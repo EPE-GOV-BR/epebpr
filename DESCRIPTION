@@ -1,0 +1,27 @@
+Package: epebpr
+Title: Balanco de Ponta
+Type: Package
+Version: 0.1.0
+Date: 2019-12-02
+Author: Joe Developer [aut, cre],
+  Pat Developer [aut],
+  A. User [ctb]
+Maintainer: Joe Developer <Joe.Developer@some.domain.net>
+Description: Ferramenta de calculo do Balanco de Ponta a partir das simulacoes do NEWAVE
+License: GPL-2
+Encoding: UTF-8
+LazyData: FALSE
+RoxygenNote: 6.1.1
+Depends: R (>= 3.6),
+  readr,
+  readxl,
+  dplyr, 
+  stringr,
+  tidyr,
+  lpSolveAPI,
+  DBI,
+  RSQLite,
+  shiny,
+  shinythemes,
+  shinybusy,
+  tictoc

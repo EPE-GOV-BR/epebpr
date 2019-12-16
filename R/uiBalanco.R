@@ -1,0 +1,222 @@
+#' Interface do usuario (ui) Shiny do Banlanco de Ponta
+#'
+#' Cria estrutura de interface de usuario (ui) do Balanco de Ponta
+#'
+#' @import shiny
+#' @import shinythemes
+#' @import shinybusy
+#'
+uiBalanco <- fluidPage(
+  theme = shinytheme("spacelab"),
+  tags$head(tags$style(".navbar {margin: 0px 0px 5px 0px; padding: 0px}")), # altera os espacamentos da barra de navegacao
+  tags$head(tags$style(".navbar-brand{padding: 5px 20px 5px 20px}")), # altera os espacamentos do titulo da barra de navegacao (logo)
+  tags$head(tags$style(".container-fluid {margin: 0px 0px 0px 2px; padding: 0px}")), # altera as margens da pagina
+  tags$head(tags$style(".well {padding: 10px; margin-bottom: 5px}")), # altera espacamentos da barra lateral
+  # tag para alterar posicao do natificacao de progresso
+  tags$head(tags$style(".shiny-notification {position: fixed; top: 40% ;left: 50%}")),
+  # spinning
+  use_busy_spinner(spin = "fading-circle", color="#274580", margins = c(300, 500), height = "80px", width = "80px"),
+
+  navbarPage(
+    title = img(src = 'http://www.epe.gov.br/PublishingImages/Logos/logo-epe-azul.png', height = '40px'),
+    windowTitle = HTML("Balan&ccedil;o"),
+    tabPanel(HTML("Balan&ccedil;o de Ponta"),
+             sidebarLayout(
+               sidebarPanel(#width = 5,
+                 # Selecao do tipo de caso
+                 # div para colocar inputs na mesma linha
+                 div(style="display:inline-block; width:140px",
+                     selectInput(inputId = "tipoCaso",
+                                 label = "Tipo de Caso:",
+                                 choices = c("PDE" = 1,
+                                             "PMO" = 2,
+                                             "Garantia Fisica" = 3),
+                                 selected = 1)),
+                 # Espaco entre inputs
+                 div(style="display:inline-block; width:7px"),
+
+                 # Selecao do modelo
+                 div(style="display:inline-block; width:100px",
+                     selectInput(inputId = "codModelo",
+                                 label = "Modelo:",
+                                 choices = c("NEWAVE" = 1,
+                                             "SUISHI" = 2),
+                                 selected = 1)),
+
+                 # Espaco entre inputs
+                 div(style="display:inline-block; width:7px"),
+
+                 # Selecao do modelo
+                 div(style="display:inline-block; width:140px",
+                     selectInput(inputId = "idDemanda",
+                                 label = "Demanda:",
+                                 choices = c("L\u00EDquida" = 1,
+                                             "Determin\u00EDstica" = 0),
+                                 selected = 0)),
+                 br(),
+
+
+                 # Entrada numerica para o numero do caso
+                 div(style="display:inline-block; width:80px",
+                     numericInput(inputId = "numeroCaso",
+                                  label = HTML("Caso:"),
+                                  min = 1,
+                                  value = NULL)),
+
+                 # Espaco entre inputs
+                 div(style="display:inline-block; width:7px"),
+
+                 # Entrada para horas de ponta
+                 div(style="display:inline-block; width:120px",
+                     numericInput(inputId = "horasPonta",
+                                  label = HTML("Horas de Ponta:"),
+                                  min = 1,
+                                  value = 10)),
+
+                 # Espaco entre inputs
+                 div(style="display:inline-block; width:7px"),
+
+                 # Entrada para reserva operativa
+                 div(style="display:inline-block; width:160px",
+                     numericInput(inputId = "reservaOperativa",
+                                  label = HTML("Reserva Operativa [%]:"),
+                                  min = 0,
+                                  value = 5)),
+                 br(),
+
+                 # Entrada de texto para a descricao do caso
+                 textInput(inputId = "descricao",
+                           label = HTML("Descri&ccedil;&atilde;o do Caso:"),
+                           value = NULL),
+
+                 # # Entrada para inicio da serie
+                 # div(style="display:inline-block; width:100px",
+                 #     numericInput(inputId = "anoMesInicioMDI",
+                 #                  label = HTML("In&iacute;cio MDI:"),
+                 #                  min = 201801,
+                 #                  max = 205012,
+                 #                  value = NULL)),
+                 #
+                 # # Espaco entre inputs
+                 # div(style="display:inline-block; width:7px"),
+                 #
+                 # # Entrada para fim da serie
+                 # div(style="display:inline-block; width:100px",
+                 #     numericInput(inputId = "anoMesFimMDI",
+                 #                  label = HTML("Fim MDI:"),
+                 #                  min = 201801,
+                 #                  max = 205012,
+                 #                  value = NULL)),
+                 #
+                 # # Espaco entre inputs
+                 # div(style="display:inline-block; width:7px"),
+                 #
+                 # # Entrada para quantidade de series hidro
+                 # div(style="display:inline-block; width:100px",
+                 #     numericInput(inputId = "seriesHidro",
+                 #                  label = HTML("S&eacute;ries Hidro:"),
+                 #                  min = 1,
+                 #                  value = NULL)),
+
+                 tags$b(HTML("Usar anos de estabiliza&ccedil&atilde;o?")),
+                 br(),
+                 div(style="display:inline-block",
+                     checkboxInput(inputId = "anosPre",
+                                   value = F,
+                                   label = HTML("Pr&eacute;"))),
+                 div(style = "display:inline-block; width:10px"),
+                 div(style="display:inline-block",
+                     checkboxInput(inputId = "anosPos",
+                                   value = F,
+                                   label = HTML("P&oacute;s"))),
+                 br(),
+
+                 tags$b(HTML("Sistemas:&nbsp;")),
+                 # Entrada para sistemas que nao modulam na ponta
+                 div(style="display:inline-block; width:150px",
+                     textInput(inputId = "sistemasNaoModulamPonta",
+                               label = HTML("N&atilde;o Modulam Ponta:"),
+                               value = NULL,
+                               placeholder = "sist1, sist2, etc.")),
+
+                 # Espaco entre inputs
+                 div(style="display:inline-block; width:7px"),
+
+                 # Entrada para sistemas que nao modulam na media
+                 div(style="display:inline-block; width:150px",
+                     textInput(inputId = "sistemasNaoModulamMedia",
+                               label = HTML("N&atilde;o Modulam M&eacute;dia:"),
+                               value = NULL,
+                               placeholder = "sist1, sist2, etc.")),
+                 br(),
+                 tags$b(HTML("Tucuru&iacute;")),
+                 br(),
+                 wellPanel(style = "padding: 5px 5px 0px 10px;", # style top right bottom left
+                           # Entrada para codigo de Tucurui
+                           div(style="display:inline-block; width:80px",
+                               numericInput(inputId = "codTucurui",
+                                            label = HTML("C&oacute;digo:"),
+                                            min = 1,
+                                            value = 275)),
+
+                           # Espaco entre inputs
+                           div(style="display:inline-block; width:7px"),
+
+                           # Entrada para cota limite de Tucurui
+                           div(style="display:inline-block; width:120px",
+                               numericInput(inputId = "cotaLimiteTucurui",
+                                            label = HTML("Cota Limite [m]:"),
+                                            min = 1,
+                                            value = 62)),
+                           # Espaco entre inputs
+                           div(style="display:inline-block; width:7px"),
+
+                           # Entrada para geracao limite de Tucurui
+                           div(style="display:inline-block; width:150px",
+                               numericInput(inputId = "geracaoLimiteTucurui",
+                                            label = HTML("Gera&ccedil;&atilde;o Limite [???]:"),
+                                            min = 1,
+                                            value = 4000))
+                 ),
+
+                 # Localiza base SQLite
+                 textOutput(outputId = "textoBaseSQLite"),
+                 span(strong(textOutput(outputId = "baseSQLite"), style = c("color:red"))),
+                 div(style = "height:3px"),
+                 div(actionButton(inputId = "btnBaseSQLite",
+                                  label = "Pesquisar"),
+                     actionButton(inputId = "btnCriaBaseSQLite",
+                                  label = "Criar Base")),
+
+                 # Localiza a pasta do caso
+                 div(style = "height:8px"),
+                 textOutput(outputId = "textoPasta"),
+                 span(strong(textOutput(outputId = "pasta"), style = c("color:red"))),
+                 div(style = "height:3px"),
+                 actionButton(inputId = "btnPasta",
+                              label = "Pesquisar"),
+
+                 # Action button
+                 div(style = "height:8px"),
+                 HTML("Calcula Balan&ccedil;o de Ponta"),
+                 div(style = "height:3px"),
+                 actionButton(inputId = "btnBalanco",
+                              label = "Calcular"),
+                 div(style = "display:inline-block; width:10px"),
+                     div(style="display:inline-block;",
+                         checkboxInput(inputId = "balacoResumido",
+                               value = T,
+                               label = HTML("Balan&ccedil;o resumido")))
+
+               ),
+
+               # Output:
+               mainPanel(
+                 htmlOutput(outputId = "selecao"),
+                 tableOutput(outputId = "datatable")
+               )
+             )
+    ),
+    tabPanel(HTML("Gr&aacute;ficos"))
+  )
+)
