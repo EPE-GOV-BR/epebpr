@@ -11,7 +11,7 @@
 #' @param codModelo valor inteiro com o codigo do modelo. 1:NEWAVE; 2:SUISHI
 #' @param descricaoCaso vetor de caracteres indicando a descricao do caso
 #' @param horasPonta valor inteiro com o numero de horas de ponta
-#' @param reservaOperativa valor com a reserva operativa usada no calculo do balanco. Ex. 0.05 (5%)
+#' @param reservaOperativa valor com a reserva operativa usada no calculo do balanco. Ex. 0.05
 #' @param idDemandaLiquida identificador de calculo com demanda liquida. 1:Demanda Liquida; 0:Deterministica
 #' @param anosPre numero de anos iniciais para fins de estabilizacao no calculo da politica
 #' @param anosPos numero de anos finais para fins de estabilizacao no calculo da politica

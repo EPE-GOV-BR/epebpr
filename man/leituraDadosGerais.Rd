@@ -12,8 +12,9 @@ leituraDadosGerais(arquivo)
 \value{
 \code{df.dadosGerais} data frame com informacao sobre o estudo
 \itemize{
-\item valor de ano e mes do inicio do estudo (\code{$anoMesInicio})
 \item numero de anos de duracao do estudo(\code{$duracaoEstudo})
+\item mes do inicio do estudo (\code{$mesInicio})
+\item ano do inicio do estudo (\code{$anoInicio})
 \item numero de anos iniciais para fins de estabilizacao no calculo da politica (\code{$anosPre})
 \item numero de anos finais para fins de estabilizacao no calculo da politica (\code{$anosPos})
 \item numero de series sinteticas (\code{$seriesSinteticas})

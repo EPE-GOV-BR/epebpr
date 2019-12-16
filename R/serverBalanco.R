@@ -10,6 +10,7 @@
 #'
 serverBalanco <- function(input, output, session) {
 
+  ####### ABA BALANCO #######
   output$textoPasta <- renderText("Escolha a pasta do caso:")
   pastaCaso <- ""
   output$textoBaseSQLite <- renderText("Escolha a base SQLite ou crie nova:")
@@ -131,5 +132,22 @@ serverBalanco <- function(input, output, session) {
   output$selecao <- renderText({
     textoSelecao()
   })
+  
+  
+  ####### ABA GRAFICOS #######
+  output$textoBaseSQLiteGrafico <- renderText("Escolha a base SQLite")
+  baseSQLiteGrafico <- ""
+  
+  # monitora botao de selecao de base existente
+  observeEvent(input$btnBaseSQLiteGrafico, {
+    baseSQLiteGrafico <<- choose.files(caption = "Escolha a base SQLite") # importante <<- para passar valor para variavel global
+    output$baseSQLiteGrafico <- renderText(baseSQLiteGrafico)
+    output$textoBaseSQLiteGrafico <- renderText("Base selecionada:")
+    output$graficosCVar <- renderPlot({
+      graficoCVARMesTipo(baseSQLiteGrafico, 1, 8000, 1, 2020, 2029)
+    }, 
+    height = 700)
+  })
+  
 
 }

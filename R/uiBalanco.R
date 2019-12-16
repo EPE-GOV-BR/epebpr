@@ -217,6 +217,22 @@ uiBalanco <- fluidPage(
                )
              )
     ),
-    tabPanel(HTML("Gr&aacute;ficos"))
+    tabPanel(HTML("Gr&aacute;ficos"),
+             sidebarLayout(
+               sidebarPanel(# width = 3,
+                 # Localiza base SQLite
+                 textOutput(outputId = "textoBaseSQLiteGrafico"),
+                 span(strong(textOutput(outputId = "baseSQLiteGrafico"), style = c("color:red"))),
+                 div(style = "height:3px"),
+                 actionButton(inputId = "btnBaseSQLiteGrafico",
+                                  label = "Pesquisar")
+               ),
+               
+               # Output:
+               mainPanel(
+                 plotOutput(outputId = "graficosCVar")
+               )
+             )
+    )
   )
 )
