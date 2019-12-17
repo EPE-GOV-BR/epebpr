@@ -149,7 +149,7 @@ calculaBalancoParalelo <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
   }
   
   # processamento paralelo
-  coresParaUso <- detectCores() - 1 # disponibiliza todos os cores da CPU menos 1, para nao travar a maquina do usuario
+  coresParaUso <- detectCores() - 2 # disponibiliza todos os cores da CPU menos 2, para nao travar a maquina do usuario
   clusterBalanco <- makeCluster(coresParaUso)
   registerDoParallel(clusterBalanco)
   clusterExport(clusterBalanco, "balancoPeriodo")

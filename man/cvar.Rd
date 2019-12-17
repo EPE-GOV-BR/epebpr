@@ -7,7 +7,7 @@
 cvar(x, cvar)
 }
 \arguments{
-\item{x}{vetor com valores a se calcular o CVAR}
+\item{x}{vetor com valores a se calcular o CVaR}
 
 \item{cvar}{valor de cvar aplicado. Ex. 0.01, 0.02, 0.05}
 }

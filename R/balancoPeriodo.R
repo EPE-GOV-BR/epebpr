@@ -34,11 +34,12 @@
 #' @import DBI
 #'
 #' @examples
+#' \dontrun{
 #' balancoPeriodo(201901, T, conexao, df.custoDefict, df.geracaoTermicaTotal,
 #' df.geracaoTransmissaoTotal, df.geracaoRenovaveisTotal,
 #' df.limitesAgrupamentoLinhasTotal, df.demanda, df.casosAnalise,
 #' df.geracaoHidroTotal, df.agrupamentoLinhas, tipoCaso, numeroCaso, codModelo,
-#' df.subsistemas, cvuHidro)
+#' df.subsistemas, cvuHidro)}
 #'
 #' @export
 balancoPeriodo <- function(periodo,
@@ -193,11 +194,11 @@ balancoPeriodo <- function(periodo,
                        indices = indicesTransmissao)
       }
       # grava modelo para resolver o problema do solver de se perder ao executar o solver em loop
-      write.lp(lpBalanco,
-               paste0("C:/CacheRBalanco/", periodo, "sh",andaNumSerie, "d", andaDemandas, "modelo.lp"), type="lp")
-      delete.lp(lpBalanco)
-      rm(lpBalanco)
-      lpBalanco <- read.lp(paste0("C:/CacheRBalanco/", periodo, "sh",andaNumSerie, "d", andaDemandas, "modelo.lp"), type = "lp")
+      # write.lp(lpBalanco,
+      #          paste0("C:/CacheRBalanco/", periodo, "sh",andaNumSerie, "d", andaDemandas, "modelo.lp"), type="lp")
+      # delete.lp(lpBalanco)
+      # rm(lpBalanco)
+      # lpBalanco <- read.lp(paste0("C:/CacheRBalanco/", periodo, "sh",andaNumSerie, "d", andaDemandas, "modelo.lp"), type = "lp")
 
       # escalonamento
       # O algoritmo simplex e um processo de iteracao tipico em que milhares de calculos flutuantes sao feitos para encontrar a solucao ideal.
@@ -270,11 +271,11 @@ balancoPeriodo <- function(periodo,
                        indices = indicesTransmissao)
       }
       # grava modelo para resolver o problema do solver de se perder ao executar o solver em loop
-      write.lp(lpBalancoSemTransmissao,
-               paste0("C:/CacheRBalanco/", periodo, "sh",andaNumSerie, "d", andaDemandas, "modeloBU.lp"), type="lp")
-      delete.lp(lpBalancoSemTransmissao)
-      rm(lpBalancoSemTransmissao)
-      lpBalancoSemTransmissao <- read.lp(paste0("C:/CacheRBalanco/", periodo, "sh",andaNumSerie, "d", andaDemandas, "modeloBU.lp"), type = "lp")
+      # write.lp(lpBalancoSemTransmissao,
+      #          paste0("C:/CacheRBalanco/", periodo, "sh",andaNumSerie, "d", andaDemandas, "modeloBU.lp"), type="lp")
+      # delete.lp(lpBalancoSemTransmissao)
+      # rm(lpBalancoSemTransmissao)
+      # lpBalancoSemTransmissao <- read.lp(paste0("C:/CacheRBalanco/", periodo, "sh",andaNumSerie, "d", andaDemandas, "modeloBU.lp"), type = "lp")
 
       # escalonamento
       lp.control(lpBalancoSemTransmissao, scaling = c("extreme", "logarithmic", "power2"))

@@ -59,10 +59,11 @@ pela variavel \code{balancoResumido}.
 Monta e resolve o problema linear de um balanco de ponta. Funcao criada para poder executar processamento paralelo.
 }
 \examples{
+\dontrun{
 balancoPeriodo(201901, T, conexao, df.custoDefict, df.geracaoTermicaTotal,
 df.geracaoTransmissaoTotal, df.geracaoRenovaveisTotal,
 df.limitesAgrupamentoLinhasTotal, df.demanda, df.casosAnalise,
 df.geracaoHidroTotal, df.agrupamentoLinhas, tipoCaso, numeroCaso, codModelo,
-df.subsistemas, cvuHidro)
+df.subsistemas, cvuHidro)}
 
 }
