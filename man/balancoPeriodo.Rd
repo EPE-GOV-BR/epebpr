@@ -4,8 +4,8 @@
 \alias{balancoPeriodo}
 \title{Calcula um balanco de ponta}
 \usage{
-balancoPeriodo(periodo, balancoResumido, conexao, df.custoDefict,
-  df.geracaoTermicaTotal, df.geracaoTransmissaoTotal,
+balancoPeriodo(periodo, idDemanda, idSerieHidro, balancoResumido, conexao,
+  df.custoDefict, df.geracaoTermicaTotal, df.geracaoTransmissaoTotal,
   df.geracaoRenovaveisTotal, df.limitesAgrupamentoLinhasTotal, df.demanda,
   df.casosAnalise, df.geracaoHidroTotal, df.agrupamentoLinhas, tipoCaso,
   numeroCaso, codModelo, df.subsistemas, cvuHidro)

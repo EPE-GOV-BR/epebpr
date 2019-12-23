@@ -17,6 +17,18 @@ serverBalanco <- function(input, output, session) {
   baseSQLite <- ""
   pastaBD <- ""
 
+  # dados do balanco
+  codTucurui <- 275 # codigo da usina Tucurui
+  cotaLimiteTucurui <- 62 # cota limite de Tucurui em metros
+  potenciaLimiteTucurui <- 4000 # potencia limite de Tucurui em MW
+  # os valores de CVU da transmissao, hidro e outras renovaveis foram calibrados para forcarem o modelo a os considerar no balanco de forma ordenada,
+  # evitando solucoes degeneradas ou irreais, mas matematicamente aceitas. Contudo, se os custos das geracoes aumentarem, 
+  # esses valores devem ser recalibrados para evitar problemas de escalonamento.
+  cvuTransmissao <- 2e-6
+  cvuHidro <- 3e-5
+  cvuRenovaveis <- 1e-5
+  cvuOutrasTermicas <- 0.1 # valores de cvu 0
+  
   # monitora botao para criar base sqlite da barra lateral e abre janela para interecao com usuario (1)
   observeEvent(input$btnCriaBaseSQLite, {
     showModal(
@@ -82,11 +94,16 @@ serverBalanco <- function(input, output, session) {
     output$pasta <- renderText(pastaCaso)
     output$textoPasta <- renderText("Pasta do caso:")
   })
+  
+  # monitora o botao para encerrar o app
+  observeEvent(input$btnSair, {
+    stopApp()
+  })
 
   # monitora botao do calculo do balanco
   textoSelecao <- eventReactive(input$btnBalanco, {
     validate(
-      need(input$numeroCaso, HTML("Caso sem n\u00FAmero")),
+      need(input$numeroCaso, HTML("Caso sem n\u00FAmero"))
       # need((input$inicioCaso %/% 100) >= 2018, "Ano da data de inicio do caso incorreto ou fora de formato (aaaamm)"),
       # need((input$inicioCaso %/% 100) <= 2050, "Ano da data de inicio do caso incorreto ou fora de formato (aaaamm)"),
       # need((input$inicioCaso %% 100) <= 12, "M\u00EAs da data de inicio do caso incorreto ou fora de formato (aaaamm)"),
@@ -95,38 +112,54 @@ serverBalanco <- function(input, output, session) {
       # need((input$fimCaso %/% 100) <= 2050, "Ano da data de fim do caso incorreto ou fora de formato (aaaamm)"),
       # need((input$fimCaso %% 100) <= 12, "M\u00EAs da data de fim do caso incorreto ou fora de formato (aaaamm)"),
       # need((input$fimCaso %% 100) != 0, "M\u00EAs da data de fim do caso incorreto ou fora de formato (aaaamm)"),
-      need(input$horasPonta, "Defina o n\u00FAmero de horas de ponta"),
-      need(input$descricao, "Caso sem descri\u00E7\u00E3o"),
-      need(pastaCaso != "", "Defina a pasta de caso"),
-      need(baseSQLite != "", "Defina a base de dados SQLite"),
-      need(input$reservaOperativa, "Defina valor de reserva operativa (0-100%)"),
-      need(input$codTucurui, "Defina o c\u00F3digo de Tucuru\u00ED"),
-      need(input$cotaLimiteTucurui, "Defina cota limite de Tucuru\u00ED"),
-      need(input$geracaoLimiteTucurui, "Defina a gera\u00E7\u00E3o limite de Tucuru\u00ED")
+      # need(input$horasPonta, "Defina o n\u00FAmero de horas de ponta"),
+      # need(input$descricao, "Caso sem descri\u00E7\u00E3o"),
+      # need(pastaCaso != "", "Defina a pasta de caso"),
+      # need(baseSQLite != "", "Defina a base de dados SQLite"),
+      # need(input$reservaOperativa, "Defina valor de reserva operativa (0-100%)")
       # need(input$sistemasNaoModulamPonta, "Defina os sistemas que n\u00E3o modulam na ponta"),
       # need(input$sistemasNaoModulamMedia, "Defina os sistemas que n\u00E3o modulam na m\u00E9dia")
     )
+    tic()
     show_spinner()
-    sistemasNaoModulamPonta <- strsplit(input$sistemasNaoModulamPonta, ",") %>% unlist() %>% as.numeric()
-    sistemasNaoModulamMedia <- strsplit(input$sistemasNaoModulamMedia, ",") %>% unlist() %>% as.numeric()
-    mensagem <- withLogErrors({carregaDadosSQLite(baseSQLite,
-                                                  pastaCaso,
-                                                  as.integer(input$tipoCaso),
-                                                  as.integer(input$numeroCaso),
-                                                  as.integer(input$codModelo),
-                                                  input$descricao,
-                                                  as.integer(input$horasPonta),
-                                                  as.numeric(input$reservaOperativa)/100,
-                                                  as.integer(input$idDemanda),
-                                                  as.logical(input$anosPre),
-                                                  as.logical(input$anosPos),
-                                                  sistemasNaoModulamPonta,
-                                                  sistemasNaoModulamMedia,
-                                                  as.integer(input$codTucurui),
-                                                  as.numeric(input$cotaLimiteTucurui),
-                                                  as.numeric(input$geracaoLimiteTucurui))})
+    # sistemasNaoModulamPonta <- strsplit(input$sistemasNaoModulamPonta, ",") %>% unlist() %>% as.numeric()
+    # sistemasNaoModulamMedia <- strsplit(input$sistemasNaoModulamMedia, ",") %>% unlist() %>% as.numeric()
+    # mensagem <- withLogErrors({carregaDadosSQLite(baseSQLite,
+    #                                               pastaCaso,
+    #                                               as.integer(input$tipoCaso),
+    #                                               as.integer(input$numeroCaso),
+    #                                               as.integer(input$codModelo),
+    #                                               input$descricao,
+    #                                               as.integer(input$horasPonta),
+    #                                               as.numeric(input$reservaOperativa)/100,
+    #                                               as.integer(input$idDemanda),
+    #                                               as.logical(input$anosPre),
+    #                                               as.logical(input$anosPos),
+    #                                               sistemasNaoModulamPonta,
+    #                                               sistemasNaoModulamMedia,
+    #                                               codTucurui,
+    #                                               cotaLimiteTucurui,
+    #                                               potenciaLimiteTucurui)})
+    
+    # calcula balanco
+    # mensagem <- calculaBalancoParalelo(baseSQLite,
+    #                                    as.integer(input$tipoCaso),
+    #                                    as.integer(input$numeroCaso),
+    #                                    as.integer(input$codModelo),
+    #                                    cvuTransmissao,
+    #                                    cvuHidro,
+    #                                    cvuRenovaveis,
+    #                                    cvuOutrasTermicas,
+    #                                    as.logical(input$balancoResumido))
+    Sys.sleep(5)
     hide_spinner()
-    return(mensagem)
+    # exibe tempo de execucao
+    tempoExecucao <- toc(quiet = T)
+    tempoExecucao <- round(tempoExecucao$toc - tempoExecucao$tic, 0) %>% as.numeric()
+    tempoExecucao <- paste0("<br>Executado em: ", tempoExecucao %/% 3600, " h. ",
+                            (tempoExecucao - (tempoExecucao %/% 3600 * 3600)) %/% 60, " min. ", tempoExecucao %% 60, " seg.")
+
+    return(c(mensagem, tempoExecucao))
     # paste(input$tipoCaso, input$codModelo, input$numeroCaso, input$descricao, pastaCaso, input$inicioCaso, input$fimCaso, baseSQLite)
   })
   output$selecao <- renderText({
@@ -139,15 +172,29 @@ serverBalanco <- function(input, output, session) {
   baseSQLiteGrafico <- ""
   
   # monitora botao de selecao de base existente
-  observeEvent(input$btnBaseSQLiteGrafico, {
+  observeEvent(input$btnBaseSQLiteGrafico, withLogErrors({
     baseSQLiteGrafico <<- choose.files(caption = "Escolha a base SQLite") # importante <<- para passar valor para variavel global
     output$baseSQLiteGrafico <- renderText(baseSQLiteGrafico)
     output$textoBaseSQLiteGrafico <- renderText("Base selecionada:")
-    output$graficosCVar <- renderPlot({
-      graficoCVARMesTipo(baseSQLiteGrafico, 1, 8000, 1, 2020, 2029)
-    }, 
-    height = 700)
-  })
-  
-
+    df.casosInputGrafico <- leituraTabelaDadosCasos(baseSQLiteGrafico)
+    # monta lista para input
+    lt.casosInputGrafico <- as.list(df.casosInputGrafico$caso)
+    names(lt.casosInputGrafico) <- df.casosInputGrafico$descricao
+    lt.casosInputGrafico <- append(list("Selecione um Caso" = -1), lt.casosInputGrafico)
+    updateSelectInput(session, 
+                      inputId = "casoGrafico", 
+                      choices = lt.casosInputGrafico,
+                      selected = -1)
+    
+    output$tabelaDadosCasos <- renderDT(
+      datatable(data = leituraTabelaDadosCasos(baseSQLiteGrafico),
+                options = list(pageLength = 12,
+                               language = list(url = '//cdn.datatables.net/plug-ins/1.10.11/i18n/Portuguese-Brasil.json')),
+                rownames = FALSE,
+                selection = "none"))
+    # output$graficosCVar <- renderPlot({
+    #   graficoCVARMesTipo(baseSQLiteGrafico, 1, 8000, 1, 2020, 2029)
+    # }, 
+    # height = 700)
+  }))
 }

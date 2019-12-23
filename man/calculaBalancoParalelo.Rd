@@ -29,7 +29,8 @@ calculaBalancoParalelo(baseSQLite, tipoCaso, numeroCaso, codModelo,
 Valor padrao T.}
 }
 \value{
-Grava resultados dos balancos nas tabelas BPO_A16_BALANCO, BPO_A17_BALANCO_GERADOR e BPO_A20_BALANCO_SUBSISTEMA
+\code{mensagem} vetor de caracteres com a mensagem de sucesso de gravacao dos resultados dos balancos 
+nas tabelas BPO_A16_BALANCO, BPO_A17_BALANCO_GERADOR e BPO_A20_BALANCO_SUBSISTEMA
 }
 \description{
 Monta e resolve o problema linear de um balanco de ponta. Funcao criada para poder executar processamento paralelo.

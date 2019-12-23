@@ -13,7 +13,8 @@
 #' @param balancoResumido variavel binaria para decidir se vai gravar somente o balanco resumido (\code{BPO_A16_BALANCO}) ou tambem o por gerador (\code{BPO_A17_BALANCO_GERADOR}).
 #' Valor padrao T.
 #'
-#' @return Grava resultados dos balancos nas tabelas BPO_A16_BALANCO, BPO_A17_BALANCO_GERADOR e BPO_A20_BALANCO_SUBSISTEMA
+#' @return \code{mensagem} vetor de caracteres com a mensagem de sucesso de gravacao dos resultados dos balancos 
+#' nas tabelas BPO_A16_BALANCO, BPO_A17_BALANCO_GERADOR e BPO_A20_BALANCO_SUBSISTEMA
 #'
 #' @examples
 #' \dontrun{
@@ -114,6 +115,17 @@ calculaBalancoParalelo <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
                   " AND A01_CD_MODELO = ", codModelo)
   df.demanda <- dbGetQuery(conexao, query)
   
+  # monta data frame com a combinacao de horizonte de estudo, quantidade de demandas e quantidade de series hidro
+  df.demandasAnoMes <- df.demanda %>% group_by(anoMes) %>% summarise(nDemandas = max(id, na.rm = T)) %>% ungroup()
+  df.demandasAnoMesSerie <- data.frame(anoMes = integer(), demanda = numeric())
+  for (andaHorizonte in horizonte) {
+    df.demandasAnoMesSerie <- crossing(data.frame(anoMes = andaHorizonte), 
+                                       data.frame(demanda = seq(1, df.demandasAnoMes %>% filter(anoMes == andaHorizonte) %>% pull(nDemandas)))) %>% 
+      rbind(df.demandasAnoMesSerie, .)
+  }
+  df.demandasAnoMesSerie <- crossing(df.demandasAnoMesSerie, data.frame(serie = seq(1, df.casosAnalise$numSeriesHidro)))
+  rm(df.demandasAnoMes)
+  
   dbExecute(conexao, "BEGIN TRANSACTION;")
   # limpa a base de uma eventual rodada anterior
   # BPO_A16_BALANCO
@@ -154,13 +166,21 @@ calculaBalancoParalelo <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
   registerDoParallel(clusterBalanco)
   clusterExport(clusterBalanco, "balancoPeriodo")
   
+  quantidadeCenarios <- nrow(df.demandasAnoMesSerie)
+  # calcula as janelas de 200 registros para inserir em lote
+  tamanhoJanela <- 200
+  janelaCenarios <- c(seq(1, quantidadeCenarios, tamanhoJanela), (quantidadeCenarios + 1))
+  quantidadeJanela <- length(janelaCenarios)
+
+  # se nao for balanco resumido grava BPO_A16_BALANCO, BPO_A17_BALANCO_GERADOR e BPO_A20_BALANCO_SUBSISTEMA
   if (balancoResumido == F) {
-    # for criado para solucionar problema de memoria em relacao ao data frame criado para inclusao no banco 
-    anosHorizonte <- as.integer(unique(substr(horizonte, 1,4)))
-    for (andaAnos in anosHorizonte) {
-      lt.resultado <- foreach(periodo = horizonte[substr(horizonte, 1,4) == andaAnos],
+    # for criado para nao estourar a alocacao de memoria e ao mesmo tempo nao compromenter desempenho na gravacao na base (gravacao em disco)
+    for (andaJanela in 1:(quantidadeJanela - 1)) {
+      lt.resultado <- foreach(cenario = seq(janelaCenarios[andaJanela], (janelaCenarios[andaJanela + 1] - 1)),
                               .combine = "subRBind",
-                              .packages = c("dplyr", "lpSolveAPI", "DBI", "RSQLite"))  %dopar%  balancoPeriodo(periodo, 
+                              .packages = c("dplyr", "lpSolveAPI", "DBI", "RSQLite"))  %dopar%  balancoPeriodo(df.demandasAnoMesSerie$anoMes[cenario],
+                                                                                                               df.demandasAnoMesSerie$demanda[cenario],
+                                                                                                               df.demandasAnoMesSerie$serie[cenario],
                                                                                                                balancoResumido, 
                                                                                                                conexao,
                                                                                                                df.custoDefict,
@@ -182,31 +202,35 @@ calculaBalancoParalelo <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
       dbWriteTable(conexao, "BPO_A17_BALANCO_GERADOR", lt.resultado$df.resultadoGerador, append = T)
       # BPO_A20_BALANCO_SUBSISTEMA
       dbWriteTable(conexao, "BPO_A20_BALANCO_SUBSISTEMA", lt.resultado$df.resultadoCMO, append = T)
-      
     }
-  } else{
-    lt.resultado <- foreach(periodo = horizonte,
-                            .combine = "subRBind",
-                            .packages = c("dplyr", "lpSolveAPI", "DBI", "RSQLite"))  %dopar%  balancoPeriodo(periodo, 
-                                                                                                             balancoResumido, 
-                                                                                                             conexao,
-                                                                                                             df.custoDefict,
-                                                                                                             df.geracaoTermicaTotal, 
-                                                                                                             df.geracaoTransmissaoTotal, 
-                                                                                                             df.geracaoRenovaveisTotal, 
-                                                                                                             df.limitesAgrupamentoLinhasTotal,
-                                                                                                             df.demanda,
-                                                                                                             df.casosAnalise,
-                                                                                                             df.geracaoHidroTotal,
-                                                                                                             df.agrupamentoLinhas,
-                                                                                                             tipoCaso, numeroCaso, codModelo,
-                                                                                                             df.subsistemas,
-                                                                                                             cvuHidro)
-    # salva os resultados na base
-    # BPO_A16_BALANCO
-    dbWriteTable(conexao, "BPO_A16_BALANCO", lt.resultado$df.resultado, append = T)
-    # BPO_A20_BALANCO_SUBSISTEMA
-    dbWriteTable(conexao, "BPO_A20_BALANCO_SUBSISTEMA", lt.resultado$df.resultadoCMO, append = T)
+  # se for balanco resumido grava BPO_A16_BALANCO e BPO_A20_BALANCO_SUBSISTEMA
+  } else {
+    for (andaJanela in 1:(quantidadeJanela - 1)) {
+      lt.resultado <- foreach(cenario = seq(janelaCenarios[andaJanela], (janelaCenarios[andaJanela + 1] - 1)),
+                              .combine = "subRBind",
+                              .packages = c("dplyr", "lpSolveAPI", "DBI", "RSQLite"))  %dopar%  balancoPeriodo(df.demandasAnoMesSerie$anoMes[cenario],
+                                                                                                               df.demandasAnoMesSerie$demanda[cenario],
+                                                                                                               df.demandasAnoMesSerie$serie[cenario], 
+                                                                                                               balancoResumido, 
+                                                                                                               conexao,
+                                                                                                               df.custoDefict,
+                                                                                                               df.geracaoTermicaTotal, 
+                                                                                                               df.geracaoTransmissaoTotal, 
+                                                                                                               df.geracaoRenovaveisTotal, 
+                                                                                                               df.limitesAgrupamentoLinhasTotal,
+                                                                                                               df.demanda,
+                                                                                                               df.casosAnalise,
+                                                                                                               df.geracaoHidroTotal,
+                                                                                                               df.agrupamentoLinhas,
+                                                                                                               tipoCaso, numeroCaso, codModelo,
+                                                                                                               df.subsistemas,
+                                                                                                               cvuHidro)
+      # salva os resultados na base
+      # BPO_A16_BALANCO
+      dbWriteTable(conexao, "BPO_A16_BALANCO", lt.resultado$df.resultado, append = T)
+      # BPO_A20_BALANCO_SUBSISTEMA
+      dbWriteTable(conexao, "BPO_A20_BALANCO_SUBSISTEMA", lt.resultado$df.resultadoCMO, append = T)
+    }
   }
   
   # para cluster
@@ -215,4 +239,6 @@ calculaBalancoParalelo <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
   dbExecute(conexao, "COMMIT TRANSACTION;")
   # fecha conexao
   dbDisconnect(conexao)
+  
+  return("Balan\u00E7o de ponta executado e gravado com sucesso!")
 }

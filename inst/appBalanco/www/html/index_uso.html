@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>Como Utilizar a ferramenta?</title>
+
+<link href='https://fonts.googleapis.com/css?family=Droid+Serif|Open+Sans:400,700' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="https://s3-us-west-2.amazonaws.com/s.cdpn.io/148866/reset.css"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+<link rel="stylesheet" href="../css/informacao.css">
+</head>
+<!-- partial:index.partial.html -->
+<body>
+	<button class="button" onclick="location.href='index.html'" style="position: absolute; right: 0;">Voltar</button>
+	<header>	
+		<h1>Como Utilizar a ferramenta?</h1>
+	</header>
+		<br>
+		<h2>Selecionar opção de torre, índice ou todos</h2>
+		<div class="boxed">
+			<table>
+				<tr>
+					<td width = 370px>
+						<img src = "../imagens/barra_radio_bt.png" />
+					</td>
+					<td>
+						Neste botão de opção o usuário pode selecionar se deseja analisar um parque (ou estação de medição AMA), todas as estações AMA que fazem parte do índice eólico (considerando as estações de apoio ao índice), ou todas as estações cadastradas na base do AMA corporativa.<p>Parques do índice estão definidos em X:/AMA/6 PROJETOS EM ANDAMENTO/AMA_IdentificadorErros/indiceAMA.txt e indiceAMAAux.txt.</p> 
+					</td>
+				</tr>
+			</table>
+		</div>
+		<br>
+		<h2>Selecionar quinzena</h2>
+		<div class="boxed">
+			<table>
+				<tr>
+					<td width = 370px>
+						<img src = "../imagens/barra_quinzena.png" />
+					</td>
+					<td>
+						Nesta caixa de seleção o usuário pode escolher a quinzena que deseja analisar na procura de medições suspeitas. As opções estão entre a última quizena completa até a data de execução da ferramenta e a quinzena de 1-15/01/2018.
+					</td>
+				</tr>
+			</table>
+		</div>
+		<br>
+		<h2>Referência de medições suspeitas para que a ferramenta indique o resultado encontrado</h2>
+		<div class="boxed">
+			<table>
+				<tr>
+					<td width = 370px>
+						<img src = "../imagens/barra_min_erros.png" />
+					</td>
+					<td>
+						Neste campo o usuário pode informar a quantidade mínima de medições suspeitas que devem ser encontradas para que a ferramenta indique a necessidade de verificação. Esse parâmetro foi criado para diminuir a quantidade de avisos com falso erro. O valor padrão é de 20 medições suspeitas por instrumento.
+					</td>
+				</tr>
+			</table>
+		</div>
+		<br>
+		<h2>Selecionar Torre (ou estação) AMA</h2>
+		<div class="boxed">
+			<table>
+				<tr>
+					<td width = 370px>
+						<img src = "../imagens/barra_torre.png" />
+					</td>
+					<td>
+						Nesta caixa de seleção o usuário pode escolher qual a torre (ou estação) AMA será analisada dentre todas a cadastradas na base corporativa do AMA.<br>Essa caixa de seleção somente aparece quando o opção <b>Parque</b> do botão de opção está selecionada.
+					</td>
+				</tr>
+			</table>
+		</div>
+		<br>
+		<h2>Verificar novamente Torre (ou estação) AMA</h2>
+		<div class="boxed">
+			<table>
+				<tr>
+					<td width = 370px>
+						<img src = "../imagens/barra_forcar_analise.png" />
+					</td>
+					<td>
+						Nesta caixa de seleção o usuário pode escolher se vai analisar novamente uma torre (ou estação) AMA na procura de medições suspeitas. Caso a opção não esteja selecionada, a ferramenta só irá executar a análise de medições suspeitas caso a análise para a quinzena escolhida nunca tenha sido efetuada.<br>Essa caixa de seleção somente aparece quando o opção <b>Parque</b> do botão de opção está selecionada.
+					</td>
+				</tr>
+			</table>
+		</div>
+		<br>
+		<h2>Verificar novamente Torre (ou estação) AMA</h2>
+		<div class="boxed">
+			<table>
+				<tr>
+					<td width = 370px>
+						<img src = "../imagens/barra_graficos.png" />
+					</td>
+					<td>
+						Nesta caixa de seleção o usuário pode escolher se os gráficos de análise de medições suspeitas irão aparecer. A opção é feita por tipo de medição e instrumento. Os gráficos que irão aparecer, caso alguma opção seja selecionada, são de identificação das medições suspeitas pela ferramente, intervalo de confiança da regressão quantílica e comparação de medição entre instrumentos equivalentes e estações.<br>Essa caixa de seleção somente aparece quando o opção <b>Parque</b> do botão de opção está selecionada.
+					</td>
+				</tr>
+			</table>
+		</div>
+		<br>
+		<h2>Botão de Verificar Medições</h2>
+		<div class="boxed">
+			<table>
+				<tr>
+					<td width = 370px>
+						<img src = "../imagens/barra_btn.png" />
+					</td>
+					<td>
+						Este botão executa a ferramenta de verificação de medições suspeitas. Após a execução, será exibido um relatório com as medições suspeitas encontradas (caso haja e seja superior ao mínimo definido para aviso) e a tabela <font face = "Courier New">fat_comparacao_torre_ama</font> será atualizada com a data da quinzena analisada com referência nas opções selecionadas. Caso a ferramenta seja executa para o índice ou para todas as estações, o relatório também será gravado em: <br>X:/AMA/6 PROJETOS EM ANDAMENTO/AMA_IdentificadorErros/logErros/
+					</td>
+				</tr>
+			</table>
+		</div>
+</body>
+</html>

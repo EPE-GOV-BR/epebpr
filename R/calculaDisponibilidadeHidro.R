@@ -20,7 +20,7 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, tipoCaso, numeroC
   arquivoSubmotorizacao <- df.arquivos %>% filter(row_number() == 13) %>% select(arquivo) %>% pull() %>% paste(pastaCaso, ., sep = "/")
   
   # SQLite
-  conexaoSQLite <- dbConnect(RSQLite::SQLite(), localizacaoBase)
+  conexaoSQLite <- dbConnect(RSQLite::SQLite(), baseSQLite)
   
   sql <- paste0("SELECT A01_NR_MES_INICIO as dataInicioCaso,
               A01_NR_MES_FIM as dataFimCaso,

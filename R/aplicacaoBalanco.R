@@ -4,11 +4,16 @@
 #'
 #' @import shiny
 #' @import shinythemes
+#' @importFrom base64enc dataURI
 #'
 #' @examples
 #' aplicacaoBalanco()
 #'
 #' @export
 aplicacaoBalanco <- function() {
-  runApp(shinyApp(ui = uiBalanco, server = serverBalanco), launch.browser = T)
+  # local <- getwd()
+  # setwd(system.file("appBalanco", package="epebpr"))
+  runApp(shinyAppDir(system.file("appBalanco", package = "epebpr")), launch.browser = T)
+  # runApp(shinyApp(ui = uiBalanco, server = serverBalanco), launch.browser = T)
+  # setwd(local)
 }

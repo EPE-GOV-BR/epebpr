@@ -8,17 +8,32 @@
 #'
 uiBalanco <- fluidPage(
   theme = shinytheme("spacelab"),
-  tags$head(tags$style(".navbar {margin: 0px 0px 5px 0px; padding: 0px}")), # altera os espacamentos da barra de navegacao
-  tags$head(tags$style(".navbar-brand{padding: 5px 20px 5px 20px}")), # altera os espacamentos do titulo da barra de navegacao (logo)
-  tags$head(tags$style(".container-fluid {margin: 0px 0px 0px 2px; padding: 0px}")), # altera as margens da pagina
-  tags$head(tags$style(".well {padding: 10px; margin-bottom: 5px}")), # altera espacamentos da barra lateral
+  tags$head(tags$style(".navbar {margin: 0px 0px 5px 0px; padding: 0px}"), # altera os espacamentos da barra de navegacao
+            tags$style(".navbar-brand {padding: 5px 20px 5px 20px}"), # altera os espacamentos do titulo da barra de navegacao (logo)
+            tags$style(".container-fluid {margin: 0px 0px 0px 2px; padding: 0px}"), # altera as margens da pagina
+            tags$style(".well {padding: 10px; margin-bottom: 5px}"), # altera espacamentos da barra lateral
+            # altera cor das barras de nevegacao
+            tags$style(HTML(".navbar-default .navbar-brand:hover, .navbar-default .navbar-brand:focus {color: #000000;}")), 
+            tags$style(HTML(".navbar-default .navbar-nav>li>a:hover, .navbar-default .navbar-nav>li>a:focus {color: #000000;}")),
+            tags$style(HTML(".navbar-default .navbar-nav>.active>a, .navbar-default .navbar-nav>.active>a:hover, .navbar-default .navbar-nav>.active>a:focus {
+                            color: #000000; font-weight: bold;}"))
+  ),
+
   # tag para alterar posicao do natificacao de progresso
-  tags$head(tags$style(".shiny-notification {position: fixed; top: 40% ;left: 50%}")),
+  tags$head(tags$style(".shiny-notification {position: absolute; top: 40% ;left: 50%}")),
   # spinning
   use_busy_spinner(spin = "fading-circle", color="#274580", margins = c(300, 500), height = "80px", width = "80px"),
 
   navbarPage(
-    title = img(src = 'http://www.epe.gov.br/PublishingImages/Logos/logo-epe-azul.png', height = '40px'),
+    title = tagList(img(src = 'http://www.epe.gov.br/PublishingImages/Logos/logo-epe-azul.png', height = '40px'),
+                    # link para ajuda
+                    a(href = "html/index_db.html", target = "_blank", 
+                      img(src = "imagens/logo-wiki.png", height = "36px", 
+                        style = 'position: absolute; top: 7px; right: 60px;'), title = "Documenta\u00E7\u00E3o e Ajuda"),
+                    div(style = 'position: absolute; top: 8px; right: 10px;', 
+                        tags$button(id = "btnSair", class="btn action-button", style = "background-color: transparent; padding: 0px",
+                                    img(src = "imagens/close.png", onmouseover = "this.src = 'imagens/close-red.png'", onmouseout = "this.src = 'imagens/close.png'",
+                                        height = "34px", title = "Encerrar Balan\u00E7o")))),
     windowTitle = HTML("Balan&ccedil;o"),
     tabPanel(HTML("Balan&ccedil;o de Ponta"),
              sidebarLayout(
@@ -149,35 +164,35 @@ uiBalanco <- fluidPage(
                                value = NULL,
                                placeholder = "sist1, sist2, etc.")),
                  br(),
-                 tags$b(HTML("Tucuru&iacute;")),
-                 br(),
-                 wellPanel(style = "padding: 5px 5px 0px 10px;", # style top right bottom left
-                           # Entrada para codigo de Tucurui
-                           div(style="display:inline-block; width:80px",
-                               numericInput(inputId = "codTucurui",
-                                            label = HTML("C&oacute;digo:"),
-                                            min = 1,
-                                            value = 275)),
-
-                           # Espaco entre inputs
-                           div(style="display:inline-block; width:7px"),
-
-                           # Entrada para cota limite de Tucurui
-                           div(style="display:inline-block; width:120px",
-                               numericInput(inputId = "cotaLimiteTucurui",
-                                            label = HTML("Cota Limite [m]:"),
-                                            min = 1,
-                                            value = 62)),
-                           # Espaco entre inputs
-                           div(style="display:inline-block; width:7px"),
-
-                           # Entrada para geracao limite de Tucurui
-                           div(style="display:inline-block; width:150px",
-                               numericInput(inputId = "geracaoLimiteTucurui",
-                                            label = HTML("Gera&ccedil;&atilde;o Limite [???]:"),
-                                            min = 1,
-                                            value = 4000))
-                 ),
+                 # tags$b(HTML("Tucuru&iacute;")),
+                 # br(),
+                 # wellPanel(style = "padding: 5px 5px 0px 10px;", # style top right bottom left
+                 #           # Entrada para codigo de Tucurui
+                 #           div(style="display:inline-block; width:80px",
+                 #               numericInput(inputId = "codTucurui",
+                 #                            label = HTML("C&oacute;digo:"),
+                 #                            min = 1,
+                 #                            value = 275)),
+                 # 
+                 #           # Espaco entre inputs
+                 #           div(style="display:inline-block; width:7px"),
+                 # 
+                 #           # Entrada para cota limite de Tucurui
+                 #           div(style="display:inline-block; width:120px",
+                 #               numericInput(inputId = "cotaLimiteTucurui",
+                 #                            label = HTML("Cota Limite [m]:"),
+                 #                            min = 1,
+                 #                            value = 62)),
+                 #           # Espaco entre inputs
+                 #           div(style="display:inline-block; width:7px"),
+                 # 
+                 #           # Entrada para geracao limite de Tucurui
+                 #           div(style="display:inline-block; width:150px",
+                 #               numericInput(inputId = "geracaoLimiteTucurui",
+                 #                            label = HTML("Gera&ccedil;&atilde;o Limite [???]:"),
+                 #                            min = 1,
+                 #                            value = 4000))
+                 # ),
 
                  # Localiza base SQLite
                  textOutput(outputId = "textoBaseSQLite"),
@@ -204,7 +219,7 @@ uiBalanco <- fluidPage(
                               label = "Calcular"),
                  div(style = "display:inline-block; width:10px"),
                      div(style="display:inline-block;",
-                         checkboxInput(inputId = "balacoResumido",
+                         checkboxInput(inputId = "balancoResumido",
                                value = T,
                                label = HTML("Balan&ccedil;o resumido")))
 
@@ -212,8 +227,7 @@ uiBalanco <- fluidPage(
 
                # Output:
                mainPanel(
-                 htmlOutput(outputId = "selecao"),
-                 tableOutput(outputId = "datatable")
+                 htmlOutput(outputId = "selecao")
                )
              )
     ),
@@ -225,7 +239,15 @@ uiBalanco <- fluidPage(
                  span(strong(textOutput(outputId = "baseSQLiteGrafico"), style = c("color:red"))),
                  div(style = "height:3px"),
                  actionButton(inputId = "btnBaseSQLiteGrafico",
-                                  label = "Pesquisar")
+                                  label = "Pesquisar"),
+                 # Espaco 
+                 div(style = "height:8px"),
+                 # input do caso
+                 selectInput(inputId = "casoGrafico",
+                             label = "Caso:",
+                             choices = NULL,
+                             selected = -1)
+                 
                ),
                
                # Output:

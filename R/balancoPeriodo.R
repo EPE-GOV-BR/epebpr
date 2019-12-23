@@ -43,6 +43,8 @@
 #'
 #' @export
 balancoPeriodo <- function(periodo,
+                           idDemanda,
+                           idSerieHidro,
                            balancoResumido,
                            conexao,
                            df.custoDefict,
@@ -98,31 +100,31 @@ balancoPeriodo <- function(periodo,
   # filtrando limites dos grupos de linhas de transmissao
   df.limitesAgrupamentoLinhas <- df.limitesAgrupamentoLinhasTotal %>% filter(anoMes == periodo) %>% select(agrupamento, limite)
 
-  # filtando numero de demandas liquidas
-  numeroDemandas <- df.demanda %>% filter(anoMes == periodo) %>% summarise(nDemandas = max(id, na.rm = T)) %>% pull(nDemandas)
-  # critica de existencia de dados
-  if(numeroDemandas == -Inf) {
-    dbDisconnect(conexao)
-    stop(paste0("N\u00E3o h\u00E1 demandas (BPO_A10_DEMANDA) para o per\u00EDodo de ", periodo))
-  }
+  # # filtando numero de demandas liquidas
+  # numeroDemandas <- df.demanda %>% filter(anoMes == periodo) %>% summarise(nDemandas = max(id, na.rm = T)) %>% pull(nDemandas)
+  # # critica de existencia de dados
+  # if(nrow(df.demanda %>% filter(anoMes == periodo, id == idDemanda)) == 0) {
+  #   dbDisconnect(conexao)
+  #   stop(paste0("N\u00E3o h\u00E1 demanda (BPO_A10_DEMANDA) para o per\u00EDodo de ", periodo))
+  # }
 
-  # cria estrutura de data frame para armazenar resultado
-  df.resultado <- data.frame(A16_TP_GERACAO = character(), A02_NR_SUBSISTEMA = integer(), A16_VL_GMIN = double(), A16_VL_DESPACHO = double(),
-                             A16_VL_DESPACHO_REDE_ILIMITADA = double(), A16_VL_NAO_DESPACHADO = double(), A01_TP_CASO = double(),
-                             A01_NR_CASO = double(), A01_CD_MODELO = double(), A09_NR_MES = double(), A09_NR_SERIE = integer(),
-                             A10_NR_SEQ_FREQUENCIA = integer())
+  ## cria estrutura de data frame para armazenar resultado
+  # df.resultado <- data.frame(A16_TP_GERACAO = character(), A02_NR_SUBSISTEMA = integer(), A16_VL_GMIN = double(), A16_VL_DESPACHO = double(),
+  #                            A16_VL_DESPACHO_REDE_ILIMITADA = double(), A16_VL_NAO_DESPACHADO = double(), A01_TP_CASO = double(),
+  #                            A01_NR_CASO = double(), A01_CD_MODELO = double(), A09_NR_MES = double(), A09_NR_SERIE = integer(),
+  #                            A10_NR_SEQ_FREQUENCIA = integer())
+  # 
+  # df.resultadoGerador <- data.frame(A16_TP_GERACAO = character(), A17_CD_USINA = integer(), A02_NR_SUBSISTEMA = integer(), A17_VL_GMIN = double(),
+  #                                   A17_VL_DESPACHO = double(), A17_VL_DESPACHO_REDE_ILIMITADA = double(), A17_VL_NAO_DESPACHADO = double(),
+  #                                   A01_TP_CASO = double(), A01_NR_CASO = double(), A01_CD_MODELO = double(), A09_NR_MES = double(),
+  #                                   A09_NR_SERIE = integer(), A10_NR_SEQ_FREQUENCIA = integer())
+  # 
+  # df.resultadoCMO <- data.frame(A20_VL_CMO = double(), A01_TP_CASO = double(), A01_NR_CASO = double(), A01_CD_MODELO = double(), A20_NR_MES = double(),
+  #                               A20_NR_SERIE = integer(), A10_NR_SEQ_FREQUENCIA = integer(), A02_NR_SUBSISTEMA = integer())
 
-  df.resultadoGerador <- data.frame(A16_TP_GERACAO = character(), A17_CD_USINA = integer(), A02_NR_SUBSISTEMA = integer(), A17_VL_GMIN = double(),
-                                    A17_VL_DESPACHO = double(), A17_VL_DESPACHO_REDE_ILIMITADA = double(), A17_VL_NAO_DESPACHADO = double(),
-                                    A01_TP_CASO = double(), A01_NR_CASO = double(), A01_CD_MODELO = double(), A09_NR_MES = double(),
-                                    A09_NR_SERIE = integer(), A10_NR_SEQ_FREQUENCIA = integer())
-
-  df.resultadoCMO <- data.frame(A20_VL_CMO = double(), A01_TP_CASO = double(), A01_NR_CASO = double(), A01_CD_MODELO = double(), A20_NR_MES = double(),
-                                A20_NR_SERIE = integer(), A10_NR_SEQ_FREQUENCIA = integer(), A02_NR_SUBSISTEMA = integer())
-
-  for (andaNumSerie in 1:df.casosAnalise$numSeriesHidro) {
+  # for (andaNumSerie in 1:df.casosAnalise$numSeriesHidro) {
     # geracao hidro
-    df.geracaoHidro <- df.geracaoHidroTotal %>% filter(anoMes == periodo & serieHidro == andaNumSerie) %>%
+    df.geracaoHidro <- df.geracaoHidroTotal %>% filter(anoMes == periodo, serieHidro == idSerieHidro) %>%
       select(tipoUsina, codUsina, subsistema, transmissao, inflexibilidade, disponibilidade, cvu)
     # critica de existencia de dados
     if(nrow(df.geracaoHidro) == 0) {
@@ -136,13 +138,13 @@ balancoPeriodo <- function(periodo,
     # geracao total para balanco sem restricao de transmissao
     df.geracaoSemTransmissao <- df.geracao %>% mutate(disponibilidade = replace(disponibilidade, tipoUsina == 'TRANSMISSAO', Inf))
 
-    for (andaDemandas in 1:numeroDemandas) {
+    # for (andaDemandas in 1:numeroDemandas) {
       # filtra demanda especifica (uso particular para carga liquida)
-      df.demandaLiquida <- df.demanda %>% filter(anoMes == periodo & id == andaDemandas) %>% select(subsistema, probOcorrencia, demanda)
+      df.demandaLiquida <- df.demanda %>% filter(anoMes == periodo & id == idDemanda) %>% select(subsistema, probOcorrencia, demanda)
       # critica de existencia de dados
       if(nrow(df.demandaLiquida) == 0) {
         dbDisconnect(conexao)
-        stop(paste0("N\u00E3o h\u00E1 demanda (BPO_A10_DEMANDA) para o per\u00EDodo de ", periodo))
+        stop(paste0("N\u00E3o h\u00E1 demanda (BPO_A10_DEMANDA) para o per\u00EDodo de ", periodo, " e demanda ", idDemanda))
       }
 
       # Balanco
@@ -195,10 +197,10 @@ balancoPeriodo <- function(periodo,
       }
       # grava modelo para resolver o problema do solver de se perder ao executar o solver em loop
       # write.lp(lpBalanco,
-      #          paste0("C:/CacheRBalanco/", periodo, "sh",andaNumSerie, "d", andaDemandas, "modelo.lp"), type="lp")
+      #          paste0("C:/CacheRBalanco/", periodo, "sh",idSerieHidro, "d", idDemanda, "modelo.lp"), type="lp")
       # delete.lp(lpBalanco)
       # rm(lpBalanco)
-      # lpBalanco <- read.lp(paste0("C:/CacheRBalanco/", periodo, "sh",andaNumSerie, "d", andaDemandas, "modelo.lp"), type = "lp")
+      # lpBalanco <- read.lp(paste0("C:/CacheRBalanco/", periodo, "sh", idSerieHidro, "d", idDemanda, "modelo.lp"), type = "lp")
 
       # escalonamento
       # O algoritmo simplex e um processo de iteracao tipico em que milhares de calculos flutuantes sao feitos para encontrar a solucao ideal.
@@ -213,7 +215,7 @@ balancoPeriodo <- function(periodo,
       if(solucao != 0) {
         dbDisconnect(conexao)
         stop(paste0("N\u00E3o foi encontrada solu\u00E7\u00E3o vi\u00E1vel (problema ", solucao ,") para execu\u00E7\u00E3o de ", periodo, ", s\u00E9rie hidro ",
-                    andaNumSerie, ", demanda ", andaDemandas))
+                    idSerieHidro, ", demanda ", idDemanda))
         # 0: "optimal solution found"
         # 1: "the model is sub-optimal"
         # 2: "the model is infeasible"
@@ -229,7 +231,7 @@ balancoPeriodo <- function(periodo,
         # 13: "no feasible branch and bound solution was found"
       }
       # exibe solucao
-      # write.csv(get.objective(lpBalanco), paste0(tipoCaso, numeroCaso, codModelo, periodo, andaNumSerie, andaDemandas, 'resultado.csv'))
+      # write.csv(get.objective(lpBalanco), paste0(tipoCaso, numeroCaso, codModelo, periodo, idSerieHidro, idDemanda, 'resultado.csv'))
       # Fim Balanco
 
       # Balanco sem limite de transmissao
@@ -272,10 +274,10 @@ balancoPeriodo <- function(periodo,
       }
       # grava modelo para resolver o problema do solver de se perder ao executar o solver em loop
       # write.lp(lpBalancoSemTransmissao,
-      #          paste0("C:/CacheRBalanco/", periodo, "sh",andaNumSerie, "d", andaDemandas, "modeloBU.lp"), type="lp")
+      #          paste0("C:/CacheRBalanco/", periodo, "sh",idSerieHidro, "d", idDemanda, "modeloBU.lp"), type="lp")
       # delete.lp(lpBalancoSemTransmissao)
       # rm(lpBalancoSemTransmissao)
-      # lpBalancoSemTransmissao <- read.lp(paste0("C:/CacheRBalanco/", periodo, "sh",andaNumSerie, "d", andaDemandas, "modeloBU.lp"), type = "lp")
+      # lpBalancoSemTransmissao <- read.lp(paste0("C:/CacheRBalanco/", periodo, "sh", idSerieHidro, "d", idDemanda, "modeloBU.lp"), type = "lp")
 
       # escalonamento
       lp.control(lpBalancoSemTransmissao, scaling = c("extreme", "logarithmic", "power2"))
@@ -286,7 +288,7 @@ balancoPeriodo <- function(periodo,
       if(solucaoSemTransmissao != 0) {
         dbDisconnect(conexao)
         stop(paste0("N\u00E3o foi encontrada solu\u00E7\u00E3o vi\u00E1vel para execu\u00E7\u00E3o com transmiss\u00E3o ilimitada de ", periodo, ",
-                    s\u00E9rie hidro ", andaNumSerie, ", demanda ", andaDemandas))
+                    s\u00E9rie hidro ", idSerieHidro, ", demanda ", idDemanda))
 
       }
       # Fim Balanco sem limite de transmissao
@@ -294,65 +296,65 @@ balancoPeriodo <- function(periodo,
       # gera resultado
       df.geracao$balanco <- round(get.variables(lpBalanco),2)
       df.geracao$balancoRedeIlimitada <- round(get.variables(lpBalancoSemTransmissao),2)
-      df.resultadoIteracao <- df.geracao %>% group_by(tipoUsina, subsistema) %>%
+      df.resultado <- df.geracao %>% group_by(tipoUsina, subsistema) %>%
         summarise(A16_VL_GMIN = round(sum(inflexibilidade),2), A16_VL_DESPACHO = round(sum(balanco * ifelse(sign(transmissao) == -1,-1,1)),2),
                   A16_VL_DESPACHO_REDE_ILIMITADA = round(sum(balancoRedeIlimitada * ifelse(sign(transmissao) == -1,-1,1)),2),
                   A16_VL_NAO_DESPACHADO = round((sum(disponibilidade) - A16_VL_DESPACHO),2))
-      df.resultadoIteracao <- ungroup(df.resultadoIteracao) # remove atributos do df criados pelo group by
-      df.resultadoIteracao$A01_TP_CASO <- tipoCaso
-      df.resultadoIteracao$A01_NR_CASO <- numeroCaso
-      df.resultadoIteracao$A01_CD_MODELO <- codModelo
-      df.resultadoIteracao$A09_NR_MES <- periodo
-      df.resultadoIteracao$A09_NR_SERIE <- andaNumSerie
-      df.resultadoIteracao$A10_NR_SEQ_FREQUENCIA <- andaDemandas
-      colnames(df.resultadoIteracao) <- c("A16_TP_GERACAO", "A02_NR_SUBSISTEMA", "A16_VL_GMIN", "A16_VL_DESPACHO", "A16_VL_DESPACHO_REDE_ILIMITADA",
+      df.resultado <- ungroup(df.resultado) # remove atributos do df criados pelo group by
+      df.resultado$A01_TP_CASO <- tipoCaso
+      df.resultado$A01_NR_CASO <- numeroCaso
+      df.resultado$A01_CD_MODELO <- codModelo
+      df.resultado$A09_NR_MES <- periodo
+      df.resultado$A09_NR_SERIE <- idSerieHidro
+      df.resultado$A10_NR_SEQ_FREQUENCIA <- idDemanda
+      colnames(df.resultado) <- c("A16_TP_GERACAO", "A02_NR_SUBSISTEMA", "A16_VL_GMIN", "A16_VL_DESPACHO", "A16_VL_DESPACHO_REDE_ILIMITADA",
                                           "A16_VL_NAO_DESPACHADO", "A01_TP_CASO", "A01_NR_CASO", "A01_CD_MODELO", "A09_NR_MES",
                                           "A09_NR_SERIE", "A10_NR_SEQ_FREQUENCIA")
 
-      # concatena resultados agregados do balanco
-      df.resultado <- rbind(df.resultado, df.resultadoIteracao)
+      # # concatena resultados agregados do balanco
+      # df.resultado <- rbind(df.resultado, df.resultadoIteracao)
 
       # gera resultados de CMO
       subsistemasReais <- df.subsistemas %>% filter(tipoSistema == 0) %>% select(subsistema) %>% pull()
       cmo <- get.dual.solution(lpBalanco) %>% round(2)
       # o primeiro valor de cmo e sempre 1, os calculados vao de 2 ate o numero de restricoes e limites de variaveis
       cmo <- cmo[2:(length(subsistemasReais)+1)]
-      df.resultadoCMOIteracao <- data.frame(A20_VL_CMO = cmo)
-      df.resultadoCMOIteracao$A01_TP_CASO <- tipoCaso
-      df.resultadoCMOIteracao$A01_NR_CASO <- numeroCaso
-      df.resultadoCMOIteracao$A01_CD_MODELO <- codModelo
-      df.resultadoCMOIteracao$A20_NR_MES <- periodo
-      df.resultadoCMOIteracao$A20_NR_SERIE <- andaNumSerie
-      df.resultadoCMOIteracao$A10_NR_SEQ_FREQUENCIA <- andaDemandas
-      df.resultadoCMOIteracao$A02_NR_SUBSISTEMA <- subsistemasReais
+      df.resultadoCMO <- data.frame(A20_VL_CMO = cmo)
+      df.resultadoCMO$A01_TP_CASO <- tipoCaso
+      df.resultadoCMO$A01_NR_CASO <- numeroCaso
+      df.resultadoCMO$A01_CD_MODELO <- codModelo
+      df.resultadoCMO$A20_NR_MES <- periodo
+      df.resultadoCMO$A20_NR_SERIE <- idSerieHidro
+      df.resultadoCMO$A10_NR_SEQ_FREQUENCIA <- idDemanda
+      df.resultadoCMO$A02_NR_SUBSISTEMA <- subsistemasReais
 
-      # concatena resultados agregados de CMO
-      df.resultadoCMO <- rbind(df.resultadoCMO, df.resultadoCMOIteracao)
+      # # concatena resultados agregados de CMO
+      # df.resultadoCMO <- rbind(df.resultadoCMO, df.resultadoCMOIteracao)
 
       # gera resultado por gerador
       if (balancoResumido == F) {
-        df.resultadoGeradorIteracao <- df.geracao
+        df.resultadoGerador <- df.geracao
         indicesTransmissao <- which(df.geracao$tipoUsina == 'TRANSMISSAO')
-        df.resultadoGeradorIteracao$codUsina[indicesTransmissao] <- abs(df.resultadoGeradorIteracao$transmissao[indicesTransmissao])
-        df.resultadoGeradorIteracao$A17_VL_NAO_DESPACHADO <- round((df.resultadoGeradorIteracao$disponibilidade - df.resultadoGeradorIteracao$balanco),2)
-        df.resultadoGeradorIteracao$balanco[indicesTransmissao] <-
-          df.resultadoGeradorIteracao$balanco[indicesTransmissao] * sign(df.resultadoGeradorIteracao$transmissao[indicesTransmissao])
-        df.resultadoGeradorIteracao$balancoRedeIlimitada[indicesTransmissao] <-
-          df.resultadoGeradorIteracao$balancoRedeIlimitada[indicesTransmissao] * sign(df.resultadoGeradorIteracao$transmissao[indicesTransmissao])
-        df.resultadoGeradorIteracao <- df.resultadoGeradorIteracao %>% select(-transmissao, -disponibilidade, -cvu)
-        df.resultadoGeradorIteracao$A01_TP_CASO <- tipoCaso
-        df.resultadoGeradorIteracao$A01_NR_CASO <- numeroCaso
-        df.resultadoGeradorIteracao$A01_CD_MODELO <- codModelo
-        df.resultadoGeradorIteracao$A09_NR_MES <- periodo
-        df.resultadoGeradorIteracao$A09_NR_SERIE <- andaNumSerie
-        df.resultadoGeradorIteracao$A10_NR_SEQ_FREQUENCIA <- andaDemandas
-        colnames(df.resultadoGeradorIteracao) <- c("A16_TP_GERACAO", "A17_CD_USINA", "A02_NR_SUBSISTEMA", "A17_VL_GMIN", "A17_VL_DESPACHO",
+        df.resultadoGerador$codUsina[indicesTransmissao] <- abs(df.resultadoGerador$transmissao[indicesTransmissao])
+        df.resultadoGerador$A17_VL_NAO_DESPACHADO <- round((df.resultadoGerador$disponibilidade - df.resultadoGerador$balanco),2)
+        df.resultadoGerador$balanco[indicesTransmissao] <-
+          df.resultadoGerador$balanco[indicesTransmissao] * sign(df.resultadoGerador$transmissao[indicesTransmissao])
+        df.resultadoGerador$balancoRedeIlimitada[indicesTransmissao] <-
+          df.resultadoGerador$balancoRedeIlimitada[indicesTransmissao] * sign(df.resultadoGerador$transmissao[indicesTransmissao])
+        df.resultadoGerador <- df.resultadoGerador %>% select(-transmissao, -disponibilidade, -cvu)
+        df.resultadoGerador$A01_TP_CASO <- tipoCaso
+        df.resultadoGerador$A01_NR_CASO <- numeroCaso
+        df.resultadoGerador$A01_CD_MODELO <- codModelo
+        df.resultadoGerador$A09_NR_MES <- periodo
+        df.resultadoGerador$A09_NR_SERIE <- idSerieHidro
+        df.resultadoGerador$A10_NR_SEQ_FREQUENCIA <- idDemanda
+        colnames(df.resultadoGerador) <- c("A16_TP_GERACAO", "A17_CD_USINA", "A02_NR_SUBSISTEMA", "A17_VL_GMIN", "A17_VL_DESPACHO",
                                                    "A17_VL_DESPACHO_REDE_ILIMITADA", "A17_VL_NAO_DESPACHADO", "A01_TP_CASO", "A01_NR_CASO",
                                                    "A01_CD_MODELO", "A09_NR_MES", "A09_NR_SERIE", "A10_NR_SEQ_FREQUENCIA")
-        df.resultadoGerador <- rbind(df.resultadoGerador, df.resultadoGeradorIteracao)
+        # df.resultadoGerador <- rbind(df.resultadoGerador, df.resultadoGeradorIteracao)
       }
-    }
-  }
+    # }
+  # }
   # limpa o valor infinito do valor nao dispachado dos deficts
   df.resultado <- df.resultado %>% mutate(A16_VL_NAO_DESPACHADO = replace(A16_VL_NAO_DESPACHADO, A16_TP_GERACAO %in% c('DEFICIT','TRANSMISSAO'), NA))
   if (balancoResumido == F) {
