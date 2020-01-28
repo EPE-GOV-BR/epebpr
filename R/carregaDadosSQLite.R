@@ -69,7 +69,7 @@ carregaDadosSQLite <- function(baseSQLite, pastaCaso, tipoCaso, numeroCaso, codM
     }
     seriesHidro <- seriesHidro$media
   } else {
-    stop("Simulacaoo final apos convergencia PDDE do NEWAVE deve ser com series sinteticas ou historicas!")
+    stop("Simulacao final apos convergencia PDDE do NEWAVE deve ser com series sinteticas ou historicas!")
   }
 
   df.dadosGerais$anoMesInicio

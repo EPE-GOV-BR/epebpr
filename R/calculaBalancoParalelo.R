@@ -23,6 +23,12 @@
 #' @export
 calculaBalancoParalelo <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, cvuTransmissao, cvuHidro, 
                                    cvuRenovaveis, cvuOutrasTermicas, balancoResumido = T) {
+  
+  # verifica se a pasta local para os arquivos temporarios do balanco existem. Caso nao, cria a pasta.
+  # if (!dir.exists("C:/CacheRBalanco")) {
+  #   dir.create("C:/CacheRBalanco")
+  # }
+  
   # abre conexao
   conexao <- dbConnect(RSQLite::SQLite(), baseSQLite)
   
@@ -161,14 +167,14 @@ calculaBalancoParalelo <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
   }
   
   # processamento paralelo
-  coresParaUso <- detectCores() - 2 # disponibiliza todos os cores da CPU menos 2, para nao travar a maquina do usuario
+  coresParaUso <- detectCores() - 1 # disponibiliza todos os cores da CPU menos 2, para nao travar a maquina do usuario
   clusterBalanco <- makeCluster(coresParaUso)
   registerDoParallel(clusterBalanco)
-  clusterExport(clusterBalanco, "balancoPeriodo")
+  clusterExport(clusterBalanco, "balancoPeriodoROI")
   
   quantidadeCenarios <- nrow(df.demandasAnoMesSerie)
   # calcula as janelas de 200 registros para inserir em lote
-  tamanhoJanela <- 200
+  tamanhoJanela <- 400
   janelaCenarios <- c(seq(1, quantidadeCenarios, tamanhoJanela), (quantidadeCenarios + 1))
   quantidadeJanela <- length(janelaCenarios)
 
@@ -178,7 +184,7 @@ calculaBalancoParalelo <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
     for (andaJanela in 1:(quantidadeJanela - 1)) {
       lt.resultado <- foreach(cenario = seq(janelaCenarios[andaJanela], (janelaCenarios[andaJanela + 1] - 1)),
                               .combine = "subRBind",
-                              .packages = c("dplyr", "lpSolveAPI", "DBI", "RSQLite"))  %dopar%  balancoPeriodo(df.demandasAnoMesSerie$anoMes[cenario],
+                              .packages = c("dplyr", "ROI", "DBI", "RSQLite"))  %dopar%  balancoPeriodoROI(df.demandasAnoMesSerie$anoMes[cenario],
                                                                                                                df.demandasAnoMesSerie$demanda[cenario],
                                                                                                                df.demandasAnoMesSerie$serie[cenario],
                                                                                                                balancoResumido, 
@@ -208,7 +214,7 @@ calculaBalancoParalelo <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
     for (andaJanela in 1:(quantidadeJanela - 1)) {
       lt.resultado <- foreach(cenario = seq(janelaCenarios[andaJanela], (janelaCenarios[andaJanela + 1] - 1)),
                               .combine = "subRBind",
-                              .packages = c("dplyr", "lpSolveAPI", "DBI", "RSQLite"))  %dopar%  balancoPeriodo(df.demandasAnoMesSerie$anoMes[cenario],
+                              .packages = c("dplyr", "ROI", "DBI", "RSQLite"))  %dopar%  balancoPeriodoROI(df.demandasAnoMesSerie$anoMes[cenario],
                                                                                                                df.demandasAnoMesSerie$demanda[cenario],
                                                                                                                df.demandasAnoMesSerie$serie[cenario], 
                                                                                                                balancoResumido, 

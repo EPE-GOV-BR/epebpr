@@ -1,12 +1,11 @@
-#' Faz a leitura da tabela com dados dos casos 
+#' Faz a leitura da tabela com dados dos casos
 #'
-#' Faz a leitura da tabela com dados dos casos (BPO_A01_CASOS_ANALISE)
+#' Faz a leitura da tabela com dados dos casos (BPO_A01_CASOS_ANALISE) e monta select input para interface grafica
 #'
 #' @param baseSQLite nome e localizacao da base SQLite do balanco de ponta
 #'
 #' @return \code{df.dadosCaso} data frame com dados dos casos (BPO_A01_CASOS_ANALISE)
 #'
-#' @export
 leituraTabelaDadosCasos <- function(baseSQLite) {
   conexaoSQLite <- dbConnect(RSQLite::SQLite(), baseSQLite)
   sql <- "SELECT A01_TP_CASO as tipoCaso, 

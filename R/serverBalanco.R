@@ -8,6 +8,7 @@
 #'
 #' @import shinybusy
 #'
+#' @export
 serverBalanco <- function(input, output, session) {
 
   ####### ABA BALANCO #######
@@ -29,7 +30,7 @@ serverBalanco <- function(input, output, session) {
   cvuRenovaveis <- 1e-5
   cvuOutrasTermicas <- 0.1 # valores de cvu 0
   
-  # monitora botao para criar base sqlite da barra lateral e abre janela para interecao com usuario (1)
+  # monitora botao para criar base sqlite da barra lateral e abre janela para interacao com usuario (1)
   observeEvent(input$btnCriaBaseSQLite, {
     showModal(
       modalDialog(
@@ -142,16 +143,16 @@ serverBalanco <- function(input, output, session) {
     #                                               potenciaLimiteTucurui)})
     
     # calcula balanco
-    # mensagem <- calculaBalancoParalelo(baseSQLite,
-    #                                    as.integer(input$tipoCaso),
-    #                                    as.integer(input$numeroCaso),
-    #                                    as.integer(input$codModelo),
-    #                                    cvuTransmissao,
-    #                                    cvuHidro,
-    #                                    cvuRenovaveis,
-    #                                    cvuOutrasTermicas,
-    #                                    as.logical(input$balancoResumido))
-    Sys.sleep(5)
+    mensagem <- calculaBalancoParalelo(baseSQLite,
+                                       as.integer(input$tipoCaso),
+                                       as.integer(input$numeroCaso),
+                                       as.integer(input$codModelo),
+                                       cvuTransmissao,
+                                       cvuHidro,
+                                       cvuRenovaveis,
+                                       cvuOutrasTermicas,
+                                       as.logical(input$balancoResumido))
+    # Sys.sleep(5)
     hide_spinner()
     # exibe tempo de execucao
     tempoExecucao <- toc(quiet = T)
@@ -172,29 +173,97 @@ serverBalanco <- function(input, output, session) {
   baseSQLiteGrafico <- ""
   
   # monitora botao de selecao de base existente
-  observeEvent(input$btnBaseSQLiteGrafico, withLogErrors({
-    baseSQLiteGrafico <<- choose.files(caption = "Escolha a base SQLite") # importante <<- para passar valor para variavel global
-    output$baseSQLiteGrafico <- renderText(baseSQLiteGrafico)
-    output$textoBaseSQLiteGrafico <- renderText("Base selecionada:")
-    df.casosInputGrafico <- leituraTabelaDadosCasos(baseSQLiteGrafico)
-    # monta lista para input
-    lt.casosInputGrafico <- as.list(df.casosInputGrafico$caso)
-    names(lt.casosInputGrafico) <- df.casosInputGrafico$descricao
-    lt.casosInputGrafico <- append(list("Selecione um Caso" = -1), lt.casosInputGrafico)
-    updateSelectInput(session, 
-                      inputId = "casoGrafico", 
-                      choices = lt.casosInputGrafico,
-                      selected = -1)
-    
-    output$tabelaDadosCasos <- renderDT(
-      datatable(data = leituraTabelaDadosCasos(baseSQLiteGrafico),
-                options = list(pageLength = 12,
-                               language = list(url = '//cdn.datatables.net/plug-ins/1.10.11/i18n/Portuguese-Brasil.json')),
-                rownames = FALSE,
-                selection = "none"))
-    # output$graficosCVar <- renderPlot({
-    #   graficoCVARMesTipo(baseSQLiteGrafico, 1, 8000, 1, 2020, 2029)
-    # }, 
-    # height = 700)
-  }))
+  observeEvent(input$btnBaseSQLiteGrafico, 
+               withLogErrors({
+                 baseSQLiteGrafico <<- choose.files(caption = "Escolha a base SQLite") # importante <<- para passar valor para variavel global
+                 output$baseSQLiteGrafico <- renderText(baseSQLiteGrafico)
+                 output$textoBaseSQLiteGrafico <- renderText("Base selecionada:")
+                 df.casosInputGrafico <- leituraTabelaDadosCasos(baseSQLiteGrafico)
+                 # monta lista para input
+                 lt.casosInputGrafico <- as.list(df.casosInputGrafico$caso)
+                 names(lt.casosInputGrafico) <- df.casosInputGrafico$descricao
+                 lt.casosInputGrafico <- append(list("Selecione um Caso" = -1), lt.casosInputGrafico)
+                 updateSelectInput(session, 
+                                   inputId = "casoGrafico", 
+                                   choices = lt.casosInputGrafico,
+                                   selected = -1)
+                 
+                 # output$tabelaDadosCasos <- renderDT(
+                 #   datatable(data = leituraTabelaDadosCasos(baseSQLiteGrafico),
+                 #             options = list(pageLength = 12,
+                 #                            language = list(url = '//cdn.datatables.net/plug-ins/1.10.11/i18n/Portuguese-Brasil.json')),
+                 #             rownames = FALSE,
+                 #             selection = "none"))
+               })
+  )
+  # monitora botao para exibir graficos
+  grafico <- eventReactive(input$btnGrafico, 
+                                {
+                                  validate(
+                                    need(input$anoInicioGrafico, HTML("Favor determinar o in\u00EDcio do horizonte para o gr\u00E1fico!")),
+                                    need(input$anoFimGrafico, HTML("Favor determinar o fim do horizonte para o gr\u00E1fico!")),
+                                    need(input$casoGrafico != -1, HTML("Favor selecionar um caso para o gr\u00E1fico!"))
+                                  )
+                                  show_spinner()
+                                  chaveGrafico <- c(input$casoGrafico %>% str_split(";") %>% unlist() %>% as.numeric())
+                                  if (as.numeric(input$tipoGrafico) == 4) {
+                                    withLogErrors({ 
+                                      grafico <- graficoRiscoDeficit(baseSQLiteGrafico, 
+                                                                     chaveGrafico[1], 
+                                                                     chaveGrafico[2], 
+                                                                     chaveGrafico[3], 
+                                                                     as.numeric(input$anoInicioGrafico), 
+                                                                     as.numeric(input$anoFimGrafico))
+                                      
+                                    })  
+                                  } else {
+                                    withLogErrors({
+                                      grafico <- graficoCVAR(baseSQLiteGrafico, 
+                                                             chaveGrafico[1], 
+                                                             chaveGrafico[2], 
+                                                             chaveGrafico[3], 
+                                                             as.numeric(input$anoInicioGrafico), 
+                                                             as.numeric(input$anoFimGrafico),
+                                                             as.numeric(input$tipoGrafico))
+                                      
+                                    })
+                                  }
+                                  hide_spinner()
+                                  return(grafico)
+                                })
+  
+  output$graficosCVar <- renderPlot(grafico(), height = 700)
+  
+  # monitora botao de download
+  output$btnDownload <- downloadHandler(
+    filename = function() {
+      chaveGrafico <- c(input$casoGrafico %>% str_split(";") %>% unlist() %>% as.numeric())
+      if (as.numeric(input$tipoGrafico) == 4) {
+        paste0("Risco de Deficit - Caso ", chaveGrafico[2], ".xlsx")
+      } else {
+        paste0("Profundidade de Deficit - CVAR - ", ifelse(as.numeric(input$tipoGrafico) == 3, "Ano", "Mes")," - Caso ", chaveGrafico[2], ".xlsx")
+      }
+    },
+    content = function(arquivoExcel) {
+      chaveGrafico <- c(input$casoGrafico %>% str_split(";") %>% unlist() %>% as.numeric())
+      if (as.numeric(input$tipoGrafico) == 4) {
+        write_xlsx(dadosGraficoRiscoDeficit(baseSQLiteGrafico, 
+                                            chaveGrafico[1], 
+                                            chaveGrafico[2], 
+                                            chaveGrafico[3], 
+                                            as.numeric(input$anoInicioGrafico), 
+                                            as.numeric(input$anoFimGrafico)),
+                   arquivoExcel)
+      } else {
+        write_xlsx(dadosGraficoCVAR(baseSQLiteGrafico, 
+                                    chaveGrafico[1], 
+                                    chaveGrafico[2], 
+                                    chaveGrafico[3], 
+                                    as.numeric(input$anoInicioGrafico), 
+                                    as.numeric(input$anoFimGrafico),
+                                    as.numeric(input$tipoGrafico)),
+                   arquivoExcel)
+      }
+    }
+  )
 }
