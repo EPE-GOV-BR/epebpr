@@ -2,10 +2,6 @@
 #'
 #' Executa a aplicacao web do Balanco de Ponta
 #'
-#' @import shiny
-#' @import shinythemes
-#' @importFrom base64enc dataURI
-#'
 #' @examples
 #' aplicacaoBalanco()
 #'

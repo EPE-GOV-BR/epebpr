@@ -112,16 +112,28 @@ balancoPeriodoClp <- function(periodo,
   
   # geracao total
   df.geracao <- rbind(df.geracaoHidro, df.geracaoRenovaveis, df.geracaoTermica, df.geracaoTransmissao, df.custoDefict)
+  # corrige pequenas distorcoes
+  df.geracao <- df.geracao %>% mutate(disponibilidade = ifelse(((disponibilidade - inflexibilidade) < 0.0001 & (disponibilidade - inflexibilidade) > -0.0001),
+                                                               inflexibilidade, disponibilidade))
   # geracao total para balanco sem restricao de transmissao
   df.geracaoSemTransmissao <- df.geracao %>% mutate(disponibilidade = replace(disponibilidade, tipoUsina == 'TRANSMISSAO', Inf))
   
-  # for (andaDemandas in 1:numeroDemandas) {
   # filtra demanda especifica (uso particular para carga liquida)
   df.demandaLiquida <- df.demanda %>% filter(anoMes == periodo & id == idDemanda) %>% select(subsistema, probOcorrencia, demanda)
   # critica de existencia de dados
   if(nrow(df.demandaLiquida) == 0) {
     dbDisconnect(conexao)
     stop(paste0("N\u00E3o h\u00E1 demanda (BPO_A10_DEMANDA) para o per\u00EDodo de ", periodo, " e demanda ", idDemanda))
+  }
+  
+  # # verifica inconsistencia de limites das variaveis
+  inconsistenciaLimites <- df.geracao$disponibilidade - df.geracao$inflexibilidade
+  inconsistenciaLimites <- inconsistenciaLimites < 0
+  inconsistenciaLimites <- any(inconsistenciaLimites == T)
+  if(inconsistenciaLimites) {
+    dbDisconnect(conexao)
+    stop(paste0("Problema de limites na gerac\u00E7\u00E3o para execu\u00E7\u00E3o de ",
+                periodo, ", s\u00E9rie hidro ", idSerieHidro, ", demanda ", idDemanda))
   }
   
   # Balanco
@@ -136,7 +148,7 @@ balancoPeriodoClp <- function(periodo,
   setObjDirCLP(lpBalanco, 1)
 
   # define restricoes
-  # sinais das variaeis - as variaveis podem ser geradores ou linhas de transmissao. 
+  # sinais das variaveis - as variaveis podem ser geradores ou linhas de transmissao. 
   # os geradores recebem valor 0 na coluna transmissao do data frame de geracao. As linhas transmissao recebem um codigo indicando os subsistemas ligados por ela
   # como cada linha e modelada como 2 geradores virtuais nos 2 sistemas que ela liga, um deles deve ter sinal negativo 
   # (retira energia de um sistema e alimenta outro)
@@ -276,7 +288,7 @@ balancoPeriodoClp <- function(periodo,
   rlb <- c(lbDemanda, lbTransmissao)
   
   loadProblemCLP(lp = lpBalancoSemTransmissao, 
-                 ncols = nrow(df.geracaoSemTransmissao$cvu), 
+                 ncols = nrow(df.geracaoSemTransmissao), 
                  nrows = nlinhas, 
                  ia = ia, 
                  ja = ja, 

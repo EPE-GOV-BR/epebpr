@@ -115,7 +115,6 @@ balancoPeriodoROI <- function(periodo,
   # corrige pequenas distorcoes
   df.geracao <- df.geracao %>% mutate(disponibilidade = ifelse(((disponibilidade - inflexibilidade) < 0.0001 & (disponibilidade - inflexibilidade) > -0.0001), 
                                                                inflexibilidade, disponibilidade))
-  
   # geracao total para balanco sem restricao de transmissao
   df.geracaoSemTransmissao <- df.geracao %>% mutate(disponibilidade = replace(disponibilidade, tipoUsina == 'TRANSMISSAO', Inf))
   
@@ -128,6 +127,7 @@ balancoPeriodoROI <- function(periodo,
     stop(paste0("N\u00E3o h\u00E1 demanda (BPO_A10_DEMANDA) para o per\u00EDodo de ", periodo, " e demanda ", idDemanda))
   }
   
+  # verifica inconsistencia de limites das variaveis
   inconsistenciaLimites <- df.geracao$disponibilidade - df.geracao$inflexibilidade 
   inconsistenciaLimites <- inconsistenciaLimites < 0
   inconsistenciaLimites <- any(inconsistenciaLimites == T)
@@ -145,7 +145,7 @@ balancoPeriodoROI <- function(periodo,
   # limiteInferiorColuna <= x <= limiteSuperiorColuna
 
   # define solver usado
-  solverBalanco <- "lpsolve" # lpsolve, glpk
+  solverBalanco <- "glpk" # lpsolve, glpk
   
   # define restricoes
   # sinais das variaeis - as variaveis podem ser geradores ou linhas de transmissao. 

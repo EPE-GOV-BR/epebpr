@@ -36,4 +36,7 @@ Depends: R (>= 3.6),
   jsonlite,
   parallel,
   foreach,
-  doParallel
+  doParallel,
+  numbers,
+  hash,
+  leitorrcepel

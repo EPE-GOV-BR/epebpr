@@ -10,22 +10,31 @@
 <body>
 	<button class="button" onclick="location.href='index.html'" style="position: absolute; right: 0;">Voltar</button>
 	<header>	
-		<h1>Informações Gerais</h1>
+		<h1>Informa&ccedil;&otilde;es Gerais</h1>
 	</header>
 	<br>
 	<h2>Desenvolvimento</h2>
 	<div class="boxed">
 		<h3>Linguagem e principais bibliotecas</h3>
 		<p>&bull; Ferramenta desenvolvida em linguagem <a href = "https://www.r-project.org/">R</a> versão 3.6.</p>
-		<p>&bull; Principal pacote utilizado foi o <a href ="https://cran.r-project.org/web/packages/quantreg/index.html" >quantreg</a> que contém métodos de estimativa e inferência para modelos de quantis condicionais.</p>
 		<p>&bull; Interface desenvolvida com <a href = "https://shiny.rstudio.com/">Shiny</a>. Este é um pacote R que facilita a criação de aplicações Web diretamente do R e utiliza CSS, widgets, html e ações JavaScript para maior flexibilidade.</p>
-		<p>&bull; Foi criado um repositório dentro do serviço de controle de versões Azure da EPE com o nome <font face = "Courier New">AMA_IdentificadorErros</font>, dentro projeto <font face = "Courier New">SGE-Modelos</font>.</p>
+		<p>&bull; A ferramente cria uma estrutura de dados usando SQLite onde todos as informa&ccedil;&otilde;es s&atilde;o armazenadas. Mais informa&ccedil;&otilde;es em: <a href="index_db.html">sobre a base</a>.</p>
 	</div>
 	<br>
-	<h2>Versão validada para uso</h2>
+	<h2>Dados de entrada</h2>
 	<div class="boxed">
-		<h3>Local</h3>
-		<p>&bull; X:\AMA\6 PROJETOS EM ANDAMENTO\AMA_IdentificadorErros</p>
+		<h3>Caso NEWAVE</h3>
+		<p>&bull; Possuir ou executar um caso que tenha gerado <font face = "Courier New">nwlistop</font> de <font face = "Courier New">ghtot e armfp </font>(04 e 20), de acordo com o tipo de simulação desejado (shist/sssint). Garantir o formato indicado pois os arquivos com sufixo "m" s&atilde;o de submercado e s&atilde;o necess&aacute;rios os de REEs.</p>
+		<p>&bull; A pasta onde se localiza o caso deve conter o arquivo relat&oacute;rio de sa&iacute;da da simula&ccedil;&atilde;o completa (<font face = "Courier New">relat, replaca ou pmo.dat</font>). Esses arquivos n&atilde;o podem ser da simulasimula&ccedil;&atilde;o final.</p>
+		<p>&bull; O arquivo <font face = "Courier New">exph</font> n&atilde;o pode conter TABs ??????????</p> 
+		<p>&bull; Mercado com todos os subsistemas (mesmo que com valor zerado)</p>
+		<p>&bull; A pasta onde se localiza o caso deve conter o arquivo <font face = "Courier New">dadosOFR.xlsx</font> que possui as contribui&ccedil;&otilde;es das renov&aacute;veis n&atilde;o despachadas para a ponta. O arquivo possui quatro abas: FatorPonta, RelacaoIndicativas, SazonalidadeIndicativas e TiposOutrasRenov&aacute;veis:</p>
+		<p style="margin-left: 20px">&bull; TiposOutrasRenov&aacute;veis: Nessa aba ficam as indica&ccedil;ões do tipo de contribui&ccedil;&atilde;o. A disponibilidade de potência pode ser considerada como sendo o valor m&eacute;io mensal da sua gera&ccedil;&atilde;o (tipo 2), ou uma contribui&ccedil;&atilde;o mensal informada em fun&ccedil;&atilde;o da pot&ecirc;ncia instalada (tipo 1). Para os casos do tipo 1, a tabela <font face = "Courier New">BPO_A19_FATOR_PONTA_OFR</font> deve ser preenchida. Esta informa&ccedil;&atilde;o deve ser inclu&iacute;da na aba <b>FatorPonta</b>. Para os casos do tipo 2, as informa&ccedil;&otilde;es ficam no arquivo excel GeraPeq.</p>
+		<p style="margin-left: 20px">&bull; FatorPonta: Nessa aba ficam os fatores de contribui&ccedil;&atilde;o mensal informados em fun&ccedil;&atilde;o da pot&ecirc;ncia instalada da fonte (tipo 1).<p>
+		<p style="margin-left: 20px">&bull; RelacaoIndicativas: Nessa aba ficam os dados de "de para" referente ao cabe&ccedil;alho do arquivo saidaExpansao.txt, oriundo do MDI.<p>
+		<p style="margin-left: 20px">&bull; SazonalidadeIndicativas: Nessa aba ficam os dados de sazonalidade das fontes indicativas da expans&atilde;o.<p>
+		<p>&bull; GeraPeq: <p>
+		<p>&bull; saidaExpansao.txt <p>
 	</div>
 	<br>
 	<h2>Implementação</h2>
@@ -55,18 +64,5 @@
 		<h3>app.R</h3>
 		<p>Arquivo com código R usando shiny que cria a interface de uso da ferramenta que verifica medições suspeitas em todos os instrumentos de uma estação AMA.<br>Consulte <a href="index_uso.html">Detalhes e explicações de utilização para usuarios</a> para mais informações sobre a interface.</p>
 	</div>
-	<br>
-	<h2>DSN do AMA corporativo</h2>
-	<div class="boxed">
-		<h3>Configuração</h3>
-		<p>&bull; No windows, abra o Administrador de fontes de dados ODBC (ODBC Data Sources (64-bits)), clique em "Adicionar" e siga as intruções das imagens abaixo:</p><br>
-		<img src = "../imagens/ODBC-DSN-AMA1.png"/><br>
-		<img src = "../imagens/ODBC-DSN-AMA2a.png"/><br>
-		<img src = "../imagens/ODBC-DSN-AMA2.png"/><br>
-		<img src = "../imagens/ODBC-DSN-AMA3.png"/><br>
-		<img src = "../imagens/ODBC-DSN-AMA4.png"/><br>
-		<img src = "../imagens/ODBC-DSN-AMA5.png"/>
-	</div>
-	<br>
 </body>
 </html>

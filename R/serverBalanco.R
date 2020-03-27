@@ -14,6 +14,8 @@ serverBalanco <- function(input, output, session) {
   ####### ABA BALANCO #######
   output$textoPasta <- renderText("Escolha a pasta do caso:")
   pastaCaso <- ""
+  output$textoPastaSaidas <- renderText("Escolha a pasta com com as sa\u00EDdas do caso (nwlistop):")
+  pastaSaidas <- ""
   output$textoBaseSQLite <- renderText("Escolha a base SQLite ou crie nova:")
   baseSQLite <- ""
   pastaBD <- ""
@@ -30,6 +32,7 @@ serverBalanco <- function(input, output, session) {
   cvuRenovaveis <- 1e-5
   cvuOutrasTermicas <- 0.1 # valores de cvu 0
   
+  ## eventos da janela popup ##
   # monitora botao para criar base sqlite da barra lateral e abre janela para interacao com usuario (1)
   observeEvent(input$btnCriaBaseSQLite, {
     showModal(
@@ -38,16 +41,19 @@ serverBalanco <- function(input, output, session) {
         div(style="display:inline-block;", HTML("Localiza&ccedil;&atilde;o da pasta:")),
         span(strong(textOutput(outputId = "pastaBDModal"), style = "color:red; display:inline-block")),
         actionButton(inputId = "btnProcurarPastaBD",
-                     label = "Pesquisar"),
+                     label = NULL,
+                     icon = icon("search")),
         textInput(inputId = "nomeBD",
                   label = HTML("Nome da base de dados"),
                   value = NULL #,
                   # placeholder = "bd_balanco_pde"
         ),
         footer = tagList(
-          modalButton("Cancel"),
+          modalButton(label = "     ",
+                      icon = icon("times")),
           actionButton(inputId = "btnCriaBaseSQLiteModal",
-                       label = "Criar Base")
+                       label = NULL,
+                       icon = icon("check"))
         )
       )
     )
@@ -81,6 +87,7 @@ serverBalanco <- function(input, output, session) {
       output$textoBaseSQLite <- renderText("Base selecionada:")
     }
   })
+  ## fim dos eventos da janela popup ##
 
   # monitora botao de selecao de base existente
   observeEvent(input$btnBaseSQLite, {
@@ -94,6 +101,13 @@ serverBalanco <- function(input, output, session) {
     pastaCaso <<- choose.dir(caption = "Escolha a pasta do caso") # importante <<- para passar valor para variavel global
     output$pasta <- renderText(pastaCaso)
     output$textoPasta <- renderText("Pasta do caso:")
+  })
+  
+  # monitora o botao de selecao da pasta de saidas do caso (nwlistop)
+  observeEvent(input$btnPastaSaidas, {
+    pastaSaidas <<- choose.dir(caption = "Escolha a pasta com as sa\u00EDdas do caso (nwlistop)") # importante <<- para passar valor para variavel global
+    output$pastaSaidas <- renderText(pastaSaidas)
+    output$textoPastaSaidas <- renderText("Pasta com as sa\u00EDdas do caso (nwlistop):")
   })
   
   # monitora o botao para encerrar o app
@@ -116,6 +130,7 @@ serverBalanco <- function(input, output, session) {
       # need(input$horasPonta, "Defina o n\u00FAmero de horas de ponta"),
       # need(input$descricao, "Caso sem descri\u00E7\u00E3o"),
       # need(pastaCaso != "", "Defina a pasta de caso"),
+      # need(pastaSaidas != "", "Defina a pasta com as sa\u00EDdas do caso (nwlistop)"),
       # need(baseSQLite != "", "Defina a base de dados SQLite"),
       # need(input$reservaOperativa, "Defina valor de reserva operativa (0-100%)")
       # need(input$sistemasNaoModulamPonta, "Defina os sistemas que n\u00E3o modulam na ponta"),

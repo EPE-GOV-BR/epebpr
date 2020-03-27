@@ -14,103 +14,203 @@
 	<header>	
 		<h1>Como Utilizar a ferramenta?</h1>
 	</header>
-		<br>
-		<h2>Selecionar opção de torre, índice ou todos</h2>
-		<div class="boxed">
-			<table>
-				<tr>
-					<td width = 370px>
-						<img src = "../imagens/barra_radio_bt.png" />
-					</td>
-					<td>
-						Neste botão de opção o usuário pode selecionar se deseja analisar um parque (ou estação de medição AMA), todas as estações AMA que fazem parte do índice eólico (considerando as estações de apoio ao índice), ou todas as estações cadastradas na base do AMA corporativa.<p>Parques do índice estão definidos em X:/AMA/6 PROJETOS EM ANDAMENTO/AMA_IdentificadorErros/indiceAMA.txt e indiceAMAAux.txt.</p> 
-					</td>
-				</tr>
-			</table>
-		</div>
-		<br>
-		<h2>Selecionar quinzena</h2>
-		<div class="boxed">
-			<table>
-				<tr>
-					<td width = 370px>
-						<img src = "../imagens/barra_quinzena.png" />
-					</td>
-					<td>
-						Nesta caixa de seleção o usuário pode escolher a quinzena que deseja analisar na procura de medições suspeitas. As opções estão entre a última quizena completa até a data de execução da ferramenta e a quinzena de 1-15/01/2018.
-					</td>
-				</tr>
-			</table>
-		</div>
-		<br>
-		<h2>Referência de medições suspeitas para que a ferramenta indique o resultado encontrado</h2>
-		<div class="boxed">
-			<table>
-				<tr>
-					<td width = 370px>
-						<img src = "../imagens/barra_min_erros.png" />
-					</td>
-					<td>
-						Neste campo o usuário pode informar a quantidade mínima de medições suspeitas que devem ser encontradas para que a ferramenta indique a necessidade de verificação. Esse parâmetro foi criado para diminuir a quantidade de avisos com falso erro. O valor padrão é de 20 medições suspeitas por instrumento.
-					</td>
-				</tr>
-			</table>
-		</div>
-		<br>
-		<h2>Selecionar Torre (ou estação) AMA</h2>
-		<div class="boxed">
-			<table>
-				<tr>
-					<td width = 370px>
-						<img src = "../imagens/barra_torre.png" />
-					</td>
-					<td>
-						Nesta caixa de seleção o usuário pode escolher qual a torre (ou estação) AMA será analisada dentre todas a cadastradas na base corporativa do AMA.<br>Essa caixa de seleção somente aparece quando o opção <b>Parque</b> do botão de opção está selecionada.
-					</td>
-				</tr>
-			</table>
-		</div>
-		<br>
-		<h2>Verificar novamente Torre (ou estação) AMA</h2>
-		<div class="boxed">
-			<table>
-				<tr>
-					<td width = 370px>
-						<img src = "../imagens/barra_forcar_analise.png" />
-					</td>
-					<td>
-						Nesta caixa de seleção o usuário pode escolher se vai analisar novamente uma torre (ou estação) AMA na procura de medições suspeitas. Caso a opção não esteja selecionada, a ferramenta só irá executar a análise de medições suspeitas caso a análise para a quinzena escolhida nunca tenha sido efetuada.<br>Essa caixa de seleção somente aparece quando o opção <b>Parque</b> do botão de opção está selecionada.
-					</td>
-				</tr>
-			</table>
-		</div>
-		<br>
-		<h2>Verificar novamente Torre (ou estação) AMA</h2>
-		<div class="boxed">
-			<table>
-				<tr>
-					<td width = 370px>
-						<img src = "../imagens/barra_graficos.png" />
-					</td>
-					<td>
-						Nesta caixa de seleção o usuário pode escolher se os gráficos de análise de medições suspeitas irão aparecer. A opção é feita por tipo de medição e instrumento. Os gráficos que irão aparecer, caso alguma opção seja selecionada, são de identificação das medições suspeitas pela ferramente, intervalo de confiança da regressão quantílica e comparação de medição entre instrumentos equivalentes e estações.<br>Essa caixa de seleção somente aparece quando o opção <b>Parque</b> do botão de opção está selecionada.
-					</td>
-				</tr>
-			</table>
-		</div>
-		<br>
-		<h2>Botão de Verificar Medições</h2>
-		<div class="boxed">
-			<table>
-				<tr>
-					<td width = 370px>
-						<img src = "../imagens/barra_btn.png" />
-					</td>
-					<td>
-						Este botão executa a ferramenta de verificação de medições suspeitas. Após a execução, será exibido um relatório com as medições suspeitas encontradas (caso haja e seja superior ao mínimo definido para aviso) e a tabela <font face = "Courier New">fat_comparacao_torre_ama</font> será atualizada com a data da quinzena analisada com referência nas opções selecionadas. Caso a ferramenta seja executa para o índice ou para todas as estações, o relatório também será gravado em: <br>X:/AMA/6 PROJETOS EM ANDAMENTO/AMA_IdentificadorErros/logErros/
-					</td>
-				</tr>
-			</table>
-		</div>
+	<br>
+	<h2>Barra de navega&ccedil;&atilde;o</h2>
+	<div class="boxed">
+		<table>
+			<tr>
+				<td width = 370px>
+					<img src = "../imagens/barra_navegacao.png" />
+				</td>
+				<td>
+					Na barra de navega&ccedil;&atilde;o pode-se acessar a aba do c&aacute;lculo do balan&ccedil;o de ponta, a aba de gr&aacute;ficos, o link para ajuda e o bot&atilde;o de sair.
+				</td>
+			</tr>
+		</table>
+	</div>
+	<br>
+	<h2>Selecionar o tipo de caso</h2>
+	<div class="boxed">
+		<table>
+			<tr>
+				<td width = 370px>
+					<img src = "../imagens/cb_tipo_caso.png" height = 70px />
+				</td>
+				<td>
+					Nesta caixa de sele&ccedil;&atilde;o o usu&aacute;rio deve escolher o tipo de caso que vai ser usado para a execu&ccedil;&atilde;o do balan&ccedil;o de ponta. As op&ccedil;&otilde;es s&atilde;o: PDE e PMO.
+				</td>
+			</tr>
+		</table>
+	</div>
+	<br>
+	<h2>Selecionar o modelo</h2>
+	<div class="boxed">
+		<table>
+			<tr>
+				<td width = 370px>
+					<img src = "../imagens/cb_modelo.png" height = 70px />
+				</td>
+				<td>
+					Nesta caixa de sele&ccedil;&atilde;o o usu&aacute;rio deve escolher o modelo utilizado no caso se refer&ecirc;ncia. As op&ccedil;&otilde;es s&atilde;o: NEWAVE e SUISHI.
+				</td>
+			</tr>
+		</table>
+	</div>
+	<br>
+	<h2>Selecionar o tipo de demanda</h2>
+	<div class="boxed">
+		<table>
+			<tr>
+				<td width = 370px>
+					<img src = "../imagens/cb_demanda.png" height = 70px />
+				</td>
+				<td>
+					Nesta caixa de sele&ccedil;&atilde;o o usu&aacute;rio deve escolher o tipo de demanda que ser&aacute; usada no c&aacute;lculo do balan&ccedil;o de ponta. As op&ccedil;&otilde;es s&atilde;o: Determin&iacute;stica ou L&iacute;quida. Com a demanda determin&iacute;stica ser&aacute; calculado o balan&ccedil;o com um valor de demanda por janela de tempo (m&ecirc;s). J&aacute; com a demanda l&iacute;quida, o balan&ccedil;o ser&aacute; calculado com uma distribui&ccedil;&atilde;o de valores de demanda formada pela demanda bruta menos as gera&ccedil;&otilde;es n&atilde;o control&aacute;veis.	
+				</td>
+			</tr>
+		</table>
+	</div>
+	<br>
+	<h2>Definir o n&uacute;mero do caso</h2>
+	<div class="boxed">
+		<table>
+			<tr>
+				<td width = 370px>
+					<img src = "../imagens/tb_caso.png" height = 70px />
+				</td>
+				<td>
+					Nesta caixa de texto o usu&aacute;rio deve definir o n&uacute;mero do caso em estudo.	
+				</td>
+			</tr>
+		</table>
+	</div>
+	<br>
+	<h2>Definir o n&uacute;mero de horas de ponta</h2>
+	<div class="boxed">
+		<table>
+			<tr>
+				<td width = 370px>
+					<img src = "../imagens/tb_horas_ponta.png" height = 70px />
+				</td>
+				<td>
+					Nesta caixa de texto o usu&aacute;rio deve definir o n&uacute;mero de horas de ponta para c&aacute;lculo do balan&ccedil;o de ponta. O valor padr&atilde;o usado pela EPE &eacute; de 10 horas.	
+				</td>
+			</tr>
+		</table>
+	</div>
+	<br>
+	<h2>Descri&ccedil;&atilde;o do caso</h2>
+	<div class="boxed">
+		<table>
+			<tr>
+				<td width = 370px>
+					<img src = "../imagens/tb_descricao.png" />
+				</td>
+				<td>
+					Nesta caixa de texto o usu&aacute;rio deve definir a descri&ccedil;&atilde;o do caso. Este campo &eacute; aberto para colocar as informa&ccedil;&otilde;es relevantes para descrever o caso.
+				</td>
+			</tr>
+		</table>
+	</div>
+	<br>
+	<h2>Selecionar os anos de pr&eacute; e p&oacute;s horizonte de estudo</h2>
+	<div class="boxed">
+		<table>
+			<tr>
+				<td width = 370px>
+					<img src = "../imagens/chk_estabilizacao.png" height = 50px />
+				</td>
+				<td>
+					Nestas caixas de valida&ccedil;&atilde;o o usu&aacute;rio pode escolher se os anos de estabiliza&ccedil;&atilde;o ser&atilde;o calculados no balan&ccedil;o de ponta ser&aacute;.
+				</td>
+			</tr>
+		</table>
+	</div>
+	<br>
+	<h2>Definir os reservat&oacute;rios equivalentes que n&atilde;o modulam e usar dados de m&eacute;dia</h2>
+	<div class="boxed">
+		<table>
+			<tr>
+				<td width = 370px>
+					<img src = "../imagens/tbs_ree_nao_modulam_media.png" height = 70px />
+				</td>
+				<td>
+					Nesta caixa de texto o usu&aacute;rio deve definir quais os c&oacute;digos dos REEs que ter&atilde;o como disponibilidade de pot&ecirc;ncia a geração hidr&aacute;ulica m&eacute;dia. Exemplo de preenchimento para REEs 6,7 e 9: 6, 7, 9
+				</td>
+			</tr>
+		</table>
+	</div>
+	<br>
+	<h2>Definir os reservat&oacute;rios equivalentes que n&atilde;o modulam e usar dados de ponta</h2>
+	<div class="boxed">
+		<table>
+			<tr>
+				<td width = 370px>
+					<img src = "../imagens/tbs_ree_nao_modulam_ponta.png" height = 70px />
+				</td>
+				<td>
+					Nesta caixa de texto o usu&aacute;rio deve definir quais os c&oacute;digos dos REEs que ter&atilde;o como disponibilidade de pot&ecirc;ncia a geração hidr&aacute;ulica da ponta. Exemplo de preenchimento para REEs 6,7 e 9: 6, 7, 9
+				</td>
+			</tr>
+		</table>
+	</div>
+	<br>
+	<h2>Definir base SQLite existente para gravar o balan&ccedil;o de ponta</h2>
+	<div class="boxed">
+		<table>
+			<tr>
+				<td width = 370px>
+					<img src = "../imagens/btn_pesquisar_base.png" height = 70px />
+				</td>
+				<td>
+					Ao pressionar o bot&atilde;o indicado, o usu&aacute;rio poder&aacute; selecionar a base SQLite onde ser&atilde;o gravadas as informa&ccedil;&otilde;es do balan&ccedil;o de ponta.
+				</td>
+			</tr>
+		</table>
+	</div>
+	<br>
+	<h2>Criar base SQLite para gravar o balan&ccedil;o de ponta</h2>
+	<div class="boxed">
+		<table>
+			<tr>
+				<td width = 370px>
+					<img src = "../imagens/btn_criar_base.png" height = 70px />
+				</td>
+				<td>
+					Ao pressionar o bot&atilde;o indicado, a janela mostrada abaixo ser&aacute; aberta para o usu&aacute;rio. Nela ser&aacute; solicitada a escolha do local e a do nome da base SQLite onde ser&atilde;o gravadas as informa&ccedil;&otilde;es do balan&ccedil;o de ponta.<br>
+					<img src = "../imagens/janela_nova_base.png" height = 200px />
+				</td>
+			</tr>
+		</table>
+	</div>
+	<br>
+	<h2>Selecionar a localiza&ccedil;&atilde;o dos arquivos com dados do caso para o balan&ccedil;o de ponta</h2>
+	<div class="boxed">
+		<table>
+			<tr>
+				<td width = 370px>
+					<img src = "../imagens/btn_pasta_caso.png" height = 65px />
+				</td>
+				<td>
+					Ao pressionar o bot&atilde;o indicado, o usu&aacute;rio poder&aacute; selecionar a pasta onde est&atilde;o os arquivos do caso do NEWAVE ou do SUISHI que ser&atilde;o usados para o c&aacute;culo do balan&ccedil;o de ponta.
+				</td>
+			</tr>
+		</table>
+	</div>
+	<br>
+	<h2>Calcular o balan&ccedil;o de ponta</h2>
+	<div class="boxed">
+		<table>
+			<tr>
+				<td width = 370px>
+					<img src = "../imagens/btn_calcula_balanco.png" height = 65px />
+				</td>
+				<td>
+					Ao pressionar o bot&atilde;o indicado, o usu&aacute;rio irá executar o c&aacute;culo do balan&ccedil;o de ponta. Caso a caixa de sele&ccedil;&atilde;o esteja marcada, ser&atilde;o gravadas somente as informa&ccedil;&otilde;es por REE (<font face = "Courier New">BPO_A16_BALANCO e BPO_A20_BALANCO_SUBSISTEMA</font>). Se estiver desmarcada, as informa&ccedil;&otilde;es de despacho por gerador tamb&eacute;m ser&atildeo gravadas (<font face = "Courier New">BPO_A17_BALANCO_GERADOR</font>).
+				</td>
+			</tr>
+		</table>
+	</div>
+	<br>
 </body>
 </html>

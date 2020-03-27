@@ -38,6 +38,8 @@ uiBalanco <- fluidPage(
                                     img(src = "imagens/close.png", onmouseover = "this.src = 'imagens/close-red.png'", onmouseout = "this.src = 'imagens/close.png'",
                                         height = "34px", title = "Encerrar Balan\u00E7o")))),
     windowTitle = HTML("Balan&ccedil;o"),
+    
+    # Painel principal do balanco
     tabPanel(HTML("Balan&ccedil;o de Ponta"),
              sidebarLayout(
                sidebarPanel(#width = 5,
@@ -136,37 +138,41 @@ uiBalanco <- fluidPage(
                  #                  min = 1,
                  #                  value = NULL)),
 
-                 tags$b(HTML("Considera anos de estabiliza&ccedil&atilde;o:")),
-                 br(),
-                 div(style="display:inline-block",
-                     checkboxInput(inputId = "anosPre",
-                                   value = F,
-                                   label = HTML("Pr&eacute;"))),
-                 div(style = "display:inline-block; width:10px"),
-                 div(style="display:inline-block",
-                     checkboxInput(inputId = "anosPos",
-                                   value = F,
-                                   label = HTML("P&oacute;s"))),
-                 br(),
+                 # Check box dos anos de estabilizacao
+                 # tags$b(HTML("Considera anos de estabiliza&ccedil&atilde;o:")),
+                 # br(),
+                 # div(style="display:inline-block",
+                 #     checkboxInput(inputId = "anosPre",
+                 #                   value = F,
+                 #                   label = HTML("Pr&eacute;"))),
+                 # 
+                 # div(style = "display:inline-block; width:10px"),
+                 # 
+                 # div(style="display:inline-block",
+                 #     checkboxInput(inputId = "anosPos",
+                 #                   value = F,
+                 #                   label = HTML("P&oacute;s"))),
+                 # br(),
 
-                 tags$b(HTML("REEs N&atilde;o Modulam:&nbsp;")),
-                 # Entrada para sistemas que nao modulam na ponta
-                 div(style="display:inline-block; width:150px",
-                     textInput(inputId = "sistemasNaoModulamPonta",
-                               label = HTML("GHPonta NW:"),
-                               value = NULL,
-                               placeholder = "sist1, sist2, etc.")),
-
-                 # Espaco entre inputs
-                 div(style="display:inline-block; width:7px"),
-
-                 # Entrada para sistemas que nao modulam na media
-                 div(style="display:inline-block; width:150px",
-                     textInput(inputId = "sistemasNaoModulamMedia",
-                               label = HTML("GHM&eacute;dia NW:"),
-                               value = NULL,
-                               placeholder = "sist1, sist2, etc.")),
-                 br(),
+                 wellPanel(style = "padding: 5px;",
+                           tags$b(HTML("REEs N&atilde;o Modulam")),
+                           br(),
+                           # Entrada para sistemas que nao modulam na ponta
+                           div(style="display:inline-block; width:150px",
+                               textInput(inputId = "sistemasNaoModulamPonta",
+                                         label = HTML("GHPonta:"),
+                                         value = NULL,
+                                         placeholder = "sist1, sist2, etc.")),
+                           
+                           # Espaco entre inputs
+                           div(style="display:inline-block; width:7px"),
+                           
+                           # Entrada para sistemas que nao modulam na media
+                           div(style="display:inline-block; width:150px",
+                               textInput(inputId = "sistemasNaoModulamMedia",
+                                         label = HTML("GHM&eacute;dia:"),
+                                         value = NULL,
+                                         placeholder = "sist1, sist2, etc."))),
                  # tags$b(HTML("Tucuru&iacute;")),
                  # br(),
                  # wellPanel(style = "padding: 5px 5px 0px 10px;", # style top right bottom left
@@ -219,6 +225,16 @@ uiBalanco <- fluidPage(
                               label = NULL,
                               icon = icon("search"),
                               width = 77),
+                 
+                 # Localiza a pasta de dados de saida do caso (nwlistop)
+                 div(style = "height:8px"),
+                 textOutput(outputId = "textoPastaSaidas"),
+                 span(strong(textOutput(outputId = "pastaSaidas"), style = c("color:red"))),
+                 div(style = "height:3px"),
+                 actionButton(inputId = "btnPastaSaidas",
+                              label = NULL,
+                              icon = icon("search"),
+                              width = 77),
 
                  # Action button
                  div(style = "height:8px"),
@@ -241,6 +257,7 @@ uiBalanco <- fluidPage(
                )
              )
     ),
+    # Painel de graficos
     tabPanel(HTML("Gr&aacute;ficos"),
              sidebarLayout(
                sidebarPanel(# width = 3,

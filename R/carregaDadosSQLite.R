@@ -65,11 +65,11 @@ carregaDadosSQLite <- function(baseSQLite, pastaCaso, tipoCaso, numeroCaso, codM
       mutate(seriesHidro = fimHistorico - inicioHistorico) %>%
       summarise(media = mean(seriesHidro), minimo = min(seriesHidro), maximo = max(seriesHidro))
     if (seriesHidro$media != seriesHidro$minimo | seriesHidro$media != seriesHidro$maximo | seriesHidro$minimo != seriesHidro$maximo) {
-      stop("Series hidro nao possuem mesmo horizonte cadastrado no arquivo confhd!")
+      stop("S\u00E9ries hidro n\u00E3o possuem mesmo horizonte cadastrado no arquivo confhd!")
     }
     seriesHidro <- seriesHidro$media
   } else {
-    stop("Simulacao final apos convergencia PDDE do NEWAVE deve ser com series sinteticas ou historicas!")
+    stop("Simula\u00E7\u00E3o final ap\u00F3s converg\u00EAncia PDDE do NEWAVE deve ser com s\u00E9ries sint\u00E9ticas ou hist\u00F3ricas!")
   }
 
   df.dadosGerais$anoMesInicio

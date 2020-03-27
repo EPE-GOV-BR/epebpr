@@ -29,10 +29,6 @@
 #' \code{BPO_A20_BALANCO_SUBSISTEMA} (\code{df.resultadoCMO})
 #' }
 #'
-#' @import lpSolveAPI
-#' @import dplyr
-#' @import DBI
-#'
 #' @examples
 #' \dontrun{
 #' balancoPeriodo(201901, T, conexao, df.custoDefict, df.geracaoTermicaTotal,
@@ -112,6 +108,9 @@ balancoPeriodo <- function(periodo,
   
   # geracao total
   df.geracao <- rbind(df.geracaoHidro, df.geracaoRenovaveis, df.geracaoTermica, df.geracaoTransmissao, df.custoDefict)
+  # corrige pequenas distorcoes
+  df.geracao <- df.geracao %>% mutate(disponibilidade = ifelse(((disponibilidade - inflexibilidade) < 0.0001 & (disponibilidade - inflexibilidade) > -0.0001), 
+                                                               inflexibilidade, disponibilidade))
   # geracao total para balanco sem restricao de transmissao
   df.geracaoSemTransmissao <- df.geracao %>% mutate(disponibilidade = replace(disponibilidade, tipoUsina == 'TRANSMISSAO', Inf))
   
@@ -121,6 +120,16 @@ balancoPeriodo <- function(periodo,
   if(nrow(df.demandaLiquida) == 0) {
     dbDisconnect(conexao)
     stop(paste0("N\u00E3o h\u00E1 demanda (BPO_A10_DEMANDA) para o per\u00EDodo de ", periodo, " e demanda ", idDemanda))
+  }
+  
+  # verifica inconsistencia de limites das variaveis
+  inconsistenciaLimites <- df.geracao$disponibilidade - df.geracao$inflexibilidade 
+  inconsistenciaLimites <- inconsistenciaLimites < 0
+  inconsistenciaLimites <- any(inconsistenciaLimites == T)
+  if(inconsistenciaLimites) {
+    dbDisconnect(conexao)
+    stop(paste0("Problema de limites na gerac\u00E7\u00E3o para execu\u00E7\u00E3o de ", 
+                periodo, ", s\u00E9rie hidro ", idSerieHidro, ", demanda ", idDemanda))
   }
   
   # Balanco
