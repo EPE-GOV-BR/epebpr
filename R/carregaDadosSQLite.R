@@ -6,6 +6,7 @@
 #'
 #' @param baseSQLite nome e localizacao da base SQLite do balanco de ponta
 #' @param pastaCaso localizacao da pasta com os arquivos do NEWAVE do caso a ser analisado no balanco de ponta
+#' @param pastaSaidas localizacao dos arquivos de saida do modulo NWLISTOP
 #' @param tipoCaso valor inteiro. 1:PDE; 2:PMO e 3;Garantia Fisica
 #' @param numeroCaso valor inteiro com o numero do caso
 #' @param codModelo valor inteiro com o codigo do modelo. 1:NEWAVE; 2:SUISHI
@@ -13,50 +14,28 @@
 #' @param horasPonta valor inteiro com o numero de horas de ponta
 #' @param reservaOperativa valor com a reserva operativa usada no calculo do balanco. Ex. 0.05
 #' @param idDemandaLiquida identificador de calculo com demanda liquida. 1:Demanda Liquida; 0:Deterministica
-#' @param anosPre numero de anos iniciais para fins de estabilizacao no calculo da politica
-#' @param anosPos numero de anos finais para fins de estabilizacao no calculo da politica
 #' @param sistemasNaoModulamPonta vetor numerico com codigos dos sitemas que nao modulam na ponta
 #' @param sistemasNaoModulamMedia vetor numerico com codigos dos sitemas que nao modulam na media
-#' @param codTucurui codigo atribuido para a usina de Tucurui ###############################
-#' @param cotaLimiteTucurui valor da cota da usina de Tucurui em metros
+#' @param codTucurui codigo atribuido para a usina de Tucurui
+#' @param cotaLimiteTucurui valor da cota da usina de Tucurui [m]
 #' @param geracaoLimiteTucurui valor da geracao limite da usina de Tucurui
 #'
 #'
 #' @return \code{mensagem} vetor de caracteres com a mensagem de sucesso de gravacao na base
 #'
 #' @export
-carregaDadosSQLite <- function(baseSQLite, pastaCaso, tipoCaso, numeroCaso, codModelo, descricaoCaso, horasPonta, reservaOperativa, idDemandaLiquida,
-                               anosPre, anosPos, sistemasNaoModulamPonta, sistemasNaoModulamMedia,
+carregaDadosSQLite <- function(baseSQLite, pastaCaso, pastaSaidas, tipoCaso, numeroCaso, codModelo, descricaoCaso, horasPonta, reservaOperativa, 
+                               idDemandaLiquida, sistemasNaoModulamPonta, sistemasNaoModulamMedia,
                                codTucurui, cotaLimiteTucurui, geracaoLimiteTucurui, anoMesInicioMDI = NA, anoMesFimMDI = NA) {
-  # identifica os arquivos do NEWAVE para leitura
-  df.arquivos <- leituraArquivos(pastaCaso)
-  # de acordo com o manual do NEWAVE o arquivo de dados gerais fica na linha 1
-  arquivoDger <- df.arquivos %>% filter(row_number() == 1) %>% select(arquivo) %>% pull() %>% paste(pastaCaso, ., sep = "/")
-  # de acordo com o manual do NEWAVE o arquivo de sistema fica na linha 2
-  arquivoSistema <- df.arquivos %>% filter(row_number() == 2) %>% select(arquivo) %>% pull() %>% paste(pastaCaso, ., sep = "/")
-  # de acordo com o manual do NEWAVE o arquivo de sistema fica na linha 3
-  arquivoConfhd <- df.arquivos %>% filter(row_number() == 3) %>% select(arquivo) %>% pull() %>% paste(pastaCaso, ., sep = "/")
-  # de acordo com o manual do NEWAVE o arquivo de REE fica na linha 36
-  arquivoREE <- df.arquivos %>% filter(row_number() == 36) %>% select(arquivo) %>% pull() %>% paste(pastaCaso, ., sep = "/")
-
   # pega dados gerais do NEWAVE
-  df.dadosGerais <- leituraDadosGerais(arquivoDger)
+  df.dadosGerais <- leituraDadosGerais(pastaCaso)
   # pega dados de configuracao hidro
-  df.configuracaoHidro <- leituraConfiguracaoHidro(arquivoConfhd)
-
-  # define inicio e fim de caso dependendo da opcao informada
-  if (!anosPre) {
-    inicioCaso <- ((df.dadosGerais$anoInicio + df.dadosGerais$anosPre) * 100) + df.dadosGerais$mesInicio
-  } else {
-    inicioCaso <- df.dadosGerais$anoInicio * 100 + df.dadosGerais$mesInicio
-  }
-
-  if (!anosPos) {
-    fimCaso <- (df.dadosGerais$anoInicio + df.dadosGerais$duracaoEstudo - df.dadosGerais$anosPos - 1) * 100 + 12
-  } else {
-    fimCaso <- (df.dadosGerais$anoInicio + df.dadosGerais$duracaoEstudo - 1) * 100 + 12
-  }
-
+  df.configuracaoHidro <- leituraConfiguracaoHidro(pastaCaso)
+  
+  # define inicio e fim de caso
+  inicioCaso <- df.dadosGerais$anoInicio * 100 + df.dadosGerais$mesInicio
+  fimCaso <- (df.dadosGerais$anoInicio + df.dadosGerais$duracaoEstudo - 1) * 100 + 12
+  
   # define o numero de series utilizadas no estudo
   if (df.dadosGerais$tipoSimulacao == 1) {
     seriesHidro <- df.dadosGerais$seriesSinteticas
@@ -71,13 +50,16 @@ carregaDadosSQLite <- function(baseSQLite, pastaCaso, tipoCaso, numeroCaso, codM
   } else {
     stop("Simula\u00E7\u00E3o final ap\u00F3s converg\u00EAncia PDDE do NEWAVE deve ser com s\u00E9ries sint\u00E9ticas ou hist\u00F3ricas!")
   }
-
+  
   df.dadosGerais$anoMesInicio
-
+  
   # inicio do processo de gravacao das tabelas BPO_A01_CASOS_ANALISE, BPO_A02_SUBSISTEMAS, BPO_A02_REES e BPO_A19_FATOR_PONTA_OFR
   # abre conexao
   conexao <- dbConnect(RSQLite::SQLite(), baseSQLite)
-
+  
+  # abre transacao com o banco de dados para gravar somente se tudo der certo
+  dbExecute(conexao, "BEGIN TRANSACTION;")
+  
   # BPO_A01_CASOS_ANALISE
   # limpa a tabela de uma eventual rodada anterior
   query <- paste0("SELECT COUNT(*) AS TOTAL FROM BPO_A01_CASOS_ANALISE WHERE A01_TP_CASO = ", tipoCaso, " AND A01_NR_CASO = ", numeroCaso,
@@ -88,7 +70,7 @@ carregaDadosSQLite <- function(baseSQLite, pastaCaso, tipoCaso, numeroCaso, codM
                     " AND A01_CD_MODELO = ", codModelo)
     dbExecute(conexao, query)
   }
-
+  
   df.casosAnalise <- data.frame(A01_TP_CASO = tipoCaso,
                                 A01_NR_CASO = numeroCaso,
                                 A01_CD_MODELO = codModelo,
@@ -105,7 +87,7 @@ carregaDadosSQLite <- function(baseSQLite, pastaCaso, tipoCaso, numeroCaso, codM
                                 A01_NR_MES_FIM_MDI = ifelse(tipoCaso == 1, anoMesFimMDI, NA))
   # salva BPO_A01_CASOS_ANALISE
   dbWriteTable(conexao, "BPO_A01_CASOS_ANALISE", df.casosAnalise, append = T)
-
+  
   # BPO_A02_SUBSISTEMAS
   # limpa a tabela de uma eventual rodada anterior
   query <- paste0("SELECT COUNT(*) AS TOTAL FROM BPO_A02_SUBSISTEMAS WHERE A01_TP_CASO = ", tipoCaso, " AND A01_NR_CASO = ", numeroCaso,
@@ -116,17 +98,17 @@ carregaDadosSQLite <- function(baseSQLite, pastaCaso, tipoCaso, numeroCaso, codM
                     " AND A01_CD_MODELO = ", codModelo)
     dbExecute(conexao, query)
   }
-
-  df.sistema <- leituraSistema(arquivoSistema)
-  names(df.sistema) <- c("A02_NR_SUBSISTEMA","A02_TX_DESCRICAO_SUBSISTEMA","A02_TP_FICTICIO", "A02_VL_CUSTO_DEFICIT")
-  df.sistema$A01_TP_CASO <- tipoCaso
-  df.sistema$A01_NR_CASO <- numeroCaso
-  df.sistema$A01_CD_MODELO <- codModelo
-
+  
+  df.sistema <- leituraDeficitSistema(pastaCaso) %>% filter(patamar == 1) %>% 
+    select(A02_NR_SUBSISTEMA = codSubsistema,
+           A02_TX_DESCRICAO_SUBSISTEMA = nomeSubsistema,
+           A02_TP_FICTICIO = tipoFicticio,
+           A02_VL_CUSTO_DEFICIT = custoDefict) %>% 
+    mutate(A01_TP_CASO = tipoCaso, A01_NR_CASO = numeroCaso, A01_CD_MODELO = codModelo)
+  
   # salva BPO_A02_SUBSISTEMAS
   dbWriteTable(conexao, "BPO_A02_SUBSISTEMAS", df.sistema, append = T)
-
-
+  
   # BPO_A02_REES
   # limpa a tabela de uma eventual rodada anterior
   query <- paste0("SELECT COUNT(*) AS TOTAL FROM BPO_A02_REES WHERE A01_TP_CASO = ", tipoCaso, " AND A01_NR_CASO = ", numeroCaso,
@@ -137,49 +119,91 @@ carregaDadosSQLite <- function(baseSQLite, pastaCaso, tipoCaso, numeroCaso, codM
                     " AND A01_CD_MODELO = ", codModelo)
     dbExecute(conexao, query)
   }
-
-  df.ree <- leituraREE(arquivoREE)
+  
+  df.ree <- leituraREE(pastaCaso)
   names(df.ree) <- c("A02_NR_REE", "A02_TX_DESCRICAO_REE", "A02_NR_SUBSISTEMA")
   df.ree$A01_TP_CASO <- tipoCaso
   df.ree$A01_NR_CASO <- numeroCaso
   df.ree$A01_CD_MODELO <- codModelo
   df.ree$A02_TP_CALC_POTENCIA <- 1
-
+  
   # define os valores do calculo de potencia passados pelo usuario
   df.ree <- df.ree %>% mutate(A02_TP_CALC_POTENCIA = ifelse(A02_NR_REE %in% sistemasNaoModulamPonta, 2, A02_TP_CALC_POTENCIA))
   df.ree <- df.ree %>% mutate(A02_TP_CALC_POTENCIA = ifelse(A02_NR_REE %in% sistemasNaoModulamMedia, 3, A02_TP_CALC_POTENCIA))
-
+  
   # salva BPO_A02_REES
   dbWriteTable(conexao, "BPO_A02_REES", df.ree, append = T)
-
-  # BPO_A19_FATOR_PONTA_OFR
-  # limpa a tabela de uma eventual rodada anterior
-  query <- paste0("SELECT COUNT(*) AS TOTAL FROM BPO_A19_FATOR_PONTA_OFR WHERE A01_TP_CASO = ", tipoCaso, " AND A01_NR_CASO = ", numeroCaso,
-                  " AND A01_CD_MODELO = ", codModelo)
-  apagar <- dbGetQuery(conexao, query) %>% pull()
-  if (apagar > 0) {
-    query <- paste0("DELETE FROM BPO_A19_FATOR_PONTA_OFR WHERE A01_TP_CASO = ", tipoCaso, " AND A01_NR_CASO = ", numeroCaso,
-                    " AND A01_CD_MODELO = ", codModelo)
-    dbExecute(conexao, query)
-  }
-
-  arquivoDadosOFR <- paste(pastaCaso, "dadosOFR.xlsx", sep = "/")
-  if (!file.exists(arquivoDadosOFR)) {
-    stop(paste0("arquivo ", arquivoDadosOFR, " com dados de oferta renov\u00E1vel n\u00E3o encontrado!"))
-  }
-  df.fatorPontaOFR <- read_xlsx(arquivoDadosOFR, sheet = "FatorPonta")
-  df.fatorPontaOFR$A01_TP_CASO <- tipoCaso
-  df.fatorPontaOFR$A01_NR_CASO <- numeroCaso
-  df.fatorPontaOFR$A01_CD_MODELO <- codModelo
-
-  # salva BPO_A19_FATOR_PONTA_OFR
-  dbWriteTable(conexao, "BPO_A19_FATOR_PONTA_OFR", df.fatorPontaOFR, append = T)
-
+  
+  # grava dados das usinas hidreletricas na tabela BPO_A03_DADOS_UHE 
+  gravaDadosUsinasHidroBDBP(pastaCaso, conexao, tipoCaso, numeroCaso, codModelo)
+  
+  # grava dados referentes aos conjuntos e maquinas das usinas hidreletricas do NEWAVE na tabela BPO_A04_MAQUINAS_UHE
+  gravacaoDadosMaquinasHidroBDBP(pastaCaso, conexao, tipoCaso, numeroCaso, codModelo)
+  
+  # grava dados das usinas hidreletricas ao longo do horizonte de simulacao do NEWAVE na tabela BPO_A05_DADOS_VIGENTES_UHE
+  # gravacaoDadosHidroVigenteBDBP(pastaCaso, conexao, tipoCaso, numeroCaso, codModelo)
+  
+  # grava dados de armazenamento e geracao das usinas hidraulicas na tabela BPO_A06_SAIDA_HIDRO_NEWAVE
+  # gravaSaidasNewaveBDBP(pastaCaso, pastaSaidas, conexao, tipoCaso, numeroCaso, codModelo)
+  
+  # grava dados de demanda de ponta do NEWAVE na tabela BPO_A10_DEMANDA
+  # gravacaoDadosDemandaBDBP(pastaCaso, conexao, tipoCaso, numeroCaso, codModelo)
+  
+  # grava dados dos limites de intercambio ao longo do horizonte de simulacao do NEWAVE na tabela BPO_A11_INTERCAMBIOS
+  gravacaoDadosIntercambioBDBP(pastaCaso, conexao, tipoCaso, numeroCaso, codModelo)
+  
+  # grava dados dos limites dos agrupamento de intercambios ao longo do horizonte de simulacao do NEWAVE na tabela BPO_A12_LIMITE_AGRUPAMENTOS_INTERCAMBIO
+  gravacaoDadosLimitesAgrupIntercambioBDBP(pastaCaso, conexao, tipoCaso, numeroCaso, codModelo)
+  
+  # grava dados de agrupamento dos intercambios do NEWAVE na tabela BPO_A15_AGRUPAMENTOS_INTERCAMBIO
+  gravacaoDadosAgrupIntercambioBDBP(pastaCaso, conexao, tipoCaso, numeroCaso, codModelo)
+  
+  # grava dados das usinas termeletricas ao longo do horizonte de simulacao do NEWAVE na tabela BPO_A14_DISPONIBILIDADE_UTE
+  gravacaoDadosTermeletricasBDBP(pastaCaso, conexao, tipoCaso, numeroCaso, codModelo)
+  
+  # grava dados de disponilidade das outras fontes renovaveis do NEWAVE na tabela BPO_A13_DISPONIBILIDADE_OFR do BDBP. 
+  # alem disso, grava as tabelas de apoio BPO_A18_TIPOS_OFR e BPO_A19_FATOR_PONTA_OFR
+  gravacaoDadosDisponibilidadeOutrasFontesBDBP(pastaCaso, conexao, tipoCaso, numeroCaso, codModelo, anoMesInicioMDI, anoMesFimMDI)
+  
+  # # BPO_A18_TIPOS_OFR
+  # # limpa a tabela de uma eventual rodada anterior
+  # query <- "SELECT COUNT(*) AS TOTAL FROM BPO_A18_TIPOS_OFR"
+  # apagar <- dbGetQuery(conexao, query) %>% pull()
+  # if (apagar > 0) {
+  #   query <- "DELETE FROM BPO_A18_TIPOS_OFR"
+  #   dbExecute(conexao, query)
+  # }
+  # 
+  # arquivoDadosOFR <- paste(pastaCaso, "dadosOFR.xlsx", sep = "/")
+  # if (!file.exists(arquivoDadosOFR)) {
+  #   stop(paste0("arquivo ", arquivoDadosOFR, " com dados de oferta renov\u00E1vel n\u00E3o encontrado!"))
+  # }
+  # df.tiposOFR <- read_xlsx(arquivoDadosOFR, sheet = "TiposOutrasFontes")
+  # 
+  # # salva BPO_A18_TIPOS_OFR
+  # dbWriteTable(conexao, "BPO_A18_TIPOS_OFR", df.tiposOFR, append = T)
+  # 
+  # # BPO_A19_FATOR_PONTA_OFR
+  # # limpa a tabela de uma eventual rodada anterior
+  # query <- paste0("SELECT COUNT(*) AS TOTAL FROM BPO_A19_FATOR_PONTA_OFR WHERE A01_TP_CASO = ", tipoCaso, " AND A01_NR_CASO = ", numeroCaso,
+  #                 " AND A01_CD_MODELO = ", codModelo)
+  # apagar <- dbGetQuery(conexao, query) %>% pull()
+  # if (apagar > 0) {
+  #   query <- paste0("DELETE FROM BPO_A19_FATOR_PONTA_OFR WHERE A01_TP_CASO = ", tipoCaso, " AND A01_NR_CASO = ", numeroCaso,
+  #                   " AND A01_CD_MODELO = ", codModelo)
+  #   dbExecute(conexao, query)
+  # }
+  # 
+  # df.fatorPontaOFR <- read_xlsx(arquivoDadosOFR, sheet = "FatorPonta") %>% 
+  #   mutate(A01_TP_CASO = tipoCaso, A01_NR_CASO = numeroCaso, A01_CD_MODELO = codModelo)
+  # 
+  # # salva BPO_A19_FATOR_PONTA_OFR
+  # dbWriteTable(conexao, "BPO_A19_FATOR_PONTA_OFR", df.fatorPontaOFR, append = T)
+  
+  # efetua commit no banco de dados confirmando todas as gravacoes com sucesso
+  dbExecute(conexao, "COMMIT TRANSACTION;")
   # fecha conexao
   dbDisconnect(conexao)
-
-  return("Sucesso!")
-  }
-
-# # converte planilha de pequenas em arquivo csv para usar no Julia
-# leituraPlanilhaRenovaveis(pastaCaso, tipoCaso, anoMesInicioMDI, anoMesFimMDI)
+  
+  return("Leitura e grava\u00E7\u00E3o dos dados do NEWAVE efetuadas com sucesso!")
+}

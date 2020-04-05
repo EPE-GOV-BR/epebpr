@@ -24,11 +24,6 @@
 calculaBalancoParalelo <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, cvuTransmissao, cvuHidro, 
                                    cvuRenovaveis, cvuOutrasTermicas, balancoResumido = T) {
   
-  # verifica se a pasta local para os arquivos temporarios do balanco existem. Caso nao, cria a pasta.
-  # if (!dir.exists("C:/CacheRBalanco")) {
-  #   dir.create("C:/CacheRBalanco")
-  # }
-  
   # abre conexao
   conexao <- dbConnect(RSQLite::SQLite(), baseSQLite)
   

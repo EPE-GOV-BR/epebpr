@@ -109,25 +109,25 @@ uiBalanco <- fluidPage(
                            label = HTML("Descri&ccedil;&atilde;o do Caso:"),
                            value = NULL),
 
-                 # # Entrada para inicio da serie
-                 # div(style="display:inline-block; width:100px",
-                 #     numericInput(inputId = "anoMesInicioMDI",
-                 #                  label = HTML("In&iacute;cio MDI:"),
-                 #                  min = 201801,
-                 #                  max = 205012,
-                 #                  value = NULL)),
-                 #
-                 # # Espaco entre inputs
-                 # div(style="display:inline-block; width:7px"),
-                 #
-                 # # Entrada para fim da serie
-                 # div(style="display:inline-block; width:100px",
-                 #     numericInput(inputId = "anoMesFimMDI",
-                 #                  label = HTML("Fim MDI:"),
-                 #                  min = 201801,
-                 #                  max = 205012,
-                 #                  value = NULL)),
-                 #
+                 # Entrada para inicio da serie
+                 div(style="display:inline-block; width:100px",
+                     numericInput(inputId = "anoMesInicioMDI",
+                                  label = HTML("In&iacute;cio MDI:"),
+                                  min = 201801,
+                                  max = 205012,
+                                  value = 201901)),
+
+                 # Espaco entre inputs
+                 div(style="display:inline-block; width:7px"),
+
+                 # Entrada para fim da serie
+                 div(style="display:inline-block; width:100px",
+                     numericInput(inputId = "anoMesFimMDI",
+                                  label = HTML("Fim MDI:"),
+                                  min = 201801,
+                                  max = 205012,
+                                  value = 203312)),
+                 
                  # # Espaco entre inputs
                  # div(style="display:inline-block; width:7px"),
                  #
@@ -161,7 +161,7 @@ uiBalanco <- fluidPage(
                            div(style="display:inline-block; width:150px",
                                textInput(inputId = "sistemasNaoModulamPonta",
                                          label = HTML("GHPonta:"),
-                                         value = NULL,
+                                         value = "2",
                                          placeholder = "sist1, sist2, etc.")),
                            
                            # Espaco entre inputs
@@ -171,37 +171,8 @@ uiBalanco <- fluidPage(
                            div(style="display:inline-block; width:150px",
                                textInput(inputId = "sistemasNaoModulamMedia",
                                          label = HTML("GHM&eacute;dia:"),
-                                         value = NULL,
+                                         value = "6, 8, 13",
                                          placeholder = "sist1, sist2, etc."))),
-                 # tags$b(HTML("Tucuru&iacute;")),
-                 # br(),
-                 # wellPanel(style = "padding: 5px 5px 0px 10px;", # style top right bottom left
-                 #           # Entrada para codigo de Tucurui
-                 #           div(style="display:inline-block; width:80px",
-                 #               numericInput(inputId = "codTucurui",
-                 #                            label = HTML("C&oacute;digo:"),
-                 #                            min = 1,
-                 #                            value = 275)),
-                 # 
-                 #           # Espaco entre inputs
-                 #           div(style="display:inline-block; width:7px"),
-                 # 
-                 #           # Entrada para cota limite de Tucurui
-                 #           div(style="display:inline-block; width:120px",
-                 #               numericInput(inputId = "cotaLimiteTucurui",
-                 #                            label = HTML("Cota Limite [m]:"),
-                 #                            min = 1,
-                 #                            value = 62)),
-                 #           # Espaco entre inputs
-                 #           div(style="display:inline-block; width:7px"),
-                 # 
-                 #           # Entrada para geracao limite de Tucurui
-                 #           div(style="display:inline-block; width:150px",
-                 #               numericInput(inputId = "geracaoLimiteTucurui",
-                 #                            label = HTML("Gera&ccedil;&atilde;o Limite [???]:"),
-                 #                            min = 1,
-                 #                            value = 4000))
-                 # ),
 
                  # Localiza base SQLite
                  textOutput(outputId = "textoBaseSQLite"),
@@ -253,6 +224,7 @@ uiBalanco <- fluidPage(
 
                # Output:
                mainPanel(
+                 htmlOutput(outputId = "avisos"),
                  htmlOutput(outputId = "selecao")
                )
              )

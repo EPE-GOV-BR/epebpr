@@ -14,37 +14,32 @@
 #'
 #' @export
 calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, tipoCaso, numeroCaso, codModelo, codTucurui) {
-  # identifica os arquivos do NEWAVE para leitura
-  df.arquivos <- leituraArquivos(pastaCaso)
-  # de acordo com o manual do NEWAVE o arquivo de submotorizacao fica na posicao 13
-  arquivoSubmotorizacao <- df.arquivos %>% filter(row_number() == 13) %>% select(arquivo) %>% pull() %>% paste(pastaCaso, ., sep = "/")
-  
   # SQLite
   conexaoSQLite <- dbConnect(RSQLite::SQLite(), baseSQLite)
   
   sql <- paste0("SELECT A01_NR_MES_INICIO as dataInicioCaso,
-              A01_NR_MES_FIM as dataFimCaso,
-              A01_NR_HORAS_PONTA as horasPonta,
-              A01_NR_GERACAO_LIMITE_TUCURUI as gerLimiteTucurui,
-              A01_NR_COTA_LIMITE_TUCURUI as cotaLimiteTucurui
-              FROM BPO_A01_CASOS_ANALISE
-              WHERE
-              A01_TP_CASO = ", tipoCaso, " AND
-              A01_NR_CASO = ", numeroCaso, " AND
-              A01_CD_MODELO = ", codModelo, ";")
+                  A01_NR_MES_FIM as dataFimCaso,
+                  A01_NR_HORAS_PONTA as horasPonta,
+                  A01_NR_GERACAO_LIMITE_TUCURUI as gerLimiteTucurui,
+                  A01_NR_COTA_LIMITE_TUCURUI as cotaLimiteTucurui
+                  FROM BPO_A01_CASOS_ANALISE
+                  WHERE
+                  A01_TP_CASO = ", tipoCaso, " AND
+                  A01_NR_CASO = ", numeroCaso, " AND
+                  A01_CD_MODELO = ", codModelo, ";")
   df.dadosCaso <- dbGetQuery(conexaoSQLite, sql)
   
   # atualizacao de submotorizacao
   sql <- paste0("SELECT A02_NR_REE, A02_NR_SUBSISTEMA, A02_TX_DESCRICAO_REE
-              FROM BPO_A02_REES
-              WHERE
-              A01_TP_CASO = ", tipoCaso, " AND
-              A01_NR_CASO = ", numeroCaso, " AND
-              A01_CD_MODELO = ", codModelo, ";")
+                  FROM BPO_A02_REES
+                  WHERE
+                  A01_TP_CASO = ", tipoCaso, " AND
+                  A01_NR_CASO = ", numeroCaso, " AND
+                  A01_CD_MODELO = ", codModelo, ";")
   df.subsistemas <- dbGetQuery(conexaoSQLite, sql)
   
-  df.submotorizacaoREE <- leituraSubmotorizacaoREE(arquivoSubmotorizacao) %>%
-    inner_join(df.subsistemas, by = c("ree" = "A02_TX_DESCRICAO_REE")) %>%
+  df.submotorizacaoREE <- leituraSubmotorizacaoREE(pastaCaso) %>%
+    inner_join(df.subsistemas, by = c("nomeREE" = "A02_TX_DESCRICAO_REE")) %>%
     filter(anoMes >= df.dadosCaso$dataInicioCaso, anoMes <= df.dadosCaso$dataFimCaso)
   # cria lista para passar os parametros para update
   lt.submotorizacaoREE <- list(ree = df.submotorizacaoREE$A02_NR_REE, anoMes = df.submotorizacaoREE$anoMes,
@@ -63,53 +58,124 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, tipoCaso, numeroC
   dbExecute(conexaoSQLite, "COMMIT TRANSACTION;")
   # fim atualizacao de submotorizacao
   
-  sql <- paste0("SELECT A05.A01_TP_CASO AS A01_TP_CASO,
-              A05.A01_NR_CASO AS A01_NR_CASO,
-              A05.A01_CD_MODELO AS A01_CD_MODELO,
-              A05.A03_CD_USINA AS A03_CD_USINA,
-              A05.A05_NR_MES AS A08_NR_MES,
-              A06.A06_NR_SERIE AS A08_NR_SERIE,
-              A05.A02_NR_REE AS A02_NR_REE,
-              (A05.A05_VL_VOL_MAX - A05.A05_VL_VOL_MIN) * A06.A06_VL_PERC_ARMAZENAMENTO + A05.A05_VL_VOL_MIN AS A08_VL_VOLUME_OPERATIVO,
-              A03_NR_PCV_0, A03_NR_PCV_1, A03_NR_PCV_2, A03_NR_PCV_3, A03_NR_PCV_4,
-              A03_VL_PERDA, A03_TP_PERDA, A03_VL_PRODUTIBILIDADE,
-              A05_NR_CANAL_FUGA_MEDIO,
-              A05_VL_TEIF, A05_VL_IP,
-              A05_VL_VAZAO_MINIMA,
-              A06_VL_GERACAO_HIDRAULICA + A06_VL_SUBMOTORIZACAO AS A06_VL_GERACAO_HIDRAULICA,
-              ROUND(A05_VL_POTENCIA - POT_TOTAL, 2) AS VL_POT_EXP
-              FROM BPO_A03_DADOS_UHE A03,
-              BPO_A05_DADOS_VIGENTES_UHE A05,
-              BPO_A06_SAIDA_HIDRO_NEWAVE A06,
-              (SELECT A01_TP_CASO, A01_NR_CASO, A01_CD_MODELO, A03_CD_USINA,
-              SUM(A04_NR_MAQUINAS * A04_VL_POTENCIA) AS POT_TOTAL
-              FROM BPO_A04_MAQUINAS_UHE
-              GROUP BY A01_TP_CASO, A01_NR_CASO, A01_CD_MODELO, A03_CD_USINA) A04
-              WHERE
-              A03.A01_TP_CASO = A05.A01_TP_CASO AND
-              A03.A01_NR_CASO = A05.A01_NR_CASO AND
-              A03.A01_CD_MODELO = A05.A01_CD_MODELO AND
-              A03.A03_CD_USINA = A05.A03_CD_USINA AND
-              A05.A01_TP_CASO = A06.A01_TP_CASO AND
-              A05.A01_NR_CASO = A06.A01_NR_CASO AND
-              A05.A01_CD_MODELO = A06.A01_CD_MODELO AND
-              A05.A02_NR_REE = A06.A02_NR_REE AND
-              A05.A05_NR_MES = A06.A06_NR_MES AND
-              A03.A01_TP_CASO = A04.A01_TP_CASO AND
-              A03.A01_NR_CASO = A04.A01_NR_CASO AND
-              A03.A01_CD_MODELO = A04.A01_CD_MODELO AND
-              A03.A03_CD_USINA = A04.A03_CD_USINA AND
-              A03.A03_TX_STATUS <> 'NC' AND
-              A05.A05_NR_MES BETWEEN ", df.dadosCaso$dataInicioCaso , " AND ", df.dadosCaso$dataFimCaso, " AND
-              A05.A02_NR_REE IN (SELECT A02_NR_REE FROM BPO_A02_REES
-              WHERE A02_TP_CALC_POTENCIA = 1 AND
-              A01_TP_CASO = ", tipoCaso, " AND
-              A01_NR_CASO = ", numeroCaso, " AND
-              A01_CD_MODELO = ", codModelo,") AND
-              A03.A01_TP_CASO = ", tipoCaso, " AND
-              A03.A01_NR_CASO = ", numeroCaso, " AND
-              A03.A01_CD_MODELO = ", codModelo, ";")
-  df.dadosCalculadosUHE <- dbGetQuery(conexaoSQLite, sql)
+  # sql <- paste0("SELECT A05.A01_TP_CASO AS A01_TP_CASO,
+  #             A05.A01_NR_CASO AS A01_NR_CASO,
+  #             A05.A01_CD_MODELO AS A01_CD_MODELO,
+  #             A05.A03_CD_USINA AS A03_CD_USINA,
+  #             A05.A05_NR_MES AS A08_NR_MES,
+  #             A06.A06_NR_SERIE AS A08_NR_SERIE,
+  #             A05.A02_NR_REE AS A02_NR_REE,
+  #             (A05.A05_VL_VOL_MAX - A05.A05_VL_VOL_MIN) * A06.A06_VL_PERC_ARMAZENAMENTO + A05.A05_VL_VOL_MIN AS A08_VL_VOLUME_OPERATIVO,
+  #             A03_NR_PCV_0, A03_NR_PCV_1, A03_NR_PCV_2, A03_NR_PCV_3, A03_NR_PCV_4,
+  #             A03_VL_PERDA, A03_TP_PERDA, A03_VL_PRODUTIBILIDADE,
+  #             A05_NR_CANAL_FUGA_MEDIO,
+  #             A05_VL_TEIF, A05_VL_IP,
+  #             A05_VL_VAZAO_MINIMA,
+  #             A06_VL_GERACAO_HIDRAULICA + A06_VL_SUBMOTORIZACAO AS A06_VL_GERACAO_HIDRAULICA,
+  #             ROUND(A05_VL_POTENCIA - POT_TOTAL, 2) AS VL_POT_EXP
+  #             FROM BPO_A03_DADOS_UHE A03,
+  #             BPO_A05_DADOS_VIGENTES_UHE A05,
+  #             BPO_A06_SAIDA_HIDRO_NEWAVE A06,
+  #             (SELECT A01_TP_CASO, A01_NR_CASO, A01_CD_MODELO, A03_CD_USINA,
+  #             SUM(A04_NR_MAQUINAS * A04_VL_POTENCIA) AS POT_TOTAL
+  #             FROM BPO_A04_MAQUINAS_UHE
+  #             GROUP BY A01_TP_CASO, A01_NR_CASO, A01_CD_MODELO, A03_CD_USINA) A04
+  #             WHERE
+  #             A03.A01_TP_CASO = A05.A01_TP_CASO AND
+  #             A03.A01_NR_CASO = A05.A01_NR_CASO AND
+  #             A03.A01_CD_MODELO = A05.A01_CD_MODELO AND
+  #             A03.A03_CD_USINA = A05.A03_CD_USINA AND
+  #             A05.A01_TP_CASO = A06.A01_TP_CASO AND
+  #             A05.A01_NR_CASO = A06.A01_NR_CASO AND
+  #             A05.A01_CD_MODELO = A06.A01_CD_MODELO AND
+  #             A05.A02_NR_REE = A06.A02_NR_REE AND
+  #             A05.A05_NR_MES = A06.A06_NR_MES AND
+  #             A03.A01_TP_CASO = A04.A01_TP_CASO AND
+  #             A03.A01_NR_CASO = A04.A01_NR_CASO AND
+  #             A03.A01_CD_MODELO = A04.A01_CD_MODELO AND
+  #             A03.A03_CD_USINA = A04.A03_CD_USINA AND
+  #             A03.A03_TX_STATUS <> 'NC' AND
+  #             A05.A05_NR_MES BETWEEN ", df.dadosCaso$dataInicioCaso , " AND ", df.dadosCaso$dataFimCaso, " AND
+  #             A05.A02_NR_REE IN (SELECT A02_NR_REE FROM BPO_A02_REES
+  #             WHERE A02_TP_CALC_POTENCIA = 1 AND
+  #             A01_TP_CASO = ", tipoCaso, " AND
+  #             A01_NR_CASO = ", numeroCaso, " AND
+  #             A01_CD_MODELO = ", codModelo,") AND
+  #             A03.A01_TP_CASO = ", tipoCaso, " AND
+  #             A03.A01_NR_CASO = ", numeroCaso, " AND
+  #             A03.A01_CD_MODELO = ", codModelo, ";")
+  # df.dadosCalculadosUHE <- dbGetQuery(conexaoSQLite, sql)
+  
+  # filtro dos ree com calculo tipo 1
+  sql <- paste0("SELECT A02_NR_REE FROM BPO_A02_REES
+                 WHERE A02_TP_CALC_POTENCIA = 1 AND
+                  A01_TP_CASO = ", tipoCaso, " AND
+                  A01_NR_CASO = ", numeroCaso, " AND
+                  A01_CD_MODELO = ", codModelo)
+  reeCalcPotencia1 <- dbGetQuery(conexaoSQLite, sql) %>% pull(A02_NR_REE) %>% paste(collapse = ", ")
+  
+  sql <- paste0("SELECT 
+                  A03_CD_USINA,
+                  A03_NR_PCV_0, A03_NR_PCV_1, A03_NR_PCV_2, A03_NR_PCV_3, A03_NR_PCV_4,
+                  A03_VL_PERDA, A03_TP_PERDA, A03_VL_PRODUTIBILIDADE 
+                 FROM BPO_A03_DADOS_UHE
+                 WHERE
+                  A03_TX_STATUS <> 'NC' AND
+                  A01_TP_CASO = ", tipoCaso, " AND
+                  A01_NR_CASO = ", numeroCaso, " AND
+                  A01_CD_MODELO = ", codModelo, " AND 
+                  A02_NR_REE IN (", reeCalcPotencia1, ")")
+  df.dadosUHE <- dbGetQuery(conexaoSQLite, sql)
+  
+  sql <- paste0("SELECT A03_CD_USINA,
+                  SUM(A04_NR_MAQUINAS * A04_VL_POTENCIA) AS POT_TOTAL
+                 FROM BPO_A04_MAQUINAS_UHE
+                 WHERE
+                  A01_TP_CASO = ", tipoCaso, " AND
+                  A01_NR_CASO = ", numeroCaso, " AND
+                  A01_CD_MODELO = ", codModelo, " 
+                 GROUP BY A01_TP_CASO, A01_NR_CASO, A01_CD_MODELO, A03_CD_USINA")
+  df.dadosMaquinasUHE <- dbGetQuery(conexaoSQLite, sql)
+  
+  
+  sql <- paste0("SELECT A03_CD_USINA, A05_NR_MES, A02_NR_REE,              
+                  A05_NR_CANAL_FUGA_MEDIO, A05_VL_VOL_MAX, A05_VL_VOL_MIN, A05_VL_VAZAO_MINIMA, A05_VL_TEIF, A05_VL_IP, A05_VL_POTENCIA
+                 FROM BPO_A05_DADOS_VIGENTES_UHE
+                 WHERE
+                  A05_NR_MES BETWEEN ", df.dadosCaso$dataInicioCaso , " AND ", df.dadosCaso$dataFimCaso, " AND
+                  A01_TP_CASO = ", tipoCaso, " AND
+                  A01_NR_CASO = ", numeroCaso, " AND
+                  A01_CD_MODELO = ", codModelo, " AND 
+                  A02_NR_REE IN (", reeCalcPotencia1, ")")
+  df.dadosVigentesUHE <- dbGetQuery(conexaoSQLite, sql)
+  
+  
+  sql <- paste0("SELECT A02_NR_REE, A06_NR_MES, A06_NR_SERIE, A06_VL_PERC_ARMAZENAMENTO, A06_VL_GERACAO_HIDRAULICA, A06_VL_SUBMOTORIZACAO 
+               FROM BPO_A06_SAIDA_HIDRO_NEWAVE
+               WHERE
+                A06_NR_MES BETWEEN ", df.dadosCaso$dataInicioCaso , " AND ", df.dadosCaso$dataFimCaso, " AND
+                A01_TP_CASO = ", tipoCaso, " AND
+                A01_NR_CASO = ", numeroCaso, " AND
+                A01_CD_MODELO = ", codModelo, " AND 
+                A02_NR_REE IN (", reeCalcPotencia1, ")")
+  df.saidasHidro <- dbGetQuery(conexaoSQLite, sql)
+  
+  
+  df.dadosCalculadosUHE <- inner_join(df.dadosVigentesUHE, df.saidasHidro, by = c("A02_NR_REE", "A05_NR_MES" = "A06_NR_MES")) %>% 
+    mutate(A08_VL_VOLUME_OPERATIVO = (A05_VL_VOL_MAX - A05_VL_VOL_MIN) * A06_VL_PERC_ARMAZENAMENTO + A05_VL_VOL_MIN, 
+           A06_VL_GERACAO_HIDRAULICA = A06_VL_GERACAO_HIDRAULICA + A06_VL_SUBMOTORIZACAO)
+  
+  df.dadosCalculadosUHE <- inner_join(df.dadosCalculadosUHE, df.dadosMaquinasUHE, by = "A03_CD_USINA") %>% 
+    mutate(VL_POT_EXP = round(A05_VL_POTENCIA - POT_TOTAL, 2))
+  
+  df.dadosCalculadosUHE <- inner_join(df.dadosCalculadosUHE, df.dadosUHE, by = "A03_CD_USINA") %>% 
+    mutate(A01_TP_CASO = tipoCaso, A01_NR_CASO = numeroCaso, A01_CD_MODELO = codModelo) %>% 
+    select(A01_TP_CASO, A01_NR_CASO, A01_CD_MODELO, A03_CD_USINA, A08_NR_MES = A05_NR_MES, A08_NR_SERIE = A06_NR_SERIE, A02_NR_REE, 
+           A08_VL_VOLUME_OPERATIVO, A03_NR_PCV_0, A03_NR_PCV_1, A03_NR_PCV_2, A03_NR_PCV_3, A03_NR_PCV_4, 
+           A03_VL_PERDA, A03_TP_PERDA, A03_VL_PRODUTIBILIDADE, A05_NR_CANAL_FUGA_MEDIO, A05_VL_TEIF, A05_VL_IP, 
+           A05_VL_VAZAO_MINIMA, A06_VL_GERACAO_HIDRAULICA, VL_POT_EXP)
+  
+  rm(df.dadosVigentesUHE, df.saidasHidro, df.dadosMaquinasUHE, df.dadosUHE, reeCalcPotencia1)
   
   # 2 - COTA OPERATIVA(per,ser) => CALCULADA a partir do VOLUME OPERATIVO(per,ser) e do polinomio cota-volume
   # 3 - ALTURA DE QUEDA LIQUIDA(per,ser) => CALCULADA a partir da COTA OPERATIVA(per,ser), CANAL DE FUGA MEDIO (per) e Perdas
@@ -137,25 +203,25 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, tipoCaso, numeroC
   # 4 - POTENCIA MaXIMA(per,ser)
   # 4.1) PARA POTENCIA REFERENTE AOS CONJUNTOS Ja EXISTENTES: ALTURA DE REFERENCIA DO CONJUNTO >= ALTURA DE QUEDA
   sql <- paste0("SELECT A.A01_TP_CASO,
-              A.A01_NR_CASO,
-              A.A01_CD_MODELO,
-              A.A03_CD_USINA,
-              A04_NR_MAQUINAS,
-              A04_VL_POTENCIA,
-              A04_NR_CONJUNTO,
-              A.A04_VL_ALTURA_REFERENCIA,
-              CASE B.A03_TP_TURBINA WHEN 1 THEN 1.5 WHEN 3 THEN 1.5 ELSE 1.2 END VL_COEF_TURBINA
-              FROM
-              BPO_A04_MAQUINAS_UHE A,
-              BPO_A03_DADOS_UHE B
-              WHERE
-              A.A01_CD_MODELO = B.A01_CD_MODELO AND
-              A.A01_NR_CASO = B.A01_NR_CASO AND
-              A.A01_TP_CASO = B.A01_TP_CASO AND
-              A.A03_CD_USINA = B.A03_CD_USINA AND
-              A.A01_TP_CASO = ", tipoCaso, " AND
-              A.A01_NR_CASO = ", numeroCaso, " AND
-              A.A01_CD_MODELO = ", codModelo, ";")
+                  A.A01_NR_CASO,
+                  A.A01_CD_MODELO,
+                  A.A03_CD_USINA,
+                  A04_NR_MAQUINAS,
+                  A04_VL_POTENCIA,
+                  A04_NR_CONJUNTO,
+                  A.A04_VL_ALTURA_REFERENCIA,
+                  CASE B.A03_TP_TURBINA WHEN 1 THEN 1.5 WHEN 3 THEN 1.5 ELSE 1.2 END VL_COEF_TURBINA
+                 FROM
+                  BPO_A04_MAQUINAS_UHE A,
+                  BPO_A03_DADOS_UHE B
+                 WHERE
+                  A.A01_CD_MODELO = B.A01_CD_MODELO AND
+                  A.A01_NR_CASO = B.A01_NR_CASO AND
+                  A.A01_TP_CASO = B.A01_TP_CASO AND
+                  A.A03_CD_USINA = B.A03_CD_USINA AND
+                  A.A01_TP_CASO = ", tipoCaso, " AND
+                  A.A01_NR_CASO = ", numeroCaso, " AND
+                  A.A01_CD_MODELO = ", codModelo, ";")
   df.potMaquinas<- dbGetQuery(conexaoSQLite, sql)
   
   df.dadosCalculadosUHEMaquinas <- inner_join(df.dadosCalculadosUHE, df.potMaquinas,
@@ -285,10 +351,10 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, tipoCaso, numeroC
   dbExecute(conexaoSQLite, "PRAGMA locking_mode = EXCLUSIVE;")
   dbExecute(conexaoSQLite, "PRAGMA journal_mode = TRUNCATE;")
   sql <- paste0("DELETE FROM BPO_A08_DADOS_CALCULADOS_UHE
-              WHERE
-              A01_TP_CASO = ", tipoCaso, " AND
-              A01_NR_CASO = ", numeroCaso, " AND
-              A01_CD_MODELO = ", codModelo, ";")
+                 WHERE
+                  A01_TP_CASO = ", tipoCaso, " AND
+                  A01_NR_CASO = ", numeroCaso, " AND
+                  A01_CD_MODELO = ", codModelo, ";")
   dbExecute(conexaoSQLite, sql)
   
   # grava dados calculados na BPO_A08_DADOS_CALCULADOS_UHE
@@ -308,24 +374,24 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, tipoCaso, numeroC
   colnames(df.dadosCalculadosSsist)[5:6] <- c("A09_NR_MES", "A09_NR_SERIE")
   
   sql <- paste0("SELECT
-              A01_CD_MODELO,
-              A01_TP_CASO,
-              A01_NR_CASO,
-              A02_NR_REE,
-              A06_NR_MES AS A09_NR_MES,
-              A06_NR_SERIE AS A09_NR_SERIE,
-              0 AS A09_VL_GERACAO_HIDRO_MINIMA,
-              0 AS A09_VL_GERACAO_HIDRO_MINIMA_ORIGINAL,
-              A06_VL_GERACAO_HIDRAULICA + A06_VL_SUBMOTORIZACAO AS A09_VL_DISPONIBILIDADE_MAXIMA_PONTA,
-              0 AS A09_VL_POTENCIA_MAXIMA
-              FROM BPO_A06_SAIDA_HIDRO_NEWAVE
-              WHERE
-              A02_NR_REE IN (SELECT A02_NR_REE FROM BPO_A02_REES
-              WHERE A02_TP_CALC_POTENCIA IN (2, 3) AND A01_TP_CASO = ", tipoCaso, " AND
-              A01_NR_CASO = ", numeroCaso, " AND A01_CD_MODELO = ", codModelo, ") AND
-              A01_TP_CASO = ", tipoCaso, " AND
-              A01_NR_CASO = ", numeroCaso, " AND
-              A01_CD_MODELO = ", codModelo, ";")
+                  A01_CD_MODELO,
+                  A01_TP_CASO,
+                  A01_NR_CASO,
+                  A02_NR_REE,
+                  A06_NR_MES AS A09_NR_MES,
+                  A06_NR_SERIE AS A09_NR_SERIE,
+                  0 AS A09_VL_GERACAO_HIDRO_MINIMA,
+                  0 AS A09_VL_GERACAO_HIDRO_MINIMA_ORIGINAL,
+                  A06_VL_GERACAO_HIDRAULICA + A06_VL_SUBMOTORIZACAO AS A09_VL_DISPONIBILIDADE_MAXIMA_PONTA,
+                  0 AS A09_VL_POTENCIA_MAXIMA
+                 FROM BPO_A06_SAIDA_HIDRO_NEWAVE
+                 WHERE
+                  A02_NR_REE IN (SELECT A02_NR_REE FROM BPO_A02_REES
+                                 WHERE A02_TP_CALC_POTENCIA IN (2, 3) AND A01_TP_CASO = ", tipoCaso, " AND
+                                  A01_NR_CASO = ", numeroCaso, " AND A01_CD_MODELO = ", codModelo, ") AND
+                  A01_TP_CASO = ", tipoCaso, " AND
+                  A01_NR_CASO = ", numeroCaso, " AND
+                  A01_CD_MODELO = ", codModelo, ";")
   df.dadosSsistNaoModulam <- dbGetQuery(conexaoSQLite, sql)
   
   # concatena as REEs que modulam com as que nao modulam para gravar na base
@@ -354,10 +420,10 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, tipoCaso, numeroC
   # limpa BPO_A09_DISPONIBILIDADE_HIDRO_PONTA_SUBSISTEMA de outras execucoes para o mesmo caso
   dbExecute(conexaoSQLite, "PRAGMA locking_mode = EXCLUSIVE;")
   sql <- paste0("DELETE FROM BPO_A09_DISPONIBILIDADE_HIDRO_PONTA_SUBSISTEMA
-              WHERE
-              A01_TP_CASO = ", tipoCaso, " AND
-              A01_NR_CASO = ", numeroCaso, " AND
-              A01_CD_MODELO = ", codModelo, ";")
+                 WHERE
+                  A01_TP_CASO = ", tipoCaso, " AND
+                  A01_NR_CASO = ", numeroCaso, " AND
+                  A01_CD_MODELO = ", codModelo, ";")
   dbExecute(conexaoSQLite, sql)
   
   dbWriteTable(conexaoSQLite, "BPO_A09_DISPONIBILIDADE_HIDRO_PONTA_SUBSISTEMA", df.dadosCalculadosSsistAgrup, append = T)
@@ -367,42 +433,4 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, tipoCaso, numeroC
   dbDisconnect(conexaoSQLite)
   
   return("Disponibilidade hidro processada com sucesso!")
-  
-  # # verifica se a pasta local para os arquivos temporarios do balanco existem. Caso nao, cria a pasta.
-  # if (!dir.exists("C:/CacheRBalanco")) {
-  #   dir.create("C:/CacheRBalanco")
-  # }
-  
-  #### Dados de entrada pelo usuario ####
-  # dados do balanco - valores calibrados
-  # os valores de CVU da transmissao, hidro e outras renovaveis foram calibrados para forcarem o modelo a os considerar no balanco de forma ordenada,
-  # evitando solucoes degeneradas ou irreais mas matematicamente aceitas. Contudo, se os custos das geracoes aumentarem, esses valores devem ser recalibrados
-  # para evitar problemas de escalonamento.
-  # cvuTransmissao <- 2e-6
-  # cvuHidro <- 3e-5
-  # cvuRenovaveis <- 1e-5
-  # cvuOutrasTermicas <- 0.1 # valores de cvu 0
-  #### FIM dos dados de entrada pelo usuario ####
-  # chama funcao de balanco
-  # calculaBalancoParalelo(localizacaoBase, tipoCaso, numeroCaso, codModelo, cvuTransmissao, cvuHidro, cvuRenovaveis, cvuOutrasTermicas,
-  #                        balancoResumido)
-  
-  # # exibe tempo de execucao
-  # tempoExecucao <- toc()
-  # tempoExecucao <- round(tempoExecucao$toc - tempoExecucao$tic, 0) %>% as.numeric()
-  # cat(paste0("tempo de execucao: ", tempoExecucao %/% 3600, " h. ",
-  #            (tempoExecucao - (tempoExecucao %/% 3600 * 3600)) %/% 60, " min. ", tempoExecucao %% 60, " seg."))
 }
-
-#### Dados de entrada - arquivo balanco.txt ####
-# df.dadosBalaco <- read_delim("X:/SGE-Projetos/02-Estudos/05-Plano Decenal de Expansao/2018-2027/Balanco de Ponta/Desenvolvimento/R/balanco.txt",
-#                              delim = ";", comment = "#", col_types = "cc", locale = locale(encoding = "UTF-8"))
-# localizacaoBase <- df.dadosBalaco$valor[14] %>% str_squish() %>% enc2native() # garante o encode correto
-# pastaCaso <- df.dadosBalaco$valor[15] %>% str_squish() %>% enc2native() # garante o encode correto
-# tipoCaso <- df.dadosBalaco$valor[1] %>% as.numeric()
-# numeroCaso <- df.dadosBalaco$valor[2] %>% as.numeric()
-# codModelo <- df.dadosBalaco$valor[3] %>% as.numeric()
-# codTucurui <- df.dadosBalaco$valor[8] %>% as.numeric()
-# # gravar balanco resumido e CMO (BPO_A16_BALANCO e BPO_A20_BALANCO_SUBSISTEMA) [T] ou tambem gravar balanco por gerador (BPO_A17_BALANCO_GERADOR) [F]
-# balancoResumido <- df.dadosBalaco$valor[20] %>% str_squish() %>%as.logical()
-#### FIM dos dados de entrada ####

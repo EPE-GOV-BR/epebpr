@@ -118,7 +118,7 @@ serverBalanco <- function(input, output, session) {
   # monitora botao do calculo do balanco
   textoSelecao <- eventReactive(input$btnBalanco, {
     validate(
-      need(input$numeroCaso, HTML("Caso sem n\u00FAmero"))
+      need(input$numeroCaso, HTML("Caso sem n\u00FAmero")),
       # need((input$inicioCaso %/% 100) >= 2018, "Ano da data de inicio do caso incorreto ou fora de formato (aaaamm)"),
       # need((input$inicioCaso %/% 100) <= 2050, "Ano da data de inicio do caso incorreto ou fora de formato (aaaamm)"),
       # need((input$inicioCaso %% 100) <= 12, "M\u00EAs da data de inicio do caso incorreto ou fora de formato (aaaamm)"),
@@ -127,46 +127,57 @@ serverBalanco <- function(input, output, session) {
       # need((input$fimCaso %/% 100) <= 2050, "Ano da data de fim do caso incorreto ou fora de formato (aaaamm)"),
       # need((input$fimCaso %% 100) <= 12, "M\u00EAs da data de fim do caso incorreto ou fora de formato (aaaamm)"),
       # need((input$fimCaso %% 100) != 0, "M\u00EAs da data de fim do caso incorreto ou fora de formato (aaaamm)"),
-      # need(input$horasPonta, "Defina o n\u00FAmero de horas de ponta"),
-      # need(input$descricao, "Caso sem descri\u00E7\u00E3o"),
-      # need(pastaCaso != "", "Defina a pasta de caso"),
-      # need(pastaSaidas != "", "Defina a pasta com as sa\u00EDdas do caso (nwlistop)"),
-      # need(baseSQLite != "", "Defina a base de dados SQLite"),
-      # need(input$reservaOperativa, "Defina valor de reserva operativa (0-100%)")
+      need(input$horasPonta, "Defina o n\u00FAmero de horas de ponta"),
+      need(input$descricao, "Caso sem descri\u00E7\u00E3o"),
+      need(pastaCaso != "", "Defina a pasta de caso"),
+      need(pastaSaidas != "", "Defina a pasta com as sa\u00EDdas do caso (nwlistop)"),
+      need(baseSQLite != "", "Defina a base de dados SQLite"),
+      need(input$reservaOperativa, "Defina valor de reserva operativa (0-100%)")
       # need(input$sistemasNaoModulamPonta, "Defina os sistemas que n\u00E3o modulam na ponta"),
       # need(input$sistemasNaoModulamMedia, "Defina os sistemas que n\u00E3o modulam na m\u00E9dia")
     )
     tic()
     show_spinner()
-    # sistemasNaoModulamPonta <- strsplit(input$sistemasNaoModulamPonta, ",") %>% unlist() %>% as.numeric()
-    # sistemasNaoModulamMedia <- strsplit(input$sistemasNaoModulamMedia, ",") %>% unlist() %>% as.numeric()
-    # mensagem <- withLogErrors({carregaDadosSQLite(baseSQLite,
-    #                                               pastaCaso,
-    #                                               as.integer(input$tipoCaso),
-    #                                               as.integer(input$numeroCaso),
-    #                                               as.integer(input$codModelo),
-    #                                               input$descricao,
-    #                                               as.integer(input$horasPonta),
-    #                                               as.numeric(input$reservaOperativa)/100,
-    #                                               as.integer(input$idDemanda),
-    #                                               as.logical(input$anosPre),
-    #                                               as.logical(input$anosPos),
-    #                                               sistemasNaoModulamPonta,
-    #                                               sistemasNaoModulamMedia,
-    #                                               codTucurui,
-    #                                               cotaLimiteTucurui,
-    #                                               potenciaLimiteTucurui)})
+    sistemasNaoModulamPonta <- strsplit(input$sistemasNaoModulamPonta, ",") %>% unlist() %>% as.numeric()
+    sistemasNaoModulamMedia <- strsplit(input$sistemasNaoModulamMedia, ",") %>% unlist() %>% as.numeric()
+    mensagemBancoDados <- carregaDadosSQLite(baseSQLite,
+                                             pastaCaso,
+                                             pastaSaidas,
+                                             as.integer(input$tipoCaso),
+                                             as.integer(input$numeroCaso),
+                                             as.integer(input$codModelo),
+                                             input$descricao,
+                                             as.integer(input$horasPonta),
+                                             as.numeric(input$reservaOperativa)/100,
+                                             as.integer(input$idDemanda),
+                                             sistemasNaoModulamPonta,
+                                             sistemasNaoModulamMedia,
+                                             codTucurui,
+                                             cotaLimiteTucurui,
+                                             potenciaLimiteTucurui,
+                                             as.integer(input$anoMesInicioMDI),
+                                             as.integer(input$anoMesFimMDI))
     
-    # calcula balanco
-    mensagem <- calculaBalancoParalelo(baseSQLite,
-                                       as.integer(input$tipoCaso),
-                                       as.integer(input$numeroCaso),
-                                       as.integer(input$codModelo),
-                                       cvuTransmissao,
-                                       cvuHidro,
-                                       cvuRenovaveis,
-                                       cvuOutrasTermicas,
-                                       as.logical(input$balancoResumido))
+    output$avisos <- renderText({mensagemBancoDados})
+    
+    mensagemDisponibilidade <- calculaDisponibilidadeHidro(baseSQLite, 
+                                                           pastaCaso, 
+                                                           as.integer(input$tipoCaso), 
+                                                           as.integer(input$numeroCaso),
+                                                           as.integer(input$codModelo), 
+                                                           codTucurui)
+    
+    output$avisos <- renderText({c(mensagemBancoDados, mensagemDisponibilidade)})
+    # # calcula balanco
+    # mensagem <- calculaBalancoParalelo(baseSQLite,
+    #                                    as.integer(input$tipoCaso),
+    #                                    as.integer(input$numeroCaso),
+    #                                    as.integer(input$codModelo),
+    #                                    cvuTransmissao,
+    #                                    cvuHidro,
+    #                                    cvuRenovaveis,
+    #                                    cvuOutrasTermicas,
+    #                                    as.logical(input$balancoResumido))
     # Sys.sleep(5)
     hide_spinner()
     # exibe tempo de execucao
@@ -175,7 +186,7 @@ serverBalanco <- function(input, output, session) {
     tempoExecucao <- paste0("<br>Executado em: ", tempoExecucao %/% 3600, " h. ",
                             (tempoExecucao - (tempoExecucao %/% 3600 * 3600)) %/% 60, " min. ", tempoExecucao %% 60, " seg.")
 
-    return(c(mensagem, tempoExecucao))
+    return({c(tempoExecucao)})
     # paste(input$tipoCaso, input$codModelo, input$numeroCaso, input$descricao, pastaCaso, input$inicioCaso, input$fimCaso, baseSQLite)
   })
   output$selecao <- renderText({
