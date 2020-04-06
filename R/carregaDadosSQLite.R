@@ -141,13 +141,13 @@ carregaDadosSQLite <- function(baseSQLite, pastaCaso, pastaSaidas, tipoCaso, num
   gravacaoDadosMaquinasHidroBDBP(pastaCaso, conexao, tipoCaso, numeroCaso, codModelo)
   
   # grava dados das usinas hidreletricas ao longo do horizonte de simulacao do NEWAVE na tabela BPO_A05_DADOS_VIGENTES_UHE
-  # gravacaoDadosHidroVigenteBDBP(pastaCaso, conexao, tipoCaso, numeroCaso, codModelo)
+  gravacaoDadosHidroVigenteBDBP(pastaCaso, conexao, tipoCaso, numeroCaso, codModelo)
   
   # grava dados de armazenamento e geracao das usinas hidraulicas na tabela BPO_A06_SAIDA_HIDRO_NEWAVE
-  # gravaSaidasNewaveBDBP(pastaCaso, pastaSaidas, conexao, tipoCaso, numeroCaso, codModelo)
+  gravaSaidasNewaveBDBP(pastaCaso, pastaSaidas, conexao, tipoCaso, numeroCaso, codModelo)
   
   # grava dados de demanda de ponta do NEWAVE na tabela BPO_A10_DEMANDA
-  # gravacaoDadosDemandaBDBP(pastaCaso, conexao, tipoCaso, numeroCaso, codModelo)
+  gravacaoDadosDemandaBDBP(pastaCaso, conexao, tipoCaso, numeroCaso, codModelo)
   
   # grava dados dos limites de intercambio ao longo do horizonte de simulacao do NEWAVE na tabela BPO_A11_INTERCAMBIOS
   gravacaoDadosIntercambioBDBP(pastaCaso, conexao, tipoCaso, numeroCaso, codModelo)

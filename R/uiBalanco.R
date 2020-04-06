@@ -2,14 +2,11 @@
 #'
 #' Cria estrutura de interface de usuario (ui) do Balanco de Ponta
 #'
-#' @import shiny
-#' @import shinythemes
-#' @import shinybusy
-#'
 #' @export
 uiBalanco <- fluidPage(
   theme = shinytheme("spacelab"),
-  tags$head(tags$style(".navbar {margin: 0px 0px 5px 0px; padding: 0px}"), # altera os espacamentos da barra de navegacao
+  tags$head(tags$style(".shiny-notification {height: 80px; width: 400px; position: fixed; top: 40% ;left: 40%}"), # notificacao de progresso
+            tags$style(".navbar {margin: 0px 0px 5px 0px; padding: 0px}"), # altera os espacamentos da barra de navegacao
             tags$style(".navbar-brand {padding: 5px 20px 5px 20px}"), # altera os espacamentos do titulo da barra de navegacao (logo)
             tags$style(".container-fluid {margin: 0px 0px 0px 2px; padding: 0px}"), # altera as margens da pagina
             tags$style(".well {padding: 10px; margin-bottom: 5px}"), # altera espacamentos da barra lateral
@@ -21,9 +18,6 @@ uiBalanco <- fluidPage(
                             color: #000000; font-weight: bold;}"))
   ),
 
-  # # tag para alterar posicao do notificacao de progresso
-  # tags$head(tags$style(".shiny-notification {position: absolute; top: 40% ;left: 50%}")),
-  
   # spinning
   use_busy_spinner(spin = "fading-circle", color="#274580", margins = c(300, 500), height = "80px", width = "80px"),
 

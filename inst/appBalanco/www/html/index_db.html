@@ -14,52 +14,11 @@
 	<header>	
 		<h1>Estrutura da Base de Dados SQLite</h1>
 	</header>
-		<br>
-		<h2>Localização da base SQLite</h2>
-		<div class="boxed">
-				<h3>Base: AMA.sqlite3</h3>
-					<p>&bull; Localização: X:\AMA\AMALite</p>
-		</div>
-		<br>
-		<h2>Padronizações adotadas</h2>
-		<div class="boxed">
-				<h3>Modelo de Banco de Dados adotado</h3>
-					<p>&bull; Para modelar os dados de entrada da ferramenta foi utilizado o padrão de Banco de Dados Relacionais.</p>
-					<p>&bull; Um banco de dados relacional é um banco que modela os dados de uma forma que eles sejam percebidos pelo usuário como tabelas, ou mais formalmente relações</p>
-					<br>
-				<h3>Tabelas Dimensão e Fato</h3>
-					<p>&bull; Utilizamos o padrão de tabelas de dimensão e fato no nosso banco</p>
-					<p>&bull; As tabelas de dimensão são tabelas que identificam caracteristicas unicas em cada linha, é muito importante para evitar a repetição de informações na base de dados</p>
-					<p>&bull; As tabelas de fato são tabelas que armazenam falores detalhados de medidas ou fatos em cada linha</p>
-					<br>
-				<h3>Nomenclaturas</h3>
-					<p>&bull; Tabelas de dimensão começam com dim seguido do nome a que se referem. Exemplo: dim_torre_ama</p>
-					<p>&bull; Tabelas de fato começam com fat seguido do nome a que se referem. Exemplo: fat_comparacao_torre_ama</p>
-					<p>&bull; Para nomes de colunas usa-se <font face = "Courier New"><b>cd_</b></font> para campos de código, <font face = "Courier New"><b>vr_</b></font> para campos de valor, <font face = "Courier New"><b>dt_</b></font> para datas em qualquer formato, <font face = "Courier New"><b>nm_</b></font> para nomes,frases,links e etc. e <font face = "Courier New"><b>tip_</b></font> para tipo (indicadores, como veradeiro ou falso, 0 ou 1)</p>
-		</div>
-		<br>
-		<h2>Tabela da base SQLite</h2>
-		<div class="boxed">
-				<h3><font face = "Courier New">fat_comparacao_torre_ama</font></h3>
-					<p>A tabela tem como função principal indicar as duas estações de comparação para verificação de medições suspeitas, assim como guardar todos os valores de &tau; e de tolerância para as regressões quantílicas que definirão o intervalo de confiança para valores válidos.</p>
-					<p>Campos:</p>
-					<p> &#8227; <font face = "Courier New">cd_ama</font>: código da estação AMA, chave primaria da tabela (PK)</p>
-					<p> &#8227; <font face = "Courier New">vr_anemometro_intermediario</font>: identificador de anemômetro intermediário, 1 se possui, 0 se não</p>
-					<p> &#8227; <font face = "Courier New">cd_ama_comp_1</font>: código da estação AMA de comparação 1</p>
-					<p> &#8227; <font face = "Courier New">cd_ama_comp_2</font>: código da estação AMA de comparação 2</p>
-					<p> &#8227; <font face = "Courier New">dt_inicio_comparacao_lp</font>: data de início do período de histórico de referência no formato AAAAMMDD </p>
-					<p> &#8227; <font face = "Courier New">dt_fim_comparacao_lp</font>: data de fim do período de histórico de referência no formato AAAAMMDD</p>
-					<p> &#8227; <font face = "Courier New">dt_ultima_analise</font>: data do último dado verificado no formato AAAAMMDD</p>
-					<p> &#8227; <font face = "Courier New">tip_processado</font>: identificador de processamento formato 0/1. Usado somente para processamento paralelo</p>
-					<p> &#8227; <font face = "Courier New">vr_tau_sup_*_**</font>: quantil superior para comparação entre os instrumentos * e ** (ex. vr_tau_sup_asupmed_aintmed)</p>
-					<p> &#8227; <font face = "Courier New">vr_tau_inf_*_**</font>: quantil inferior para comparação entre os instrumentos * e ** (ex. vr_tau_sup_asupmed_comp_2)</p>
-					<p> &#8227; <font face = "Courier New">vr_tol_sup_quantil_*_**</font>: valor de tolerância da curva do quantil superior para comparação entre os instrumentos * e **</p>
-					<p> &#8227; <font face = "Courier New">vr_tol_inf_quantil_*_**</font>: valor de tolerância da curva do quantil inferior para comparação entre os instrumentos * e **</p>
-		</div>
+		<br>		
 		<div class="boxed">
 			<h3>Diagrama Entidade e Relacionamento</h3>
 			<br>
-			<img src = "../imagens/fat_comparacao_torre_ama.png"/>
+			
 		</div>
 </body>
 

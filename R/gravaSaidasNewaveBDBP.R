@@ -66,9 +66,14 @@ gravaSaidasNewaveBDBP <- function(pasta, pastaSaidas, conexao, tipoCaso, numeroC
   
   # calculo de potencia tipo 1: modula a geracao hidro pela media (saida modelo de simulacao) para atender x horas de ponta
   # calculo de potencia tipo 3: nao modula - considera a geracao hidraulica media resultante da simulacao
-  df.dadosUsinasCalculoDemaisTipos <- df.geracaoHidroTotal %>% group_by(codREE, serie, anoMes) %>% 
+  df.energiaArmazenadaFinal13 <- df.energiaArmazenadaFinal %>% inner_join(df.ree, by = c("codREE" = "A02_NR_REE")) %>%
+    filter(A02_TP_CALC_POTENCIA != 2) %>% select(-A02_TP_CALC_POTENCIA)
+  df.dadosUsinasCalculoDemaisTipos <- df.geracaoHidroTotal %>% 
+    inner_join(df.ree, by = c("codREE" = "A02_NR_REE")) %>%
+    filter(A02_TP_CALC_POTENCIA != 2) %>%
+    group_by(codREE, serie, anoMes) %>% 
     summarise(geracao = sum(geracao)) %>% ungroup() %>% 
-    full_join(df.energiaArmazenadaFinal, by = c("codREE", "serie", "anoMes")) %>%
+    full_join(df.energiaArmazenadaFinal13, by = c("codREE", "serie", "anoMes")) %>%
     select(codREE, anoMes, serie, earmfp, geracao)
   
   df.dadosUsinas <- rbind(df.dadosUsinasCalculoTipo2, df.dadosUsinasCalculoDemaisTipos) %>% 

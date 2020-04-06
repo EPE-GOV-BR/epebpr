@@ -58,54 +58,6 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, tipoCaso, numeroC
   dbExecute(conexaoSQLite, "COMMIT TRANSACTION;")
   # fim atualizacao de submotorizacao
   
-  # sql <- paste0("SELECT A05.A01_TP_CASO AS A01_TP_CASO,
-  #             A05.A01_NR_CASO AS A01_NR_CASO,
-  #             A05.A01_CD_MODELO AS A01_CD_MODELO,
-  #             A05.A03_CD_USINA AS A03_CD_USINA,
-  #             A05.A05_NR_MES AS A08_NR_MES,
-  #             A06.A06_NR_SERIE AS A08_NR_SERIE,
-  #             A05.A02_NR_REE AS A02_NR_REE,
-  #             (A05.A05_VL_VOL_MAX - A05.A05_VL_VOL_MIN) * A06.A06_VL_PERC_ARMAZENAMENTO + A05.A05_VL_VOL_MIN AS A08_VL_VOLUME_OPERATIVO,
-  #             A03_NR_PCV_0, A03_NR_PCV_1, A03_NR_PCV_2, A03_NR_PCV_3, A03_NR_PCV_4,
-  #             A03_VL_PERDA, A03_TP_PERDA, A03_VL_PRODUTIBILIDADE,
-  #             A05_NR_CANAL_FUGA_MEDIO,
-  #             A05_VL_TEIF, A05_VL_IP,
-  #             A05_VL_VAZAO_MINIMA,
-  #             A06_VL_GERACAO_HIDRAULICA + A06_VL_SUBMOTORIZACAO AS A06_VL_GERACAO_HIDRAULICA,
-  #             ROUND(A05_VL_POTENCIA - POT_TOTAL, 2) AS VL_POT_EXP
-  #             FROM BPO_A03_DADOS_UHE A03,
-  #             BPO_A05_DADOS_VIGENTES_UHE A05,
-  #             BPO_A06_SAIDA_HIDRO_NEWAVE A06,
-  #             (SELECT A01_TP_CASO, A01_NR_CASO, A01_CD_MODELO, A03_CD_USINA,
-  #             SUM(A04_NR_MAQUINAS * A04_VL_POTENCIA) AS POT_TOTAL
-  #             FROM BPO_A04_MAQUINAS_UHE
-  #             GROUP BY A01_TP_CASO, A01_NR_CASO, A01_CD_MODELO, A03_CD_USINA) A04
-  #             WHERE
-  #             A03.A01_TP_CASO = A05.A01_TP_CASO AND
-  #             A03.A01_NR_CASO = A05.A01_NR_CASO AND
-  #             A03.A01_CD_MODELO = A05.A01_CD_MODELO AND
-  #             A03.A03_CD_USINA = A05.A03_CD_USINA AND
-  #             A05.A01_TP_CASO = A06.A01_TP_CASO AND
-  #             A05.A01_NR_CASO = A06.A01_NR_CASO AND
-  #             A05.A01_CD_MODELO = A06.A01_CD_MODELO AND
-  #             A05.A02_NR_REE = A06.A02_NR_REE AND
-  #             A05.A05_NR_MES = A06.A06_NR_MES AND
-  #             A03.A01_TP_CASO = A04.A01_TP_CASO AND
-  #             A03.A01_NR_CASO = A04.A01_NR_CASO AND
-  #             A03.A01_CD_MODELO = A04.A01_CD_MODELO AND
-  #             A03.A03_CD_USINA = A04.A03_CD_USINA AND
-  #             A03.A03_TX_STATUS <> 'NC' AND
-  #             A05.A05_NR_MES BETWEEN ", df.dadosCaso$dataInicioCaso , " AND ", df.dadosCaso$dataFimCaso, " AND
-  #             A05.A02_NR_REE IN (SELECT A02_NR_REE FROM BPO_A02_REES
-  #             WHERE A02_TP_CALC_POTENCIA = 1 AND
-  #             A01_TP_CASO = ", tipoCaso, " AND
-  #             A01_NR_CASO = ", numeroCaso, " AND
-  #             A01_CD_MODELO = ", codModelo,") AND
-  #             A03.A01_TP_CASO = ", tipoCaso, " AND
-  #             A03.A01_NR_CASO = ", numeroCaso, " AND
-  #             A03.A01_CD_MODELO = ", codModelo, ";")
-  # df.dadosCalculadosUHE <- dbGetQuery(conexaoSQLite, sql)
-  
   # filtro dos ree com calculo tipo 1
   sql <- paste0("SELECT A02_NR_REE FROM BPO_A02_REES
                  WHERE A02_TP_CALC_POTENCIA = 1 AND
@@ -299,8 +251,8 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, tipoCaso, numeroC
   # POT_MODULADA = ((GHMEDIA X 730.5) - (GHMIN X (730.5 - HORASPONTA))) / HORASPONTA
   df.dadosCalculadosUHE <- df.dadosCalculadosUHE %>%
     mutate(A08_VL_GERACAO_HIDRO_MINIMA = ifelse((A06_VL_GERACAO_HIDRAULICA < A09_VL_GERACAO_HIDRO_MINIMA_TMP),
-                                                (A08_VL_GERACAO_HIDRO_MINIMA * (1 -
-                                                                                  (A09_VL_GERACAO_HIDRO_MINIMA_TMP - A06_VL_GERACAO_HIDRAULICA) / A09_VL_GERACAO_HIDRO_MINIMA_TMP)),
+                                                (A08_VL_GERACAO_HIDRO_MINIMA * 
+                                                   (1 - (A09_VL_GERACAO_HIDRO_MINIMA_TMP - A06_VL_GERACAO_HIDRAULICA) / A09_VL_GERACAO_HIDRO_MINIMA_TMP)),
                                                 A08_VL_GERACAO_HIDRO_MINIMA))
   
   df.dadosCalculadosUHE <- df.dadosCalculadosUHE %>% select(-A09_VL_GERACAO_HIDRO_MINIMA_TMP)
@@ -316,7 +268,8 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, tipoCaso, numeroC
   
   df.dadosCalculadosUHE <- df.dadosCalculadosUHE %>%
     mutate(A08_VL_GERACAO_HIDRO_MEDIA = (A08_VL_GERACAO_HIDRO_MINIMA + ((A06_VL_GERACAO_HIDRAULICA - A09_VL_GERACAO_HIDRO_MINIMA_TMP) *
-                                                                          ((A08_VL_POTENCIA_MAXIMA - A08_VL_GERACAO_HIDRO_MINIMA) / (A09_VL_POTENCIA_MAXIMA - A09_VL_GERACAO_HIDRO_MINIMA_TMP)))),
+                                                                          ((A08_VL_POTENCIA_MAXIMA - A08_VL_GERACAO_HIDRO_MINIMA) / 
+                                                                             (A09_VL_POTENCIA_MAXIMA - A09_VL_GERACAO_HIDRO_MINIMA_TMP)))),
            A08_VL_POTENCIA_MAXIMA_MODULADA = (((A08_VL_GERACAO_HIDRO_MEDIA * 730.5) -
                                                  (A08_VL_GERACAO_HIDRO_MINIMA * (730.5 - df.dadosCaso$horasPonta))) / df.dadosCaso$horasPonta))
   

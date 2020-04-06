@@ -169,7 +169,7 @@ calculaBalancoParalelo <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
   
   quantidadeCenarios <- nrow(df.demandasAnoMesSerie)
   # calcula as janelas de 200 registros para inserir em lote
-  tamanhoJanela <- 600
+  tamanhoJanela <- 1000
   janelaCenarios <- c(seq(1, quantidadeCenarios, tamanhoJanela), (quantidadeCenarios + 1))
   quantidadeJanela <- length(janelaCenarios)
 
