@@ -27,7 +27,7 @@ uiBalanco <- fluidPage(
                     a(href = "html/index.html", target = "_blank", 
                       img(src = "imagens/logo-wiki.png", height = "36px", 
                         style = 'position: absolute; top: 7px; right: 60px;'), title = "Documenta\u00E7\u00E3o e Ajuda"),
-                    div(style = 'position: absolute; top: 8px; right: 10px;', 
+                    tags$div(style = 'position: absolute; top: 8px; right: 10px;', 
                         tags$button(id = "btnSair", class="btn action-button", style = "background-color: transparent; padding: 0px",
                                     img(src = "imagens/close.png", onmouseover = "this.src = 'imagens/close-red.png'", onmouseout = "this.src = 'imagens/close.png'",
                                         height = "34px", title = "Encerrar Balan\u00E7o")))),
@@ -39,7 +39,7 @@ uiBalanco <- fluidPage(
                sidebarPanel(#width = 5,
                  # Selecao do tipo de caso
                  # div para colocar inputs na mesma linha
-                 div(style="display:inline-block; width:140px",
+                 tags$div(style="display:inline-block; width:140px",
                      selectInput(inputId = "tipoCaso",
                                  label = "Tipo de Caso:",
                                  choices = c("PDE" = 1,
@@ -47,10 +47,10 @@ uiBalanco <- fluidPage(
                                              "Garantia Fisica" = 3),
                                  selected = 1)),
                  # Espaco entre inputs
-                 div(style="display:inline-block; width:7px"),
+                 tags$div(style="display:inline-block; width:7px"),
 
                  # Selecao do modelo
-                 div(style="display:inline-block; width:100px",
+                 tags$div(style="display:inline-block; width:100px",
                      selectInput(inputId = "codModelo",
                                  label = "Modelo:",
                                  choices = c("NEWAVE" = 1,
@@ -58,10 +58,10 @@ uiBalanco <- fluidPage(
                                  selected = 1)),
 
                  # Espaco entre inputs
-                 div(style="display:inline-block; width:7px"),
+                 tags$div(style="display:inline-block; width:7px"),
 
                  # Selecao do modelo
-                 div(style="display:inline-block; width:140px",
+                 tags$div(style="display:inline-block; width:140px",
                      selectInput(inputId = "idDemanda",
                                  label = "Demanda:",
                                  choices = c("L\u00EDquida" = 1,
@@ -71,27 +71,27 @@ uiBalanco <- fluidPage(
 
 
                  # Entrada numerica para o numero do caso
-                 div(style="display:inline-block; width:80px",
+                 tags$div(style="display:inline-block; width:80px",
                      numericInput(inputId = "numeroCaso",
                                   label = HTML("Caso:"),
                                   min = 1,
                                   value = NULL)),
 
                  # Espaco entre inputs
-                 div(style="display:inline-block; width:7px"),
+                 tags$div(style="display:inline-block; width:7px"),
 
                  # Entrada para horas de ponta
-                 div(style="display:inline-block; width:120px",
+                 tags$div(style="display:inline-block; width:120px",
                      numericInput(inputId = "horasPonta",
                                   label = HTML("Horas de Ponta:"),
                                   min = 1,
                                   value = 10)),
 
                  # Espaco entre inputs
-                 div(style="display:inline-block; width:7px"),
+                 tags$div(style="display:inline-block; width:7px"),
 
                  # Entrada para reserva operativa
-                 div(style="display:inline-block; width:160px",
+                 tags$div(style="display:inline-block; width:160px",
                      numericInput(inputId = "reservaOperativa",
                                   label = HTML("Reserva Operativa [%]:"),
                                   min = 0,
@@ -104,7 +104,7 @@ uiBalanco <- fluidPage(
                            value = NULL),
 
                  # Entrada para inicio da serie
-                 div(style="display:inline-block; width:100px",
+                 tags$div(style="display:inline-block; width:100px",
                      numericInput(inputId = "anoMesInicioMDI",
                                   label = HTML("In&iacute;cio MDI:"),
                                   min = 201801,
@@ -112,10 +112,10 @@ uiBalanco <- fluidPage(
                                   value = 201901)),
 
                  # Espaco entre inputs
-                 div(style="display:inline-block; width:7px"),
+                 tags$div(style="display:inline-block; width:7px"),
 
                  # Entrada para fim da serie
-                 div(style="display:inline-block; width:100px",
+                 tags$div(style="display:inline-block; width:100px",
                      numericInput(inputId = "anoMesFimMDI",
                                   label = HTML("Fim MDI:"),
                                   min = 201801,
@@ -123,10 +123,10 @@ uiBalanco <- fluidPage(
                                   value = 203312)),
                  
                  # # Espaco entre inputs
-                 # div(style="display:inline-block; width:7px"),
+                 # tags$div(style="display:inline-block; width:7px"),
                  #
                  # # Entrada para quantidade de series hidro
-                 # div(style="display:inline-block; width:100px",
+                 # tags$div(style="display:inline-block; width:100px",
                  #     numericInput(inputId = "seriesHidro",
                  #                  label = HTML("S&eacute;ries Hidro:"),
                  #                  min = 1,
@@ -135,14 +135,14 @@ uiBalanco <- fluidPage(
                  # Check box dos anos de estabilizacao
                  # tags$b(HTML("Considera anos de estabiliza&ccedil&atilde;o:")),
                  # br(),
-                 # div(style="display:inline-block",
+                 # tags$div(style="display:inline-block",
                  #     checkboxInput(inputId = "anosPre",
                  #                   value = F,
                  #                   label = HTML("Pr&eacute;"))),
                  # 
-                 # div(style = "display:inline-block; width:10px"),
+                 # tags$div(style = "display:inline-block; width:10px"),
                  # 
-                 # div(style="display:inline-block",
+                 # tags$div(style="display:inline-block",
                  #     checkboxInput(inputId = "anosPos",
                  #                   value = F,
                  #                   label = HTML("P&oacute;s"))),
@@ -152,17 +152,17 @@ uiBalanco <- fluidPage(
                            tags$b(HTML("REEs N&atilde;o Modulam")),
                            br(),
                            # Entrada para sistemas que nao modulam na ponta
-                           div(style="display:inline-block; width:150px",
+                           tags$div(style="display:inline-block; width:150px",
                                textInput(inputId = "sistemasNaoModulamPonta",
                                          label = HTML("GHPonta:"),
                                          value = "2",
                                          placeholder = "sist1, sist2, etc.")),
                            
                            # Espaco entre inputs
-                           div(style="display:inline-block; width:7px"),
+                           tags$div(style="display:inline-block; width:7px"),
                            
                            # Entrada para sistemas que nao modulam na media
-                           div(style="display:inline-block; width:150px",
+                           tags$div(style="display:inline-block; width:150px",
                                textInput(inputId = "sistemasNaoModulamMedia",
                                          label = HTML("GHM&eacute;dia:"),
                                          value = "6, 8, 13",
@@ -171,8 +171,8 @@ uiBalanco <- fluidPage(
                  # Localiza base SQLite
                  textOutput(outputId = "textoBaseSQLite"),
                  span(strong(textOutput(outputId = "baseSQLite"), style = c("color:red"))),
-                 div(style = "height:3px"),
-                 div(actionButton(inputId = "btnBaseSQLite",
+                 tags$div(style = "height:3px"),
+                 tags$div(actionButton(inputId = "btnBaseSQLite",
                                   label = NULL,
                                   icon = icon("search"),
                                   width = 77),
@@ -182,35 +182,35 @@ uiBalanco <- fluidPage(
                                   width = 77)),
 
                  # Localiza a pasta do caso
-                 div(style = "height:8px"),
+                 tags$div(style = "height:8px"),
                  textOutput(outputId = "textoPasta"),
                  span(strong(textOutput(outputId = "pasta"), style = c("color:red"))),
-                 div(style = "height:3px"),
+                 tags$div(style = "height:3px"),
                  actionButton(inputId = "btnPasta",
                               label = NULL,
                               icon = icon("search"),
                               width = 77),
                  
                  # Localiza a pasta de dados de saida do caso (nwlistop)
-                 div(style = "height:8px"),
+                 tags$div(style = "height:8px"),
                  textOutput(outputId = "textoPastaSaidas"),
                  span(strong(textOutput(outputId = "pastaSaidas"), style = c("color:red"))),
-                 div(style = "height:3px"),
+                 tags$div(style = "height:3px"),
                  actionButton(inputId = "btnPastaSaidas",
                               label = NULL,
                               icon = icon("search"),
                               width = 77),
 
                  # Action button
-                 div(style = "height:8px"),
+                 tags$div(style = "height:8px"),
                  HTML("Calcula Balan&ccedil;o de Ponta"),
-                 div(style = "height:3px"),
+                 tags$div(style = "height:3px"),
                  actionButton(inputId = "btnBalanco",
                               label = NULL,
                               icon = icon("calculator"),
                               width = 77),
-                 div(style = "display:inline-block; width:10px"),
-                     div(style="display:inline-block;",
+                 tags$div(style = "display:inline-block; width:10px"),
+                     tags$div(style="display:inline-block;",
                          checkboxInput(inputId = "balancoResumido",
                                value = T,
                                label = HTML("Balan&ccedil;o resumido")))
@@ -230,7 +230,7 @@ uiBalanco <- fluidPage(
                  # Localiza base SQLite
                  textOutput(outputId = "textoBaseSQLiteGrafico"),
                  span(strong(textOutput(outputId = "baseSQLiteGrafico"), style = c("color:red"))),
-                 div(style = "height:3px"),
+                 tags$div(style = "height:3px"),
                  actionButton(inputId = "btnBaseSQLiteGrafico",
                               label = NULL,
                               icon = icon("search"),
@@ -238,7 +238,7 @@ uiBalanco <- fluidPage(
                  
                  # Exibe/esconde input com resultado da base
                  conditionalPanel(condition = "input.casoGrafico != -2",
-                                  div(style = "height:8px"),
+                                  tags$div(style = "height:8px"),
                                   # Input dos casos na base
                                   selectInput(inputId = "casoGrafico",
                                               label = "Caso:",
@@ -249,10 +249,10 @@ uiBalanco <- fluidPage(
                                   HTML("Defina o horizonte de exibi&ccedil;&atilde;o do gr&aacute;fico"),
                                   br(),
                                   # Espaco
-                                  div(style = "height:3px"),
+                                  tags$div(style = "height:3px"),
                                   # Entrada para inicio da serie do grafico
                                   HTML("In&iacute;cio:"),
-                                  div(style="display:inline-block; width:100px",
+                                  tags$div(style="display:inline-block; width:100px",
                                       numericInput(inputId = "anoInicioGrafico", 
                                                    label = NULL,
                                                    min = 2018,
@@ -260,11 +260,11 @@ uiBalanco <- fluidPage(
                                                    value = 2020)),
                                   
                                   # Espaco entre inputs
-                                  div(style="display:inline-block; width:7px"),
+                                  tags$div(style="display:inline-block; width:7px"),
                                   
                                   # Entrada para fim da serie do grafico
                                   HTML("Fim:"),
-                                  div(style="display:inline-block; width:100px",
+                                  tags$div(style="display:inline-block; width:100px",
                                       numericInput(inputId = "anoFimGrafico", 
                                                    label = NULL,
                                                    min = 2018,
@@ -283,7 +283,7 @@ uiBalanco <- fluidPage(
                                                icon = icon("chart-area"),
                                                width = 70),
                                   # Botao de download
-                                  div(style = "display:inline-block;",
+                                  tags$div(style = "display:inline-block;",
                                       # Exibe/esconde botao se nao tiver caso selecionado
                                       conditionalPanel(condition = "input.casoGrafico != -1",
                                                        downloadButton(outputId = "btnDownload", 

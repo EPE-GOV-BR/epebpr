@@ -36,7 +36,7 @@ serverBalanco <- function(input, output, session) {
     showModal(
       modalDialog(
         title = HTML("Criar nova base de dados para o Balan&ccedil;o de Ponta"),
-        div(style="display:inline-block;", HTML("Localiza&ccedil;&atilde;o da pasta:")),
+        tags$div(style="display:inline-block;", HTML("Localiza&ccedil;&atilde;o da pasta:")),
         span(strong(textOutput(outputId = "pastaBDModal"), style = "color:red; display:inline-block")),
         actionButton(inputId = "btnProcurarPastaBD",
                      label = NULL,
@@ -78,7 +78,7 @@ serverBalanco <- function(input, output, session) {
         modalDialog(
           title = "Base de dados",
           mensagemModal,
-          footer = div(style="text-align:center", modalButton("Ok"))
+          footer = tags$div(style="text-align:center", modalButton("Ok"))
         )
       )
       output$baseSQLite <- renderText(baseSQLite)
