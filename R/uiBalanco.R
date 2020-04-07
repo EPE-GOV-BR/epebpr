@@ -1,4 +1,4 @@
-#' Interface do usuario (ui) Shiny do Banlanco de Ponta
+#' Interface do usuario (ui) Shiny do Balanco de Ponta
 #'
 #' Cria estrutura de interface de usuario (ui) do Balanco de Ponta
 #'

@@ -1,7 +1,7 @@
 Package: epebpr
 Title: Balanco de Ponta
 Type: Package
-Version: 0.8.12
+Version: 0.8.13
 Date: 2019-12-02
 Author: Gustavo Haydt [aut, cre],
   Simone Brandao [aut, cre],

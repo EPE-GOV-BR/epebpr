@@ -139,35 +139,38 @@ serverBalanco <- function(input, output, session) {
     sistemasNaoModulamPonta <- strsplit(input$sistemasNaoModulamPonta, ",") %>% unlist() %>% as.numeric()
     sistemasNaoModulamMedia <- strsplit(input$sistemasNaoModulamMedia, ",") %>% unlist() %>% as.numeric()
     withProgress(message = "Lendo dados de entrada e gravando no banco de dados...", value = 0, {
-      mensagemBancoDados <- carregaDadosSQLite(baseSQLite,
-                                               pastaCaso,
-                                               pastaSaidas,
-                                               as.integer(input$tipoCaso),
-                                               as.integer(input$numeroCaso),
-                                               as.integer(input$codModelo),
-                                               input$descricao,
-                                               as.integer(input$horasPonta),
-                                               as.numeric(input$reservaOperativa)/100,
-                                               as.integer(input$idDemanda),
-                                               sistemasNaoModulamPonta,
-                                               sistemasNaoModulamMedia,
-                                               codTucurui,
-                                               cotaLimiteTucurui,
-                                               potenciaLimiteTucurui,
-                                               as.integer(input$anoMesInicioMDI),
-                                               as.integer(input$anoMesFimMDI))
-      setProgress(message = "Calculando disponibilidade hidr\u00E1ulica...")
-      incProgress(1/3)
-      mensagemDisponibilidade <- calculaDisponibilidadeHidro(baseSQLite,
-                                                             pastaCaso,
-                                                             as.integer(input$tipoCaso),
-                                                             as.integer(input$numeroCaso),
-                                                             as.integer(input$codModelo),
-                                                             codTucurui)
-
+      # bloco de dados de entrada
+      # mensagemBancoDados <- carregaDadosSQLite(baseSQLite,
+      #                                          pastaCaso,
+      #                                          pastaSaidas,
+      #                                          as.integer(input$tipoCaso),
+      #                                          as.integer(input$numeroCaso),
+      #                                          as.integer(input$codModelo),
+      #                                          input$descricao,
+      #                                          as.integer(input$horasPonta),
+      #                                          as.numeric(input$reservaOperativa)/100,
+      #                                          as.integer(input$idDemanda),
+      #                                          sistemasNaoModulamPonta,
+      #                                          sistemasNaoModulamMedia,
+      #                                          codTucurui,
+      #                                          cotaLimiteTucurui,
+      #                                          potenciaLimiteTucurui,
+      #                                          as.integer(input$anoMesInicioMDI),
+      #                                          as.integer(input$anoMesFimMDI))
+      # 
+      # # bloco de calculo da disponibilidade hidro
+      # setProgress(message = "Calculando disponibilidade hidr\u00E1ulica...")
+      # incProgress(1/3)
+      # mensagemDisponibilidade <- calculaDisponibilidadeHidro(baseSQLite,
+      #                                                        pastaCaso,
+      #                                                        as.integer(input$tipoCaso),
+      #                                                        as.integer(input$numeroCaso),
+      #                                                        as.integer(input$codModelo),
+      #                                                        codTucurui)
+      
+      # bloco de calculo de balanco
       setProgress(message = "Calculando balan\u00E7o de ponta...")
       incProgress(1/3)
-      # calcula balanco
       mensagem <- calculaBalancoParalelo(baseSQLite,
                                          as.integer(input$tipoCaso),
                                          as.integer(input$numeroCaso),
