@@ -1,9 +1,10 @@
-#' Calcula um balanco de ponta
+#' Calcula um balanco de ponta usando o solver Coin
 #'
 #' Monta e resolve o problema linear de um balanco de ponta usando Clp (Coin-or linear programming). Funcao criada para poder executar processamento paralelo.
 #'
 #' @param periodo vetor com o anoMes a ser ser processado. Ex. 201805
-#' @param balancoResumido variavel binaria para decidir se vai calcular somente o balanco resumido (\code{BPO_A16_BALANCO}) ou tambem o por gerador (\code{BPO_A17_BALANCO_GERADOR})
+#' @param balancoResumido variavel binaria para decidir se vai calcular somente o balanco resumido (\code{BPO_A16_BALANCO}) ou 
+#' tambem o por gerador (\code{BPO_A17_BALANCO_GERADOR})
 #' @param conexao conexao com o banco de dados (classe SQLiteConnection)
 #' @param df.custoDefict data frame com custos de deficit
 #' @param df.geracaoTermicaTotal data frame com os dados das geracoes termicas
@@ -20,18 +21,14 @@
 #' @param df.subsistemas data frame com os dados de subsistemas
 #' @param cvuHidro valor de CVU das hidro
 #'
-#' @return \code{lt.resultado} lista com data frames com as estruturas das tabelas com os resultados dos balancos. A lista pode ter 2 ou 3 data frames conforme definido
-#' pela variavel \code{balancoResumido}.
+#' @return \code{lt.resultado} lista com data frames com as estruturas das tabelas com os resultados dos balancos. 
+#' A lista pode ter 2 ou 3 data frames conforme definido pela variavel \code{balancoResumido}.
 #' \itemize{
 #' \item Para \code{balancoResumido} == \code{F}: lista com 3 data frames com as estruturas das tabelas \code{BPO_A16_BALANCO} (\code{df.resultado}),
 #' \code{BPO_A17_BALANCO_GERADOR} (\code{df.resultadoGerador}) e \code{BPO_A20_BALANCO_SUBSISTEMA} (\code{df.resultadoCMO}) para cada periodo (anoMes)
 #' \item Para \code{balancoResumido} == \code{T}: lista com 2 data frames com as estruturas das tabelas \code{BPO_A16_BALANCO} (\code{df.resultado}) e
 #' \code{BPO_A20_BALANCO_SUBSISTEMA} (\code{df.resultadoCMO})
 #' }
-#'
-#' @import clpAPI
-#' @import dplyr
-#' @import DBI
 #'
 #' @examples
 #' \dontrun{
@@ -149,8 +146,8 @@ balancoPeriodoClp <- function(periodo,
 
   # define restricoes
   # sinais das variaveis - as variaveis podem ser geradores ou linhas de transmissao. 
-  # os geradores recebem valor 0 na coluna transmissao do data frame de geracao. As linhas transmissao recebem um codigo indicando os subsistemas ligados por ela
-  # como cada linha e modelada como 2 geradores virtuais nos 2 sistemas que ela liga, um deles deve ter sinal negativo 
+  # os geradores recebem valor 0 na coluna transmissao do data frame de geracao. As linhas transmissao recebem um codigo indicando os subsistemas 
+  # ligados por ela como cada linha e modelada como 2 geradores virtuais nos 2 sistemas que ela liga, um deles deve ter sinal negativo 
   # (retira energia de um sistema e alimenta outro)
   sinalVariavel <- ifelse(df.geracao$transmissao >= 0, 1, -1) # sinais de operacao
   
@@ -305,7 +302,8 @@ balancoPeriodoClp <- function(periodo,
   # critica
   if(solucao != 0) {
     dbDisconnect(conexao)
-    stop(paste0("N\u00E3o foi encontrada solu\u00E7\u00E3o vi\u00E1vel (", status_codeCLP(solucao),") para execu\u00E7\u00E3o com transmiss\u00E3o ilimitada de ", 
+    stop(paste0("N\u00E3o foi encontrada solu\u00E7\u00E3o vi\u00E1vel (", 
+                status_codeCLP(solucao),") para execu\u00E7\u00E3o com transmiss\u00E3o ilimitada de ", 
                 periodo, ", s\u00E9rie hidro ", idSerieHidro, ", demanda ", idDemanda))
   }
   

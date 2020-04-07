@@ -2,7 +2,7 @@
 % Please edit documentation in R/balancoPeriodoROI.R
 \name{balancoPeriodoROI}
 \alias{balancoPeriodoROI}
-\title{Calcula um balanco de ponta}
+\title{Calcula um balanco de ponta usando ROI}
 \usage{
 balancoPeriodoROI(periodo, idDemanda, idSerieHidro, balancoResumido,
   conexao, df.custoDefict, df.geracaoTermicaTotal,
@@ -14,7 +14,8 @@ balancoPeriodoROI(periodo, idDemanda, idSerieHidro, balancoResumido,
 \arguments{
 \item{periodo}{vetor com o anoMes a ser ser processado. Ex. 201805}
 
-\item{balancoResumido}{variavel binaria para decidir se vai calcular somente o balanco resumido (\code{BPO_A16_BALANCO}) ou tambem o por gerador (\code{BPO_A17_BALANCO_GERADOR})}
+\item{balancoResumido}{variavel binaria para decidir se vai calcular somente o balanco resumido (\code{BPO_A16_BALANCO}) ou 
+tambem o por gerador (\code{BPO_A17_BALANCO_GERADOR})}
 
 \item{conexao}{conexao com o banco de dados (classe SQLiteConnection)}
 
@@ -47,8 +48,8 @@ balancoPeriodoROI(periodo, idDemanda, idSerieHidro, balancoResumido,
 \item{cvuHidro}{valor de CVU das hidro}
 }
 \value{
-\code{lt.resultado} lista com data frames com as estruturas das tabelas com os resultados dos balancos. A lista pode ter 2 ou 3 data frames conforme definido
-pela variavel \code{balancoResumido}.
+\code{lt.resultado} lista com data frames com as estruturas das tabelas com os resultados dos balancos. 
+A lista pode ter 2 ou 3 data frames conforme definido pela variavel \code{balancoResumido}.
 \itemize{
 \item Para \code{balancoResumido} == \code{F}: lista com 3 data frames com as estruturas das tabelas \code{BPO_A16_BALANCO} (\code{df.resultado}),
 \code{BPO_A17_BALANCO_GERADOR} (\code{df.resultadoGerador}) e \code{BPO_A20_BALANCO_SUBSISTEMA} (\code{df.resultadoCMO}) para cada periodo (anoMes)
@@ -57,7 +58,7 @@ pela variavel \code{balancoResumido}.
 }
 }
 \description{
-Monta e resolve o problema linear de um balanco de ponta usando Clp (Coin-or linear programming). Funcao criada para poder executar processamento paralelo.
+Monta e resolve o problema linear de um balanco de ponta usando R Optimization Infrastructure (ROI).
 }
 \examples{
 \dontrun{

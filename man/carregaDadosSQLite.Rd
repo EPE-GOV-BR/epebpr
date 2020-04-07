@@ -4,16 +4,18 @@
 \alias{carregaDadosSQLite}
 \title{Carrega dados na base SQLite do Balanco de Ponta}
 \usage{
-carregaDadosSQLite(baseSQLite, pastaCaso, tipoCaso, numeroCaso, codModelo,
-  descricaoCaso, horasPonta, reservaOperativa, idDemandaLiquida, anosPre,
-  anosPos, sistemasNaoModulamPonta, sistemasNaoModulamMedia, codTucurui,
-  cotaLimiteTucurui, geracaoLimiteTucurui, anoMesInicioMDI = NA,
-  anoMesFimMDI = NA)
+carregaDadosSQLite(baseSQLite, pastaCaso, pastaSaidas, tipoCaso,
+  numeroCaso, codModelo, descricaoCaso, horasPonta, reservaOperativa,
+  idDemandaLiquida, sistemasNaoModulamPonta, sistemasNaoModulamMedia,
+  codTucurui, cotaLimiteTucurui, geracaoLimiteTucurui,
+  anoMesInicioMDI = NA, anoMesFimMDI = NA)
 }
 \arguments{
 \item{baseSQLite}{nome e localizacao da base SQLite do balanco de ponta}
 
 \item{pastaCaso}{localizacao da pasta com os arquivos do NEWAVE do caso a ser analisado no balanco de ponta}
+
+\item{pastaSaidas}{localizacao dos arquivos de saida do modulo NWLISTOP}
 
 \item{tipoCaso}{valor inteiro. 1:PDE; 2:PMO e 3;Garantia Fisica}
 
@@ -29,17 +31,13 @@ carregaDadosSQLite(baseSQLite, pastaCaso, tipoCaso, numeroCaso, codModelo,
 
 \item{idDemandaLiquida}{identificador de calculo com demanda liquida. 1:Demanda Liquida; 0:Deterministica}
 
-\item{anosPre}{numero de anos iniciais para fins de estabilizacao no calculo da politica}
-
-\item{anosPos}{numero de anos finais para fins de estabilizacao no calculo da politica}
-
 \item{sistemasNaoModulamPonta}{vetor numerico com codigos dos sitemas que nao modulam na ponta}
 
 \item{sistemasNaoModulamMedia}{vetor numerico com codigos dos sitemas que nao modulam na media}
 
-\item{codTucurui}{codigo atribuido para a usina de Tucurui ###############################}
+\item{codTucurui}{codigo atribuido para a usina de Tucurui}
 
-\item{cotaLimiteTucurui}{valor da cota da usina de Tucurui em metros}
+\item{cotaLimiteTucurui}{valor da cota da usina de Tucurui [m]}
 
 \item{geracaoLimiteTucurui}{valor da geracao limite da usina de Tucurui}
 }

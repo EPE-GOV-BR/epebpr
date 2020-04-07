@@ -2,7 +2,7 @@
 % Please edit documentation in R/balancoPeriodo.R
 \name{balancoPeriodo}
 \alias{balancoPeriodo}
-\title{Calcula um balanco de ponta}
+\title{Calcula um balanco de ponta usando o lpsolver}
 \usage{
 balancoPeriodo(periodo, idDemanda, idSerieHidro, balancoResumido, conexao,
   df.custoDefict, df.geracaoTermicaTotal, df.geracaoTransmissaoTotal,

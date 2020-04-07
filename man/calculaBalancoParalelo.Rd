@@ -2,7 +2,7 @@
 % Please edit documentation in R/calculaBalancoParalelo.R
 \name{calculaBalancoParalelo}
 \alias{calculaBalancoParalelo}
-\title{Calcula um balanco de ponta}
+\title{Calcula todo o processo de balanco de ponta}
 \usage{
 calculaBalancoParalelo(baseSQLite, tipoCaso, numeroCaso, codModelo,
   cvuTransmissao, cvuHidro, cvuRenovaveis, cvuOutrasTermicas,

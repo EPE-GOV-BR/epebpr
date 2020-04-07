@@ -1,4 +1,4 @@
-#' Calcula um balanco de ponta
+#' Calcula todo o processo de balanco de ponta
 #'
 #' Monta e resolve o problema linear de um balanco de ponta. Funcao criada para poder executar processamento paralelo.
 #'

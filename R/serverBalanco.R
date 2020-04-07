@@ -12,7 +12,7 @@ serverBalanco <- function(input, output, session) {
   ####### ABA BALANCO #######
   output$textoPasta <- renderText("Escolha a pasta do caso:")
   pastaCaso <- ""
-  output$textoPastaSaidas <- renderText("Escolha a pasta com com as sa\u00EDdas do caso (nwlistop):")
+  output$textoPastaSaidas <- renderText("Escolha a pasta com as sa\u00EDdas do caso (nwlistop):")
   pastaSaidas <- ""
   output$textoBaseSQLite <- renderText("Escolha a base SQLite ou crie nova:")
   baseSQLite <- ""
@@ -89,21 +89,21 @@ serverBalanco <- function(input, output, session) {
 
   # monitora botao de selecao de base existente
   observeEvent(input$btnBaseSQLite, {
-    baseSQLite <<- choose.files(caption = "Escolha a base SQLite") # importante <<- para passar valor para variavel global
+    baseSQLite <<- choose.files(caption = "Escolha a base SQLite")
     output$baseSQLite <- renderText(baseSQLite)
     output$textoBaseSQLite <- renderText("Base selecionada:")
   })
 
   # monitora o botao de selecao da pasta do caso
   observeEvent(input$btnPasta, {
-    pastaCaso <<- choose.dir(caption = "Escolha a pasta do caso") # importante <<- para passar valor para variavel global
+    pastaCaso <<- choose.dir(caption = "Escolha a pasta do caso")
     output$pasta <- renderText(pastaCaso)
     output$textoPasta <- renderText("Pasta do caso:")
   })
   
   # monitora o botao de selecao da pasta de saidas do caso (nwlistop)
   observeEvent(input$btnPastaSaidas, {
-    pastaSaidas <<- choose.dir(caption = "Escolha a pasta com as sa\u00EDdas do caso (nwlistop)") # importante <<- para passar valor para variavel global
+    pastaSaidas <<- choose.dir(caption = "Escolha a pasta com as sa\u00EDdas do caso (nwlistop)")
     output$pastaSaidas <- renderText(pastaSaidas)
     output$textoPastaSaidas <- renderText("Pasta com as sa\u00EDdas do caso (nwlistop):")
   })
@@ -115,26 +115,26 @@ serverBalanco <- function(input, output, session) {
 
   # monitora botao do calculo do balanco
   textoSelecao <- eventReactive(input$btnBalanco, {
-    validate(
-      need(input$numeroCaso, HTML("Caso sem n\u00FAmero")),
-      need((input$anoMesInicioMDI %/% 100) >= 2018, "Ano da data de inicio do caso incorreto ou fora de formato (aaaamm)"),
-      need((input$anoMesInicioMDI %/% 100) <= 2050, "Ano da data de inicio do caso incorreto ou fora de formato (aaaamm)"),
-      need((input$anoMesInicioMDI %% 100) <= 12, "M\u00EAs da data de inicio do caso incorreto ou fora de formato (aaaamm)"),
-      need((input$anoMesInicioMDI %% 100) != 0, "M\u00EAs da data de inicio do caso incorreto ou fora de formato (aaaamm)"),
-      need((input$anoMesFimMDI %/% 100) >= 2018, "Ano da data de fim do caso incorreto ou fora de formato (aaaamm)"),
-      need((input$anoMesFimMDI %/% 100) <= 2050, "Ano da data de fim do caso incorreto ou fora de formato (aaaamm)"),
-      need((input$anoMesFimMDI %% 100) <= 12, "M\u00EAs da data de fim do caso incorreto ou fora de formato (aaaamm)"),
-      need((input$anoMesFimMDI %% 100) != 0, "M\u00EAs da data de fim do caso incorreto ou fora de formato (aaaamm)"),
+    shiny::validate(
+      need(input$numeroCaso, "Caso sem n\u00FAmero"),
+      need((as.integer(input$anoMesInicioMDI) %/% 100) >= 2018, "Ano da data de inicio do caso incorreto ou fora de formato (aaaamm)"),
+      need((as.integer(input$anoMesInicioMDII) %/% 100) <= 2050, "Ano da data de inicio do caso incorreto ou fora de formato (aaaamm)"),
+      need((as.integer(input$anoMesInicioMDI) %% 100) <= 12, "M\u00EAs da data de inicio do caso incorreto ou fora de formato (aaaamm)"),
+      need((as.integer(input$anoMesInicioMDI) %% 100) != 0, "M\u00EAs da data de inicio do caso incorreto ou fora de formato (aaaamm)"),
+      need((as.integer(input$anoMesFimMDI) %/% 100) >= 2018, "Ano da data de fim do caso incorreto ou fora de formato (aaaamm)"),
+      need((as.integer(input$anoMesFimMDI) %/% 100) <= 2050, "Ano da data de fim do caso incorreto ou fora de formato (aaaamm)"),
+      need((as.integer(input$anoMesFimMDI) %% 100) <= 12, "M\u00EAs da data de fim do caso incorreto ou fora de formato (aaaamm)"),
+      need((as.integer(input$anoMesFimMDI) %% 100) != 0, "M\u00EAs da data de fim do caso incorreto ou fora de formato (aaaamm)"),
       need(input$horasPonta, "Defina o n\u00FAmero de horas de ponta"),
       need(input$descricao, "Caso sem descri\u00E7\u00E3o"),
       need(pastaCaso != "", "Defina a pasta de caso"),
       need(pastaSaidas != "", "Defina a pasta com as sa\u00EDdas do caso (nwlistop)"),
       need(baseSQLite != "", "Defina a base de dados SQLite"),
-      need(input$reservaOperativa, "Defina valor de reserva operativa (0-100%)"),
-      need(input$sistemasNaoModulamPonta, "Defina os sistemas que n\u00E3o modulam na ponta"),
-      need(input$sistemasNaoModulamMedia, "Defina os sistemas que n\u00E3o modulam na m\u00E9dia")
+      need(input$reservaOperativa, "Defina valor de reserva operativa (0-100%)")#,
+      # need(input$sistemasNaoModulamPonta, "Defina os sistemas que n\u00E3o modulam na ponta"),
+      # need(input$sistemasNaoModulamMedia, "Defina os sistemas que n\u00E3o modulam na m\u00E9dia")
     )
-    
+
     tic()
     sistemasNaoModulamPonta <- strsplit(input$sistemasNaoModulamPonta, ",") %>% unlist() %>% as.numeric()
     sistemasNaoModulamMedia <- strsplit(input$sistemasNaoModulamMedia, ",") %>% unlist() %>% as.numeric()
@@ -164,7 +164,7 @@ serverBalanco <- function(input, output, session) {
                                                              as.integer(input$numeroCaso),
                                                              as.integer(input$codModelo),
                                                              codTucurui)
-      
+
       setProgress(message = "Calculando balan\u00E7o de ponta...")
       incProgress(1/3)
       # calcula balanco
