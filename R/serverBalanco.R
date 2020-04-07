@@ -118,7 +118,7 @@ serverBalanco <- function(input, output, session) {
     shiny::validate(
       need(input$numeroCaso, "Caso sem n\u00FAmero"),
       need((as.integer(input$anoMesInicioMDI) %/% 100) >= 2018, "Ano da data de inicio do caso incorreto ou fora de formato (aaaamm)"),
-      need((as.integer(input$anoMesInicioMDII) %/% 100) <= 2050, "Ano da data de inicio do caso incorreto ou fora de formato (aaaamm)"),
+      need((as.integer(input$anoMesInicioMDI) %/% 100) <= 2050, "Ano da data de inicio do caso incorreto ou fora de formato (aaaamm)"),
       need((as.integer(input$anoMesInicioMDI) %% 100) <= 12, "M\u00EAs da data de inicio do caso incorreto ou fora de formato (aaaamm)"),
       need((as.integer(input$anoMesInicioMDI) %% 100) != 0, "M\u00EAs da data de inicio do caso incorreto ou fora de formato (aaaamm)"),
       need((as.integer(input$anoMesFimMDI) %/% 100) >= 2018, "Ano da data de fim do caso incorreto ou fora de formato (aaaamm)"),
