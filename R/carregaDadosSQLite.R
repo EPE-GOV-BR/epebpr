@@ -40,7 +40,7 @@ carregaDadosSQLite <- function(baseSQLite, pastaCaso, pastaSaidas, tipoCaso, num
   if (df.dadosGerais$tipoSimulacao == 1) {
     seriesHidro <- df.dadosGerais$seriesSinteticas
   } else if (df.dadosGerais$tipoSimulacao == 2) {
-    seriesHidro <- leituraConfiguracaoHidro(arquivoConfhd) %>%
+    seriesHidro <- df.configuracaoHidro %>%
       mutate(seriesHidro = fimHistorico - inicioHistorico) %>%
       summarise(media = mean(seriesHidro), minimo = min(seriesHidro), maximo = max(seriesHidro))
     if (seriesHidro$media != seriesHidro$minimo | seriesHidro$media != seriesHidro$maximo | seriesHidro$minimo != seriesHidro$maximo) {

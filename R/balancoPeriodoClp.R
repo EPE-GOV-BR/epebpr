@@ -103,7 +103,7 @@ balancoPeriodoClp <- function(periodo,
   # critica de existencia de dados
   if(nrow(df.geracaoHidro) == 0) {
     dbDisconnect(conexao)
-    stop(paste0("N\u00E3o h\u00E1 h\u00EDdricas x(BPO_A09_DISPONIBILIDADE_HIDRO_PONTA_SUBSISTEMA) para o per\u00EDodo de ", 
+    stop(paste0("N\u00E3o h\u00E1 h\u00EDdricas (BPO_A09_DISPONIBILIDADE_HIDRO_PONTA_SUBSISTEMA) para o per\u00EDodo de ", 
                 periodo, " e s\u00E9rie hidro ", idSerieHidro))
   }
   df.geracaoHidro$cvu <- cvuHidro
