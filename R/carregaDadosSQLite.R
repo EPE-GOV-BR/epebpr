@@ -41,7 +41,7 @@ carregaDadosSQLite <- function(baseSQLite, pastaCaso, pastaSaidas, tipoCaso, num
     seriesHidro <- df.dadosGerais$seriesSinteticas
   } else if (df.dadosGerais$tipoSimulacao == 2) {
     seriesHidro <- df.configuracaoHidro %>%
-      mutate(seriesHidro = fimHistorico - inicioHistorico) %>%
+      mutate(seriesHidro = fimHistorico - inicioHistorico + 1) %>%
       summarise(media = mean(seriesHidro), minimo = min(seriesHidro), maximo = max(seriesHidro))
     if (seriesHidro$media != seriesHidro$minimo | seriesHidro$media != seriesHidro$maximo | seriesHidro$minimo != seriesHidro$maximo) {
       stop("S\u00E9ries hidro n\u00E3o possuem mesmo horizonte cadastrado no arquivo confhd!")
@@ -99,7 +99,7 @@ carregaDadosSQLite <- function(baseSQLite, pastaCaso, pastaSaidas, tipoCaso, num
     dbExecute(conexao, query)
   }
   
-  df.sistema <- leituraDeficitSistema(pastaCaso) %>% filter(patamar == 1) %>% 
+  df.sistema <- leituraDeficitSistema(pastaCaso) %>% filter(patamar %in% c(1, NA)) %>% 
     select(A02_NR_SUBSISTEMA = codSubsistema,
            A02_TX_DESCRICAO_SUBSISTEMA = nomeSubsistema,
            A02_TP_FICTICIO = tipoFicticio,
