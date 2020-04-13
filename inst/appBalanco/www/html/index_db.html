@@ -15,11 +15,179 @@
 		<h1>Estrutura da Base de Dados SQLite</h1>
 	</header>
 		<br>		
+		<h2>Tabelas da base SQLite</h2>
 		<div class="boxed">
-			<h3>Diagrama Entidade e Relacionamento</h3>
-			<br>
-			
+				<h3><font face = "Courier New">BPO_A01_CASOS_ANALISE </font></h3>
+					<p>A tabela possui as informa&ccedil;&otilde;es dos casos executados no balan&ccedil;o de ponta.</p>
+					<p>Campos:</p>
+					<p> &#8227; <font face = "Courier New">A01_TP_CASO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Tipo de caso (1:PDE)</p>
+					<p> &#8227; <font face = "Courier New">A01_NR_CASO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: N&uacute;mero do caso. Identificador num&eacute;rico do caso definido pelo usu&aacute;rio</p>
+					<p> &#8227; <font face = "Courier New">A01_CD_MODELO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Tipo de modelo dos dados de entrada (1= Newave, 2=Suishi)</p>
+					<p> &#8227; <font face = "Courier New">A01_TX_DESCRICAO</font>: Descri&ccedil;&atilde;o do caso</p>
+					<p> &#8227; <font face = "Courier New">A01_NR_MES_INICIO</font>: M&ecirc;s In&iacute;cio do BP, no formato aaaamm</p>
+					<p> &#8227; <font face = "Courier New">A01_NR_MES_FIM</font>: M&ecirc;s Final do BP, no formato aaaamm</p>
+					<p> &#8227; <font face = "Courier New">A01_NR_HORAS_PONTA</font>: N&uacute;mero de horas considerada para modula&ccedil;&atilde;o da gera&ccedil;&atilde;o hidr&aacute;ulica para o atendimento de ponta</p>
+					<p> &#8227; <font face = "Courier New">A01_NR_COTA_LIMITE_TUCURUI</font>: Cota Tucuru&iacute; a qual ocorre limita&ccedil;&atilde;o da Gera&ccedil;&atilde;o (Simulando a perda da segunda casa de for&ccedil;a [m]</p>
+					<p> &#8227; <font face = "Courier New">A01_NR_GERACAO_LIMITE_TUCURUI</font>: Gera&ccedil;&atilde;o Limite de Tucuru&iacute; para a cota limite informada [MWmed]</p>
+					<p> &#8227; <font face = "Courier New">A01_VL_RESERVA_OPERATIVA</font>: Valor de reserva operativa que ser&aacute; acrescida &#224; demanda</p>
+					<p> &#8227; <font face = "Courier New">A01_IN_DEMANDA_LIQUIDA</font>: Tipo de Demanda: 1 para Demanda L&iacute;quida, 0 para Determin&iacute;stica</p>
+					<p> &#8227; <font face = "Courier New">A01_NR_SERIES_HIDRO</font>: Total de s&eacute;ries hidrol&oacute;gicas</p>
+					<p> &#8227; <font face = "Courier New">A01_NR_MES_INICIO_MDI</font>: Ano m&ecirc;s inicial de expans&atilde;o no arquivo Dados_MDI_PDE_AAAA, no formato aaaamm</p>
+					<p> &#8227; <font face = "Courier New">A01_NR_MES_FIM_MDI</font>: Ano m&ecirc;s final de expans&atilde;o no arquivo Dados_MDI_PDE_AAAA, no formato aaaamm</p>
+				<br>
+				<h3><font face = "Courier New">BPO_A02_REES</font></h3>
+					<p>A tabela possui as informa&ccedil;&otilde;es dos reservatórios equivalentes de energia utilizados.</p>
+					<p>Campos:</p>
+					<p> &#8227; <font face = "Courier New">A01_TP_CASO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Tipo de caso (1:PDE)</p>
+					<p> &#8227; <font face = "Courier New">A01_NR_CASO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: N&uacute;mero do caso. Identificador num&eacute;rico do caso definido pelo usu&aacute;rio</p>
+					<p> &#8227; <font face = "Courier New">A01_CD_MODELO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Tipo de modelo dos dados de entrada (1= Newave, 2=Suishi)</p>
+					<p> &#8227; <font face = "Courier New">A02_NR_REE</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Código do REE</p>
+					<p> &#8227; <font face = "Courier New">A02_TX_DESCRICAO_REE</font>: Nome do REE</p>
+					<p> &#8227; <font face = "Courier New">A02_TP_CALC_POTENCIA</font>: Tipo de Modução Geração Hidro: 1-modula a geração hidro na média (Saída Modelo de Simulação) para atender às x horas de ponta; 2-não modula e considera a geração hidráulica da ponta resultante da simulação; 3-não modula e considera a geração hidráulica média resultante da simulação</p>
+					<p> &#8227; <font face = "Courier New">A02_NR_SUBSISTEMA</font>: número do subsistema/submercado</p>
+				<br>
+				<h3><font face = "Courier New">BPO_A02_SUBSISTEMAS</font></h3>				
+					<p>A tabela possui as informa&ccedil;&otilde;es dos subsistemas utilizados.</p>
+					<p>Campos:</p>
+					<p> &#8227; <font face = "Courier New">A01_TP_CASO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Tipo de caso (1:PDE)</p>
+					<p> &#8227; <font face = "Courier New">A01_NR_CASO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: N&uacute;mero do caso. Identificador num&eacute;rico do caso definido pelo usu&aacute;rio</p>
+					<p> &#8227; <font face = "Courier New">A01_CD_MODELO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Tipo de modelo dos dados de entrada (1= Newave, 2=Suishi)</p>
+					<p> &#8227; <font face = "Courier New">A02_NR_SUBSISTEMA</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: número do subsistema/submercado</p>					
+					<p> &#8227; <font face = "Courier New">A02_TX_DESCRICAO_SUBSISTEMA</font>: Nome do subsistema/submercado</p>
+					<p> &#8227; <font face = "Courier New">A02_VL_CUSTO_DEFICIT</font>: Valor do custo de déficit [R$]</p>
+					<p> &#8227; <font face = "Courier New">A02_TP_FICTICIO</font>: Tipo de subsistema/submercado. Pode assumir 1 para ficticio, ou 0 para real</p>
+				<br>
+				<h3><font face = "Courier New">BPO_A03_DADOS_UHE</font></h3>				
+					<p> &#8227; <font face = "Courier New">A01_TP_CASO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Tipo de caso (1:PDE)</p>
+					<p> &#8227; <font face = "Courier New">A01_NR_CASO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: N&uacute;mero do caso. Identificador num&eacute;rico do caso definido pelo usu&aacute;rio</p>
+					<p> &#8227; <font face = "Courier New">A01_CD_MODELO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Tipo de modelo dos dados de entrada (1= Newave, 2=Suishi)</p>
+					<p> &#8227; <font face = "Courier New">A03_CD_USINA</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Código da usina no cadastro de usinas hidroelétricas</p>					
+					<p> &#8227; <font face = "Courier New">A02_NR_REE</font>: Código do REE</p>
+					<p> &#8227; <font face = "Courier New">A03_TX_USINA</font>: Nome da usina</p>
+					<p> &#8227; <font face = "Courier New">A03_TX_STATUS</font>: Indicador de status da usina (EX existente; EE existente com expansão; NE não existente; NC não considerada)</p>
+					<p> &#8227; <font face = "Courier New">A03_CD_TIPO</font>: Tipo de reservatório (1-reservatório; 2-fio d'água)</p>
+					<p> &#8227; <font face = "Courier New">A03_NR_PCV_0</font>: Coeficiente A0 do polinômio cota volume</p>
+					<p> &#8227; <font face = "Courier New">A03_NR_PCV_1</font>: Coeficiente A1 do polinômio cota volume</p>
+					<p> &#8227; <font face = "Courier New">A03_NR_PCV_2</font>: Coeficiente A2 do polinômio cota volume</p>
+					<p> &#8227; <font face = "Courier New">A03_NR_PCV_3</font>: Coeficiente A3 do polinômio cota volume</p>
+					<p> &#8227; <font face = "Courier New">A03_NR_PCV_4</font>: Coeficiente A4 do polinômio cota volume</p>
+					<p> &#8227; <font face = "Courier New">A03_NR_PVNJ_0</font>: Coeficiente A0 do polinômio de vazão de nível de jusante</p>
+					<p> &#8227; <font face = "Courier New">A03_NR_PVNJ_1</font>: Coeficiente A1 do polinômio de vazão de nível de jusante</p>
+					<p> &#8227; <font face = "Courier New">A03_NR_PVNJ_2</font>: Coeficiente A2 do polinômio de vazão de nível de jusante</p>
+					<p> &#8227; <font face = "Courier New">A03_NR_PVNJ_3</font>: Coeficiente A3 do polinômio de vazão de nível de jusante</p>
+					<p> &#8227; <font face = "Courier New">A03_NR_PVNJ_4</font>: Coeficiente A4 do polinômio de vazão de nível de jusante</p>
+					<p> &#8227; <font face = "Courier New">A03_TP_PERDA</font>: Tipo de perda (1=percentual/2=metro)</p>
+					<p> &#8227; <font face = "Courier New">A03_VL_PERDA</font>: Valor da perda</p>
+					<p> &#8227; <font face = "Courier New">A03_TP_TURBINA</font>: Tipo de turbina - 0:Não Há; 1:Francis; 2:Kaplan/Propeller; 3:Pelton</p>
+					<p> &#8227; <font face = "Courier New">A03_VL_PRODUTIBILIDADE</font>: Valor de produtibilidade específica [MW/m3/s/m]</p>
+				<br>
+				<h3><font face = "Courier New">BPO_A04_MAQUINAS_UHE</font></h3>				
+					<p> &#8227; <font face = "Courier New">A01_TP_CASO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Tipo de caso (1:PDE)</p>
+					<p> &#8227; <font face = "Courier New">A01_NR_CASO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: N&uacute;mero do caso. Identificador num&eacute;rico do caso definido pelo usu&aacute;rio</p>
+					<p> &#8227; <font face = "Courier New">A01_CD_MODELO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Tipo de modelo dos dados de entrada (1= Newave, 2=Suishi)</p>
+					<p> &#8227; <font face = "Courier New">A03_CD_USINA</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Código da usina no cadastro de usinas hidroelétricas</p>
+					<p> &#8227; <font face = "Courier New">A04_NR_CONJUNTO</font>: Conjunto de máquinas</p>
+					<p> &#8227; <font face = "Courier New">A04_NR_MAQUINAS</font>: Número de máquinas</p>
+					<p> &#8227; <font face = "Courier New">A04_VL_POTENCIA</font>: Potência [MW]</p>
+					<p> &#8227; <font face = "Courier New">A04_VL_ALTURA_REFERENCIA</font>: Altura de referência da queda [m]</p>
+				<br>
+				<h3><font face = "Courier New">BPO_A05_DADOS_VIGENTES_UHE</font></h3>				
+					<p> &#8227; <font face = "Courier New">A01_TP_CASO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Tipo de caso (1:PDE)</p>
+					<p> &#8227; <font face = "Courier New">A01_NR_CASO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: N&uacute;mero do caso. Identificador num&eacute;rico do caso definido pelo usu&aacute;rio</p>
+					<p> &#8227; <font face = "Courier New">A01_CD_MODELO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Tipo de modelo dos dados de entrada (1= Newave, 2=Suishi)</p>
+					<p> &#8227; <font face = "Courier New">A03_CD_USINA</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Código da usina no cadastro de usinas hidroelétricas</p>
+					<p> &#8227; <font face = "Courier New">A05_NR_MES</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Ano m&ecirc;s no formato aaaamm</p>
+					<p> &#8227; <font face = "Courier New">A02_NR_REE</font>: Código do REE</p>
+					<p> &#8227; <font face = "Courier New">A05_NR_CANAL_FUGA_MEDIO</font>: Canal de fuga médio [m]</p>
+					<p> &#8227; <font face = "Courier New">A05_VL_VOL_MAX</font>: Volume Máximo [hm3]</p>
+					<p> &#8227; <font face = "Courier New">A05_VL_VOL_MIN</font>: Volume Mínimo [hm3]</p>
+					<p> &#8227; <font face = "Courier New">A05_VL_VAZAO_MINIMA</font>: Vazão mínima do histórico [m3/s]</p>
+					<p> &#8227; <font face = "Courier New">A05_NR_CONJUNTOS</font>: Número de conjuntos de máquinas</p>
+					<p> &#8227; <font face = "Courier New">A05_VL_TEIF</font>: Taxa esperada de indisponibilidade forcada (TEIF) [%]</p>
+					<p> &#8227; <font face = "Courier New">A05_VL_IP</font>: Indisponibilidade programada (IP) [%]</p>
+					<p> &#8227; <font face = "Courier New">A05_VL_POTENCIA</font>: Potência efetiva da usina [MW]</p>
+					<p> &#8227; <font face = "Courier New">A05_VL_POTENCIA_EXPANSAO</font>: Potência em expansão [MW]</p>
+				<br>
+				<h3><font face = "Courier New">BPO_A06_SAIDA_HIDRO_NEWAVE</font></h3>				
+					<p> &#8227; <font face = "Courier New">A01_TP_CASO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Tipo de caso (1:PDE)</p>
+					<p> &#8227; <font face = "Courier New">A01_NR_CASO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: N&uacute;mero do caso. Identificador num&eacute;rico do caso definido pelo usu&aacute;rio</p>
+					<p> &#8227; <font face = "Courier New">A01_CD_MODELO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Tipo de modelo dos dados de entrada (1= Newave, 2=Suishi)</p>
+					<p> &#8227; <font face = "Courier New">A02_NR_REE</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Código do REE</p>
+					<p> &#8227; <font face = "Courier New">A06_NR_MES</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Ano m&ecirc;s no formato aaaamm</p>
+					<p> &#8227; <font face = "Courier New">A06_NR_SERIE</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: N&uacute;mero da série hidro</p>
+					<p> &#8227; <font face = "Courier New">A06_VL_PERC_ARMAZENAMENTO</font>: Valor de energia armazenada final em relaçao a máxima [%]</p>
+					<p> &#8227; <font face = "Courier New">A06_VL_GERACAO_HIDRAULICA</font>: Valor de geração hidroelétrica [MWmes]</p>
+					<p> &#8227; <font face = "Courier New">A06_VL_SUBMOTORIZACAO</font>: Valor de submotorização</p>
+				<br>
+				<h3><font face = "Courier New">BPO_A08_DADOS_CALCULADOS_UHE</font></h3>				
+					<p> &#8227; <font face = "Courier New">A01_TP_CASO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Tipo de caso (1:PDE)</p>
+					<p> &#8227; <font face = "Courier New">A01_NR_CASO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: N&uacute;mero do caso. Identificador num&eacute;rico do caso definido pelo usu&aacute;rio</p>
+					<p> &#8227; <font face = "Courier New">A01_CD_MODELO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Tipo de modelo dos dados de entrada (1= Newave, 2=Suishi)</p>
+					<p> &#8227; <font face = "Courier New">A03_CD_USINA</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Código da usina no cadastro de usinas hidroelétricas</p>
+					<p> &#8227; <font face = "Courier New">A08_NR_MES</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Ano m&ecirc;s no formato aaaamm</p>
+					<p> &#8227; <font face = "Courier New">A08_NR_SERIE</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: N&uacute;mero da série hidro</p>
+					<p> &#8227; <font face = "Courier New">A02_NR_REE</font>: Código do REE</p>
+					<p> &#8227; <font face = "Courier New">A08_VL_VOLUME_OPERATIVO</font>: </p>
+					<p> &#8227; <font face = "Courier New">A08_VL_COTA_OPERATIVA</font>: </p>
+					<p> &#8227; <font face = "Courier New">A08_VL_ALTURA_LIQUIDA</font>: </p>
+					<p> &#8227; <font face = "Courier New">A08_VL_VAZAO_MAXIMA</font>: </p>
+					<p> &#8227; <font face = "Courier New">A08_VL_POTENCIA_MAXIMA</font>: </p>
+					<p> &#8227; <font face = "Courier New">A08_VL_GERACAO_HIDRO_MINIMA_ORIGINAL</font>: </p>
+					<p> &#8227; <font face = "Courier New">A08_VL_GERACAO_HIDRO_MINIMA</font>: </p>
+					<p> &#8227; <font face = "Courier New">A08_VL_GERACAO_HIDRO_MEDIA</font>: </p>
+					<p> &#8227; <font face = "Courier New">A08_VL_VAZAO_MAXIMA_MODULADA</font>: </p>
+					<p> &#8227; <font face = "Courier New">A08_VL_ALTURA_MODULADA</font>: </p>
+					<p> &#8227; <font face = "Courier New">A08_VL_POTENCIA_MAXIMA_MODULADA</font>: </p>
+				<br>
+				<h3><font face = "Courier New">BPO_A09_DISPONIBILIDADE_HIDRO_PONTA_SUBSISTEMA</font></h3>				
+					<p> &#8227; <font face = "Courier New">A01_TP_CASO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Tipo de caso (1:PDE)</p>
+					<p> &#8227; <font face = "Courier New">A01_NR_CASO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: N&uacute;mero do caso. Identificador num&eacute;rico do caso definido pelo usu&aacute;rio</p>
+					<p> &#8227; <font face = "Courier New">A01_CD_MODELO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Tipo de modelo dos dados de entrada (1= Newave, 2=Suishi)</p>
+					<p> &#8227; <font face = "Courier New">A02_NR_SUBSISTEMA</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: número do subsistema/submercado</p>
+					<p> &#8227; <font face = "Courier New">A09_NR_MES</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Ano m&ecirc;s no formato aaaamm</p>
+					<p> &#8227; <font face = "Courier New">A09_NR_SERIE</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: N&uacute;mero da série hidro</p>
+					<p> &#8227; <font face = "Courier New">A09_VL_POTENCIA_MAXIMA</font>: Valor da potência máxima</p>
+					<p> &#8227; <font face = "Courier New">A09_VL_GERACAO_HIDRO_MINIMA_ORIGINAL</font>: Valor da geração hidráulica míninima original</p>
+					<p> &#8227; <font face = "Courier New">A09_VL_GERACAO_HIDRO_MINIMA</font>: Valor da geração hidráulica míninima revisada na metodologia do balanço de ponta</p>
+					<p> &#8227; <font face = "Courier New">A09_VL_DISPONIBILIDADE_MAXIMA_PONTA</font>: Valor da disponibilidade máxima na ponta</p>
+				<br>
+				<h3><font face = "Courier New">BPO_A10_DEMANDA</font></h3>				
+					<p> &#8227; <font face = "Courier New">A01_TP_CASO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Tipo de caso (1:PDE)</p>
+					<p> &#8227; <font face = "Courier New">A01_NR_CASO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: N&uacute;mero do caso. Identificador num&eacute;rico do caso definido pelo usu&aacute;rio</p>
+					<p> &#8227; <font face = "Courier New">A01_CD_MODELO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Tipo de modelo dos dados de entrada (1= Newave, 2=Suishi)</p>
+					<p> &#8227; <font face = "Courier New">A02_NR_SUBSISTEMA</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: número do subsistema/submercado</p>
+					<p> &#8227; <font face = "Courier New">A10_NR_MES</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Ano m&ecirc;s no formato aaaamm</p>
+					<p> &#8227; <font face = "Courier New">A10_NR_SEQ_FREQUENCIA</font>: Identificador da demanda</p>
+					<p> &#8227; <font face = "Courier New">A10_VL_FREQUENCIA</font>: Probabilidade de ocorrência</p>
+					<p> &#8227; <font face = "Courier New">A10_VL_DEMANDA</font>: Valor de demanda média</p>
+				<br>
+				<h3><font face = "Courier New">--------</font></h3>				
+					<p> &#8227; <font face = "Courier New">A01_TP_CASO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Tipo de caso (1:PDE)</p>
+					<p> &#8227; <font face = "Courier New">A01_NR_CASO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: N&uacute;mero do caso. Identificador num&eacute;rico do caso definido pelo usu&aacute;rio</p>
+					<p> &#8227; <font face = "Courier New">A01_CD_MODELO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Tipo de modelo dos dados de entrada (1= Newave, 2=Suishi)</p>
+					<p> &#8227; <font face = "Courier New"> </font>: </p>
+				<br>
+				<h3><font face = "Courier New"> </font></h3>				
+					<p> &#8227; <font face = "Courier New">A01_TP_CASO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Tipo de caso (1:PDE)</p>
+					<p> &#8227; <font face = "Courier New">A01_NR_CASO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: N&uacute;mero do caso. Identificador num&eacute;rico do caso definido pelo usu&aacute;rio</p>
+					<p> &#8227; <font face = "Courier New">A01_CD_MODELO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Tipo de modelo dos dados de entrada (1= Newave, 2=Suishi)</p>
+					<p> &#8227; <font face = "Courier New"> </font>: </p>
+				<br>
+				<h3><font face = "Courier New"> </font></h3>				
+					<p> &#8227; <font face = "Courier New">A01_TP_CASO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Tipo de caso (1:PDE)</p>
+					<p> &#8227; <font face = "Courier New">A01_NR_CASO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: N&uacute;mero do caso. Identificador num&eacute;rico do caso definido pelo usu&aacute;rio</p>
+					<p> &#8227; <font face = "Courier New">A01_CD_MODELO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Tipo de modelo dos dados de entrada (1= Newave, 2=Suishi)</p>
+					<p> &#8227; <font face = "Courier New"> </font>: </p>
+				<br>
+				<h3><font face = "Courier New"> </font></h3>				
+					<p> &#8227; <font face = "Courier New">A01_TP_CASO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Tipo de caso (1:PDE)</p>
+					<p> &#8227; <font face = "Courier New">A01_NR_CASO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: N&uacute;mero do caso. Identificador num&eacute;rico do caso definido pelo usu&aacute;rio</p>
+					<p> &#8227; <font face = "Courier New">A01_CD_MODELO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Tipo de modelo dos dados de entrada (1= Newave, 2=Suishi)</p>
+					<p> &#8227; <font face = "Courier New"> </font>: </p>
+				<br>
 		</div>
+		<h2>Diagrama Entidade e Relacionamento</h2>
+		<img src = "../imagens/bd_balanco.png" />			
 </body>
 
 
