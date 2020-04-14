@@ -3,7 +3,7 @@
 \docType{data}
 \name{uiBalanco}
 \alias{uiBalanco}
-\title{Interface do usuario (ui) Shiny do Banlanco de Ponta}
+\title{Interface do usuario (ui) Shiny do Balanco de Ponta}
 \format{An object of class \code{shiny.tag.list} (inherits from \code{list}) of length 3.}
 \usage{
 uiBalanco
