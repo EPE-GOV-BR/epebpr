@@ -165,41 +165,6 @@ carregaDadosSQLite <- function(baseSQLite, pastaCaso, pastaSaidas, tipoCaso, num
   # alem disso, grava as tabelas de apoio BPO_A18_TIPOS_OFR e BPO_A19_FATOR_PONTA_OFR
   gravacaoDadosDisponibilidadeOutrasFontesBDBP(pastaCaso, conexao, tipoCaso, numeroCaso, codModelo, anoMesInicioMDI, anoMesFimMDI)
   
-  # # BPO_A18_TIPOS_OFR
-  # # limpa a tabela de uma eventual rodada anterior
-  # query <- "SELECT COUNT(*) AS TOTAL FROM BPO_A18_TIPOS_OFR"
-  # apagar <- dbGetQuery(conexao, query) %>% pull()
-  # if (apagar > 0) {
-  #   query <- "DELETE FROM BPO_A18_TIPOS_OFR"
-  #   dbExecute(conexao, query)
-  # }
-  # 
-  # arquivoDadosOFR <- paste(pastaCaso, "dadosOFR.xlsx", sep = "/")
-  # if (!file.exists(arquivoDadosOFR)) {
-  #   stop(paste0("arquivo ", arquivoDadosOFR, " com dados de oferta renov\u00E1vel n\u00E3o encontrado!"))
-  # }
-  # df.tiposOFR <- read_xlsx(arquivoDadosOFR, sheet = "TiposOutrasFontes")
-  # 
-  # # salva BPO_A18_TIPOS_OFR
-  # dbWriteTable(conexao, "BPO_A18_TIPOS_OFR", df.tiposOFR, append = T)
-  # 
-  # # BPO_A19_FATOR_PONTA_OFR
-  # # limpa a tabela de uma eventual rodada anterior
-  # query <- paste0("SELECT COUNT(*) AS TOTAL FROM BPO_A19_FATOR_PONTA_OFR WHERE A01_TP_CASO = ", tipoCaso, " AND A01_NR_CASO = ", numeroCaso,
-  #                 " AND A01_CD_MODELO = ", codModelo)
-  # apagar <- dbGetQuery(conexao, query) %>% pull()
-  # if (apagar > 0) {
-  #   query <- paste0("DELETE FROM BPO_A19_FATOR_PONTA_OFR WHERE A01_TP_CASO = ", tipoCaso, " AND A01_NR_CASO = ", numeroCaso,
-  #                   " AND A01_CD_MODELO = ", codModelo)
-  #   dbExecute(conexao, query)
-  # }
-  # 
-  # df.fatorPontaOFR <- read_xlsx(arquivoDadosOFR, sheet = "FatorPonta") %>% 
-  #   mutate(A01_TP_CASO = tipoCaso, A01_NR_CASO = numeroCaso, A01_CD_MODELO = codModelo)
-  # 
-  # # salva BPO_A19_FATOR_PONTA_OFR
-  # dbWriteTable(conexao, "BPO_A19_FATOR_PONTA_OFR", df.fatorPontaOFR, append = T)
-  
   # efetua commit no banco de dados confirmando todas as gravacoes com sucesso
   dbExecute(conexao, "COMMIT TRANSACTION;")
   # fecha conexao

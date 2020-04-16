@@ -47,6 +47,15 @@ gravacaoDadosDisponibilidadeOutrasFontesBDBP <- function(pastaCaso, conexao, tip
   if (length(planilhaPequenas) != 1) {
     stop("Planilha de pequenas n\u00E3o encontrada ou multiplos arquivos com nome GeraPeq em ", pastaCaso)
   }
+  # verifica se o excel possui a aba correta
+  abasExcelPequenas <- "Principal"
+  abasExcelPequenasLidos <- excel_sheets(paste(pastaCaso, planilhaPequenas, sep = "/"))
+  abasExistentes <- setdiff(abasExcelPequenas,abasExcelPequenasLidos)
+  if(length(abasExistentes != 0)) {
+    stop(paste0("arquivo ", planilhaPequenas, " n\u00E3o possui a aba de nome Principal!"))
+  }
+  
+  
   # leitura do excel com informacao das usinas contratadas
   df.renovaveis <- read_xlsx(path = paste(pastaCaso, planilhaPequenas, sep = "/"), sheet = "Principal", range = cell_cols("B:S"), 
                               col_types = c("text", "text", "numeric", "date", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric",
@@ -67,8 +76,17 @@ gravacaoDadosDisponibilidadeOutrasFontesBDBP <- function(pastaCaso, conexao, tip
   
   ## dados de outras renovaveis
   arquivoDadosOFR <- paste(pastaCaso, "dadosOFR.xlsx", sep = "/")
+  # verifica exitencia do excel
   if (!file.exists(arquivoDadosOFR)) {
     stop(paste0("arquivo ", arquivoDadosOFR, " com dados de oferta renov\u00E1vel n\u00E3o encontrado em ", pastaCaso))
+  }
+  # verifica se o excel possui as abas corretas
+  abasExcelDadosOFR <- c("FatorPonta", "RelacaoIndicativas", "SazonalidadeIndicativas", "TipoContribuicaoPonta")
+  abasExcelDadosOFRLidos <- excel_sheets(arquivoDadosOFR)
+  abasExistentes <- setdiff(abasExcelDadosOFR,abasExcelDadosOFRLidos)
+  if(length(abasExistentes != 0)) {
+    stop(paste0("arquivo ", arquivoDadosOFR, " n\u00E3o possui a(s) aba(s) ", paste(abasExistentes, collapse = ", "), 
+                " ou h\u00E1 problema com o(s) nome(s) da(s) aba(s)!"))
   }
   
   # BPO_A18_TIPOS_OFR
