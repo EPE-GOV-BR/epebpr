@@ -1,7 +1,7 @@
 Package: epebpr
 Title: Balanco de Ponta
 Type: Package
-Version: 0.8.3
+Version: 0.8.4
 Date: 2019-12-02
 Author: Gustavo Haydt [aut, cre],
   Simone Brandao [aut, cre],
@@ -25,7 +25,6 @@ Depends: R (>= 3.6),
   shiny,
   shinythemes,
   shinybusy,
-  DT,
   tictoc,
   ggplot2,
   zoo,
