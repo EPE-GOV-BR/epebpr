@@ -52,6 +52,7 @@ gravacaoDadosDisponibilidadeOutrasFontesBDBP <- function(pastaCaso, conexao, tip
   abasExcelPequenasLidos <- excel_sheets(paste(pastaCaso, planilhaPequenas, sep = "/"))
   abasExistentes <- setdiff(abasExcelPequenas,abasExcelPequenasLidos)
   if(length(abasExistentes != 0)) {
+    dbDisconnect(conexao)
     stop(paste0("arquivo ", planilhaPequenas, " n\u00E3o possui a aba de nome Principal!"))
   }
   
@@ -63,6 +64,7 @@ gravacaoDadosDisponibilidadeOutrasFontesBDBP <- function(pastaCaso, conexao, tip
   # trata nome de colunas com acentos
   codificacao <- Encoding(colnames(df.renovaveis)) %>% .[. != "unknown"] %>% unique()
   if (length(codificacao) != 1) {
+    dbDisconnect(conexao)
     stop("Problema de codifica\u00E7\u00E3o (UTF-8) na Planilha de pequenas. Uma solu\u00E7\u00E3o \u00E9 remover os acentos dos nomes das colunas.")
   }
   colnames(df.renovaveis) <- iconv(colnames(df.renovaveis), from = codificacao, to = "ASCII//TRANSLIT")
@@ -78,6 +80,7 @@ gravacaoDadosDisponibilidadeOutrasFontesBDBP <- function(pastaCaso, conexao, tip
   arquivoDadosOFR <- paste(pastaCaso, "dadosOFR.xlsx", sep = "/")
   # verifica exitencia do excel
   if (!file.exists(arquivoDadosOFR)) {
+    dbDisconnect(conexao)
     stop(paste0("arquivo ", arquivoDadosOFR, " com dados de oferta renov\u00E1vel n\u00E3o encontrado em ", pastaCaso))
   }
   # verifica se o excel possui as abas corretas
@@ -85,6 +88,7 @@ gravacaoDadosDisponibilidadeOutrasFontesBDBP <- function(pastaCaso, conexao, tip
   abasExcelDadosOFRLidos <- excel_sheets(arquivoDadosOFR)
   abasExistentes <- setdiff(abasExcelDadosOFR,abasExcelDadosOFRLidos)
   if(length(abasExistentes != 0)) {
+    dbDisconnect(conexao)
     stop(paste0("arquivo ", arquivoDadosOFR, " n\u00E3o possui a(s) aba(s) ", paste(abasExistentes, collapse = ", "), 
                 " ou h\u00E1 problema com o(s) nome(s) da(s) aba(s)!"))
   }
@@ -134,6 +138,7 @@ gravacaoDadosDisponibilidadeOutrasFontesBDBP <- function(pastaCaso, conexao, tip
     # trata nome de colunas com acentos
     codificacao <- Encoding(colnames(df.sazonalidadeIndicativas)) %>% .[. != "unknown"] %>% unique()
     if (length(codificacao) != 1) {
+      dbDisconnect(conexao)
       stop("Problema de codifica\u00E7\u00E3o (UTF-8) na Planilha ", arquivoDadosOFR,  
            " na aba SazonalidadeIndicativas. Uma solu\u00E7\u00E3o \u00E9 remover os acentos dos nomes das colunas.")
     }
@@ -141,6 +146,7 @@ gravacaoDadosDisponibilidadeOutrasFontesBDBP <- function(pastaCaso, conexao, tip
     
     arquivoExpansao <- list.files(path = pastaCaso, pattern = "^saidaExpansao")
     if (length(arquivoExpansao) != 1) {
+      dbDisconnect(conexao)
       stop("Arquivo texto saidaExpansao n\u00E3o encontrado ou multiplos arquivos com nome saidaExpansao em ", pastaCaso)
     }
     
