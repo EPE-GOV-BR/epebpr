@@ -64,7 +64,7 @@ dadosGraficoRiscoDeficit <- function(baseSQLite, tipoCaso, numeroCaso, codModelo
   
   # cria coluna de data anoMes, mes e ano e filtra o horizonte para exibicao no grafico
   tib.resultados <- tib.resultados %>% 
-    mutate(anoMes = as.character(A09_NR_MES) %>% as.yearmon("%Y%m") %>% as.Date(),
+    mutate(anoMes = as.character(A09_NR_MES) %>% as.yearmon("%Y%m") %>% zoo::as.Date(),
            mes = A09_NR_MES %% 100, ano = A09_NR_MES %/% 100) %>% 
     filter(between(ano, inicioHorizonteGrafico, fimHorizonteGrafico))
   

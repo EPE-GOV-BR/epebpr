@@ -1,7 +1,7 @@
 Package: epebpr
 Title: Balanco de Ponta
 Type: Package
-Version: 0.8.42
+Version: 0.8.44
 Date: 2019-12-02
 Author: Gustavo Haydt [aut, cre],
   Simone Brandao [aut, cre],
@@ -11,7 +11,7 @@ Description: Ferramenta de calculo do Balanco de Ponta a partir das simulacoes d
 License: GPL-2
 Encoding: UTF-8
 LazyData: FALSE
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.0
 Depends: R (>= 3.6),
   readr,
   readxl,

@@ -68,7 +68,7 @@ dadosGraficoCVAR <- function(baseSQLite, tipoCaso, numeroCaso, codModelo,
   tib.resultadosCvarMes <- tib.resultadosCvarMes %>% gather(key = "tamanhoCVAR", value = "cvar", -A09_NR_MES)
   
   # cria coluna do tipo data a partir do campo anoMes e filtra o horizonte para exibicao no grafico
-  tib.resultadosCvarMes <- tib.resultadosCvarMes %>% mutate(anoMes = as.character(A09_NR_MES) %>% as.yearmon("%Y%m") %>% as.Date()) %>% 
+  tib.resultadosCvarMes <- tib.resultadosCvarMes %>% mutate(anoMes = as.character(A09_NR_MES) %>% as.yearmon("%Y%m") %>% zoo::as.Date()) %>% 
     filter(between(as.integer(format(anoMes, "%Y")), inicioHorizonteGrafico, fimHorizonteGrafico))
   
   # inclusao de maximo cvar por tipo para possibilitar a identificacao dos maximos no grafico

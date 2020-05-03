@@ -168,7 +168,7 @@ calculaBalancoParalelo <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
   clusterExport(clusterBalanco, "balancoPeriodoClp")
   
   quantidadeCenarios <- nrow(df.demandasAnoMesSerie)
-  # calcula as janelas de 200 registros para inserir em lote
+  # calcula as janelas de 1000 registros para inserir em lote
   tamanhoJanela <- 1000
   janelaCenarios <- c(seq(1, quantidadeCenarios, tamanhoJanela), (quantidadeCenarios + 1))
   quantidadeJanela <- length(janelaCenarios)

@@ -64,7 +64,7 @@ graficoRiscoDeficit <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, ini
   
   # cria coluna de data anoMes, mes e ano e filtra o horizonte para exibicao no grafico
   tib.resultados <- tib.resultados %>% 
-    mutate(anoMes = as.character(A09_NR_MES) %>% as.yearmon("%Y%m") %>% as.Date(),
+    mutate(anoMes = as.character(A09_NR_MES) %>% as.yearmon("%Y%m") %>% zoo::as.Date(),
            mes = A09_NR_MES %% 100, ano = A09_NR_MES %/% 100) %>% 
     filter(between(ano, inicioHorizonteGrafico, fimHorizonteGrafico))
   
@@ -93,18 +93,20 @@ graficoRiscoDeficit <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, ini
   # cria vetor auxiliar com as datas em que ocorreu o maior risco mensal em cada ano do horizonte
   maximosAnuais <- tib.resultadosMes %>% group_by(ano) %>% summarise(riscoMensal = max(riscoMensal)) %>% 
     semi_join(tib.resultadosMes, ., by = c("ano", "riscoMensal")) %>% pull (anoMes)
+  filtroDuplicados <- maximosAnuais %>% format("%Y") %>% duplicated() %>% not()
+  maximosAnuais <- maximosAnuais[filtroDuplicados]
   
   # carrega fontes de texto para o grafico
-  font_add_google("Montserrat", "Montserrat")
-  showtext_auto()
+  # font_add_google("Montserrat", "Montserrat")
+  # showtext_auto()
   
   # exibe grafico mensal de risco
   graficoRisco <- ggplot(tib.resultadosMes, aes(x = anoMes, y = riscoMensal)) + 
     geom_col(aes(fill = "Risco Mensal")) +
     geom_line(aes(y = riscoAnual, colour = "Risco Anual"), size = 1.5) +
     geom_text(aes(label = ifelse(anoMes %in% maximosAnuais, percent(riscoMensal, accuracy = 0.1, scale = 100, suffix = "%", decimal.mark = ","), "")), 
-              nudge_y = (ceiling(max(tib.resultadosMes$riscoMensal)*10)/10 * 0.05), 
-              hjust = 0.5, show.legend = FALSE, fontface = "bold", size = 5, family = "Montserrat") +
+              nudge_y = (ceiling(max(tib.resultadosMes$riscoMensal)*10)/10 * 0.05),
+              hjust = 0.4, show.legend = FALSE, fontface = "bold", size = 5, family = "sans") +
     scale_x_date(name = "M\u00EAs", date_labels = "%b-%y", expand = c(0,0), breaks = marcasEixoMes) + 
     scale_y_continuous(name = "Risco de D\u00E9ficit", expand = c(0,0), labels = percent_format(accuracy = 0.1, scale = 100, suffix = "%", decimal.mark = ","),
                        breaks = seq(0, ceiling(max(tib.resultadosMes$riscoMensal)*10)/10, ceiling(max(tib.resultadosMes$riscoMensal)*10)/10/16),
@@ -113,7 +115,7 @@ graficoRiscoDeficit <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, ini
     scale_colour_manual(name = NULL, values = "red2") +
     ggtitle(label = tituloGrafico) + 
     expand_limits(x = max(tib.resultadosMes$anoMes) + 20) + # dar uma folga no grafico
-    theme(text = element_text(size = 12, family = "Montserrat"),
+    theme(text = element_text(size = 20, family = "sans"),
           plot.title = element_text(face = "bold", hjust = 0.5, size = rel(1)),
           strip.background = element_blank(),
           panel.background = element_rect(fill = "white"),

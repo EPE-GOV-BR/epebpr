@@ -72,7 +72,7 @@ graficoCVAR <- function(baseSQLite, tipoCaso, numeroCaso, codModelo,
   tib.resultadosCvarMes <- tib.resultadosCvarMes %>% gather(key = "tamanhoCVAR", value = "cvar", -A09_NR_MES)
   
   # cria coluna do tipo data a partir do campo anoMes e filtra o horizonte para exibicao no grafico
-  tib.resultadosCvarMes <- tib.resultadosCvarMes %>% mutate(anoMes = as.character(A09_NR_MES) %>% as.yearmon("%Y%m") %>% as.Date()) %>% 
+  tib.resultadosCvarMes <- tib.resultadosCvarMes %>% mutate(anoMes = as.character(A09_NR_MES) %>% as.yearmon("%Y%m") %>% zoo::as.Date()) %>% 
     filter(between(as.integer(format(anoMes, "%Y")), inicioHorizonteGrafico, fimHorizonteGrafico))
   
   # inclusao de maximo cvar por tipo para possibilitar a identificacao dos maximos no grafico
@@ -81,14 +81,14 @@ graficoCVAR <- function(baseSQLite, tipoCaso, numeroCaso, codModelo,
   
   # tibble criado para possibilitar marcacao da area do grafico onde se encontra o maximo
   tib.localMaxCvar <- rbind(tib.resultadosCvarMes %>% filter(cvar == maxCVAR), 
-                            tib.resultadosCvarMes %>% filter(cvar == maxCVAR) %>% mutate(anoMes = as.Date(as.yearmon(anoMes)+1/12)))
+                            tib.resultadosCvarMes %>% filter(cvar == maxCVAR) %>% mutate(anoMes = zoo::as.Date(as.yearmon(anoMes)+1/12)))
   
   # cria vetor auxiliar com os marcadores que aparecerao no eixo de tempo no grafico
   marcasEixoMes <- tib.resultadosCvarMes %>% filter(months(anoMes) %in% c("janeiro","julho")) %>% pull(anoMes) %>% c(., max(tib.resultadosCvarMes$anoMes))
   
   # carrega fontes para o grafico
-  font_add_google("Montserrat", "Montserrat")
-  showtext_auto()
+  # font_add_google("Montserrat", "Montserrat")
+  # showtext_auto()
   
   if (tipoGrafico == 1) {
     # exibe grafico mensal de cvar separado por tipo de cvar
@@ -100,7 +100,7 @@ graficoCVAR <- function(baseSQLite, tipoCaso, numeroCaso, codModelo,
                 nudge_y = (ceiling(max(tib.resultadosCvarMes$cvar)*10)/10 * 0.1), 
                 hjust = 0.2,
                 show.legend = FALSE, 
-                fontface = "bold", size = 5, family = "Montserrat") +
+                fontface = "bold", size = 5, family = "sans") +
       scale_x_date(name = "M\u00EAs", date_labels = "%b-%y", expand = c(0,0), breaks = marcasEixoMes) +
       scale_y_continuous(name = "% da Demanda", expand = c(0,0), labels = percent_format(accuracy = 0.1, scale = 100, suffix = "%", decimal.mark = ","),
                          breaks = seq(0, ceiling(max(tib.resultadosCvarMes$cvar)*10)/10, ceiling(max(tib.resultadosCvarMes$cvar)*10)/10/5),
@@ -108,7 +108,7 @@ graficoCVAR <- function(baseSQLite, tipoCaso, numeroCaso, codModelo,
       scale_color_manual(name = NULL, values = c("black", "darkgreen", "red2", "steelblue"), labels = c("cvar 1,5%", "cvar 2,5%", "cvar 5%", "cvar 10%")) + 
       ggtitle(label = tituloGraficoCVARMes) + 
       expand_limits(x = max(tib.resultadosCvarMes$anoMes) + 20) + # dar uma folga no grafico
-      theme(text = element_text(size = 12, family = "Montserrat"),
+      theme(text = element_text(size = 20, family = "sans"),
             plot.title = element_text(face = "bold", hjust = 0.5, size = rel(1)),
             # plot.background = element_rect(fill = "gray98"),
             strip.background = element_blank(),
@@ -139,7 +139,7 @@ graficoCVAR <- function(baseSQLite, tipoCaso, numeroCaso, codModelo,
       scale_color_manual(name = NULL, values = c("black", "darkgreen", "red2", "steelblue"), labels = c("cvar 1,5%", "cvar 2,5%", "cvar 5%", "cvar 10%")) + 
       ggtitle(label = tituloGraficoCVARMes) + 
       expand_limits(x = max(tib.resultadosCvarMes$anoMes) + 20) + # dar uma folga no grafico
-      theme(text = element_text(size = 12, family = "Montserrat"),
+      theme(text = element_text(size = 20, family = "sans"),
             plot.title = element_text(face = "bold", hjust = 0.5, size = rel(1)),
             # plot.background = element_rect(fill = "gray98"),
             strip.background = element_blank(),
@@ -185,7 +185,7 @@ graficoCVAR <- function(baseSQLite, tipoCaso, numeroCaso, codModelo,
       scale_color_manual(name = NULL, values = c("black", "darkgreen", "red2", "steelblue"), labels = c("cvar 1,5%", "cvar 2,5%", "cvar 5%", "cvar 10%")) + 
       ggtitle(label = tituloGraficoCVARAno) +
       expand_limits(x = max(tib.resultadosCvarAno$ano) + 0.2) + # dar uma folga no grafico
-      theme(text = element_text(size = 12, family = "Montserrat"),
+      theme(text = element_text(size = 20, family = "sans"),
             plot.title = element_text(face = "bold", hjust = 0.5, size = rel(1)), 
             # plot.background = element_rect(fill = "gray98"),
             strip.background = element_blank(),
