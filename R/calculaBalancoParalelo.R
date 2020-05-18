@@ -26,6 +26,8 @@ calculaBalancoParalelo <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
   
   # abre conexao
   conexao <- dbConnect(RSQLite::SQLite(), baseSQLite)
+  # fecha conexao com a base SQLite na saida da funcao, seja por erro ou normalmente
+  on.exit(dbDisconnect(conexao))
   
   # seleciona os sistemas do balanco
   query <- paste0("SELECT A02_NR_SUBSISTEMA AS subsistema, A02_TP_FICTICIO AS tipoSistema ", 
@@ -128,6 +130,7 @@ calculaBalancoParalelo <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
   rm(df.demandasAnoMes)
   
   dbExecute(conexao, "BEGIN TRANSACTION;")
+
   # limpa a base de uma eventual rodada anterior
   # BPO_A16_BALANCO
   query <- paste0("SELECT COUNT(*) AS TOTAL FROM BPO_A16_BALANCO WHERE A01_TP_CASO = ", tipoCaso, " AND A01_NR_CASO = ", numeroCaso,
@@ -166,6 +169,9 @@ calculaBalancoParalelo <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
   clusterBalanco <- makeCluster(coresParaUso)
   registerDoParallel(clusterBalanco)
   clusterExport(clusterBalanco, "balancoPeriodoClp")
+  
+  # para cluster na saida da funcao, seja por erro ou normalmente
+  on.exit(stopCluster(clusterBalanco), add = T, after = F)
   
   quantidadeCenarios <- nrow(df.demandasAnoMesSerie)
   # calcula as janelas de 1000 registros para inserir em lote
@@ -234,12 +240,12 @@ calculaBalancoParalelo <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
     }
   }
   
-  # para cluster
-  stopCluster(clusterBalanco)
+  # # para cluster
+  # stopCluster(clusterBalanco)
   # efetua commit no banco de dados
   dbExecute(conexao, "COMMIT TRANSACTION;")
-  # fecha conexao
-  dbDisconnect(conexao)
+  # # fecha conexao
+  # dbDisconnect(conexao)
   
   return("Balan\u00E7o de ponta executado e gravado com sucesso!")
 }
