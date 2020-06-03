@@ -242,7 +242,7 @@ serverBalanco <- function(input, output, session) {
                                                                      as.numeric(input$anoFimGrafico))
                                       
                                     })  
-                                  } else {
+                                  } else if(as.numeric(input$tipoGrafico) %in% c(1,2,3)){
                                     withLogErrors({
                                       grafico <- graficoCVAR(baseSQLiteGrafico, 
                                                              chaveGrafico[1], 
@@ -253,6 +253,14 @@ serverBalanco <- function(input, output, session) {
                                                              as.numeric(input$tipoGrafico))
                                       
                                     })
+                                  } else {
+                                    grafico <- graficoVAR(baseSQLiteGrafico, 
+                                                          chaveGrafico[1], 
+                                                          chaveGrafico[2], 
+                                                          chaveGrafico[3], 
+                                                          as.numeric(input$anoInicioGrafico), 
+                                                          as.numeric(input$anoFimGrafico),
+                                                          as.numeric(input$tipoGrafico))
                                   }
                                   hide_spinner()
                                   return(grafico)
@@ -266,8 +274,10 @@ serverBalanco <- function(input, output, session) {
       chaveGrafico <- c(input$casoGrafico %>% str_split(";") %>% unlist() %>% as.numeric())
       if (as.numeric(input$tipoGrafico) == 4) {
         paste0("Risco de Deficit - Caso ", chaveGrafico[2], ".xlsx")
+      } else if(as.numeric(input$tipoGrafico) %in% c(1,2,3)) {
+        paste0("Profundidade de Deficit - CVaR - ", ifelse(as.numeric(input$tipoGrafico) == 3, "Ano", "Mes")," - Caso ", chaveGrafico[2], ".xlsx")
       } else {
-        paste0("Profundidade de Deficit - CVAR - ", ifelse(as.numeric(input$tipoGrafico) == 3, "Ano", "Mes")," - Caso ", chaveGrafico[2], ".xlsx")
+        paste0("Profundidade de Deficit - VaR - ", ifelse(as.numeric(input$tipoGrafico) == 7, "Ano", "Mes")," - Caso ", chaveGrafico[2], ".xlsx")
       }
     },
     content = function(arquivoExcel) {
@@ -280,7 +290,7 @@ serverBalanco <- function(input, output, session) {
                                             as.numeric(input$anoInicioGrafico), 
                                             as.numeric(input$anoFimGrafico)),
                    arquivoExcel)
-      } else {
+      } else if(as.numeric(input$tipoGrafico) %in% c(1,2,3)) {
         write_xlsx(dadosGraficoCVAR(baseSQLiteGrafico, 
                                     chaveGrafico[1], 
                                     chaveGrafico[2], 
@@ -288,6 +298,15 @@ serverBalanco <- function(input, output, session) {
                                     as.numeric(input$anoInicioGrafico), 
                                     as.numeric(input$anoFimGrafico),
                                     as.numeric(input$tipoGrafico)),
+                   arquivoExcel)
+      } else {
+        write_xlsx(dadosGraficoVAR(baseSQLiteGrafico, 
+                                   chaveGrafico[1], 
+                                   chaveGrafico[2], 
+                                   chaveGrafico[3], 
+                                   as.numeric(input$anoInicioGrafico), 
+                                   as.numeric(input$anoFimGrafico),
+                                   as.numeric(input$tipoGrafico)),
                    arquivoExcel)
       }
     }
