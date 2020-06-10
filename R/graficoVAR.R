@@ -25,29 +25,13 @@ graficoVAR <- function(baseSQLite, tipoCaso, numeroCaso, codModelo,
   squery <- paste0("SELECT 
                     A16.A09_NR_SERIE,
                     A16.A09_NR_MES,
-                    SUM(A16_VL_DESPACHO) AS DEFICIT,
-                    A10.DEMANDA 
-                    FROM BPO_A16_BALANCO AS A16,
-                    ( SELECT A10_NR_MES,
-                      A01_TP_CASO,
-                      A01_NR_CASO,
-                      A01_CD_MODELO,
-                      SUM(A10_VL_DEMANDA) AS DEMANDA
-                      FROM BPO_A10_DEMANDA
-                      GROUP BY A10_NR_MES,
-                      A01_TP_CASO,
-                      A01_NR_CASO,
-                      A01_CD_MODELO
-                    ) AS A10
+                    SUM(A16_VL_DESPACHO) AS DEFICIT
+                    FROM BPO_A16_BALANCO AS A16
                     WHERE 
                     A16.A16_TP_GERACAO = 'DEFICIT' AND
                     A16.A01_TP_CASO = ", tipoCaso," AND
                     A16.A01_NR_CASO = ", numeroCaso," AND
-                    A16.A01_CD_MODELO = ", codModelo, " AND
-                    A10.A10_NR_MES = A16.A09_NR_MES AND
-                    A10.A01_TP_CASO = A16.A01_TP_CASO AND
-                    A10.A01_NR_CASO = A16.A01_NR_CASO AND
-                    A10.A01_CD_MODELO = A16.A01_CD_MODELO
+                    A16.A01_CD_MODELO = ", codModelo, " 
                     GROUP BY
                     A16.A09_NR_SERIE,
                     A16.A09_NR_MES;")
@@ -55,18 +39,15 @@ graficoVAR <- function(baseSQLite, tipoCaso, numeroCaso, codModelo,
   tib.resultados <- dbGetQuery(conexao, squery) %>% as.tbl()
   dbDisconnect(conexao)
   
-  # calcula a profundidade dos deficts
-  tib.resultados <- tib.resultados %>% mutate(PROFUNDIDADE = DEFICIT/DEMANDA)
-  
   # calcula o CVAR por ano e mes
   tib.resultadosVarMes <- tib.resultados %>%
     group_by(A09_NR_MES) %>%
-    summarise(#"var 1%" = var(PROFUNDIDADE, 0.01),
-      "1var 1,5%" = var(PROFUNDIDADE, 0.015),
-      #"var 2%" = var(PROFUNDIDADE, 0.02),
-      "2var 2,5%" = var(PROFUNDIDADE, 0.025),
-      "3var 5%" = var(PROFUNDIDADE, 0.05),
-      "4var 10%" = var(PROFUNDIDADE, 0.1)) %>% ungroup()
+    summarise(#"var 1%" = var(DEFICIT, 0.01),
+      "1var 1,5%" = var(DEFICIT, 0.015),
+      #"var 2%" = var(DEFICIT, 0.02),
+      "2var 2,5%" = var(DEFICIT, 0.025),
+      "3var 5%" = var(DEFICIT, 0.05),
+      "4var 10%" = var(DEFICIT, 0.1)) %>% ungroup()
   
   # faz a transposicao dos dados de var por coluna para um campo de identificacao do var (1%; 1,5%; 2%; 5%...) e outro de valor de var
   tib.resultadosVarMes <- tib.resultadosVarMes %>% gather(key = "tamanhoVAR", value = "var", -A09_NR_MES)
@@ -96,15 +77,15 @@ graficoVAR <- function(baseSQLite, tipoCaso, numeroCaso, codModelo,
       geom_area(data = tib.localMaxVar, show.legend = FALSE) + 
       scale_fill_manual(name = NULL, values = c("black", "darkgreen", "red2", "steelblue")) +
       geom_step(size = 1.5) + 
-      geom_text(aes(label = ifelse(var == maxVAR, percent(var, accuracy = 0.1, scale = 100, suffix = "%", decimal.mark = ","), "")), 
+      geom_text(aes(label = ifelse(maxVAR == 0, "", ifelse(var == maxVAR, var, ""))), 
                 nudge_y = (ceiling(max(tib.resultadosVarMes$var)*10)/10 * 0.1), 
                 hjust = 0.2,
                 show.legend = FALSE, 
                 fontface = "bold", size = 5, family = "sans") +
       scale_x_date(name = "M\u00EAs", date_labels = "%b-%y", expand = c(0,0), breaks = marcasEixoMes) +
-      scale_y_continuous(name = "% da Demanda", expand = c(0,0), labels = percent_format(accuracy = 0.1, scale = 100, suffix = "%", decimal.mark = ","),
-                         breaks = seq(0, ceiling(max(tib.resultadosVarMes$var)*10)/10, ceiling(max(tib.resultadosVarMes$var)*10)/10/5),
-                         limits = c(0, ceiling(max(tib.resultadosVarMes$var)*10)/10)) +
+      scale_y_continuous(name = "MW", expand = c(0,0),
+                         breaks = seq(0, ceiling(max(tib.resultadosVarMes$var)*1.2), ceiling(max(tib.resultadosVarMes$var)*1.2)/5),
+                         limits = c(0, ceiling(max(tib.resultadosVarMes$var)*1.2))) +
       scale_color_manual(name = NULL, values = c("black", "darkgreen", "red2", "steelblue"), labels = c("var 1,5%", "var 2,5%", "var 5%", "var 10%")) + 
       ggtitle(label = tituloGraficoCVARMes) + 
       expand_limits(x = max(tib.resultadosVarMes$anoMes) + 20) + # dar uma folga no grafico
@@ -133,9 +114,9 @@ graficoVAR <- function(baseSQLite, tipoCaso, numeroCaso, codModelo,
     graficoVaR <- ggplot(tib.resultadosVarMes, aes(x = anoMes, y = var, colour = tamanhoVAR)) + 
       geom_line(size = 1.5) +
       scale_x_date(name = "M\u00EAs", date_labels = "%b-%y", expand = c(0,0), breaks = marcasEixoMes) +
-      scale_y_continuous(name = "% da Demanda", expand = c(0,0), labels = percent_format(accuracy = 0.1, scale = 100, suffix = "%", decimal.mark = ","),
-                         breaks = seq(0, ceiling(max(tib.resultadosVarMes$var)*10)/10, ceiling(max(tib.resultadosVarMes$var)*10)/10/20),
-                         limits = c(0, ceiling(max(tib.resultadosVarMes$var)*10)/10)) +
+      scale_y_continuous(name = "MW", expand = c(0,0),
+                         breaks = seq(0, ceiling(max(tib.resultadosVarMes$var)*1.2), ceiling(max(tib.resultadosVarMes$var)*1.2)/5),
+                         limits = c(0, ceiling(max(tib.resultadosVarMes$var)*1.2))) +
       scale_color_manual(name = NULL, values = c("black", "darkgreen", "red2", "steelblue"), labels = c("var 1,5%", "var 2,5%", "var 5%", "var 10%")) + 
       ggtitle(label = tituloGraficoCVARMes) + 
       expand_limits(x = max(tib.resultadosVarMes$anoMes) + 20) + # dar uma folga no grafico
@@ -162,12 +143,12 @@ graficoVAR <- function(baseSQLite, tipoCaso, numeroCaso, codModelo,
     # cria coluna de ano e calcula o CVAR por ano
     tib.resultadosVarAno <- tib.resultados %>% mutate(ano = A09_NR_MES%/%100) %>% 
       group_by(ano) %>%
-      summarise(# "var 1%" = var(PROFUNDIDADE, 0.01),
-        "1cvar 1,5%" = var(PROFUNDIDADE, 0.015),
-        # "var 2%" = var(PROFUNDIDADE, 0.02),
-        "2cvar 2,5%" = var(PROFUNDIDADE, 0.025),
-        "3cvar 5%" = var(PROFUNDIDADE, 0.05),
-        "4cvar 10%" = var(PROFUNDIDADE, 0.1))
+      summarise(# "var 1%" = var(DEFICIT, 0.01),
+        "1cvar 1,5%" = var(DEFICIT, 0.015),
+        # "var 2%" = var(DEFICIT, 0.02),
+        "2cvar 2,5%" = var(DEFICIT, 0.025),
+        "3cvar 5%" = var(DEFICIT, 0.05),
+        "4cvar 10%" = var(DEFICIT, 0.1))
     
     # faz a transposicao dos dados de var por coluna para um campo de identificacao do var (1%; 1,5%; 2%; 5%...) e outro de valor de var
     tib.resultadosVarAno <- tib.resultadosVarAno %>% gather(key = "tamanhoVAR", value = "var", -ano) 
@@ -179,9 +160,9 @@ graficoVAR <- function(baseSQLite, tipoCaso, numeroCaso, codModelo,
     graficoVaR <- ggplot(tib.resultadosVarAno, aes(x = ano, y = var, colour = tamanhoVAR)) + 
       geom_step(size = 1.5) + 
       scale_x_continuous(name = "Ano", expand = c(0,0), breaks = seq(inicioHorizonteGrafico, fimHorizonteGrafico)) +
-      scale_y_continuous(name = "% da Demanda", expand = c(0,0), labels = percent_format(accuracy = 0.1, scale = 100, suffix = "%", decimal.mark = ","), 
-                         breaks = seq(0, ceiling(max(tib.resultadosVarAno$var)*10)/10, ceiling(max(tib.resultadosVarAno$var)*10)/10/20),
-                         limits = c(0, ceiling(max(tib.resultadosVarAno$var)*10)/10)) + 
+      scale_y_continuous(name = "MW", expand = c(0,0), 
+                         breaks = seq(0, ceiling(max(tib.resultadosVarAno$var)*1.2), ceiling(max(tib.resultadosVarAno$var)*1.2)/20),
+                         limits = c(0, ceiling(max(tib.resultadosVarAno$var)*1.2))) + 
       scale_color_manual(name = NULL, values = c("black", "darkgreen", "red2", "steelblue"), labels = c("var 1,5%", "var 2,5%", "var 5%", "var 10%")) + 
       ggtitle(label = tituloGraficoCVARAno) +
       expand_limits(x = max(tib.resultadosVarAno$ano) + 0.2) + # dar uma folga no grafico

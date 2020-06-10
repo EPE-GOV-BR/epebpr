@@ -21,29 +21,13 @@ dadosGraficoVAR <- function(baseSQLite, tipoCaso, numeroCaso, codModelo,
   squery <- paste0("SELECT 
                     A16.A09_NR_SERIE,
                     A16.A09_NR_MES,
-                    SUM(A16_VL_DESPACHO) AS DEFICIT,
-                    A10.DEMANDA 
-                    FROM BPO_A16_BALANCO AS A16,
-                    ( SELECT A10_NR_MES,
-                      A01_TP_CASO,
-                      A01_NR_CASO,
-                      A01_CD_MODELO,
-                      SUM(A10_VL_DEMANDA) AS DEMANDA
-                      FROM BPO_A10_DEMANDA
-                      GROUP BY A10_NR_MES,
-                      A01_TP_CASO,
-                      A01_NR_CASO,
-                      A01_CD_MODELO
-                    ) AS A10
+                    SUM(A16_VL_DESPACHO) AS DEFICIT
+                    FROM BPO_A16_BALANCO AS A16
                     WHERE 
                     A16.A16_TP_GERACAO = 'DEFICIT' AND
                     A16.A01_TP_CASO = ", tipoCaso," AND
                     A16.A01_NR_CASO = ", numeroCaso," AND
-                    A16.A01_CD_MODELO = ", codModelo, " AND
-                    A10.A10_NR_MES = A16.A09_NR_MES AND
-                    A10.A01_TP_CASO = A16.A01_TP_CASO AND
-                    A10.A01_NR_CASO = A16.A01_NR_CASO AND
-                    A10.A01_CD_MODELO = A16.A01_CD_MODELO
+                    A16.A01_CD_MODELO = ", codModelo, " 
                     GROUP BY
                     A16.A09_NR_SERIE,
                     A16.A09_NR_MES;")
@@ -51,18 +35,15 @@ dadosGraficoVAR <- function(baseSQLite, tipoCaso, numeroCaso, codModelo,
   tib.resultados <- dbGetQuery(conexao, squery) %>% as.tbl()
   dbDisconnect(conexao)
   
-  # calcula a profundidade dos deficts
-  tib.resultados <- tib.resultados %>% mutate(PROFUNDIDADE = DEFICIT/DEMANDA)
-  
   # calcula o CVAR por ano e mes
   tib.resultadosVarMes <- tib.resultados %>%
     group_by(A09_NR_MES) %>%
-    summarise(#"var 1%" = var(PROFUNDIDADE, 0.01),
-      "1var 1,5%" = var(PROFUNDIDADE, 0.015),
-      #"var 2%" = var(PROFUNDIDADE, 0.02),
-      "2var 2,5%" = var(PROFUNDIDADE, 0.025),
-      "3var 5%" = var(PROFUNDIDADE, 0.05),
-      "4var 10%" = var(PROFUNDIDADE, 0.1)) %>% ungroup()
+    summarise(#"var 1%" = var(DEFICIT, 0.01),
+      "1var 1,5%" = var(DEFICIT, 0.015),
+      #"var 2%" = var(DEFICIT, 0.02),
+      "2var 2,5%" = var(DEFICIT, 0.025),
+      "3var 5%" = var(DEFICIT, 0.05),
+      "4var 10%" = var(DEFICIT, 0.1)) %>% ungroup()
   
   # faz a transposicao dos dados de var por coluna para um campo de identificacao do var (1%; 1,5%; 2%; 5%...) e outro de valor de var
   tib.resultadosVarMes <- tib.resultadosVarMes %>% gather(key = "tamanhoVAR", value = "var", -A09_NR_MES)
@@ -83,12 +64,12 @@ dadosGraficoVAR <- function(baseSQLite, tipoCaso, numeroCaso, codModelo,
     # cria coluna de ano e calcula o CVAR por ano
     tib.resultadosVarAno <- tib.resultados %>% mutate(ano = A09_NR_MES%/%100) %>% 
       group_by(ano) %>%
-      summarise(# "var 1%" = var(PROFUNDIDADE, 0.01),
-        "1var 1,5%" = var(PROFUNDIDADE, 0.015),
-        # "var 2%" = var(PROFUNDIDADE, 0.02),
-        "2var 2,5%" = var(PROFUNDIDADE, 0.025),
-        "3var 5%" = var(PROFUNDIDADE, 0.05),
-        "4var 10%" = var(PROFUNDIDADE, 0.1))
+      summarise(# "var 1%" = var(DEFICIT, 0.01),
+        "1var 1,5%" = var(DEFICIT, 0.015),
+        # "var 2%" = var(DEFICIT, 0.02),
+        "2var 2,5%" = var(DEFICIT, 0.025),
+        "3var 5%" = var(DEFICIT, 0.05),
+        "4var 10%" = var(DEFICIT, 0.1))
     
     # faz a transposicao dos dados de var por coluna para um campo de identificacao do var (1%; 1,5%; 2%; 5%...) e outro de valor de var
     tib.resultadosVarAno <- tib.resultadosVarAno %>% gather(key = "tamanhoVAR", value = "var", -ano) 
