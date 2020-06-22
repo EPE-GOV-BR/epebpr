@@ -51,30 +51,37 @@ gravaSaidasNewaveBDBP <- function(pasta, pastaSaidas, conexao, tipoCaso, numeroC
   # Carrega arquivos
   df.energiaArmazenadaFinal <- leituraEnergiaArmazenadaFinalPercentual(pastaSaidas)
   df.geracaoHidroTotal <- leituraGeracaoHidroTotal(pastaSaidas)
+  df.vertimentoTurbinavel <- leituraVertimentoFioDaguaTurbinavel(pastaSaidas)
 
   # calculo de potencia tipo 2: nao modula - considera a geracao hidraulica na ponta resultante da simulacao
   df.dadosUsinasCalculoTipo2 <- full_join(df.energiaArmazenadaFinal, 
                                            filter(df.geracaoHidroTotal, patamar == 1), 
                                            by = c("codREE", "serie", "anoMes")) %>% 
+    full_join(df.vertimentoTurbinavel, by = c("codREE", "serie", "anoMes")) %>%
     inner_join(df.ree, by = c("codREE" = "A02_NR_REE")) %>%
     filter(A02_TP_CALC_POTENCIA == 2) %>% 
     inner_join(leituraDadosDuracaoPatamar(pasta), by = c("anoMes", "patamar")) %>%
     # calcula a geracao proporcional ao patamar de carga
     mutate(geracao = geracao / duracaoPatamar, 
            earmfp = ifelse(is.na(earmfp), 0, earmfp / 100)) %>% 
-    select(codREE, anoMes, serie, earmfp, geracao)
+    select(codREE, anoMes, serie, earmfp, geracao, vertimento)
   
   # calculo de potencia tipo 1: modula a geracao hidro pela media (saida modelo de simulacao) para atender x horas de ponta
   # calculo de potencia tipo 3: nao modula - considera a geracao hidraulica media resultante da simulacao
   df.energiaArmazenadaFinal13 <- df.energiaArmazenadaFinal %>% inner_join(df.ree, by = c("codREE" = "A02_NR_REE")) %>%
     filter(A02_TP_CALC_POTENCIA != 2) %>% select(-A02_TP_CALC_POTENCIA)
+  
+  df.vertimentoTurbinavel13 <- df.vertimentoTurbinavel %>% inner_join(df.ree, by = c("codREE" = "A02_NR_REE")) %>%
+    filter(A02_TP_CALC_POTENCIA != 2) %>% select(-A02_TP_CALC_POTENCIA)
+  
   df.dadosUsinasCalculoDemaisTipos <- df.geracaoHidroTotal %>% 
     inner_join(df.ree, by = c("codREE" = "A02_NR_REE")) %>%
     filter(A02_TP_CALC_POTENCIA != 2) %>%
     group_by(codREE, serie, anoMes) %>% 
     summarise(geracao = sum(geracao)) %>% ungroup() %>% 
     full_join(df.energiaArmazenadaFinal13, by = c("codREE", "serie", "anoMes")) %>%
-    select(codREE, anoMes, serie, earmfp, geracao)
+    full_join(df.vertimentoTurbinavel13, by = c("codREE", "serie", "anoMes")) %>%
+    select(codREE, anoMes, serie, earmfp, geracao, vertimento)
   
   df.dadosUsinas <- rbind(df.dadosUsinasCalculoTipo2, df.dadosUsinasCalculoDemaisTipos) %>% 
     mutate(tipoCaso = tipoCaso, numeroCaso = numeroCaso, codModelo = codModelo, submotorizacao = 0) %>% 
@@ -87,7 +94,8 @@ gravaSaidasNewaveBDBP <- function(pasta, pastaSaidas, conexao, tipoCaso, numeroC
            A06_NR_SERIE = serie, 
            A06_VL_PERC_ARMAZENAMENTO = earmfp, 
            A06_VL_GERACAO_HIDRAULICA = geracao, 
-           A06_VL_SUBMOTORIZACAO = submotorizacao)
+           A06_VL_SUBMOTORIZACAO = submotorizacao,
+           A06_VL_VERTIMENTO_TURBINAVEL = vertimento)
 
   dbWriteTable(conexao, "BPO_A06_SAIDA_HIDRO_NEWAVE", df.dadosUsinas, append = TRUE)
   
