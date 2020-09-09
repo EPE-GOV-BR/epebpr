@@ -239,8 +239,10 @@ gravacaoDadosDisponibilidadeOutrasFontesBDBP <- function(pastaCaso, conexao, tip
     left_join(df.fatorPontaOFR, by = c("sistema" = "A02_NR_SUBSISTEMA", "A18_CD_TIPO_FONTE" = "A18_CD_TIPO_FONTE", "mes" = "A19_NR_MES")) %>% 
     # inner_join(fontes,  by = c("TIPO" = "nome_fonte")) %>% 
     mutate(disponibilidade = ifelse(A18_TP_CONTRIBUICAO_PONTA == 2, 
-                         Energia * ifelse(is.na(patamar), 1, profundidadeUNS), 
-                         Potencia * A19_VL_FATOR)) %>% 
+                                    Energia * ifelse(is.na(patamar), 
+                                                     1, 
+                                                     profundidadeUNS), 
+                                    Potencia * A19_VL_FATOR)) %>% 
     mutate(A01_TP_CASO = tipoCaso, A01_NR_CASO = numeroCaso, A01_CD_MODELO = codModelo) %>% 
     # renomeia os campos do data frame para compatibilizacao com a tabela do BDBP
     select(A01_TP_CASO, 
