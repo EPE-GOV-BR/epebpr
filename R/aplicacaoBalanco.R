@@ -1,6 +1,6 @@
-#' Aplicacao web do Balanco de Ponta
+#' Aplicacao web do Balanco de Potencia
 #'
-#' Executa a aplicacao web do Balanco de Ponta
+#' Executa a aplicacao web do Balanco de Potencia
 #'
 #' @examples
 #' aplicacaoBalanco()

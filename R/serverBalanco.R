@@ -1,6 +1,6 @@
 #' Servidor Shiny do Banlanco
 #'
-#' Cria servidor do Balanco de Ponta
+#' Cria servidor do Balanco de Potencia
 #'
 #' @param input entradas da camada ui
 #' @param output saidas da camada ui
@@ -35,7 +35,7 @@ serverBalanco <- function(input, output, session) {
   observeEvent(input$btnCriaBaseSQLite, {
     showModal(
       modalDialog(
-        title = HTML("Criar nova base de dados para o Balan&ccedil;o de Ponta"),
+        title = HTML("Criar nova base de dados para o Balan&ccedil;o de Pot\u00EAncia"),
         tags$div(style="display:inline-block;", HTML("Localiza&ccedil;&atilde;o da pasta:")),
         span(strong(textOutput(outputId = "pastaBDModal"), style = "color:red; display:inline-block")),
         actionButton(inputId = "btnProcurarPastaBD",
@@ -138,7 +138,18 @@ serverBalanco <- function(input, output, session) {
     tic()
     sistemasNaoModulamPonta <- strsplit(input$sistemasNaoModulamPonta, ",") %>% unlist() %>% as.numeric()
     sistemasNaoModulamMedia <- strsplit(input$sistemasNaoModulamMedia, ",") %>% unlist() %>% as.numeric()
-    withProgress(message = "Lendo dados de entrada e gravando no banco de dados...", value = 0, {
+    
+    # mensagem de tipo de simulacao
+    # pega dados gerais do NEWAVE
+    df.dadosGerais <- leituraDadosGerais(pastaCaso)
+    if (df.dadosGerais$tipoSimulacao == 1) {
+      mensagemLeitura <- "Lendo dados de simula\u00E7\u00E3o com s\u00E9ries sint\u00E9ticas e gravando no banco de dados..."
+    } else if (df.dadosGerais$tipoSimulacao == 2){
+      mensagemLeitura <- "Lendo dados de simula\u00E7\u00E3o com s\u00E9ries hist\u00F3ricas e gravando no banco de dados..."
+    } else {
+      return("Outro tipo de simula\u00E7\u00E3o. <font color=red>Verifique o arquivo dger!</font>")
+    }
+    withProgress(message = mensagemLeitura, value = 0, {
       # bloco de dados de entrada
       mensagemBancoDados <- carregaDadosSQLite(baseSQLite,
                                                pastaCaso,
@@ -169,7 +180,7 @@ serverBalanco <- function(input, output, session) {
                                                              codTucurui)
       
       # bloco de calculo de balanco
-      setProgress(message = "Calculando balan\u00E7o de ponta...")
+      setProgress(message = "Calculando balan\u00E7o de pot\u00EAncia...")
       incProgress(1/3)
       mensagem <- calculaBalancoParalelo(baseSQLite,
                                          as.integer(input$tipoCaso),

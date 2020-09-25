@@ -2,7 +2,7 @@
 #'
 #' Faz a leitura da tabela com dados dos casos (BPO_A01_CASOS_ANALISE) e monta select input para interface grafica
 #'
-#' @param baseSQLite nome e localizacao da base SQLite do balanco de ponta
+#' @param baseSQLite nome e localizacao da base SQLite do balanco de potencia
 #'
 #' @return \code{df.dadosCaso} data frame com dados dos casos (BPO_A01_CASOS_ANALISE)
 #'

@@ -1,6 +1,6 @@
-#' Grava dados das usinas hidraulicas no banco de dados do balanco de ponta
+#' Grava dados das usinas hidraulicas no banco de dados do balanco de potencia
 #'
-#' Grava dados das usinas hidraulicas originalmente nos arquivos confhd.\* e hidr.\* na tabela BPO_A03_DADOS_UHE do banco de dados do balanco de ponta
+#' Grava dados das usinas hidraulicas originalmente nos arquivos confhd.\* e hidr.\* na tabela BPO_A03_DADOS_UHE do banco de dados do balanco de potencia
 #' Usa funcoes do pacote (\code{leitorrcepel}).
 #'
 #' @param pasta localizacao dos arquivos do NEWAVE
@@ -42,7 +42,7 @@ gravaDadosUsinasHidroBDBP <- function(pasta, conexao, tipoCaso, numeroCaso, codM
   # Carrega arquivos
   lt.dadosUsinasHidro <- leituraDadosUsinasHidro(pasta) 
   df.dadosUsinasHidroeletricas <- lt.dadosUsinasHidro %>% use_series(df.dadosUsinasHidroeletricas)
-  # para o balanco de ponta somente se usa o primeiro polinomio de vazao de nivel de jusante
+  # para o balanco de potencia somente se usa o primeiro polinomio de vazao de nivel de jusante
   df.polinomiosVazaoNivelJusante <- lt.dadosUsinasHidro %>% use_series(df.polinomiosVazaoNivelJusante) %>% filter(polinomio == 1) %>% 
     select(-nomeUsina, -codSubsistema)
   df.configuracaoHidro <- leituraConfiguracaoHidro(pasta) %>% select(codUsina, codREE, idUsinaExistente)

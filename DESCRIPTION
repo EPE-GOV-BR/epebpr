@@ -1,13 +1,13 @@
 Package: epebpr
-Title: Balanco de Ponta
+Title: Balanco de Potencia
 Type: Package
-Version: 0.8.71
+Version: 0.8.72
 Date: 2019-12-02
 Author: Gustavo Haydt [aut, cre],
   Simone Brandao [aut, cre],
   Caio Leocadio [aut, cre]
 Maintainer: epe <epe@epe.gov.br>
-Description: Ferramenta de calculo do Balanco de Ponta a partir das simulacoes do NEWAVE
+Description: Ferramenta que efetua os balancos de geracao, transmissao e carga para os patamares de ponta, permitindo calcular os indicadores do criterio de suprimento.  
 License: GPL-2
 Encoding: UTF-8
 LazyData: TRUE

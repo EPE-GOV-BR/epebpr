@@ -1,6 +1,6 @@
-#' Calcula um balanco de ponta usando ROI
+#' Calcula um balanco de potencia usando ROI
 #'
-#' Monta e resolve o problema linear de um balanco de ponta usando R Optimization Infrastructure (ROI). 
+#' Monta e resolve o problema linear de um balanco de potencia usando R Optimization Infrastructure (ROI). 
 #'
 #' @param periodo vetor com o anoMes a ser ser processado. Ex. 201805
 #' @param balancoResumido variavel binaria para decidir se vai calcular somente o balanco resumido (\code{BPO_A16_BALANCO}) ou 

@@ -2,7 +2,7 @@
 #'
 #' Exporta os dados dos graficos de Profundidade de Deficit por VAR de um caso especifico
 #'
-#' @param baseSQLite nome e localizacao da base SQLite do balanco de ponta
+#' @param baseSQLite nome e localizacao da base SQLite do balanco de potencia
 #' @param tipoCaso valor inteiro. 1:PDE; 2:PMO e 3;Garantia Fisica
 #' @param numeroCaso valor inteiro com o numero do caso
 #' @param codModelo valor inteiro com o codigo do modelo. 1:NEWAVE; 2:SUISHI

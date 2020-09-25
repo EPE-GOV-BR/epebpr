@@ -1,6 +1,6 @@
-#' Calcula um balanco de ponta usando o lpsolver
+#' Calcula um balanco de potencia usando o lpsolver
 #'
-#' Monta e resolve o problema linear de um balanco de ponta. Funcao criada para poder executar processamento paralelo.
+#' Monta e resolve o problema linear de um balanco de potencia. Funcao criada para poder executar processamento paralelo.
 #'
 #' @param periodo vetor com o anoMes a ser ser processado. Ex. 201805
 #' @param balancoResumido variavel binaria para decidir se vai calcular somente o balanco resumido (\code{BPO_A16_BALANCO}) ou tambem o por gerador (\code{BPO_A17_BALANCO_GERADOR})
@@ -201,6 +201,7 @@ balancoPeriodo <- function(periodo,
   # critica
   if(solucao != 0) {
     dbDisconnect(conexao)
+    # write.lp(lpBalanco, paste0("C:/Temp/", periodo, "sh",idSerieHidro, "d", idDemanda, "modelo.lp"), type="lp")
     stop(paste0("N\u00E3o foi encontrada solu\u00E7\u00E3o vi\u00E1vel (problema ", solucao ,") para execu\u00E7\u00E3o de ", periodo, ", s\u00E9rie hidro ",
                 idSerieHidro, ", demanda ", idDemanda))
     # 0: "optimal solution found"

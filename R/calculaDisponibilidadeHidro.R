@@ -1,4 +1,4 @@
-#' Calcula a disponibilidade hidraulica para o Balanco de Ponta
+#' Calcula a disponibilidade hidraulica para o Balanco de Potencia
 #'
 #' Faz os calculos da disponibilidade hidraulica atualizando as tabelas BPO_A06_SAIDA_HIDRO_NEWAVE, BPO_A08_DADOS_CALCULADOS_UHE e 
 #' BPO_A09_DISPONIBILIDADE_HIDRO_PONTA_SUBSISTEMA

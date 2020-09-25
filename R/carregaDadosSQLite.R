@@ -1,4 +1,4 @@
-#' Carrega dados na base SQLite do Balanco de Ponta
+#' Carrega dados na base SQLite do Balanco de Potencia
 #'
 #' Faz a leitura dos arquivos do NEWAVE e carrega todos os dados necessarios na base SQLite para execucao do Balanco de Ponto.
 #' Usa como referencia para a identificacao dos arquivos as posicoes definidas no Manual do Usuario do

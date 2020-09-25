@@ -1,10 +1,10 @@
 #' Gravacao dos dados de disponilidade das outras fontes renovaveis
 #'
-#' Faz a gravacao dos dados de disponilidade das outras fontes renovaveis do NEWAVE no banco de dados do Balanco de Ponta (BDBP)
+#' Faz a gravacao dos dados de disponilidade das outras fontes renovaveis do NEWAVE no banco de dados do Balanco de Potencia (BDBP)
 #' Os dados sao gravados na tabela BPO_A13_DISPONIBILIDADE_OFR do BDBP. Alem disso, grava as tabelas de apoio BPO_A18_TIPOS_OFR e BPO_A19_FATOR_PONTA_OFR
 #'
 #' @param pastaCaso caracter com a localizacao dos arquivos NEWAVE.
-#' @param conexao caracter com a conexao com o Banco de Dados do Balanco de Ponta.
+#' @param conexao caracter com a conexao com o Banco de Dados do Balanco de Potencia.
 #' @param tipoCaso caracter com o tipo de caso simulado. [1]=PDE [2]=PMO [3]=GF.
 #' @param numeroCaso caracter com o numero do caso, definido pelo usuario.
 #' @param codModelo caracter com a definicao do modelo utilizado. [1]=Newave [2]=Suishi.
@@ -45,6 +45,7 @@ gravacaoDadosDisponibilidadeOutrasFontesBDBP <- function(pastaCaso, conexao, tip
   ## leitura da planilha GeraPeq
   planilhaPequenas <- list.files(path = pastaCaso, pattern = "^GeraPeq")
   if (length(planilhaPequenas) != 1) {
+    dbDisconnect(conexao)
     stop("Planilha de pequenas n\u00E3o encontrada ou multiplos arquivos com nome GeraPeq em ", pastaCaso)
   }
   # verifica se o excel possui a aba correta
@@ -144,7 +145,7 @@ gravacaoDadosDisponibilidadeOutrasFontesBDBP <- function(pastaCaso, conexao, tip
     }
     colnames(df.sazonalidadeIndicativas) <- iconv(colnames(df.sazonalidadeIndicativas), from = codificacao, to = "ASCII//TRANSLIT")
     
-    arquivoExpansao <- list.files(path = pastaCaso, pattern = "^saidaExpansao")
+    arquivoExpansao <- list.files(path = pastaCaso, pattern = "saidaExpansao.txt")
     if (length(arquivoExpansao) != 1) {
       dbDisconnect(conexao)
       stop("Arquivo texto saidaExpansao n\u00E3o encontrado ou multiplos arquivos com nome saidaExpansao em ", pastaCaso)

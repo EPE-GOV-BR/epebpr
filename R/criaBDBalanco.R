@@ -1,6 +1,6 @@
-#' Cria banco de dados do balanco de ponta
+#' Cria banco de dados do balanco de potencia
 #'
-#' Executa script SQL e cria banco de dados SQLite com estrutura dos dados do balanco de ponta
+#' Executa script SQL e cria banco de dados SQLite com estrutura dos dados do balanco de potencia
 #'
 #' @param caminho localizacao do banco de dados
 #' @param nomeBD nome do banco de dados
@@ -35,7 +35,7 @@ criaBDBalanco <- function(caminho, nomeBD) {
     if (resultado == 0) {
       mensagem <- "Base de dados criada com sucesso!"
     } else {
-      mensagem <- "Problemas para criar base de dados. Verifique se o pacote epesgebpr foi instalado corretamente!"
+      mensagem <- "Problemas para criar base de dados. Verifique se o pacote epebpr foi instalado corretamente!"
     }
   }
 }

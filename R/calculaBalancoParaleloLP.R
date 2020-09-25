@@ -18,11 +18,11 @@
 #'
 #' @examples
 #' \dontrun{
-#' calculaBalancoParalelo("C:/PDE2027_Caso080/bp.slqlite3", 1, 80, 1, 1e-10, 2e-8, 1e-8, 0.1, F)}
+#' calculaBalancoParaleloLP("C:/PDE2027_Caso080/bp.slqlite3", 1, 80, 1, 1e-10, 2e-8, 1e-8, 0.1, F)}
 #' 
 #' @export
-calculaBalancoParalelo <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, cvuTransmissao, cvuHidro, 
-                                   cvuRenovaveis, cvuOutrasTermicas, balancoResumido = T) {
+calculaBalancoParaleloLP <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, cvuTransmissao, cvuHidro, 
+                                     cvuRenovaveis, cvuOutrasTermicas, balancoResumido = T) {
   
   # abre conexao
   conexao <- dbConnect(RSQLite::SQLite(), baseSQLite)
@@ -130,7 +130,7 @@ calculaBalancoParalelo <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
   rm(df.demandasAnoMes)
   
   dbExecute(conexao, "BEGIN TRANSACTION;")
-
+  
   # limpa a base de uma eventual rodada anterior
   # BPO_A16_BALANCO
   query <- paste0("SELECT COUNT(*) AS TOTAL FROM BPO_A16_BALANCO WHERE A01_TP_CASO = ", tipoCaso, " AND A01_NR_CASO = ", numeroCaso,
@@ -165,10 +165,10 @@ calculaBalancoParalelo <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
   }
   
   # processamento paralelo
-  coresParaUso <- detectCores() - 1 # disponibiliza todos os cores da CPU menos 2, para nao travar a maquina do usuario
+  coresParaUso <- detectCores() - 2 # disponibiliza todos os cores da CPU menos 2, para nao travar a maquina do usuario
   clusterBalanco <- makeCluster(coresParaUso)
   registerDoParallel(clusterBalanco)
-  clusterExport(clusterBalanco, "balancoPeriodoClp")
+  clusterExport(clusterBalanco, "balancoPeriodo")
   
   # para cluster na saida da funcao, seja por erro ou normalmente
   on.exit(stopCluster(clusterBalanco), add = T, after = F)
@@ -178,14 +178,14 @@ calculaBalancoParalelo <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
   tamanhoJanela <- 1000
   janelaCenarios <- c(seq(1, quantidadeCenarios, tamanhoJanela), (quantidadeCenarios + 1))
   quantidadeJanela <- length(janelaCenarios)
-
+  
   # se nao for balanco resumido grava BPO_A16_BALANCO, BPO_A17_BALANCO_GERADOR e BPO_A20_BALANCO_SUBSISTEMA
   if (balancoResumido == F) {
     # for criado para nao estourar a alocacao de memoria e ao mesmo tempo nao compromenter desempenho na gravacao na base (gravacao em disco)
     for (andaJanela in 1:(quantidadeJanela - 1)) {
       lt.resultado <- foreach(cenario = seq(janelaCenarios[andaJanela], (janelaCenarios[andaJanela + 1] - 1)),
                               .combine = "subRBind",
-                              .packages = c("dplyr", "clpAPI", "DBI", "RSQLite"))  %dopar%  balancoPeriodoClp(df.demandasAnoMesSerie$anoMes[cenario],
+                              .packages = c("dplyr", "lpSolveAPI", "DBI", "RSQLite"))  %dopar%  balancoPeriodo(df.demandasAnoMesSerie$anoMes[cenario],
                                                                                                                df.demandasAnoMesSerie$demanda[cenario],
                                                                                                                df.demandasAnoMesSerie$serie[cenario],
                                                                                                                balancoResumido, 
@@ -210,28 +210,28 @@ calculaBalancoParalelo <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
       # BPO_A20_BALANCO_SUBSISTEMA
       dbWriteTable(conexao, "BPO_A20_BALANCO_SUBSISTEMA", lt.resultado$df.resultadoCMO, append = T)
     }
-  # se for balanco resumido grava BPO_A16_BALANCO e BPO_A20_BALANCO_SUBSISTEMA
+    # se for balanco resumido grava BPO_A16_BALANCO e BPO_A20_BALANCO_SUBSISTEMA
   } else {
     for (andaJanela in 1:(quantidadeJanela - 1)) {
       lt.resultado <- foreach(cenario = seq(janelaCenarios[andaJanela], (janelaCenarios[andaJanela + 1] - 1)),
                               .combine = "subRBind",
-                              .packages = c("dplyr", "clpAPI", "DBI", "RSQLite")) %dopar% balancoPeriodoClp(df.demandasAnoMesSerie$anoMes[cenario],
-                                                                                                            df.demandasAnoMesSerie$demanda[cenario],
-                                                                                                            df.demandasAnoMesSerie$serie[cenario], 
-                                                                                                            balancoResumido, 
-                                                                                                            conexao,
-                                                                                                            df.custoDefict,
-                                                                                                            df.geracaoTermicaTotal, 
-                                                                                                            df.geracaoTransmissaoTotal, 
-                                                                                                            df.geracaoRenovaveisTotal, 
-                                                                                                            df.limitesAgrupamentoLinhasTotal,
-                                                                                                            df.demanda,
-                                                                                                            df.casosAnalise,
-                                                                                                            df.geracaoHidroTotal,
-                                                                                                            df.agrupamentoLinhas,
-                                                                                                            tipoCaso, numeroCaso, codModelo,
-                                                                                                            df.subsistemas,
-                                                                                                            cvuHidro)
+                              .packages = c("dplyr", "lpSolveAPI", "DBI", "RSQLite")) %dopar% balancoPeriodo(df.demandasAnoMesSerie$anoMes[cenario],
+                                                                                                             df.demandasAnoMesSerie$demanda[cenario],
+                                                                                                             df.demandasAnoMesSerie$serie[cenario], 
+                                                                                                             balancoResumido, 
+                                                                                                             conexao,
+                                                                                                             df.custoDefict,
+                                                                                                             df.geracaoTermicaTotal, 
+                                                                                                             df.geracaoTransmissaoTotal, 
+                                                                                                             df.geracaoRenovaveisTotal, 
+                                                                                                             df.limitesAgrupamentoLinhasTotal,
+                                                                                                             df.demanda,
+                                                                                                             df.casosAnalise,
+                                                                                                             df.geracaoHidroTotal,
+                                                                                                             df.agrupamentoLinhas,
+                                                                                                             tipoCaso, numeroCaso, codModelo,
+                                                                                                             df.subsistemas,
+                                                                                                             cvuHidro)
       # salva os resultados na base
       # BPO_A16_BALANCO
       dbWriteTable(conexao, "BPO_A16_BALANCO", lt.resultado$df.resultado, append = T)

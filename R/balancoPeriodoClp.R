@@ -1,6 +1,6 @@
-#' Calcula um balanco de ponta usando o solver Coin
+#' Calcula um balanco de potencia usando o solver Coin
 #'
-#' Monta e resolve o problema linear de um balanco de ponta usando Clp (Coin-or linear programming). Funcao criada para poder executar processamento paralelo.
+#' Monta e resolve o problema linear de um balanco de potencia usando Clp (Coin-or linear programming). Funcao criada para poder executar processamento paralelo.
 #'
 #' @param periodo vetor com o anoMes a ser ser processado. Ex. 201805
 #' @param balancoResumido variavel binaria para decidir se vai calcular somente o balanco resumido (\code{BPO_A16_BALANCO}) ou 
@@ -124,13 +124,23 @@ balancoPeriodoClp <- function(periodo,
     stop(paste0("N\u00E3o h\u00E1 demanda (BPO_A10_DEMANDA) para o per\u00EDodo de ", periodo, " e demanda ", idDemanda))
   }
   
-  # # verifica inconsistencia de limites das variaveis
+  # verifica inconsistencia de limites das variaveis
+  if (any(is.na(df.geracao$disponibilidade))) {
+    dbDisconnect(conexao)
+    stop(paste0("Problema na disponibilidade da gera\u00E7\u00E3o para execu\u00E7\u00E3o de ",
+                periodo, ", s\u00E9rie hidro ", idSerieHidro, ", demanda ", idDemanda))
+  }
+  if (any(is.na(df.geracao$inflexibilidade))) {
+    dbDisconnect(conexao)
+    stop(paste0("Problema na inflexibilidade da gera\u00E7\u00E3o para execu\u00E7\u00E3o de ",
+                periodo, ", s\u00E9rie hidro ", idSerieHidro, ", demanda ", idDemanda))
+  }
   inconsistenciaLimites <- df.geracao$disponibilidade - df.geracao$inflexibilidade
   inconsistenciaLimites <- inconsistenciaLimites < 0
   inconsistenciaLimites <- any(inconsistenciaLimites == T)
   if(inconsistenciaLimites) {
     dbDisconnect(conexao)
-    stop(paste0("Problema de limites na gerac\u00E7\u00E3o para execu\u00E7\u00E3o de ",
+    stop(paste0("Problema de limites na gera\u00E7\u00E3o para execu\u00E7\u00E3o de ",
                 periodo, ", s\u00E9rie hidro ", idSerieHidro, ", demanda ", idDemanda))
   }
   

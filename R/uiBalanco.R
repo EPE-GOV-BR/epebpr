@@ -1,6 +1,6 @@
-#' Interface do usuario (ui) Shiny do Balanco de Ponta
+#' Interface do usuario (ui) Shiny do Balanco de Potencia
 #'
-#' Cria estrutura de interface de usuario (ui) do Balanco de Ponta
+#' Cria estrutura de interface de usuario (ui) do Balanco de Potencia
 #'
 #' @export
 uiBalanco <- fluidPage(
@@ -35,7 +35,7 @@ uiBalanco <- fluidPage(
     windowTitle = HTML("Balan&ccedil;o"),
     
     # Painel principal do balanco
-    tabPanel(HTML("Balan&ccedil;o de Ponta"),
+    tabPanel(HTML("Balan&ccedil;o de Pot\u00EAncia"),
              sidebarLayout(
                sidebarPanel(#width = 5,
                  # Selecao do tipo de caso
@@ -180,7 +180,7 @@ uiBalanco <- fluidPage(
 
                  # Action button
                  tags$div(style = "height:8px"),
-                 HTML("Calcula Balan&ccedil;o de Ponta"),
+                 HTML("Calcula Balan&ccedil;o de Pot\u00EAncia"),
                  tags$div(style = "height:3px"),
                  actionButton(inputId = "btnBalanco",
                               label = NULL,

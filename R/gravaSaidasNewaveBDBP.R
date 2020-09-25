@@ -1,7 +1,7 @@
-#' Grava dados de armazenamento e geracao das usinas hidraulicas no banco de dados do balanco de ponta
+#' Grava dados de armazenamento e geracao das usinas hidraulicas no banco de dados do balanco de potencia
 #'
 #' Grava dados de armazenamento e geracao das usinas hidraulicas originalmente nos arquivos earmfpXXX.out e ghtotxxx.out na tabela BPO_A06_SAIDA_HIDRO_NEWAVE 
-#' do banco de dados do balanco de ponta. Usa funcoes do pacote (\code{leitorrcepel}).
+#' do banco de dados do balanco de potencia. Usa funcoes do pacote (\code{leitorrcepel}).
 #'
 #' @param pasta localizacao dos arquivos do NEWAVE
 #' @param pastaSaidas localizacao dos arquivos de saida do modulo NWLISTOP

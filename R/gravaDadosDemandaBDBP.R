@@ -1,10 +1,10 @@
 #' Gravacao dos dados de demanda de ponta
 #'
-#' Faz a gravacao dos dados de demanda de ponta do NEWAVE no banco de dados do Balanco de Ponta (BDBP)
+#' Faz a gravacao dos dados de demanda de ponta do NEWAVE no banco de dados do Balanco de Potencia (BDBP)
 #' Os dados sao gravados na tabela BPO_A10_DEMANDA do BDBP.
 #'
 #' @param pastaCaso caracter com a localizacao dos arquivos NEWAVE.
-#' @param conexao caracter com a conexao com o Banco de Dados do Balanco de Ponta.
+#' @param conexao caracter com a conexao com o Banco de Dados do Balanco de Potencia.
 #' @param tipoCaso caracter com o tipo de caso simulado. [1]=PDE [2]=PMO [3]=GF.
 #' @param numeroCaso caracter com o numero do caso, definido pelo usuario.
 #' @param codModelo caracter com a definicao do modelo utilizado. [1]=Newave [2]=Suishi.
