@@ -46,7 +46,7 @@ uiBalanco <- fluidPage(
                                       choices = c("PDE" = 1 #,
                                                   #"PMO" = 2,
                                                   #"Garantia Fisica" = 3
-                                                  ),
+                                      ),
                                       selected = 1)),
                  # Espaco entre inputs
                  tags$div(style="display:inline-block; width:7px"),
@@ -106,24 +106,26 @@ uiBalanco <- fluidPage(
                            label = HTML("Descri&ccedil;&atilde;o do Caso:"),
                            value = NULL),
 
-                 # Entrada para inicio da serie
-                 tags$div(style="display:inline-block; width:100px",
-                          numericInput(inputId = "anoMesInicioMDI",
-                                       label = HTML("In&iacute;cio MDI:"),
-                                       min = 201801,
-                                       max = 205012,
-                                       value = 201901)),
-
-                 # Espaco entre inputs
-                 tags$div(style="display:inline-block; width:7px"),
-
-                 # Entrada para fim da serie
-                 tags$div(style="display:inline-block; width:100px",
-                          numericInput(inputId = "anoMesFimMDI",
-                                       label = HTML("Fim MDI:"),
-                                       min = 201801,
-                                       max = 205012,
-                                       value = 203312)),
+                 conditionalPanel(condition = "input.tipoCaso == 1",
+                                  # Entrada para inicio da serie
+                                  tags$div(style="display:inline-block; width:100px",
+                                           numericInput(inputId = "anoMesInicioMDI",
+                                                        label = HTML("In&iacute;cio MDI:"),
+                                                        min = 201801,
+                                                        max = 205012,
+                                                        value = 201901)),
+                                  
+                                  # Espaco entre inputs
+                                  tags$div(style="display:inline-block; width:7px"),
+                                  
+                                  # Entrada para fim da serie
+                                  tags$div(style="display:inline-block; width:100px",
+                                           numericInput(inputId = "anoMesFimMDI",
+                                                        label = HTML("Fim MDI:"),
+                                                        min = 201801,
+                                                        max = 205012,
+                                                        value = 203312))
+                 ),
                  
                  wellPanel(style = "padding: 5px;",
                            tags$b(HTML("REEs N&atilde;o Modulam")),
@@ -202,7 +204,7 @@ uiBalanco <- fluidPage(
     # Painel de graficos
     tabPanel(HTML("Gr&aacute;ficos"),
              sidebarLayout(
-               sidebarPanel(# width = 3,
+               sidebarPanel(width = 3,
                  # Localiza base SQLite
                  textOutput(outputId = "textoBaseSQLiteGrafico"),
                  tags$span(strong(textOutput(outputId = "baseSQLiteGrafico"), style = c("color:red"))),
@@ -251,12 +253,7 @@ uiBalanco <- fluidPage(
                                   selectInput(inputId = "tipoGrafico",
                                               label = HTML("Tipo do Gr&aacute;fico de CVaR:"),
                                               choices = c("CVaR Mensal Patamar" = 1, 
-                                                          "CVaR Mensal" = 2, 
-                                                          "CVaR Anual" = 3, 
-                                                          "Risco" = 4,
-                                                          "VaR Mensal Patamar" = 5, 
-                                                          "VaR Mensal" = 6, 
-                                                          "VaR Anual" = 7),
+                                                          "LOLP Anual" = 8),
                                               selected = -2),
                                   
                                   # Botao para exibir grafico

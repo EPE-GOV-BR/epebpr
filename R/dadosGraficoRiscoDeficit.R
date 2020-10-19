@@ -59,7 +59,7 @@ dadosGraficoRiscoDeficit <- function(baseSQLite, tipoCaso, numeroCaso, codModelo
                     A16.A09_NR_SERIE,
                     A16.A09_NR_MES;")
   
-  tib.resultados <- dbGetQuery(conexao, query) %>% as.tbl()
+  tib.resultados <- dbGetQuery(conexao, query) %>% as_tibble()
   dbDisconnect(conexao)
   
   # cria coluna de data anoMes, mes e ano e filtra o horizonte para exibicao no grafico

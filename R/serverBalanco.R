@@ -115,6 +115,11 @@ serverBalanco <- function(input, output, session) {
 
   # monitora botao do calculo do balanco
   textoSelecao <- eventReactive(input$btnBalanco, {
+    
+    sistemasNaoModulamPonta <- strsplit(input$sistemasNaoModulamPonta, ",") %>% unlist() %>% as.numeric()
+    sistemasNaoModulamMedia <- strsplit(input$sistemasNaoModulamMedia, ",") %>% unlist() %>% as.numeric()
+    validaModulacao <- length(intersect(sistemasNaoModulamPonta, sistemasNaoModulamMedia))
+    
     shiny::validate(
       need(input$numeroCaso, "Caso sem n\u00FAmero"),
       need((as.integer(input$anoMesInicioMDI) %/% 100) >= 2018, "Ano da data de inicio do caso incorreto ou fora de formato (aaaamm)"),
@@ -130,14 +135,13 @@ serverBalanco <- function(input, output, session) {
       need(pastaCaso != "", "Defina a pasta de caso"),
       need(pastaSaidas != "", "Defina a pasta com as sa\u00EDdas do caso (nwlistop)"),
       need(baseSQLite != "", "Defina a base de dados SQLite"),
-      need(input$reservaOperativa, "Defina valor de reserva operativa (0-100%)")#,
+      need(input$reservaOperativa, "Defina valor de reserva operativa (0-100%)"),
+      need(validaModulacao == 0, "Sistemas que n\u00E3o modulam na ponta devem ser diferentes dos que n\u00E3o modulam na m\u00E9dia!")
       # need(input$sistemasNaoModulamPonta, "Defina os sistemas que n\u00E3o modulam na ponta"),
       # need(input$sistemasNaoModulamMedia, "Defina os sistemas que n\u00E3o modulam na m\u00E9dia")
     )
 
     tic()
-    sistemasNaoModulamPonta <- strsplit(input$sistemasNaoModulamPonta, ",") %>% unlist() %>% as.numeric()
-    sistemasNaoModulamMedia <- strsplit(input$sistemasNaoModulamMedia, ",") %>% unlist() %>% as.numeric()
     
     # mensagem de tipo de simulacao
     # pega dados gerais do NEWAVE
@@ -264,6 +268,15 @@ serverBalanco <- function(input, output, session) {
                                                              as.numeric(input$tipoGrafico))
                                       
                                     })
+                                  } else if(as.numeric(input$tipoGrafico) == 8){
+                                    withLogErrors({
+                                      grafico <- graficoRiscoDeficitAnual(baseSQLiteGrafico, 
+                                                                          chaveGrafico[1], 
+                                                                          chaveGrafico[2], 
+                                                                          chaveGrafico[3], 
+                                                                          as.numeric(input$anoInicioGrafico), 
+                                                                          as.numeric(input$anoFimGrafico))
+                                    })
                                   } else {
                                     grafico <- graficoVAR(baseSQLiteGrafico, 
                                                           chaveGrafico[1], 
@@ -277,13 +290,13 @@ serverBalanco <- function(input, output, session) {
                                   return(grafico)
                                 })
   
-  output$graficosCVar <- renderPlot(grafico(), height = 700)
-  
+  output$graficosCVar <- renderPlot(grafico(), height = 600, width = 1000)
+
   # monitora botao de download
   output$btnDownload <- downloadHandler(
     filename = function() {
       chaveGrafico <- c(input$casoGrafico %>% str_split(";") %>% unlist() %>% as.numeric())
-      if (as.numeric(input$tipoGrafico) == 4) {
+      if (as.numeric(input$tipoGrafico) %in% c(4,8)) {
         paste0("Risco de Deficit - Caso ", chaveGrafico[2], ".xlsx")
       } else if(as.numeric(input$tipoGrafico) %in% c(1,2,3)) {
         paste0("Profundidade de Deficit - CVaR - ", ifelse(as.numeric(input$tipoGrafico) == 3, "Ano", "Mes")," - Caso ", chaveGrafico[2], ".xlsx")
@@ -293,14 +306,18 @@ serverBalanco <- function(input, output, session) {
     },
     content = function(arquivoExcel) {
       chaveGrafico <- c(input$casoGrafico %>% str_split(";") %>% unlist() %>% as.numeric())
-      if (as.numeric(input$tipoGrafico) == 4) {
-        write_xlsx(dadosGraficoRiscoDeficit(baseSQLiteGrafico, 
-                                            chaveGrafico[1], 
-                                            chaveGrafico[2], 
-                                            chaveGrafico[3], 
-                                            as.numeric(input$anoInicioGrafico), 
-                                            as.numeric(input$anoFimGrafico)),
-                   arquivoExcel)
+      if (as.numeric(input$tipoGrafico) %in% c(4,8)) {
+        dadosGraficosExcel <- dadosGraficoRiscoDeficit(baseSQLiteGrafico, 
+                                                  chaveGrafico[1], 
+                                                  chaveGrafico[2], 
+                                                  chaveGrafico[3], 
+                                                  as.numeric(input$anoInicioGrafico), 
+                                                  as.numeric(input$anoFimGrafico))
+        if (as.numeric(input$tipoGrafico) == 8) {
+          dadosGraficosExcel <- dadosGraficosExcel %>% ungroup() %>% select(ano, riscoAnual) %>% distinct()
+        }
+        write_xlsx(dadosGraficosExcel, arquivoExcel)
+        
       } else if(as.numeric(input$tipoGrafico) %in% c(1,2,3)) {
         write_xlsx(dadosGraficoCVAR(baseSQLiteGrafico, 
                                     chaveGrafico[1], 

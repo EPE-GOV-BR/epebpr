@@ -17,7 +17,7 @@
 #' @export
 graficoCVAR <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
                         inicioHorizonteGrafico, fimHorizonteGrafico, tipoGrafico,
-                        tituloGraficoCVARMes = paste0("Profundidade de D\u00E9ficit - CVAR Mensal - Caso ", numeroCaso),
+                        tituloGraficoCVARMes = paste0("Profundidade de D\u00E9ficit - CVAR Mensal 5% - Caso ", numeroCaso),
                         tituloGraficoCVARAno = paste0("Profundidade de D\u00E9ficit - CVAR Anual - Caso ", numeroCaso)) {
   
   conexao <- dbConnect(RSQLite::SQLite(), baseSQLite)
@@ -52,7 +52,7 @@ graficoCVAR <- function(baseSQLite, tipoCaso, numeroCaso, codModelo,
                     A16.A09_NR_SERIE,
                     A16.A09_NR_MES;")
   
-  tib.resultados <- dbGetQuery(conexao, squery) %>% as.tbl()
+  tib.resultados <- dbGetQuery(conexao, squery) %>% as_tibble()
   dbDisconnect(conexao)
   
   # calcula a profundidade dos deficts
@@ -62,11 +62,11 @@ graficoCVAR <- function(baseSQLite, tipoCaso, numeroCaso, codModelo,
   tib.resultadosCvarMes <- tib.resultados %>%
     group_by(A09_NR_MES) %>%
     summarise(#"cvar 1%" = cvar(PROFUNDIDADE, 0.01),
-      "1cvar 1,5%" = cvar(PROFUNDIDADE, 0.015),
+      #"1cvar 1,5%" = cvar(PROFUNDIDADE, 0.015),
       #"cvar 2%" = cvar(PROFUNDIDADE, 0.02),
-      "2cvar 2,5%" = cvar(PROFUNDIDADE, 0.025),
-      "3cvar 5%" = cvar(PROFUNDIDADE, 0.05),
-      "4cvar 10%" = cvar(PROFUNDIDADE, 0.1)) %>% ungroup()
+      #"2cvar 2,5%" = cvar(PROFUNDIDADE, 0.025),
+      #"4cvar 10%" = cvar(PROFUNDIDADE, 0.1),
+      "3cvar 5%" = cvar(PROFUNDIDADE, 0.05)) %>% ungroup()
   
   # faz a transposicao dos dados de cvar por coluna para um campo de identificacao do cvar (1%; 1,5%; 2%; 5%...) e outro de valor de cvar
   tib.resultadosCvarMes <- tib.resultadosCvarMes %>% gather(key = "tamanhoCVAR", value = "cvar", -A09_NR_MES)
@@ -94,10 +94,11 @@ graficoCVAR <- function(baseSQLite, tipoCaso, numeroCaso, codModelo,
     # exibe grafico mensal de cvar separado por tipo de cvar
     graficoCVaR <- ggplot(tib.resultadosCvarMes, aes(x = anoMes, y = cvar, colour = tamanhoCVAR, fill = tamanhoCVAR)) + 
       geom_area(data = tib.localMaxCvar, show.legend = FALSE) + 
-      scale_fill_manual(name = NULL, values = c("black", "darkgreen", "red2", "steelblue")) +
-      geom_step(size = 1.5) + 
+      # scale_fill_manual(name = NULL, values = c("black", "darkgreen", "red2", "steelblue")) +
+      scale_fill_manual(name = NULL, values = c("steelblue"), labels = NULL) +
+      geom_step(size = 1.5, show.legend = FALSE) + 
       geom_text(aes(label = ifelse(cvar == maxCVAR, percent(cvar, accuracy = 0.1, scale = 100, suffix = "%", decimal.mark = ","), "")), 
-                nudge_y = (ceiling(max(tib.resultadosCvarMes$cvar)*10)/10 * 0.1), 
+                nudge_y = (ceiling(max(tib.resultadosCvarMes$cvar)*10)/10 * 0.05), 
                 hjust = 0.2,
                 show.legend = FALSE, 
                 fontface = "bold", size = 5, family = "sans") +
@@ -105,7 +106,8 @@ graficoCVAR <- function(baseSQLite, tipoCaso, numeroCaso, codModelo,
       scale_y_continuous(name = "% da Demanda", expand = c(0,0), labels = percent_format(accuracy = 0.1, scale = 100, suffix = "%", decimal.mark = ","),
                          breaks = seq(0, ceiling(max(tib.resultadosCvarMes$cvar)*10)/10, ceiling(max(tib.resultadosCvarMes$cvar)*10)/10/5),
                          limits = c(0, ceiling(max(tib.resultadosCvarMes$cvar)*10)/10)) +
-      scale_color_manual(name = NULL, values = c("black", "darkgreen", "red2", "steelblue"), labels = c("cvar 1,5%", "cvar 2,5%", "cvar 5%", "cvar 10%")) + 
+      scale_color_manual(name = NULL, values = c("steelblue"), labels = NULL) +
+      # scale_color_manual(name = NULL, values = c("black", "darkgreen", "red2", "steelblue"), labels = c("cvar 1,5%", "cvar 2,5%", "cvar 5%", "cvar 10%")) + 
       ggtitle(label = tituloGraficoCVARMes) + 
       expand_limits(x = max(tib.resultadosCvarMes$anoMes) + 20) + # dar uma folga no grafico
       theme(text = element_text(size = 20, family = "sans"),
@@ -124,8 +126,8 @@ graficoCVAR <- function(baseSQLite, tipoCaso, numeroCaso, codModelo,
             legend.key = element_blank(),
             strip.text.x = element_blank(),
             legend.box.background = element_blank()) +
-      guides(colour = guide_legend(nrow = 1)) +
-      facet_wrap(~tamanhoCVAR, ncol = 1)
+      guides(colour = guide_legend(nrow = 1)) # +
+      # facet_wrap(~tamanhoCVAR, ncol = 1)
     
   } else if (tipoGrafico == 2){
     

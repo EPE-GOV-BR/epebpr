@@ -1,7 +1,7 @@
 #' Grava dados das usinas hidraulicas no banco de dados do balanco de potencia
 #'
 #' Grava dados das usinas hidraulicas originalmente nos arquivos confhd.\* e hidr.\* na tabela BPO_A03_DADOS_UHE do banco de dados do balanco de potencia
-#' Usa funcoes do pacote (\code{leitorrcepel}).
+#' Usa funcoes do pacote (\code{leitorrmpe}).
 #'
 #' @param pasta localizacao dos arquivos do NEWAVE
 #' @param conexao conexao com o banco de dados (classe SQLiteConnection)

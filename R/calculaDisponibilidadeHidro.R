@@ -271,7 +271,7 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, tipoCaso, numeroC
     # Calcula GHTOT por usina:
     # Rateia o GHTOT pela potencia maxima, ja abatida do GHMIN*/
     # GHMIN_UHE = GHMIN_UHE X (1 - (GHMIN_SSIS - GHTOT_SSIS)/GHMIN_SSIS)
-    # GHTOT_UHE = GHMIN_UHE + ((GHTOT_SSIS - GHMIN_SSIS) X ((POT_MAX_UHE - GHMIN_UHE)/(POT_MAX_SSIS - GHMIN_SSIS)))
+    # GHMEDIA = GHMIN_UHE + ((GHTOT_SSIS - GHMIN_SSIS) X ((POT_MAX_UHE - GHMIN_UHE)/(POT_MAX_SSIS - GHMIN_SSIS)))
     # Modula o GHTOT, maximizando a geracao na horas de ponta*/
     # POT_MODULADA = ((GHMEDIA X 730.5) - (GHMIN X (730.5 - HORASPONTA))) / HORASPONTA
     df.dadosCalculadosUHE <- df.dadosCalculadosUHE %>%

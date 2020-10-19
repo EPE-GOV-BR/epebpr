@@ -1,6 +1,6 @@
 #' Gravacao dos dados de disponilidade das outras fontes renovaveis
 #'
-#' Faz a gravacao dos dados de disponilidade das outras fontes renovaveis do NEWAVE no banco de dados do Balanco de Potencia (BDBP)
+#' Faz a gravacao dos dados de disponibilidade das outras fontes renovaveis do NEWAVE no banco de dados do Balanco de Potencia (BDBP)
 #' Os dados sao gravados na tabela BPO_A13_DISPONIBILIDADE_OFR do BDBP. Alem disso, grava as tabelas de apoio BPO_A18_TIPOS_OFR e BPO_A19_FATOR_PONTA_OFR
 #'
 #' @param pastaCaso caracter com a localizacao dos arquivos NEWAVE.

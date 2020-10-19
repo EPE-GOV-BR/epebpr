@@ -48,7 +48,7 @@ dadosGraficoCVAR <- function(baseSQLite, tipoCaso, numeroCaso, codModelo,
                     A16.A09_NR_SERIE,
                     A16.A09_NR_MES;")
   
-  tib.resultados <- dbGetQuery(conexao, squery) %>% as.tbl()
+  tib.resultados <- dbGetQuery(conexao, squery) %>% as_tibble()
   dbDisconnect(conexao)
   
   # calcula a profundidade dos deficts
