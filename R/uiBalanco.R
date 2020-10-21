@@ -252,7 +252,7 @@ uiBalanco <- fluidPage(
                                   # Input dos casos na base
                                   selectInput(inputId = "tipoGrafico",
                                               label = HTML("Tipo do Gr&aacute;fico de CVaR:"),
-                                              choices = c("CVaR Mensal Patamar" = 1, 
+                                              choices = c("CVaR Mensal" = 1, 
                                                           "LOLP Anual" = 8),
                                               selected = -2),
                                   
