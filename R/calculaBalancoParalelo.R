@@ -53,7 +53,7 @@ calculaBalancoParalelo <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
                   "FROM BPO_A02_SUBSISTEMAS WHERE A02_TP_FICTICIO = 0 AND A01_TP_CASO = ", tipoCaso, " AND A01_NR_CASO = ", numeroCaso, 
                   " AND A01_CD_MODELO = ", codModelo, " ORDER BY A02_NR_SUBSISTEMA")
   df.custoDefict <- dbGetQuery(conexao, query)
-  df.custoDefict$disponibilidade <- Inf
+  df.custoDefict$disponibilidade <- 999999
   
   # horizonte do balanco
   quantidadeMesesHorizonte <- ((df.casosAnalise$fimHorizonte %/% 100) * 12 + df.casosAnalise$fimHorizonte %% 100) - 

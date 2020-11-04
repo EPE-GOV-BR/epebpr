@@ -89,7 +89,7 @@ balancoPeriodoClp <- function(periodo,
     select(tipoUsina, codUsina, subsistema, transmissao, inflexibilidade, disponibilidade, cvu)
   
   # filtrando limites dos grupos de linhas de transmissao para o mes especifico
-  # critica de existencia de dados
+  # critica de existencia de dados caso nao seja caso de GF
   if(nrow(df.limitesAgrupamentoLinhasTotal %>% filter(anoMes == periodo)) == 0 & tipoCaso != 3) {
     dbDisconnect(conexao)
     stop(paste0("N\u00E3o h\u00E1 limites de agrupamentos de linhas (BPO_A12_LIMITE_AGRUPAMENTOS_INTERCAMBIO) para o per\u00EDodo de ", periodo))
@@ -165,7 +165,7 @@ balancoPeriodoClp <- function(periodo,
   # demanda
   identificaSubsistema <- function(x) ifelse(df.geracao$subsistema == x, 1, 0)
   # define a parte da matriz de restricoes A referente a demanda
-  matrizRestricoesDemanda <- sapply(df.subsistemas$subsistema, identificaSubsistema) 
+  matrizRestricoesDemanda <- sapply(df.subsistemas$subsistema, identificaSubsistema)   
   matrizRestricoesDemanda <- (matrizRestricoesDemanda * sinalVariavel) %>% t() 
   # define os limites superior e inferior de cada linha de restricao para demanda. Como e uma igualdade, os limites superior e inferior sao iguais
   ubDemanda <- left_join(df.subsistemas, df.demandaLiquida, by = "subsistema") %>% 
@@ -186,13 +186,18 @@ balancoPeriodoClp <- function(periodo,
   lbTransmissao <- ubTransmissao
 
   # agrupamento transmissao
-  # seleciona os agrupamentos de transmissao
-  varAgrupamento <- df.limitesAgrupamentoLinhas %>% pull(agrupamento)
-  # funcao para identificar os agrupamentos de transmissao
-  identificaAgrupamento <- function(x) ifelse(df.geracao$transmissao %in% df.agrupamentoLinhas$transmissao[df.agrupamentoLinhas$agrupamento == x], 1, 0)
-  # define a parte da matriz de restricoes A referente aos agrupamentos de transmissao
-  matrizRestricoesAgrupamento <- sapply(varAgrupamento, identificaAgrupamento)
-  matrizRestricoesAgrupamento <- (matrizRestricoesAgrupamento * sinalVariavel) %>% t()
+  # nao considera agrupamento caso seja caso de GF
+  if (tipoCaso == 3) {
+    matrizRestricoesAgrupamento <- numeric()
+  } else {
+    # seleciona os agrupamentos de transmissao
+    varAgrupamento <- df.limitesAgrupamentoLinhas %>% pull(agrupamento)
+    # funcao para identificar os agrupamentos de transmissao
+    identificaAgrupamento <- function(x) ifelse(df.geracao$transmissao %in% df.agrupamentoLinhas$transmissao[df.agrupamentoLinhas$agrupamento == x], 1, 0)
+    # define a parte da matriz de restricoes A referente aos agrupamentos de transmissao
+    matrizRestricoesAgrupamento <- sapply(varAgrupamento, identificaAgrupamento)
+    matrizRestricoesAgrupamento <- (matrizRestricoesAgrupamento * sinalVariavel) %>% t()
+  }
   # define os limites superior e inferior de cada linha de restricao para os agrupamentos de transmissao
   ubAgrupamento <- df.limitesAgrupamentoLinhas %>% pull(limite)
   lbAgrupamento <- rep(0, length(ubAgrupamento))

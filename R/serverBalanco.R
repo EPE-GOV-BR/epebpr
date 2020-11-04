@@ -89,7 +89,8 @@ serverBalanco <- function(input, output, session) {
 
   # monitora botao de selecao de base existente
   observeEvent(input$btnBaseSQLite, {
-    baseSQLite <<- choose.files(caption = "Escolha a base SQLite")
+    baseSQLite <<- choose.files(caption = "Escolha a base SQLite",
+                                filters = matrix(c("SQLite", "*.db;*.sqlite;*.sqlite3"), ncol = 2))
     output$baseSQLite <- renderText(baseSQLite)
     output$textoBaseSQLite <- renderText("Base selecionada:")
   })
@@ -216,7 +217,9 @@ serverBalanco <- function(input, output, session) {
   # monitora botao de selecao de base existente
   observeEvent(input$btnBaseSQLiteGrafico, 
                withLogErrors({
-                 baseSQLiteGrafico <<- choose.files(caption = "Escolha a base SQLite") # importante <<- para passar valor para variavel global
+                 # importante <<- para passar valor para variavel global
+                 baseSQLiteGrafico <<- choose.files(caption = "Escolha a base SQLite",
+                                                    filters = matrix(c("SQLite", "*.db;*.sqlite;*.sqlite3"), ncol = 2)) 
                  output$baseSQLiteGrafico <- renderText(baseSQLiteGrafico)
                  output$textoBaseSQLiteGrafico <- renderText("Base selecionada:")
                  df.casosInputGrafico <- leituraTabelaDadosCasos(baseSQLiteGrafico)

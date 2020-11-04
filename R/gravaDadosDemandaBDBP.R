@@ -44,9 +44,20 @@ gravacaoDadosDemandaBDBP <- function(pastaCaso, conexao, tipoCaso, numeroCaso, c
   # executa as funcoes de leitura do pacote leitorrcepel para o carregamento dos dados da demanda de ponta (patamar = 1)
   # insere as variaveis associadas ao tipoCaso, numeroCaso e codModelo
   # define a demanda para o patamar de ponta (demandaPonta = limiteInterligacao * profundidadeIntercambio)
-  df.Demanda <- inner_join(leituraMercadoEnergia(pastaCaso), 
-                           filter(leituraDadosProfundidadePatamarCarga(pastaCaso), patamar == 1), 
-                           by = c("anoMes", "codSubsistema")) %>% 
+  df.mercado <- leituraMercadoEnergia(pastaCaso)
+  df.patamar <- filter(leituraDadosProfundidadePatamarCarga(pastaCaso), patamar == 1)
+  
+  # verifica se mercado e patamar estao com o mesmo horizonte de meses
+  if (length(setdiff(unique(df.patamar$anoMes), unique(df.mercado$anoMes))) != 0) {
+    dbDisconnect(conexao)
+    stop("Horizonte de mercado inferior ao horizonte dos patamares de carga!")
+  }
+  if (length(setdiff(unique(df.mercado$anoMes), unique(df.patamar$anoMes))) != 0) {
+    dbDisconnect(conexao)
+    stop("Horizonte dos patamares de carga inferior ao horizonte de mercado!")
+  }
+  
+  df.Demanda <- inner_join(df.mercado, df.patamar, by = c("anoMes", "codSubsistema")) %>% 
     mutate(tipoCaso = tipoCaso, numeroCaso = numeroCaso, codModelo = codModelo, numSequencialFrequencia = 1, valorFrequencia = 1, 
            demandaPonta = energiaMercado * profundidadeCarga) %>% 
     # renomeia os campos do data frame para compatibilizacao com a tabela do BDBP

@@ -57,7 +57,6 @@ gravacaoDadosDisponibilidadeOutrasFontesBDBP <- function(pastaCaso, conexao, tip
     stop(paste0("arquivo ", planilhaPequenas, " n\u00E3o possui a aba de nome Principal!"))
   }
   
-  
   # leitura do excel com informacao das usinas contratadas
   df.renovaveis <- read_xlsx(path = paste(pastaCaso, planilhaPequenas, sep = "/"), sheet = "Principal", range = cell_cols("B:S"), 
                               col_types = c("text", "text", "numeric", "date", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric",
@@ -74,8 +73,16 @@ gravacaoDadosDisponibilidadeOutrasFontesBDBP <- function(pastaCaso, conexao, tip
   df.renovaveis <- df.renovaveis %>% filter(!str_detect(NOME, "Indicativa")) %>% 
     mutate(`Data entrada` = format(`Data entrada`, "%Y-%m-%d")) %>% 
     # converte os fatores das renovaveis em energia
-    mutate_at(vars(matches("FSAZ")), ~(. * `POT (MW)` * `FCMedio (%)`)) %>% select(-`FCMedio (%)`, -NOME) 
+    mutate_at(vars(matches("FSAZ")), ~(. * `POT (MW)` * `FCMedio (%)`)) %>% select(-`FCMedio (%)`, -NOME)
   
+  # leitura dos REES/subsistemas cadastrados para garantir que nao haja geracao em local inexistente
+  reeCadastradas <- dbReadTable(conexao, "BPO_A02_SUBSISTEMAS") %>% pull(A02_NR_SUBSISTEMA)
+  reeRenovaveis <- df.renovaveis %>% pull(sistema) %>% unique()
+  diferencaREE <- setdiff(reeRenovaveis, reeCadastradas) %>% length()
+  if (diferencaREE != 0) {
+    dbDisconnect(conexao)
+    stop("Planilha de pequenas com oferta renov\u00E1vel em subsistema/REE n\u00E3o cadastrado!")
+  }
   
   ## dados de outras renovaveis
   arquivoDadosOFR <- paste(pastaCaso, "dadosOFR.xlsx", sep = "/")

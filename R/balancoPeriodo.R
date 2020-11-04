@@ -184,7 +184,7 @@ balancoPeriodo <- function(periodo,
   
   # grava modelo para resolver o problema do solver de se perder ao executar o solver em loop
   # write.lp(lpBalanco,
-  #          paste0("C:/CacheRBalanco/", periodo, "sh",idSerieHidro, "d", idDemanda, "modelo.lp"), type="lp")
+  #          paste0("C:/Teste/", periodo, "sh",idSerieHidro, "d", idDemanda, "modelo.lp"), type="lp")
   # delete.lp(lpBalanco)
   # rm(lpBalanco)
   # lpBalanco <- read.lp(paste0("C:/CacheRBalanco/", periodo, "sh", idSerieHidro, "d", idDemanda, "modelo.lp"), type = "lp")

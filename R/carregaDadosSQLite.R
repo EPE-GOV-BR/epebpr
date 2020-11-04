@@ -152,11 +152,14 @@ carregaDadosSQLite <- function(baseSQLite, pastaCaso, pastaSaidas, tipoCaso, num
   # grava dados dos limites de intercambio ao longo do horizonte de simulacao do NEWAVE na tabela BPO_A11_INTERCAMBIOS
   gravacaoDadosIntercambioBDBP(pastaCaso, conexao, tipoCaso, numeroCaso, codModelo)
   
-  # grava dados dos limites dos agrupamento de intercambios ao longo do horizonte de simulacao do NEWAVE na tabela BPO_A12_LIMITE_AGRUPAMENTOS_INTERCAMBIO
-  gravacaoDadosLimitesAgrupIntercambioBDBP(pastaCaso, conexao, tipoCaso, numeroCaso, codModelo)
-  
-  # grava dados de agrupamento dos intercambios do NEWAVE na tabela BPO_A15_AGRUPAMENTOS_INTERCAMBIO
-  gravacaoDadosAgrupIntercambioBDBP(pastaCaso, conexao, tipoCaso, numeroCaso, codModelo)
+  # nao grava limites e agrupamento dos intercambios se for caso de garantia fisica
+  if (tipoCaso != 3) {
+    # grava dados dos limites dos agrupamento de intercambios ao longo do horizonte de simulacao do NEWAVE na tabela BPO_A12_LIMITE_AGRUPAMENTOS_INTERCAMBIO
+    gravacaoDadosLimitesAgrupIntercambioBDBP(pastaCaso, conexao, tipoCaso, numeroCaso, codModelo)
+    
+    # grava dados de agrupamento dos intercambios do NEWAVE na tabela BPO_A15_AGRUPAMENTOS_INTERCAMBIO
+    gravacaoDadosAgrupIntercambioBDBP(pastaCaso, conexao, tipoCaso, numeroCaso, codModelo)
+  }
   
   # grava dados das usinas termeletricas ao longo do horizonte de simulacao do NEWAVE na tabela BPO_A14_DISPONIBILIDADE_UTE
   gravacaoDadosTermeletricasBDBP(pastaCaso, conexao, tipoCaso, numeroCaso, codModelo)
