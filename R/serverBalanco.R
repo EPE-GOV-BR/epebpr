@@ -145,57 +145,89 @@ serverBalanco <- function(input, output, session) {
     tic()
     
     # mensagem de tipo de simulacao
-    # pega dados gerais do NEWAVE
-    df.dadosGerais <- leituraDadosGerais(pastaCaso)
-    if (df.dadosGerais$tipoSimulacao == 1) {
-      mensagemLeitura <- "Lendo dados de simula\u00E7\u00E3o com s\u00E9ries sint\u00E9ticas e gravando no banco de dados..."
-    } else if (df.dadosGerais$tipoSimulacao == 2){
-      mensagemLeitura <- "Lendo dados de simula\u00E7\u00E3o com s\u00E9ries hist\u00F3ricas e gravando no banco de dados..."
+    # verifica se o usuario escolheu efetuar a leitura de dados, caso seja uma rodada com opcao epe
+    if (as.logical(input$leituraDados)) {
+      # pega dados gerais do NEWAVE
+      df.dadosGerais <- leituraDadosGerais(pastaCaso)
+      if (df.dadosGerais$tipoSimulacao == 1) {
+        mensagemLeitura <- "Lendo dados de simula\u00E7\u00E3o com s\u00E9ries sint\u00E9ticas e gravando no banco de dados..."
+      } else if (df.dadosGerais$tipoSimulacao == 2){
+        mensagemLeitura <- "Lendo dados de simula\u00E7\u00E3o com s\u00E9ries hist\u00F3ricas e gravando no banco de dados..."
+      } else {
+        return("Outro tipo de simula\u00E7\u00E3o. <font color=red>Verifique o arquivo dger!</font>")
+      }
     } else {
-      return("Outro tipo de simula\u00E7\u00E3o. <font color=red>Verifique o arquivo dger!</font>")
+      mensagemLeitura <- "Processando..."
     }
+    
+    # verifica se check box de etapas de execucao existem e os cria caso contrario
+    # if (!exists("input$leituraDados")) {
+    #   input$leituraDados <- T
+    # }
+    # if (!exists("input$disponibilidadeHidro")) {
+    #   input$disponibilidadeHidro <- T
+    # }
+    # if (!exists("input$execucaoBP")) {
+    #   input$execucaoBP <- T
+    # }
+    
     withProgress(message = mensagemLeitura, value = 0, {
       # bloco de dados de entrada
-      mensagemBancoDados <- carregaDadosSQLite(baseSQLite,
-                                               pastaCaso,
-                                               pastaSaidas,
-                                               as.integer(input$tipoCaso),
-                                               as.integer(input$numeroCaso),
-                                               as.integer(input$codModelo),
-                                               input$descricao,
-                                               as.integer(input$horasPonta),
-                                               as.numeric(input$reservaOperativa)/100,
-                                               as.integer(input$idDemanda),
-                                               sistemasNaoModulamPonta,
-                                               sistemasNaoModulamMedia,
-                                               codTucurui,
-                                               cotaLimiteTucurui,
-                                               potenciaLimiteTucurui,
-                                               as.integer(input$anoMesInicioMDI),
-                                               as.integer(input$anoMesFimMDI))
+      # verifica se o usuario escolheu efetuar a leitura de dados
+      if (as.logical(input$leituraDados)) {
+        mensagemBancoDados <- carregaDadosSQLite(baseSQLite,
+                                                 pastaCaso,
+                                                 pastaSaidas,
+                                                 as.integer(input$tipoCaso),
+                                                 as.integer(input$numeroCaso),
+                                                 as.integer(input$codModelo),
+                                                 input$descricao,
+                                                 as.integer(input$horasPonta),
+                                                 as.numeric(input$reservaOperativa)/100,
+                                                 as.integer(input$idDemanda),
+                                                 sistemasNaoModulamPonta,
+                                                 sistemasNaoModulamMedia,
+                                                 codTucurui,
+                                                 cotaLimiteTucurui,
+                                                 potenciaLimiteTucurui,
+                                                 as.integer(input$anoMesInicioMDI),
+                                                 as.integer(input$anoMesFimMDI))
+      } else {
+        mensagemBancoDados <- ""
+      }
 
       # bloco de calculo da disponibilidade hidro
-      setProgress(message = "Calculando disponibilidade hidr\u00E1ulica...")
       incProgress(1/3)
-      mensagemDisponibilidade <- calculaDisponibilidadeHidro(baseSQLite,
-                                                             pastaCaso,
-                                                             as.integer(input$tipoCaso),
-                                                             as.integer(input$numeroCaso),
-                                                             as.integer(input$codModelo),
-                                                             codTucurui)
+      # verifica se o usuario escolheu efetuar o calculo da disponibilidade hidro
+      if (as.logical(input$disponibilidadeHidro)) {
+        setProgress(message = "Calculando disponibilidade hidr\u00E1ulica...")
+        mensagemDisponibilidade <- calculaDisponibilidadeHidro(baseSQLite,
+                                                               pastaCaso,
+                                                               as.integer(input$tipoCaso),
+                                                               as.integer(input$numeroCaso),
+                                                               as.integer(input$codModelo),
+                                                               codTucurui)
+      } else {
+        mensagemDisponibilidade <- ""
+      }
       
       # bloco de calculo de balanco
-      setProgress(message = "Calculando balan\u00E7o de pot\u00EAncia...")
       incProgress(1/3)
-      mensagem <- calculaBalancoParalelo(baseSQLite,
-                                         as.integer(input$tipoCaso),
-                                         as.integer(input$numeroCaso),
-                                         as.integer(input$codModelo),
-                                         cvuTransmissao,
-                                         cvuHidro,
-                                         cvuRenovaveis,
-                                         cvuOutrasTermicas,
-                                         as.logical(input$balancoResumido))
+      # verifica se o usuario escolheu efetuar o calculo do BP
+      if (as.logical(input$execucaoBP)) {
+        setProgress(message = "Calculando balan\u00E7o de pot\u00EAncia...")
+        mensagem <- calculaBalancoParalelo(baseSQLite,
+                                           as.integer(input$tipoCaso),
+                                           as.integer(input$numeroCaso),
+                                           as.integer(input$codModelo),
+                                           cvuTransmissao,
+                                           cvuHidro,
+                                           cvuRenovaveis,
+                                           cvuOutrasTermicas,
+                                           as.logical(input$balancoResumido))
+      } else {
+        mensagem <- ""
+      }
     })
     # exibe tempo de execucao
     tempoExecucao <- toc(quiet = T)

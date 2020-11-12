@@ -192,7 +192,25 @@ uiBalanco <- fluidPage(
                  tags$div(style="display:inline-block;",
                           checkboxInput(inputId = "balancoResumido",
                                         value = T,
-                                        label = HTML("Balan&ccedil;o resumido")))
+                                        label = HTML("Balan&ccedil;o resumido"))),
+                 # cria os inputs de escolha dos passos do bp mas os deixa escondidos nessa versao de uso externo para nao causar confusao
+                 conditionalPanel(condition = "input.tipoCaso == 100",
+                                  tags$div(style = "display:inline-block; width:5px"),
+                                  tags$div(style="display:inline-block;",
+                                           checkboxInput(inputId = "leituraDados",
+                                                         value = T,
+                                                         label = HTML("Dados"))),
+                                  tags$div(style = "display:inline-block; width:5px"),
+                                  tags$div(style="display:inline-block;",
+                                           checkboxInput(inputId = "disponibilidadeHidro",
+                                                         value = T,
+                                                         label = HTML("Disp. Hidro"))),
+                                  tags$div(style = "display:inline-block; width:5px"),
+                                  tags$div(style="display:inline-block;",
+                                           checkboxInput(inputId = "execucaoBP",
+                                                         value = T,
+                                                         label = HTML("BP")))
+                 )
                ),
 
                # Output:

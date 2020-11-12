@@ -191,7 +191,22 @@ uiBalancoEPE <- fluidPage(
                  tags$div(style="display:inline-block;",
                           checkboxInput(inputId = "balancoResumido",
                                         value = T,
-                                        label = HTML("Balan&ccedil;o resumido")))
+                                        label = HTML("Resumido"))),
+                 tags$div(style = "display:inline-block; width:5px"),
+                 tags$div(style="display:inline-block;",
+                          checkboxInput(inputId = "leituraDados",
+                                        value = T,
+                                        label = HTML("Dados"))),
+                 tags$div(style = "display:inline-block; width:5px"),
+                 tags$div(style="display:inline-block;",
+                          checkboxInput(inputId = "disponibilidadeHidro",
+                                        value = T,
+                                        label = HTML("Disp. Hidro"))),
+                 tags$div(style = "display:inline-block; width:5px"),
+                 tags$div(style="display:inline-block;",
+                          checkboxInput(inputId = "execucaoBP",
+                                        value = T,
+                                        label = HTML("BP")))
                ),
 
                # Output:
