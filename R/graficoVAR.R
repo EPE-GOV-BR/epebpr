@@ -12,13 +12,13 @@
 #' @param tituloGraficoCVARMes vetor de caracteres com o titulo do grafico de CVAR mensal - Nao obrigatorio - valor padrao com numero do caso
 #' @param tituloGraficoCVARAno vetor de caracteres com o titulo do grafico de CVAR anual - Nao obrigatorio - valor padrao com numero do caso
 #'
-#' @return objeto do tipo ggplot
+#' @return objeto do tipo plotly
 #'
 #' @export
 graficoVAR <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
                        inicioHorizonteGrafico, fimHorizonteGrafico, tipoGrafico,
-                       tituloGraficoCVARMes = paste0("Profundidade de D\u00E9ficit - VaR Mensal - Caso ", numeroCaso),
-                       tituloGraficoCVARAno = paste0("Profundidade de D\u00E9ficit - VaR Anual - Caso ", numeroCaso)) {
+                       tituloGraficoVARMes = paste0("Profundidade de D\u00E9ficit - VaR Mensal - Caso ", numeroCaso),
+                       tituloGraficoVARAno = paste0("Profundidade de D\u00E9ficit - VaR Anual - Caso ", numeroCaso)) {
   
   conexao <- dbConnect(RSQLite::SQLite(), baseSQLite)
   # query no banco com join para buscar defict e demanda por serie para calculo da profundidade (informacao pelo SIN)
@@ -67,76 +67,50 @@ graficoVAR <- function(baseSQLite, tipoCaso, numeroCaso, codModelo,
   # cria vetor auxiliar com os marcadores que aparecerao no eixo de tempo no grafico
   marcasEixoMes <- tib.resultadosVarMes %>% filter(months(anoMes) %in% c("janeiro","julho")) %>% pull(anoMes) %>% c(., max(tib.resultadosVarMes$anoMes))
   
-  # carrega fontes para o grafico
-  # font_add_google("Montserrat", "Montserrat")
-  # showtext_auto()
-  
   if (tipoGrafico == 5) {
     # exibe grafico mensal de var separado por tipo de var
-    graficoVaR <- ggplot(tib.resultadosVarMes, aes(x = anoMes, y = var, colour = tamanhoVAR, fill = tamanhoVAR)) + 
-      geom_area(data = tib.localMaxVar, show.legend = FALSE) + 
-      scale_fill_manual(name = NULL, values = c("black", "darkgreen", "red2", "steelblue")) +
-      geom_step(size = 1.5) + 
-      geom_text(aes(label = ifelse(maxVAR == 0, "", ifelse(var == maxVAR, var, ""))), 
-                nudge_y = (ceiling(max(tib.resultadosVarMes$var)*10)/10 * 0.1), 
-                hjust = 0.2,
-                show.legend = FALSE, 
-                fontface = "bold", size = 5, family = "sans") +
-      scale_x_date(name = "M\u00EAs", date_labels = "%b-%y", expand = c(0,0), breaks = marcasEixoMes) +
-      scale_y_continuous(name = "MW", expand = c(0,0),
-                         breaks = seq(0, ceiling(max(tib.resultadosVarMes$var)*1.2), ceiling(max(tib.resultadosVarMes$var)*1.2)/5),
-                         limits = c(0, ceiling(max(tib.resultadosVarMes$var)*1.2))) +
-      scale_color_manual(name = NULL, values = c("black", "darkgreen", "red2", "steelblue"), labels = c("var 1,5%", "var 2,5%", "var 5%", "var 10%")) + 
-      ggtitle(label = tituloGraficoCVARMes) + 
-      expand_limits(x = max(tib.resultadosVarMes$anoMes) + 20) + # dar uma folga no grafico
-      theme(text = element_text(size = 20, family = "sans"),
-            plot.title = element_text(face = "bold", hjust = 0.5, size = rel(1)),
-            # plot.background = element_rect(fill = "gray98"),
-            strip.background = element_blank(),
-            panel.background = element_rect(fill = "white"),
-            panel.grid.major = element_line(color = "gray92"),
-            panel.grid.major.x = element_blank(),
-            panel.spacing = unit(2, "lines"),
-            axis.line = element_line(colour = "black"),
-            axis.text.x = element_text(angle = 90, vjust = 0.5, color = "black"),
-            axis.text.y = element_text(color = "black"),  
-            axis.title = element_text(face = "bold"),
-            legend.position = "bottom",
-            legend.key = element_blank(),
-            strip.text.x = element_blank(),
-            legend.box.background = element_blank()) +
-      guides(colour = guide_legend(nrow = 1)) +
-      facet_wrap(~tamanhoVAR, ncol = 1)
-    
+    graficoVaR <- plot_ly(data = tib.resultadosVarMes, x = ~anoMes, y = ~var, color = ~tamanhoVAR, colors = "Set3", type = "bar",
+                       hovertemplate = "<b>D\u00E9ficit em MW</b>: %{y:.0f}<br><b>M\u00EAs</b>: %{x|%Y-%m}<extra></extra>") %>% 
+      layout( 
+        title = paste0("<b>", tituloGraficoVARMes, "</b>"),
+        legend = list(orientation = 'h', x = "0.3", y = "-0.15"),
+        yaxis = list( 
+          title = "<b>D\u00E9ficit em MW</b>", 
+          tickformat = ".0f"
+        ), 
+        xaxis = list( 
+          title = "",
+          ticktext = as.list(as.character(as.yearmon(marcasEixoMes))), 
+          tickvals = as.list(marcasEixoMes)
+        )
+      ) %>% 
+      style(visible = "legendonly", name = "CVaR 1.5%", traces = 1) %>% 
+      style(visible = "legendonly", name = "CVaR 2.5%", traces = 2) %>% 
+      style(name = "CVaR 5%", traces = 3) %>% 
+      style(visible = "legendonly", name = "CVaR 10%", traces = 4)
+
   } else if (tipoGrafico == 6){
     
     # exibe grafico mensal de var
-    graficoVaR <- ggplot(tib.resultadosVarMes, aes(x = anoMes, y = var, colour = tamanhoVAR)) + 
-      geom_line(size = 1.5) +
-      scale_x_date(name = "M\u00EAs", date_labels = "%b-%y", expand = c(0,0), breaks = marcasEixoMes) +
-      scale_y_continuous(name = "MW", expand = c(0,0),
-                         breaks = seq(0, ceiling(max(tib.resultadosVarMes$var)*1.2), ceiling(max(tib.resultadosVarMes$var)*1.2)/5),
-                         limits = c(0, ceiling(max(tib.resultadosVarMes$var)*1.2))) +
-      scale_color_manual(name = NULL, values = c("black", "darkgreen", "red2", "steelblue"), labels = c("var 1,5%", "var 2,5%", "var 5%", "var 10%")) + 
-      ggtitle(label = tituloGraficoCVARMes) + 
-      expand_limits(x = max(tib.resultadosVarMes$anoMes) + 20) + # dar uma folga no grafico
-      theme(text = element_text(size = 20, family = "sans"),
-            plot.title = element_text(face = "bold", hjust = 0.5, size = rel(1)),
-            # plot.background = element_rect(fill = "gray98"),
-            strip.background = element_blank(),
-            panel.background = element_rect(fill = "white"),
-            panel.grid.major = element_line(color = "gray92"),
-            panel.grid.major.x = element_blank(),
-            panel.spacing = unit(2, "lines"),
-            axis.line = element_line(colour = "black"),
-            axis.text.x = element_text(angle = 90, vjust = 0.5, color = "black"),
-            axis.text.y = element_text(color = "black"),  
-            axis.title = element_text(face = "bold"),
-            legend.position = "bottom",
-            legend.key = element_blank(),
-            strip.text.x = element_blank(),
-            legend.box.background = element_blank()) +
-      guides(colour = guide_legend(nrow = 1))
+    graficoVaR <- plot_ly(data = tib.resultadosVarMes, x = ~anoMes, y = ~var, color = ~tamanhoVAR, type = "scatter", mode = "lines",
+                          hovertemplate = "<b>D\u00E9ficit em MW</b>: %{y:.0f}<br><b>M\u00EAs</b>: %{x|%Y-%m}<extra></extra>") %>% 
+      layout( 
+        title = paste0("<b>", tituloGraficoVARMes, "</b>"),
+        legend = list(orientation = 'h', x = "0.3", y = "-0.15"),
+        yaxis = list( 
+          title = "<b>D\u00E9ficit em MW</b>", 
+          tickformat = ".0f"
+        ), 
+        xaxis = list( 
+          title = "",
+          ticktext = as.list(as.character(as.yearmon(marcasEixoMes))), 
+          tickvals = as.list(marcasEixoMes)
+        )
+      ) %>% 
+      style(visible = "legendonly", name = "CVaR 1.5%", traces = 1) %>% 
+      style(visible = "legendonly", name = "CVaR 2.5%", traces = 2) %>% 
+      style(name = "CVaR 5%", traces = 3) %>% 
+      style(visible = "legendonly", name = "CVaR 10%", traces = 4)
     
   } else {
     # var anual
@@ -157,31 +131,22 @@ graficoVAR <- function(baseSQLite, tipoCaso, numeroCaso, codModelo,
     tib.resultadosVarAno <- tib.resultadosVarAno %>% filter(between(ano, inicioHorizonteGrafico, fimHorizonteGrafico))
     
     # exibe grafico anual de var
-    graficoVaR <- ggplot(tib.resultadosVarAno, aes(x = ano, y = var, colour = tamanhoVAR)) + 
-      geom_step(size = 1.5) + 
-      scale_x_continuous(name = "Ano", expand = c(0,0), breaks = seq(inicioHorizonteGrafico, fimHorizonteGrafico)) +
-      scale_y_continuous(name = "MW", expand = c(0,0), 
-                         breaks = seq(0, ceiling(max(tib.resultadosVarAno$var)*1.2), ceiling(max(tib.resultadosVarAno$var)*1.2)/20),
-                         limits = c(0, ceiling(max(tib.resultadosVarAno$var)*1.2))) + 
-      scale_color_manual(name = NULL, values = c("black", "darkgreen", "red2", "steelblue"), labels = c("var 1,5%", "var 2,5%", "var 5%", "var 10%")) + 
-      ggtitle(label = tituloGraficoCVARAno) +
-      expand_limits(x = max(tib.resultadosVarAno$ano) + 0.2) + # dar uma folga no grafico
-      theme(text = element_text(size = 20, family = "sans"),
-            plot.title = element_text(face = "bold", hjust = 0.5, size = rel(1)), 
-            # plot.background = element_rect(fill = "gray98"),
-            strip.background = element_blank(),
-            panel.background = element_rect(fill = "white"),
-            panel.grid.major = element_line(color = "gray92"),
-            panel.grid.major.x = element_blank(),
-            axis.line = element_line(colour = "black"),
-            axis.text.x = element_text(angle = 90, vjust = 0.5, color = "black"),
-            axis.text.y = element_text(color = "black"), 
-            axis.title = element_text(face = "bold"),
-            legend.position = "bottom",
-            legend.key = element_blank(),
-            strip.text.x = element_blank()) +
-      guides(colour = guide_legend(nrow = 1))
-    
+    graficoVaR <- plot_ly(data = tib.resultadosVarAno, x = ~ano, y = ~var, color = ~tamanhoVAR, 
+                          colors = "Set3", type = "bar",
+                          hovertemplate = "<b>D\u00E9ficit em MW</b>: %{y:.0f}<br><b>Ano</b>: %{x}") %>% 
+      layout( 
+        title = paste0("<b>", tituloGraficoVARAno, "</b>"),
+        legend = list(orientation = 'h', x = "0.3"),
+        yaxis = list( 
+          title = "<b>D\u00E9ficit em MW</b>", 
+          tickformat = ".0f"), 
+        xaxis = list(
+          type = 'category')) %>% 
+      style(name = "CVaR 1.5%", traces = 1) %>% 
+      style(name = "CVaR 2.5%", traces = 2) %>% 
+      style(name = "CVaR 5%", traces = 3) %>% 
+      style(name = "CVaR 10%", traces = 4)
+
   }
   return(graficoVaR)
 }

@@ -160,17 +160,6 @@ serverBalanco <- function(input, output, session) {
       mensagemLeitura <- "Processando..."
     }
     
-    # verifica se check box de etapas de execucao existem e os cria caso contrario
-    # if (!exists("input$leituraDados")) {
-    #   input$leituraDados <- T
-    # }
-    # if (!exists("input$disponibilidadeHidro")) {
-    #   input$disponibilidadeHidro <- T
-    # }
-    # if (!exists("input$execucaoBP")) {
-    #   input$execucaoBP <- T
-    # }
-    
     withProgress(message = mensagemLeitura, value = 0, {
       # bloco de dados de entrada
       # verifica se o usuario escolheu efetuar a leitura de dados
@@ -282,6 +271,7 @@ serverBalanco <- function(input, output, session) {
                                   )
                                   show_spinner()
                                   chaveGrafico <- c(input$casoGrafico %>% str_split(";") %>% unlist() %>% as.numeric())
+                                  # Risco 
                                   if (as.numeric(input$tipoGrafico) == 4) {
                                     withLogErrors({ 
                                       grafico <- graficoRiscoDeficit(baseSQLiteGrafico, 
@@ -292,6 +282,7 @@ serverBalanco <- function(input, output, session) {
                                                                      as.numeric(input$anoFimGrafico))
                                       
                                     })  
+                                  # CvaR
                                   } else if(as.numeric(input$tipoGrafico) %in% c(1,2,3)){
                                     withLogErrors({
                                       grafico <- graficoCVAR(baseSQLiteGrafico, 
@@ -312,6 +303,15 @@ serverBalanco <- function(input, output, session) {
                                                                           as.numeric(input$anoInicioGrafico), 
                                                                           as.numeric(input$anoFimGrafico))
                                     })
+                                  } else if(as.numeric(input$tipoGrafico) == 9){
+                                    withLogErrors({
+                                      grafico <- graficoCVARSubsistema(baseSQLiteGrafico, 
+                                                                       chaveGrafico[1], 
+                                                                       chaveGrafico[2], 
+                                                                       chaveGrafico[3], 
+                                                                       as.numeric(input$anoInicioGrafico), 
+                                                                       as.numeric(input$anoFimGrafico))
+                                    })
                                   } else {
                                     grafico <- graficoVAR(baseSQLiteGrafico, 
                                                           chaveGrafico[1], 
@@ -325,7 +325,8 @@ serverBalanco <- function(input, output, session) {
                                   return(grafico)
                                 })
   
-  output$graficosCVar <- renderPlot(grafico(), height = 600, width = 1000)
+  # output$graficosCVar <- renderPlot(grafico(), height = 600, width = 1000)
+  output$graficoBalanco <- renderPlotly(grafico())
 
   # monitora botao de download
   output$btnDownload <- downloadHandler(
@@ -333,6 +334,8 @@ serverBalanco <- function(input, output, session) {
       chaveGrafico <- c(input$casoGrafico %>% str_split(";") %>% unlist() %>% as.numeric())
       if (as.numeric(input$tipoGrafico) %in% c(4,8)) {
         paste0("Risco de Deficit - Caso ", chaveGrafico[2], ".xlsx")
+      } else if(as.numeric(input$tipoGrafico) == 9) {
+        paste0("Profundidade de Deficit Subsistema - CVaR - Caso ", chaveGrafico[2], ".xlsx")
       } else if(as.numeric(input$tipoGrafico) %in% c(1,2,3)) {
         paste0("Profundidade de Deficit - CVaR - ", ifelse(as.numeric(input$tipoGrafico) == 3, "Ano", "Mes")," - Caso ", chaveGrafico[2], ".xlsx")
       } else {
@@ -362,6 +365,15 @@ serverBalanco <- function(input, output, session) {
                                     as.numeric(input$anoFimGrafico),
                                     as.numeric(input$tipoGrafico)),
                    arquivoExcel)
+        
+      } else if(as.numeric(input$tipoGrafico) == 9) {
+        write_xlsx(dadosGraficoCVARSubsistema(baseSQLiteGrafico, 
+                                              chaveGrafico[1], 
+                                              chaveGrafico[2], 
+                                              chaveGrafico[3], 
+                                              as.numeric(input$anoInicioGrafico), 
+                                              as.numeric(input$anoFimGrafico)),
+                   arquivoExcel) 
       } else {
         write_xlsx(dadosGraficoVAR(baseSQLiteGrafico, 
                                    chaveGrafico[1], 

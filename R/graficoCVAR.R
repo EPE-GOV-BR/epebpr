@@ -12,7 +12,7 @@
 #' @param tituloGraficoCVARMes vetor de caracteres com o titulo do grafico de CVAR mensal - Nao obrigatorio - valor padrao com numero do caso
 #' @param tituloGraficoCVARAno vetor de caracteres com o titulo do grafico de CVAR anual - Nao obrigatorio - valor padrao com numero do caso
 #'
-#' @return objeto do tipo ggplot
+#' @return objeto do tipo plotly
 #'
 #' @export
 graficoCVAR <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
@@ -92,72 +92,114 @@ graficoCVAR <- function(baseSQLite, tipoCaso, numeroCaso, codModelo,
   
   if (tipoGrafico == 1) {
     # exibe grafico mensal de cvar separado por tipo de cvar
-    graficoCVaR <- ggplot(tib.resultadosCvarMes, aes(x = anoMes, y = cvar, colour = tamanhoCVAR, fill = tamanhoCVAR)) + 
-      geom_area(data = tib.localMaxCvar, show.legend = FALSE) + 
-      # scale_fill_manual(name = NULL, values = c("black", "darkgreen", "red2", "steelblue")) +
-      scale_fill_manual(name = NULL, values = c("steelblue"), labels = NULL) +
-      geom_step(size = 1.5, show.legend = FALSE) + 
-      geom_text(aes(label = ifelse(cvar == maxCVAR, percent(cvar, accuracy = 0.1, scale = 100, suffix = "%", decimal.mark = ","), "")), 
-                nudge_y = (ceiling(max(tib.resultadosCvarMes$cvar)*10)/10 * 0.05), 
-                hjust = 0.2,
-                show.legend = FALSE, 
-                fontface = "bold", size = 5, family = "sans") +
-      scale_x_date(name = "M\u00EAs", date_labels = "%b-%y", expand = c(0,0), breaks = marcasEixoMes) +
-      scale_y_continuous(name = "% da Demanda", expand = c(0,0), labels = percent_format(accuracy = 0.1, scale = 100, suffix = "%", decimal.mark = ","),
-                         breaks = seq(0, ceiling(max(tib.resultadosCvarMes$cvar)*10)/10, ceiling(max(tib.resultadosCvarMes$cvar)*10)/10/5),
-                         limits = c(0, ceiling(max(tib.resultadosCvarMes$cvar)*10)/10)) +
-      scale_color_manual(name = NULL, values = c("steelblue"), labels = NULL) +
-      # scale_color_manual(name = NULL, values = c("black", "darkgreen", "red2", "steelblue"), labels = c("cvar 1,5%", "cvar 2,5%", "cvar 5%", "cvar 10%")) + 
-      ggtitle(label = tituloGraficoCVARMes) + 
-      expand_limits(x = max(tib.resultadosCvarMes$anoMes) + 20) + # dar uma folga no grafico
-      theme(text = element_text(size = 20, family = "sans"),
-            plot.title = element_text(face = "bold", hjust = 0.5, size = rel(1)),
-            # plot.background = element_rect(fill = "gray98"),
-            strip.background = element_blank(),
-            panel.background = element_rect(fill = "white"),
-            panel.grid.major = element_line(color = "gray92"),
-            panel.grid.major.x = element_blank(),
-            panel.spacing = unit(2, "lines"),
-            axis.line = element_line(colour = "black"),
-            axis.text.x = element_text(angle = 90, vjust = 0.5, color = "black"),
-            axis.text.y = element_text(color = "black"),  
-            axis.title = element_text(face = "bold"),
-            legend.position = "bottom",
-            legend.key = element_blank(),
-            strip.text.x = element_blank(),
-            legend.box.background = element_blank()) +
-      guides(colour = guide_legend(nrow = 1)) # +
-      # facet_wrap(~tamanhoCVAR, ncol = 1)
+    tib.resultadosCvarMes <- tib.resultadosCvarMes %>% 
+      mutate(textoCVaR = ifelse(cvar == maxCVAR, paste0(round(cvar * 100, 1), "%"), ""))
+    
+    graficoCVaR <- plot_ly(data = tib.resultadosCvarMes, x = ~anoMes, y = ~cvar, name = "", type = "bar", showlegend = F,
+                           hovertemplate = "<b>D\u00E9ficit % da Demanda</b>: %{y:.1%}<br><b>M\u00EAs</b>: %{x|%Y-%m}<extra></extra>") %>% 
+      add_trace(tib.resultadosCvarMes, x = ~anoMes, y = ~cvar, type = 'scatter',
+                mode = 'text', text = ~textoCVaR, textposition = 'top center', texttemplate = "<b>%{text}</b>") %>%
+      layout( 
+        title = paste0("<b>", tituloGraficoCVARMes, "</b>"),
+        # legend = list(title = list(text='<b> Subsistemas </b>')), #orientation = 'h'),
+        yaxis = list( 
+          title = "<b>D\u00E9ficit % da Demanda</b>", 
+          tickformat = "%" 
+        ), 
+        xaxis = list( 
+          title = "<b>M\u00EAs</b>", 
+          ticktext = as.list(as.character(as.yearmon(marcasEixoMes))), 
+          tickvals = as.list(marcasEixoMes)
+        )
+      )
+    
+    # graficoCVaR <- ggplot(tib.resultadosCvarMes, aes(x = anoMes, y = cvar, colour = tamanhoCVAR, fill = tamanhoCVAR)) + 
+    #   geom_area(data = tib.localMaxCvar, show.legend = FALSE) + 
+    #   # scale_fill_manual(name = NULL, values = c("black", "darkgreen", "red2", "steelblue")) +
+    #   scale_fill_manual(name = NULL, values = c("steelblue"), labels = NULL) +
+    #   geom_step(size = 1.5, show.legend = FALSE) + 
+    #   geom_text(aes(label = ifelse(cvar == maxCVAR, percent(cvar, accuracy = 0.1, scale = 100, suffix = "%", decimal.mark = ","), "")), 
+    #             nudge_y = (ceiling(max(tib.resultadosCvarMes$cvar)*10)/10 * 0.05), 
+    #             hjust = 0.2,
+    #             show.legend = FALSE, 
+    #             fontface = "bold") + #, size = 5, family = "sans") +
+    #   scale_x_date(name = "M\u00EAs", date_labels = "%b-%y", expand = c(0,0), breaks = marcasEixoMes) +
+    #   scale_y_continuous(name = "% da Demanda", expand = c(0,0), labels = percent_format(accuracy = 0.1, scale = 100, suffix = "%", decimal.mark = ","),
+    #                      breaks = seq(0, ceiling(max(tib.resultadosCvarMes$cvar)*10)/10, ceiling(max(tib.resultadosCvarMes$cvar)*10)/10/5),
+    #                      limits = c(0, ceiling(max(tib.resultadosCvarMes$cvar)*10)/10)) +
+    #   scale_color_manual(name = NULL, values = c("steelblue"), labels = NULL) +
+    #   # scale_color_manual(name = NULL, values = c("black", "darkgreen", "red2", "steelblue"), labels = c("cvar 1,5%", "cvar 2,5%", "cvar 5%", "cvar 10%")) + 
+    #   ggtitle(label = tituloGraficoCVARMes) + 
+    #   expand_limits(x = max(tib.resultadosCvarMes$anoMes) + 20) + # dar uma folga no grafico
+    #   theme(# text = element_text(size = 20, family = "sans"),
+    #         plot.title = element_text(face = "bold", hjust = 0.5, size = rel(1)),
+    #         # plot.background = element_rect(fill = "gray98"),
+    #         strip.background = element_blank(),
+    #         panel.background = element_rect(fill = "white"),
+    #         panel.grid.major = element_line(color = "gray92"),
+    #         panel.grid.major.x = element_blank(),
+    #         panel.spacing = unit(2, "lines"),
+    #         axis.line = element_line(colour = "black"),
+    #         axis.text.x = element_text(angle = 90, vjust = 0.5, color = "black"),
+    #         axis.text.y = element_text(color = "black"),  
+    #         axis.title = element_text(face = "bold"),
+    #         legend.position = "bottom",
+    #         legend.key = element_blank(),
+    #         strip.text.x = element_blank(),
+    #         legend.box.background = element_blank()) +
+    #   guides(colour = guide_legend(nrow = 1)) 
     
   } else if (tipoGrafico == 2){
     
     # exibe grafico mensal de cvar
-    graficoCVaR <- ggplot(tib.resultadosCvarMes, aes(x = anoMes, y = cvar, colour = tamanhoCVAR)) + 
-      geom_line(size = 1.5) +
-      scale_x_date(name = "M\u00EAs", date_labels = "%b-%y", expand = c(0,0), breaks = marcasEixoMes) +
-      scale_y_continuous(name = "% da Demanda", expand = c(0,0), labels = percent_format(accuracy = 0.1, scale = 100, suffix = "%", decimal.mark = ","),
-                         breaks = seq(0, ceiling(max(tib.resultadosCvarMes$cvar)*10)/10, ceiling(max(tib.resultadosCvarMes$cvar)*10)/10/20),
-                         limits = c(0, ceiling(max(tib.resultadosCvarMes$cvar)*10)/10)) +
-      scale_color_manual(name = NULL, values = c("black", "darkgreen", "red2", "steelblue"), labels = c("cvar 1,5%", "cvar 2,5%", "cvar 5%", "cvar 10%")) + 
-      ggtitle(label = tituloGraficoCVARMes) + 
-      expand_limits(x = max(tib.resultadosCvarMes$anoMes) + 20) + # dar uma folga no grafico
-      theme(text = element_text(size = 20, family = "sans"),
-            plot.title = element_text(face = "bold", hjust = 0.5, size = rel(1)),
-            # plot.background = element_rect(fill = "gray98"),
-            strip.background = element_blank(),
-            panel.background = element_rect(fill = "white"),
-            panel.grid.major = element_line(color = "gray92"),
-            panel.grid.major.x = element_blank(),
-            panel.spacing = unit(2, "lines"),
-            axis.line = element_line(colour = "black"),
-            axis.text.x = element_text(angle = 90, vjust = 0.5, color = "black"),
-            axis.text.y = element_text(color = "black"),  
-            axis.title = element_text(face = "bold"),
-            legend.position = "bottom",
-            legend.key = element_blank(),
-            strip.text.x = element_blank(),
-            legend.box.background = element_blank()) +
-      guides(colour = guide_legend(nrow = 1))
+    tib.resultadosCvarMes <- tib.resultadosCvarMes %>% 
+      mutate(textoCVaR = ifelse(cvar == maxCVAR, paste0(round(cvar * 100, 1), "%"), ""))
+    
+    graficoCVaR <- plot_ly(data = tib.resultadosCvarMes, x = ~anoMes, y = ~cvar, name = "", type = 'scatter', mode = 'lines', showlegend = F,
+                           hovertemplate = "<b>D\u00E9ficit % da Demanda</b>: %{y:.1%}<br><b>M\u00EAs</b>: %{x|%Y-%m}<extra></extra>") %>% 
+      add_trace(tib.resultadosCvarMes, x = ~anoMes, y = ~cvar, type = 'scatter', name = "",
+                mode = 'text', text = ~textoCVaR, textposition = 'top center', texttemplate = "<b>%{text}</b>") %>%
+      layout( 
+        title = paste0("<b>", tituloGraficoCVARMes, "</b>"),
+        # legend = list(title = list(text='<b> Subsistemas </b>')), #orientation = 'h'),
+        yaxis = list( 
+          title = "<b>D\u00E9ficit % da Demanda</b>", 
+          tickformat = "%" 
+        ), 
+        xaxis = list( 
+          title = "<b>M\u00EAs</b>", 
+          ticktext = as.list(as.character(as.yearmon(marcasEixoMes))), 
+          tickvals = as.list(marcasEixoMes)
+        )
+      )
+    
+    # graficoCVaR <- ggplot(tib.resultadosCvarMes, aes(x = anoMes, y = cvar, colour = tamanhoCVAR)) + 
+    #   geom_line(size = 1.5, show.legend = FALSE) +
+    #   scale_x_date(name = "M\u00EAs", date_labels = "%b-%y", expand = c(0,0), breaks = marcasEixoMes) +
+    #   scale_y_continuous(name = "% da Demanda", expand = c(0,0), labels = percent_format(accuracy = 0.1, scale = 100, suffix = "%", decimal.mark = ","),
+    #                      breaks = seq(0, ceiling(max(tib.resultadosCvarMes$cvar)*10)/10, ceiling(max(tib.resultadosCvarMes$cvar)*10)/10/20),
+    #                      limits = c(0, ceiling(max(tib.resultadosCvarMes$cvar)*10)/10)) +
+    #   scale_color_manual(name = NULL, labels = NULL, 
+    #                      values = c("steelblue", "black", "darkgreen", "red2")) + 
+    #   ggtitle(label = tituloGraficoCVARMes) + 
+    #   expand_limits(x = max(tib.resultadosCvarMes$anoMes) + 20) + # dar uma folga no grafico
+    #   theme(text = element_text(size = 20, family = "sans"),
+    #         plot.title = element_text(face = "bold", hjust = 0.5, size = rel(1)),
+    #         # plot.background = element_rect(fill = "gray98"),
+    #         strip.background = element_blank(),
+    #         panel.background = element_rect(fill = "white"),
+    #         panel.grid.major = element_line(color = "gray92"),
+    #         panel.grid.major.x = element_blank(),
+    #         panel.spacing = unit(2, "lines"),
+    #         axis.line = element_line(colour = "black"),
+    #         axis.text.x = element_text(angle = 90, vjust = 0.5, color = "black"),
+    #         axis.text.y = element_text(color = "black"),  
+    #         axis.title = element_text(face = "bold"),
+    #         legend.position = "bottom",
+    #         legend.key = element_blank(),
+    #         strip.text.x = element_blank(),
+    #         legend.box.background = element_blank()) +
+    #   guides(colour = guide_legend(nrow = 1))
     
   } else {
     # cvar anual
@@ -178,30 +220,47 @@ graficoCVAR <- function(baseSQLite, tipoCaso, numeroCaso, codModelo,
     tib.resultadosCvarAno <- tib.resultadosCvarAno %>% filter(between(ano, inicioHorizonteGrafico, fimHorizonteGrafico))
     
     # exibe grafico anual de cvar
-    graficoCVaR <- ggplot(tib.resultadosCvarAno, aes(x = ano, y = cvar, colour = tamanhoCVAR)) + 
-      geom_step(size = 1.5) + 
-      scale_x_continuous(name = "Ano", expand = c(0,0), breaks = seq(inicioHorizonteGrafico, fimHorizonteGrafico)) +
-      scale_y_continuous(name = "% da Demanda", expand = c(0,0), labels = percent_format(accuracy = 0.1, scale = 100, suffix = "%", decimal.mark = ","), 
-                         breaks = seq(0, ceiling(max(tib.resultadosCvarAno$cvar)*10)/10, ceiling(max(tib.resultadosCvarAno$cvar)*10)/10/20),
-                         limits = c(0, ceiling(max(tib.resultadosCvarAno$cvar)*10)/10)) + 
-      scale_color_manual(name = NULL, values = c("black", "darkgreen", "red2", "steelblue"), labels = c("cvar 1,5%", "cvar 2,5%", "cvar 5%", "cvar 10%")) + 
-      ggtitle(label = tituloGraficoCVARAno) +
-      expand_limits(x = max(tib.resultadosCvarAno$ano) + 0.2) + # dar uma folga no grafico
-      theme(text = element_text(size = 20, family = "sans"),
-            plot.title = element_text(face = "bold", hjust = 0.5, size = rel(1)), 
-            # plot.background = element_rect(fill = "gray98"),
-            strip.background = element_blank(),
-            panel.background = element_rect(fill = "white"),
-            panel.grid.major = element_line(color = "gray92"),
-            panel.grid.major.x = element_blank(),
-            axis.line = element_line(colour = "black"),
-            axis.text.x = element_text(angle = 90, vjust = 0.5, color = "black"),
-            axis.text.y = element_text(color = "black"), 
-            axis.title = element_text(face = "bold"),
-            legend.position = "bottom",
-            legend.key = element_blank(),
-            strip.text.x = element_blank()) +
-      guides(colour = guide_legend(nrow = 1))
+    graficoCVaR <- plot_ly(data = tib.resultadosCvarAno, x = ~ano, y = ~cvar, color = ~tamanhoCVAR, 
+                           colors = "Set3", type = "bar",
+                           hovertemplate = "<b>D\u00E9ficit % da Demanda</b>: %{y:.1%}<br><b>Ano</b>: %{x}") %>% 
+      layout( 
+        title = paste0("<b>", tituloGraficoCVARAno, "</b>"),
+        legend = list(orientation = 'h', x = "0.3"),
+        yaxis = list( 
+          title = "<b>D\u00E9ficit % da Demanda</b>", 
+          tickformat = "%"), 
+        xaxis = list(
+          type = 'category')) %>% 
+      style(name = "CVaR 1.5%", traces = 1) %>% 
+      style(name = "CVaR 2.5%", traces = 2) %>% 
+      style(name = "CVaR 5%", traces = 3) %>% 
+      style(name = "CVaR 10%", traces = 4)
+    
+    
+    # graficoCVaR <- ggplot(tib.resultadosCvarAno, aes(x = ano, y = cvar, colour = tamanhoCVAR)) + 
+    #   geom_step(size = 1.5) + 
+    #   scale_x_continuous(name = "Ano", expand = c(0,0), breaks = seq(inicioHorizonteGrafico, fimHorizonteGrafico)) +
+    #   scale_y_continuous(name = "% da Demanda", expand = c(0,0), labels = percent_format(accuracy = 0.1, scale = 100, suffix = "%", decimal.mark = ","), 
+    #                      breaks = seq(0, ceiling(max(tib.resultadosCvarAno$cvar)*10)/10, ceiling(max(tib.resultadosCvarAno$cvar)*10)/10/20),
+    #                      limits = c(0, ceiling(max(tib.resultadosCvarAno$cvar)*10)/10)) + 
+    #   scale_color_manual(name = NULL, values = c("black", "darkgreen", "red2", "steelblue"), labels = c("cvar 1,5%", "cvar 2,5%", "cvar 5%", "cvar 10%")) + 
+    #   ggtitle(label = tituloGraficoCVARAno) +
+    #   expand_limits(x = max(tib.resultadosCvarAno$ano) + 0.2) + # dar uma folga no grafico
+    #   theme(text = element_text(size = 20, family = "sans"),
+    #         plot.title = element_text(face = "bold", hjust = 0.5, size = rel(1)), 
+    #         # plot.background = element_rect(fill = "gray98"),
+    #         strip.background = element_blank(),
+    #         panel.background = element_rect(fill = "white"),
+    #         panel.grid.major = element_line(color = "gray92"),
+    #         panel.grid.major.x = element_blank(),
+    #         axis.line = element_line(colour = "black"),
+    #         axis.text.x = element_text(angle = 90, vjust = 0.5, color = "black"),
+    #         axis.text.y = element_text(color = "black"), 
+    #         axis.title = element_text(face = "bold"),
+    #         legend.position = "bottom",
+    #         legend.key = element_blank(),
+    #         strip.text.x = element_blank()) +
+    #   guides(colour = guide_legend(nrow = 1))
     
   }
   return(graficoCVaR)

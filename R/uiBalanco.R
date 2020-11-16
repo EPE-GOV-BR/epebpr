@@ -293,7 +293,8 @@ uiBalanco <- fluidPage(
                
                # Output:
                mainPanel(
-                 plotOutput(outputId = "graficosCVar")
+                 # plotOutput(outputId = "graficosCVar")
+                 plotlyOutput(outputId = "graficoBalanco", width = 1100, height = 600)
                )
              )
     )

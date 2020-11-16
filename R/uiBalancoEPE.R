@@ -265,14 +265,16 @@ uiBalancoEPE <- fluidPage(
                                   tags$br(),
                                   # Input dos casos na base
                                   selectInput(inputId = "tipoGrafico",
-                                              label = HTML("Tipo do Gr&aacute;fico de CVaR:"),
+                                              label = HTML("Tipo de Gr&aacute;fico:"),
                                               choices = c("CVaR Mensal Patamar" = 1, 
-                                                          "CVaR Mensal" = 2, 
+                                                          "CVaR Mensal" = 2,
+                                                          "CVaR Mensal Subsistema" = 9,
                                                           "CVaR Anual" = 3, 
                                                           "Risco" = 4,
                                                           "VaR Mensal Patamar" = 5, 
                                                           "VaR Mensal" = 6, 
-                                                          "VaR Anual" = 7),
+                                                          "VaR Anual" = 7,
+                                                          "LOLP Anual" = 8),
                                               selected = -2),
                                   
                                   # Botao para exibir grafico
@@ -294,7 +296,8 @@ uiBalancoEPE <- fluidPage(
                
                # Output:
                mainPanel(
-                 plotOutput(outputId = "graficosCVar")
+                 # plotOutput(outputId = "graficosCVar")
+                 plotlyOutput(outputId = "graficoBalanco", width = 1100, height = 600)
                )
              )
     )
