@@ -96,7 +96,7 @@ graficoCVARSubsistema <- function(baseSQLite, tipoCaso, numeroCaso, codModelo,
   marcasEixoMes <- tib.resultadosCvarMes %>% filter(months(anoMes) %in% c("janeiro","julho")) %>% pull(anoMes) %>% c(., max(tib.resultadosCvarMes$anoMes))
   
   grafico <- plot_ly(data = tib.resultadosCvarMes, x = ~anoMes, y = ~cvar, color = ~A02_TX_DESCRICAO_SUBSISTEMA, type = "bar",
-          hovertemplate = "<b>D\u00E9ficit % da Demanda</b>: %{y:.1%}<br><b>M\u00EAs</b>: %{x|%Y-%m}<extra></extra>") %>% 
+          hovertemplate = "<b>D\u00E9ficit % da Demanda</b>: %{y:.1%}<br><b>M\u00EAs</b>: %{x|%Y-%m}") %>% 
     layout( 
       title = paste0("<b>", tituloGraficoCVARMes, "</b>"),
       legend = list(title = list(text='<b> Subsistemas </b>')), #orientation = 'h'),

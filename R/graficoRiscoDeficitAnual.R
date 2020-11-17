@@ -76,6 +76,7 @@ graficoRiscoDeficitAnual <- function(baseSQLite, tipoCaso, numeroCaso, codModelo
   graficoRisco <- plot_ly(data = tib.resultados, x = ~ano, y = ~riscoAnual, name = "", type = "bar", 
                           textposition = 'outside', texttemplate = "<b>%{y:.1%}</b>",
                           hovertemplate = "<b>Risco de D\u00E9ficit</b>: %{y:.1%}<br><b>Ano</b>: %{x}<extra></extra>") %>% 
+                          # <extra></extra> remove o trece do hover
     layout( 
       title = paste0("<b>", tituloGrafico, "</b>"),
       yaxis = list( 
