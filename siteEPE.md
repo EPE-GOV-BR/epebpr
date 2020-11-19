@@ -10,34 +10,27 @@ Balan&ccedil;o de pot&ecirc;ncia: A ferramenta tem como objetivo avaliar os mont
 
 `install.packages(c("readr", "readxl", "writexl", "dplyr", "stringr", "tidyr", "clpAPI", "DBI",`
 `"RSQLite", "shiny", "shinythemes", "shinybusy", "tictoc", "plotly", "zoo", "scales", "showtext",`
-`"jsonlite", "parallel", "foreach", "doParallel", "numbers", "devtools"), repos = "https://cran.fiocruz.br")`
+`"jsonlite", "parallel", "foreach", "doParallel", "numbers"), repos = "https://cran.fiocruz.br")`
 
-3. Ap&oacute;s a instala&ccedil;&atilde;o das depend&ecirc;ncias que est&atilde;o no CRAN, voc&ecirc; deve instalar o pacote do leitor de arquivos dos modelos de planejanemto energ&eacute;tico do CEPEL. Este tamb&eacute;m &eacute; uma depend&ecirc;ncia, contudo, ele foi desenvolvido pela EPE e ainda n&atilde;o est&aacute; no CRAN. Para instalar esse pacote h&aacute; duas op&ccedil;&otilde;es: 
+3. Ap&oacute;s a instala&ccedil;&atilde;o das depend&ecirc;ncias que est&atilde;o no CRAN, voc&ecirc; deve instalar o pacote do leitor de arquivos dos modelos de planejanemto energ&eacute;tico do CEPEL. Este tamb&eacute;m &eacute; uma depend&ecirc;ncia, contudo, ele foi desenvolvido pela EPE e ainda n&atilde;o est&aacute; no CRAN. Para instalar esse pacote basta efetuar o download do pacote em zip mais recente em https://www.epe.gov.br/pt/publicacoes-dados-abertos/publicacoes/leitor-dos-arquivos-de-entrada-e-saida-dos-modelos-do-planejamento-energetico-do-cepel e, depois, no R, ir em Pacotes > Install package(s) from local files... e escolher o zip rec&eacute;m baixado.
 
-   1. Usar as instru&ccedil;&otilde;es no *command* do R: `library(devtools)`    
+4. Finalmente, podemos instalar o pacote do BP. Para instalar o pacote basta efetuar o download do pacote em zip na parte de arquivos desta p&aacute;gina e, depois, no R, ir em Pacotes > Install package(s) from local files... e escolher o zip rec&eacute;m baixado. 
 
-     `install_github("equipesge/leitorrmpe")` 
+# Executando o BP
 
-   2. Ou efetuar o download do pacote em zip em www.epe.gov.br/xxxxx e, depois, no R, ir em Pacotes > Install package(s) from local files... e escolher o zip rec&eacute;m baixado.
+Ap&oacute;s ter o pacote instalado, basta usar as instru&ccedil;&otilde;es no *command* do R:
 
-4. Finalmente, podemos instalar o pacote do BP. Para instalar o pacote h&aacute; duas op&ccedil;&otilde;es: 
-
-   1. Usar as instru&ccedil;&otilde;es no *command* do R: `library(devtools)`    
-
-     `install_github("equipesge/epebpr")` 
-
-   2. Ou efetuar o download do pacote em zip em www.epe.gov.br/xxxxx e, depois, no R, ir em Pacotes > Install package(s) from local files... e escolher o zip rec&eacute;m baixado. 
-
-# Executando o BP 
-
-Ap&oacute;s ter o pacote instalado, basta usar as instru&ccedil;&otilde;es no *command* do R: `library(epebpr)`    
-
-     `aplicacaoBalanco()` 
+`library(epebpr)`    
+`aplicacaoBalanco()` 
 
 # Instru&ccedil;&otilde;es de uso da ferramenta 
 
 Ap&oacute;s ter a ferramenta em execu&ccedil;&atilde;o basta clicar no &iacute;cone do livro para obter ajuda. 
 
-# Contribui&ccedil;&atilde;o 
+# Arquivos 
 
-Caso desejem fazer contribui&ccedil;&otilde;es no c&oacute;digo, basta seguir o procedimento padr&atilde;o do GitHub. N&oacute;s avaliaremos os *commits* e os incorporaremos se verificarmos as devidas melhorias. 
+# Vers&otilde;es
+
+### v.0.9.0
+
+Primeira vers&atilde;o divulgada 
