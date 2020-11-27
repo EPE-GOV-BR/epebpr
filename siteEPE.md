@@ -2,11 +2,15 @@
 
 Balan&ccedil;o de pot&ecirc;ncia: A ferramenta tem como objetivo avaliar os montantes de pot&ecirc;ncia necess&aacute;rios nos momentos em que o sistema apresenta demanda m&aacute;xima instant&acirc;nea com o objetivo de verificar as condi&ccedil;&otilde;es de seu atendimento. Isto &eacute;, verificando a possibilidade de d&eacute;ficits e a auxiliando na avalia&ccedil;&atilde;o de contrata&ccedil;&atilde;o de pot&ecirc;ncia para o sistema. A ferramenta mant&eacute;m a compatibilidade com a an&aacute;lise energ&eacute;tica previamente efetuada.
 
+A ferramenta de balan&ccedil;o de pot&ecirc;ncia foi desenvolvida em linguagem de programa&ccedil;&atilde;o R e sua interface foi desenvolvida com Shiny, que &eacute; um pacote R que facilita a cria&ccedil;&atilde;o de aplica&ccedil;&otilde;es web diretamente do R e utiliza CSS, widgets, html e a&ccedil;&otilde;es JavaScript para maior flexibilidade. A ferramenta tamb&eacute;m usa o pacote clpAPI, que &eacute; uma Interface R para a API em C do COIN-OR Clp.
+
 # Instalando o BP 
 
-1.  Para utilizar a ferramenta do Balan&ccedil;o de Pot&ecirc;ncia &eacute; necess&aacute;rio que o R esteja instalado. Para tal, basta baixar a instala&ccedil;&atilde;o e seguir as instru&ccedil;&otilde;es localizadas, por exemplo, no "mirror" do CRAN da Fiocruz em https://cran.fiocruz.br/ 
+1.  Para utilizar a ferramenta do Balan&ccedil;o de Pot&ecirc;ncia &eacute; necess&aacute;rio que o R esteja instalado. Para tal, basta baixar a instala&ccedil;&atilde;o e seguir as instru&ccedil;&otilde;es localizadas, por exemplo, no "mirror" do CRAN da Fiocruz em https://cran.fiocruz.br
 
-2.  Com o R j&aacute; instalado, execute o R e clique em Pacotes > Instalar pacote(s)... Selecione um "mirror" para baixar os pacotes. D&ecirc; prefer&ecirc;ncia para os que est&atilde;o no Brasil, pois o download ser&aacute; mais r&aacute;pido. Ap&oacute;s isso marque e instale os seguintes pacotes que ser&atilde;o necess&aacute;rios para execu&ccedil;&atilde;o do BP: readr, readxl, writexl, dplyr, stringr, tidyr, clpAPI, DBI, RSQLite, shiny, shinythemes, shinybusy, tictoc, plotly, zoo, scales, showtext, jsonlite, parallel, foreach, doParallel, numbers. Outra maneira de instalar as depend&ecirc;ncias &eacute; usando a instru&ccedil;&atilde;o abaixo no *command* do R. 
+2.  Al&eacute;m do R, h&aacute; a necessidade da instala&ccedil;&atilde;o do Rtools, que &eacute; um conjunto de ferramentas importantes para a constru&ccedil;&atilde;o de novos pacotes. Para instalar basta acessar https://cran.r-project.org/bin/windows/Rtools/ para baixar o Rtools 4.0 para windows e depois executar o arquivo. 
+
+2.  Com o R e o Rtools j&aacute; instalados, execute o R e clique em Pacotes > Instalar pacote(s)... Selecione um "mirror" para baixar os pacotes. D&ecirc; prefer&ecirc;ncia para os que est&atilde;o no Brasil, pois o download ser&aacute; mais r&aacute;pido. Ap&oacute;s isso marque e instale os seguintes pacotes que ser&atilde;o necess&aacute;rios para execu&ccedil;&atilde;o do BP: readr, readxl, writexl, dplyr, stringr, tidyr, clpAPI, DBI, RSQLite, shiny, shinythemes, shinybusy, tictoc, plotly, zoo, scales, showtext, jsonlite, parallel, foreach, doParallel, numbers. Outra maneira de instalar as depend&ecirc;ncias &eacute; usando a instru&ccedil;&atilde;o abaixo no *command* do R. 
 
 `install.packages(c("readr", "readxl", "writexl", "dplyr", "stringr", "tidyr", "clpAPI", "DBI",`
 `"RSQLite", "shiny", "shinythemes", "shinybusy", "tictoc", "plotly", "zoo", "scales", "showtext",`

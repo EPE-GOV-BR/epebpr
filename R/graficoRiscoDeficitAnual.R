@@ -72,11 +72,15 @@ graficoRiscoDeficitAnual <- function(baseSQLite, tipoCaso, numeroCaso, codModelo
   tib.resultados <- tib.resultados %>% filter(DEFICIT > 0) %>% 
     group_by(ano) %>% summarise(riscoAnual = n()/max(SERIES)/12)
   
+  # anosLinha <- as.factor((min(tib.resultados$ano) - 1):(max(tib.resultados$ano) + 1))
+  
   # exibe grafico de risco
-  graficoRisco <- plot_ly(data = tib.resultados, x = ~ano, y = ~riscoAnual, name = "", type = "bar", 
+  graficoRisco <- plot_ly(data = tib.resultados, x = ~ano, y = ~riscoAnual, name = "", type = "bar", showlegend = F,
                           textposition = 'outside', texttemplate = "<b>%{y:.1%}</b>",
                           hovertemplate = "<b>Risco de D\u00E9ficit</b>: %{y:.1%}<br><b>Ano</b>: %{x}<extra></extra>") %>% 
                           # <extra></extra> remove o trece do hover
+    add_trace(tib.resultados, x = ~ano, y = 0.05, type = 'scatter', mode = 'lines', color = I("red"),
+              hovertemplate = "<b>Limite de crit\u00E9rio de suprimento: %{y:.0%}<extra></extra>") %>%
     layout( 
       title = paste0("<b>", tituloGrafico, "</b>"),
       yaxis = list( 

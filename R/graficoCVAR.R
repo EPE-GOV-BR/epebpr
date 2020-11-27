@@ -80,8 +80,8 @@ graficoCVAR <- function(baseSQLite, tipoCaso, numeroCaso, codModelo,
   tib.resultadosCvarMes <- inner_join(tib.resultadosCvarMes, tib.resultadosCvarMesMax, by = "tamanhoCVAR")
   
   # tibble criado para possibilitar marcacao da area do grafico onde se encontra o maximo
-  tib.localMaxCvar <- rbind(tib.resultadosCvarMes %>% filter(cvar == maxCVAR), 
-                            tib.resultadosCvarMes %>% filter(cvar == maxCVAR) %>% mutate(anoMes = zoo::as.Date(as.yearmon(anoMes)+1/12)))
+  # tib.localMaxCvar <- rbind(tib.resultadosCvarMes %>% filter(cvar == maxCVAR), 
+  #                           tib.resultadosCvarMes %>% filter(cvar == maxCVAR) %>% mutate(anoMes = zoo::as.Date(as.yearmon(anoMes)+1/12)))
   
   # cria vetor auxiliar com os marcadores que aparecerao no eixo de tempo no grafico
   marcasEixoMes <- tib.resultadosCvarMes %>% filter(months(anoMes) %in% c("janeiro","julho")) %>% pull(anoMes) %>% c(., max(tib.resultadosCvarMes$anoMes))
@@ -95,10 +95,17 @@ graficoCVAR <- function(baseSQLite, tipoCaso, numeroCaso, codModelo,
     tib.resultadosCvarMes <- tib.resultadosCvarMes %>% 
       mutate(textoCVaR = ifelse(cvar == maxCVAR, paste0(round(cvar * 100, 1), "%"), ""))
     
+    # cria sequencia de datas para desenhar a linha de limite de criterio de sup. tem um mes antes e um depois para atravessar todo o grafico
+    primeiroMes <- min(tib.resultadosCvarMes$anoMes) %>% as.yearmon()
+    ultimoMes <- max(tib.resultadosCvarMes$anoMes) %>% as.yearmon()
+    mesesLinha <- seq(primeiroMes - 1/12, ultimoMes + 1/12, 1/12) %>% format("%Y-%m-%d")
+    
     graficoCVaR <- plot_ly(data = tib.resultadosCvarMes, x = ~anoMes, y = ~cvar, name = "", type = "bar", showlegend = F,
                            hovertemplate = "<b>D\u00E9ficit % da Demanda</b>: %{y:.1%}<br><b>M\u00EAs</b>: %{x|%Y-%m}<extra></extra>") %>% 
       add_trace(tib.resultadosCvarMes, x = ~anoMes, y = ~cvar, type = 'scatter',
                 mode = 'text', text = ~textoCVaR, textposition = 'top center', texttemplate = "<b>%{text}</b>") %>%
+      add_trace(tib.resultadosCvarMes, x = mesesLinha, y = 0.05, type = 'scatter', mode = 'lines', color = I("red"),
+                hovertemplate = "<b>Limite de crit\u00E9rio de suprimento: %{y:.0%}<extra></extra>") %>% 
       layout( 
         title = paste0("<b>", tituloGraficoCVARMes, "</b>"),
         # legend = list(title = list(text='<b> Subsistemas </b>')), #orientation = 'h'),
@@ -109,7 +116,8 @@ graficoCVAR <- function(baseSQLite, tipoCaso, numeroCaso, codModelo,
         xaxis = list( 
           title = "<b>M\u00EAs</b>", 
           ticktext = as.list(as.character(as.yearmon(marcasEixoMes))), 
-          tickvals = as.list(marcasEixoMes)
+          tickvals = as.list(marcasEixoMes)#,
+          #range = c(min(tib.resultadosCvarMes$anoMes), max(tib.resultadosCvarMes$anoMes))
         )
       )
     
