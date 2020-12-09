@@ -16,9 +16,9 @@ A ferramenta de balan&ccedil;o de pot&ecirc;ncia foi desenvolvida em linguagem d
 `"RSQLite", "shiny", "shinythemes", "shinybusy", "tictoc", "plotly", "zoo", "scales", "showtext",`
 `"jsonlite", "parallel", "foreach", "doParallel", "numbers"), repos = "https://cran.fiocruz.br")`
 
-3. Ap&oacute;s a instala&ccedil;&atilde;o das depend&ecirc;ncias que est&atilde;o no CRAN, voc&ecirc; deve instalar o pacote do leitor de arquivos dos modelos de planejanemto energ&eacute;tico do CEPEL. Este tamb&eacute;m &eacute; uma depend&ecirc;ncia, contudo, ele foi desenvolvido pela EPE e ainda n&atilde;o est&aacute; no CRAN. Para instalar esse pacote basta efetuar o download do pacote em zip mais recente em https://www.epe.gov.br/pt/publicacoes-dados-abertos/publicacoes/leitor-dos-arquivos-de-entrada-e-saida-dos-modelos-do-planejamento-energetico-do-cepel e, depois, no R, ir em Pacotes > Install package(s) from local files... e escolher o zip rec&eacute;m baixado.
+3. Ap&oacute;s a instala&ccedil;&atilde;o das depend&ecirc;ncias que est&atilde;o no CRAN, voc&ecirc; deve instalar o pacote do leitor de arquivos dos modelos de planejamento energ&eacute;tico do CEPEL. Este tamb&eacute;m &eacute; uma depend&ecirc;ncia, contudo, ele foi desenvolvido pela EPE e ainda n&atilde;o est&aacute; no CRAN. Para instalar esse pacote basta efetuar o download do pacote em zip mais recente em https://www.epe.gov.br/pt/publicacoes-dados-abertos/publicacoes/leitor-dos-arquivos-de-entrada-e-saida-dos-modelos-do-planejamento-energetico-do-cepel e, depois, no R, ir em Pacotes > Install package(s) from local files... e escolher o zip rec&eacute;m baixado.
 
-4. Finalmente, podemos instalar o pacote do BP. Para instalar o pacote basta efetuar o download do pacote em zip na parte de arquivos desta p&aacute;gina e, depois, no R, ir em Pacotes > Install package(s) from local files... e escolher o zip rec&eacute;m baixado. 
+4. Finalmente, podemos instalar o pacote do BP. Para instalar o pacote basta efetuar o download do pacote em tar.gz na parte de arquivos desta p&aacute;gina e, depois, no R, ir em Pacotes > Install package(s) from local files... e escolher o tar.gz rec&eacute;m baixado. 
 
 # Executando o BP
 
@@ -29,11 +29,23 @@ Ap&oacute;s ter o pacote instalado, basta usar as instru&ccedil;&otilde;es no *c
 
 # Instru&ccedil;&otilde;es de uso da ferramenta 
 
-Ap&oacute;s ter a ferramenta em execu&ccedil;&atilde;o basta clicar no &iacute;cone do livro para obter ajuda. 
+Ap&oacute;s ter a ferramenta em execu&ccedil;&atilde;o basta clicar no &iacute;cone do livro ![](inst/appBalanco/www/imagens/logo-wiki.png){width=30px} para obter ajuda e toda a documenta&ccedil;&atilde;o necess&aacute;ria para entender a metodologia do BP e seu uso. 
+
+Para a execu&ccedil;&atilde;o do balan&ccedil;o de pot&ecirc;ncia para o caso do PDE 29, foi disponibilizado na &aacute;rea de Arquivos o deck do PDE com os arquivos extras necess&aacute;rios ao BP (PDE29 - deck NEWAVE e entradas BP.zip) e as sa&iacute;das do Newave (PDE29 - nwlistop.zip). 
+
+# Contato
+Para coment&aacute;rios sobre a ferramenta, favor enviar e-mail para modelos.sgr@epe.gov.br.
 
 # Arquivos 
 
 # Vers&otilde;es
+
+### v.0.9.1
+Corrige erro ocorrido na atualiza&ccedil;&atilde;o de submotoriza&ccedil;&atilde;o quando n&atilde;o havia expans&atilde;o hidr&aacute;ulica no horizonte do estudo.
+
+Passa a contabilizar o n&uacute;mero de s&eacute;ries hist&oacute;ricas hidr&aacute;ulicas para simula&ccedil;&atilde;o a partir do in&iacute;cio de varredura da s&eacute;rie hist&oacute;rica.
+
+Corrige gr&aacute;fico de LOLP para exibir anos que possuem risco anual exatamente igual a zero.
 
 ### v.0.9.0
 

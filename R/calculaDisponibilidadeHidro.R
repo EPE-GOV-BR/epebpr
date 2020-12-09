@@ -19,6 +19,7 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, tipoCaso, numeroC
   # fecha conexao com a base SQLite na saida da funcao, seja por erro ou normalmente
   on.exit(dbDisconnect(conexaoSQLite))
 
+  # pega dados da tabela de dados do caso
   sql <- paste0("SELECT A01_NR_MES_INICIO as dataInicioCaso,
                   A01_NR_MES_FIM as dataFimCaso,
                   A01_NR_HORAS_PONTA as horasPonta,
@@ -32,24 +33,31 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, tipoCaso, numeroC
                   A01_CD_MODELO = ", codModelo, ";")
   df.dadosCaso <- dbGetQuery(conexaoSQLite, sql)
   
-  # atualizacao de submotorizacao
+  # pega dados da tabela de ree
   sql <- paste0("SELECT A02_NR_REE, A02_NR_SUBSISTEMA, A02_TX_DESCRICAO_REE
                   FROM BPO_A02_REES
                   WHERE
                   A01_TP_CASO = ", tipoCaso, " AND
                   A01_NR_CASO = ", numeroCaso, " AND
                   A01_CD_MODELO = ", codModelo, ";")
-  df.subsistemas <- dbGetQuery(conexaoSQLite, sql)
+  df.ree <- dbGetQuery(conexaoSQLite, sql)
   
-  df.submotorizacaoREE <- leituraSubmotorizacaoREE(pastaCaso) %>%
-    inner_join(df.subsistemas, by = c("nomeREE" = "A02_TX_DESCRICAO_REE")) %>%
-    filter(anoMes >= df.dadosCaso$dataInicioCaso, anoMes <= df.dadosCaso$dataFimCaso)
+  # atualizacao de submotorizacao
+  quantidadeExpansaoHidro <- df.dadosExpansaoHidro <- leituraDadosExpansaoUsinasHidro(pastaCaso) %>% 
+    extract2("df.dadosExpansaoHidro") %>% nrow()
   
-  # cria lista para passar os parametros para update
-  lt.submotorizacaoREE <- list(ree = df.submotorizacaoREE$A02_NR_REE, anoMes = df.submotorizacaoREE$anoMes,
-                               submotorizacao = df.submotorizacaoREE$submotorizacao)
-  
-  sqlUpdate <- paste0("UPDATE BPO_A06_SAIDA_HIDRO_NEWAVE
+  # se houver alguma expansao hidro segue atualizacao 
+  if (quantidadeExpansaoHidro > 0) {
+
+    df.submotorizacaoREE <- leituraSubmotorizacaoREE(pastaCaso) %>%
+      inner_join(df.ree, by = c("nomeREE" = "A02_TX_DESCRICAO_REE")) %>%
+      filter(anoMes >= df.dadosCaso$dataInicioCaso, anoMes <= df.dadosCaso$dataFimCaso)
+    
+    # cria lista para passar os parametros para update
+    lt.submotorizacaoREE <- list(ree = df.submotorizacaoREE$A02_NR_REE, anoMes = df.submotorizacaoREE$anoMes,
+                                 submotorizacao = df.submotorizacaoREE$submotorizacao)
+    
+    sqlUpdate <- paste0("UPDATE BPO_A06_SAIDA_HIDRO_NEWAVE
                     SET A06_VL_SUBMOTORIZACAO = $submotorizacao
                     WHERE
                     A02_NR_REE = $ree AND
@@ -57,9 +65,10 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, tipoCaso, numeroC
                     A01_TP_CASO = ", tipoCaso, " AND
                     A01_NR_CASO = ", numeroCaso, " AND
                     A01_CD_MODELO = ", codModelo, ";")
-  dbExecute(conexaoSQLite, "BEGIN TRANSACTION;")
-  dbExecute(conexaoSQLite, sqlUpdate, param = lt.submotorizacaoREE)
-  dbExecute(conexaoSQLite, "COMMIT TRANSACTION;")
+    dbExecute(conexaoSQLite, "BEGIN TRANSACTION;")
+    dbExecute(conexaoSQLite, sqlUpdate, param = lt.submotorizacaoREE)
+    dbExecute(conexaoSQLite, "COMMIT TRANSACTION;")
+  }
   # fim atualizacao de submotorizacao
   
   # filtro dos ree com calculo tipo 1
@@ -369,7 +378,7 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, tipoCaso, numeroC
     
     
     # Para buscar o subsistema
-    df.dadosCalculadosSsist <- inner_join(df.dadosCalculadosSsist, df.subsistemas,
+    df.dadosCalculadosSsist <- inner_join(df.dadosCalculadosSsist, df.ree,
                                           by = c("A02_NR_REE"))
     
     # Nao precisa mais de REE e Descricao

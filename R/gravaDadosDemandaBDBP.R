@@ -48,7 +48,7 @@ gravacaoDadosDemandaBDBP <- function(pastaCaso, conexao, tipoCaso, numeroCaso, c
   df.patamar <- filter(leituraDadosProfundidadePatamarCarga(pastaCaso), patamar == 1)
   
   # verifica se mercado e patamar estao com o mesmo horizonte de meses
-  if (length(setdiff(unique(df.patamar$anoMes), unique(df.mercado$anoMes))) != 0) {
+  if (length(setdiff(unique(df.patamar$anoMes), unique(df.mercado$anoMes))) != 0 & tipoCaso != 2) {
     dbDisconnect(conexao)
     stop("Horizonte de mercado inferior ao horizonte dos patamares de carga!")
   }

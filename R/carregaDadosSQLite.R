@@ -40,18 +40,22 @@ carregaDadosSQLite <- function(baseSQLite, pastaCaso, pastaSaidas, tipoCaso, num
   if (df.dadosGerais$tipoSimulacao == 1) {
     seriesHidro <- df.dadosGerais$seriesSinteticas
   } else if (df.dadosGerais$tipoSimulacao == 2) {
+    # veririfica se todas as series do confhd possuem o mesmo tamanho
     seriesHidro <- df.configuracaoHidro %>%
       mutate(seriesHidro = fimHistorico - inicioHistorico + 1) %>%
       summarise(media = mean(seriesHidro), minimo = min(seriesHidro), maximo = max(seriesHidro))
     if (seriesHidro$media != seriesHidro$minimo | seriesHidro$media != seriesHidro$maximo | seriesHidro$minimo != seriesHidro$maximo) {
       stop("S\u00E9ries hidro n\u00E3o possuem mesmo horizonte cadastrado no arquivo confhd!")
     }
-    seriesHidro <- seriesHidro$media
+    fimHistorico <- df.configuracaoHidro %>% pull(fimHistorico) %>% max()
+    # resgata o valor de inicio de varredura da serie historica para contabilizar quantidade de series
+    inicioSimulacaoHistorico <- leituraSeriesHistoricasSimulacaoFinal(pastaCaso) %>% extract2("df.varredura") %>% pull(anoInicio)
+    seriesHidro <- fimHistorico - inicioSimulacaoHistorico + 1
   } else {
     stop("Simula\u00E7\u00E3o final ap\u00F3s converg\u00EAncia PDDE do NEWAVE deve ser com s\u00E9ries sint\u00E9ticas ou hist\u00F3ricas!")
   }
   
-  df.dadosGerais$anoMesInicio
+  # df.dadosGerais$anoMesInicio
   
   # inicio do processo de gravacao das tabelas BPO_A01_CASOS_ANALISE, BPO_A02_SUBSISTEMAS, BPO_A02_REES e BPO_A19_FATOR_PONTA_OFR
   # abre conexao

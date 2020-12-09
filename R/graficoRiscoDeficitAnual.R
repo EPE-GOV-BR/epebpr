@@ -68,17 +68,25 @@ graficoRiscoDeficitAnual <- function(baseSQLite, tipoCaso, numeroCaso, codModelo
            mes = A09_NR_MES %% 100, ano = A09_NR_MES %/% 100) %>% 
     filter(between(ano, inicioHorizonteGrafico, fimHorizonteGrafico))
   
+  horizonteGrafico <- tib.resultados %>% pull(ano) %>% unique()
+  
   # calcula o risco de defict anual (LOLP)
   tib.resultados <- tib.resultados %>% filter(DEFICIT > 0) %>% 
-    group_by(ano) %>% summarise(riscoAnual = n()/max(SERIES)/12)
+    group_by(ano) %>% summarise(riscoAnual = n()/max(SERIES)/12, .groups = "drop")
   
-  # anosLinha <- as.factor((min(tib.resultados$ano) - 1):(max(tib.resultados$ano) + 1))
+  # inclui os anos com risco 0 para exibicao no grafico
+  horizonteGraficoDados <- tib.resultados %>% pull(ano)
+  diferencaAnos <- setdiff(horizonteGrafico, horizonteGraficoDados)
+  if (length(diferencaAnos) > 0) {
+    tib.resultadosAux <- data.frame(ano = diferencaAnos, riscoAnual = 0)
+    tib.resultados <- rbind(tib.resultados, tib.resultadosAux) %>% arrange(ano)
+  }
   
   # exibe grafico de risco
   graficoRisco <- plot_ly(data = tib.resultados, x = ~ano, y = ~riscoAnual, name = "", type = "bar", showlegend = F,
                           textposition = 'outside', texttemplate = "<b>%{y:.1%}</b>",
-                          hovertemplate = "<b>Risco de D\u00E9ficit</b>: %{y:.1%}<br><b>Ano</b>: %{x}<extra></extra>") %>% 
                           # <extra></extra> remove o trece do hover
+                          hovertemplate = "<b>Risco de D\u00E9ficit</b>: %{y:.1%}<br><b>Ano</b>: %{x}<extra></extra>") %>%
     add_trace(tib.resultados, x = ~ano, y = 0.05, type = 'scatter', mode = 'lines', color = I("red"),
               hovertemplate = "<b>Limite de crit\u00E9rio de suprimento: %{y:.0%}<extra></extra>") %>%
     layout( 
@@ -88,38 +96,5 @@ graficoRiscoDeficitAnual <- function(baseSQLite, tipoCaso, numeroCaso, codModelo
         tickformat = "%"),
       xaxis = list(
         type = 'category')
-      )
-  
-  
-  # graficoRisco <- ggplot(tib.resultados, aes(x = as.factor(ano), y = riscoAnual)) + 
-  #   geom_col(fill = "steelblue") +
-  #   # geom_line(size = 1.5, color = "red2") +
-  #   geom_text(aes(label = percent(riscoAnual, accuracy = 0.1, scale = 100, suffix = "%", decimal.mark = ",")), 
-  #             nudge_y = (ceiling(max(tib.resultados$riscoAnual)*10)/10 * 0.05),
-  #             hjust = 0.4, show.legend = FALSE, fontface = "bold", size = 5, family = "sans") +
-  #   scale_x_discrete(name = "Ano") +
-  #   # scale_x_continuous(name = "Ano", labels = percent_format(accuracy = 1, scale = 1), 
-  #   #                    expand = c(0,0), breaks = seq(min(tib.resultados$ano), max(tib.resultados$ano), 1)) + 
-  #   scale_y_continuous(name = "Risco de D\u00E9ficit", expand = c(0,0), labels = percent_format(accuracy = 1, scale = 100, suffix = "%", decimal.mark = ","),
-  #                      # breaks = seq(0, ceiling(max(tib.resultados$riscoAnual)*10)/10, ceiling(max(tib.resultados$riscoAnual)*10)/10/16),
-  #                      limits = c(0, ceiling(max(tib.resultados$riscoAnual)*10)/10)) +
-  #   # scale_fill_manual(name = NULL, values = "steelblue") +
-  #   # scale_colour_manual(name = NULL, values = "red2") +
-  #   ggtitle(label = tituloGrafico) + 
-  #   # expand_limits(x = max(tib.resultadosMes$anoMes) + 20) + # dar uma folga no grafico
-  #   theme(text = element_text(size = 20, family = "sans"),
-  #         plot.title = element_text(face = "bold", hjust = 0.5, size = rel(1)),
-  #         strip.background = element_blank(),
-  #         panel.background = element_rect(fill = "white"),
-  #         panel.grid.major = element_line(color = "gray92"),
-  #         panel.grid.major.x = element_blank(),
-  #         axis.line = element_line(colour = "black"),
-  #         axis.text.x = element_text(angle = 90, vjust = 0.5, color = "black"),
-  #         axis.text.y = element_text(color = "black"),
-  #         axis.title = element_text(face = "bold"),
-  #         legend.position = "bottom",
-  #         legend.key = element_blank(),
-  #         strip.text.x = element_blank(),
-  #         legend.box.background = element_blank()) +
-  #   guides(colour = guide_legend(nrow = 1))
+    )
 }
