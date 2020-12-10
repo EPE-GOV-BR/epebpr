@@ -346,11 +346,11 @@ serverBalanco <- function(input, output, session) {
       chaveGrafico <- c(input$casoGrafico %>% str_split(";") %>% unlist() %>% as.numeric())
       if (as.numeric(input$tipoGrafico) %in% c(4,8)) {
         dadosGraficosExcel <- dadosGraficoRiscoDeficit(baseSQLiteGrafico, 
-                                                  chaveGrafico[1], 
-                                                  chaveGrafico[2], 
-                                                  chaveGrafico[3], 
-                                                  as.numeric(input$anoInicioGrafico), 
-                                                  as.numeric(input$anoFimGrafico))
+                                                       chaveGrafico[1], 
+                                                       chaveGrafico[2], 
+                                                       chaveGrafico[3], 
+                                                       as.numeric(input$anoInicioGrafico), 
+                                                       as.numeric(input$anoFimGrafico))
         if (as.numeric(input$tipoGrafico) == 8) {
           dadosGraficosExcel <- dadosGraficosExcel %>% ungroup() %>% select(ano, riscoAnual) %>% distinct()
         }

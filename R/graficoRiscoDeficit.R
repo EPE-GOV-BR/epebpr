@@ -69,20 +69,14 @@ graficoRiscoDeficit <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, ini
     filter(between(ano, inicioHorizonteGrafico, fimHorizonteGrafico))
   
   # calcula o risco mensal para os meses com defict
-  tib.resultadosMes <- tib.resultados %>% filter(DEFICIT > 0) %>% 
-    group_by(ano, mes, anoMes) %>% summarise(riscoMensal = n()/max(SERIES))
-  
-  # separa os dados com risco 0 para compor o grafico
-  tib.resultadoDeficit0 <- tib.resultados %>% group_by(ano, mes, anoMes) %>% 
-    summarise(riscoMensal = sum(DEFICIT)) %>% filter(riscoMensal == 0)
-  
-  # une as informacoes de deficit e ordena por data de forma crescente
-  tib.resultadosMes <- rbind(tib.resultadosMes, tib.resultadoDeficit0) %>% 
-    arrange(anoMes)
+  tib.resultadosMes <- tib.resultados %>% 
+    mutate(DEFICIT = ifelse(DEFICIT > 0, 1,0)) %>% 
+    group_by(ano, mes, anoMes) %>% summarise(riscoMensal = sum(DEFICIT)/max(SERIES), .groups = "drop")
   
   # calcula o risco de defict anual
-  tib.resultadosAno <- tib.resultados %>% filter(DEFICIT > 0) %>% 
-    group_by(ano) %>% summarise(riscoAnual = n()/max(SERIES)/12)
+  tib.resultadosAno <- tib.resultados %>% 
+    mutate(DEFICIT = ifelse(DEFICIT > 0, 1,0)) %>%
+    group_by(ano) %>% summarise(riscoAnual = sum(DEFICIT)/max(SERIES)/12, .groups = "drop")
   
   # efetua join entre as tibbles de mes e ano para se ter o risco anual na tibble mensal
   tib.resultadosMes <- inner_join(tib.resultadosMes, tib.resultadosAno, by = "ano")
@@ -91,7 +85,7 @@ graficoRiscoDeficit <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, ini
   marcasEixoMes <- tib.resultadosMes %>% filter(months(anoMes) %in% c("janeiro","julho")) %>% pull(anoMes) %>% c(.,max(tib.resultadosMes$anoMes))
   
   # cria vetor auxiliar com as datas em que ocorreu o maior risco mensal em cada ano do horizonte
-  maximosAnuais <- tib.resultadosMes %>% group_by(ano) %>% summarise(riscoMensal = max(riscoMensal)) %>% 
+  maximosAnuais <- tib.resultadosMes %>% group_by(ano) %>% summarise(riscoMensal = max(riscoMensal), .groups = "drop") %>% 
     semi_join(tib.resultadosMes, ., by = c("ano", "riscoMensal")) %>% pull (anoMes)
   filtroDuplicados <- maximosAnuais %>% format("%Y") %>% duplicated() %>% not()
   maximosAnuais <- maximosAnuais[filtroDuplicados]

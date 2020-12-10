@@ -68,19 +68,10 @@ graficoRiscoDeficitAnual <- function(baseSQLite, tipoCaso, numeroCaso, codModelo
            mes = A09_NR_MES %% 100, ano = A09_NR_MES %/% 100) %>% 
     filter(between(ano, inicioHorizonteGrafico, fimHorizonteGrafico))
   
-  horizonteGrafico <- tib.resultados %>% pull(ano) %>% unique()
-  
   # calcula o risco de defict anual (LOLP)
-  tib.resultados <- tib.resultados %>% filter(DEFICIT > 0) %>% 
-    group_by(ano) %>% summarise(riscoAnual = n()/max(SERIES)/12, .groups = "drop")
-  
-  # inclui os anos com risco 0 para exibicao no grafico
-  horizonteGraficoDados <- tib.resultados %>% pull(ano)
-  diferencaAnos <- setdiff(horizonteGrafico, horizonteGraficoDados)
-  if (length(diferencaAnos) > 0) {
-    tib.resultadosAux <- data.frame(ano = diferencaAnos, riscoAnual = 0)
-    tib.resultados <- rbind(tib.resultados, tib.resultadosAux) %>% arrange(ano)
-  }
+  tib.resultados <- tib.resultados %>% 
+    mutate(DEFICIT = ifelse(DEFICIT > 0, 1,0)) %>%
+    group_by(ano) %>% summarise(riscoAnual = sum(DEFICIT)/max(SERIES)/12, .groups = "drop")
   
   # exibe grafico de risco
   graficoRisco <- plot_ly(data = tib.resultados, x = ~ano, y = ~riscoAnual, name = "", type = "bar", showlegend = F,
