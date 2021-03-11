@@ -47,11 +47,11 @@ graficoVAR <- function(baseSQLite, tipoCaso, numeroCaso, codModelo,
       #"var 2%" = var(DEFICIT, 0.02),
       "2var 2,5%" = var(DEFICIT, 0.025),
       "3var 5%" = var(DEFICIT, 0.05),
-      "4var 10%" = var(DEFICIT, 0.1)) %>% ungroup()
+      "4var 10%" = var(DEFICIT, 0.1), .groups = "drop")
   
   # faz a transposicao dos dados de var por coluna para um campo de identificacao do var (1%; 1,5%; 2%; 5%...) e outro de valor de var
-  tib.resultadosVarMes <- tib.resultadosVarMes %>% gather(key = "tamanhoVAR", value = "var", -A09_NR_MES)
-  
+  tib.resultadosVarMes <- tib.resultadosVarMes %>% pivot_longer(cols = -A09_NR_MES, names_to = "tamanhoVAR", values_to = "var")
+
   # cria coluna do tipo data a partir do campo anoMes e filtra o horizonte para exibicao no grafico
   tib.resultadosVarMes <- tib.resultadosVarMes %>% mutate(anoMes = as.character(A09_NR_MES) %>% as.yearmon("%Y%m") %>% zoo::as.Date()) %>% 
     filter(between(as.integer(format(anoMes, "%Y")), inicioHorizonteGrafico, fimHorizonteGrafico))
@@ -122,11 +122,11 @@ graficoVAR <- function(baseSQLite, tipoCaso, numeroCaso, codModelo,
         # "var 2%" = var(DEFICIT, 0.02),
         "2cvar 2,5%" = var(DEFICIT, 0.025),
         "3cvar 5%" = var(DEFICIT, 0.05),
-        "4cvar 10%" = var(DEFICIT, 0.1))
+        "4cvar 10%" = var(DEFICIT, 0.1), .groups = "drop")
     
     # faz a transposicao dos dados de var por coluna para um campo de identificacao do var (1%; 1,5%; 2%; 5%...) e outro de valor de var
-    tib.resultadosVarAno <- tib.resultadosVarAno %>% gather(key = "tamanhoVAR", value = "var", -ano) 
-    
+    tib.resultadosVarAno <- tib.resultadosVarAno %>% pivot_longer(cols = -ano, names_to = "tamanhoVAR", values_to = "var")
+
     # filtra o horizonte para exibicao no grafico
     tib.resultadosVarAno <- tib.resultadosVarAno %>% filter(between(ano, inicioHorizonteGrafico, fimHorizonteGrafico))
     

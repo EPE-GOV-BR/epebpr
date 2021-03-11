@@ -57,6 +57,13 @@ gravacaoDadosDemandaBDBP <- function(pastaCaso, conexao, tipoCaso, numeroCaso, c
     stop("Horizonte dos patamares de carga inferior ao horizonte de mercado!")
   }
   
+  # verifica se mercado e patamar estao com os mesmos subsistemas
+  subsistemasConjuntos <- length(intersect(unique(df.mercado$codSubsistema), unique(df.patamar$codSubsistema)))
+  if (length(unique(df.mercado$codSubsistema)) != subsistemasConjuntos | length(unique(df.patamar$codSubsistema)) != subsistemasConjuntos) {
+    dbDisconnect(conexao)
+    stop("Patamares de carga e mercado n\u00E3o possuem os mesmos subsistemas!")
+  }
+  
   df.Demanda <- inner_join(df.mercado, df.patamar, by = c("anoMes", "codSubsistema")) %>% 
     mutate(tipoCaso = tipoCaso, numeroCaso = numeroCaso, codModelo = codModelo, numSequencialFrequencia = 1, valorFrequencia = 1, 
            demandaPonta = energiaMercado * profundidadeCarga) %>% 

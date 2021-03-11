@@ -40,6 +40,11 @@ Para coment&aacute;rios sobre a ferramenta, favor enviar e-mail para modelos.sgr
 
 # Vers&otilde;es
 
+### v.0.9.2
+Verifica se os dados de mercado e patamar possuem os mesmo subsistemas e avisa caso negativo. Esse problema acontece em casos montados manualmente.
+
+Apresenta novos gr&aacute;ficos de CVaR e VaR seguindo os crit&eacute;rios de contabiliza&ccedil;&atilde;o de Garantia F&iacute;sica. 
+
 ### v.0.9.1
 Corrige erro ocorrido na atualiza&ccedil;&atilde;o de submotoriza&ccedil;&atilde;o quando n&atilde;o havia expans&atilde;o hidr&aacute;ulica no horizonte do estudo.
 

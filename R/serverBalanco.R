@@ -271,48 +271,27 @@ serverBalanco <- function(input, output, session) {
                                   )
                                   show_spinner()
                                   chaveGrafico <- c(input$casoGrafico %>% str_split(";") %>% unlist() %>% as.numeric())
-                                  # Risco 
-                                  if (as.numeric(input$tipoGrafico) == 4) {
-                                    withLogErrors({ 
-                                      grafico <- graficoRiscoDeficit(baseSQLiteGrafico, 
-                                                                     chaveGrafico[1], 
-                                                                     chaveGrafico[2], 
-                                                                     chaveGrafico[3], 
-                                                                     as.numeric(input$anoInicioGrafico), 
-                                                                     as.numeric(input$anoFimGrafico))
-                                      
-                                    })  
                                   # CvaR
-                                  } else if(as.numeric(input$tipoGrafico) %in% c(1,2,3)){
-                                    withLogErrors({
-                                      grafico <- graficoCVAR(baseSQLiteGrafico, 
-                                                             chaveGrafico[1], 
-                                                             chaveGrafico[2], 
-                                                             chaveGrafico[3], 
-                                                             as.numeric(input$anoInicioGrafico), 
-                                                             as.numeric(input$anoFimGrafico),
-                                                             as.numeric(input$tipoGrafico))
-                                      
-                                    })
-                                  } else if(as.numeric(input$tipoGrafico) == 8){
-                                    withLogErrors({
-                                      grafico <- graficoRiscoDeficitAnual(baseSQLiteGrafico, 
-                                                                          chaveGrafico[1], 
-                                                                          chaveGrafico[2], 
-                                                                          chaveGrafico[3], 
-                                                                          as.numeric(input$anoInicioGrafico), 
-                                                                          as.numeric(input$anoFimGrafico))
-                                    })
-                                  } else if(as.numeric(input$tipoGrafico) == 9){
-                                    withLogErrors({
-                                      grafico <- graficoCVARSubsistema(baseSQLiteGrafico, 
-                                                                       chaveGrafico[1], 
-                                                                       chaveGrafico[2], 
-                                                                       chaveGrafico[3], 
-                                                                       as.numeric(input$anoInicioGrafico), 
-                                                                       as.numeric(input$anoFimGrafico))
-                                    })
-                                  } else {
+                                  if(as.numeric(input$tipoGrafico) %in% c(1, 2, 3)){
+                                    grafico <- graficoCVAR(baseSQLiteGrafico, 
+                                                           chaveGrafico[1], 
+                                                           chaveGrafico[2], 
+                                                           chaveGrafico[3], 
+                                                           as.numeric(input$anoInicioGrafico), 
+                                                           as.numeric(input$anoFimGrafico),
+                                                           as.numeric(input$tipoGrafico))
+                                    
+                                  # Risco 
+                                  } else if (as.numeric(input$tipoGrafico) == 4) {
+                                    grafico <- graficoRiscoDeficit(baseSQLiteGrafico, 
+                                                                   chaveGrafico[1], 
+                                                                   chaveGrafico[2], 
+                                                                   chaveGrafico[3], 
+                                                                   as.numeric(input$anoInicioGrafico), 
+                                                                   as.numeric(input$anoFimGrafico))
+                                    
+                                  # VaR
+                                  } else if (as.numeric(input$tipoGrafico) %in% c(5, 6, 7)){
                                     grafico <- graficoVAR(baseSQLiteGrafico, 
                                                           chaveGrafico[1], 
                                                           chaveGrafico[2], 
@@ -320,7 +299,34 @@ serverBalanco <- function(input, output, session) {
                                                           as.numeric(input$anoInicioGrafico), 
                                                           as.numeric(input$anoFimGrafico),
                                                           as.numeric(input$tipoGrafico))
+                                    
+                                  # LOLP    
+                                  } else if (as.numeric(input$tipoGrafico) == 8){
+                                    grafico <- graficoRiscoDeficitAnual(baseSQLiteGrafico, 
+                                                                        chaveGrafico[1], 
+                                                                        chaveGrafico[2], 
+                                                                        chaveGrafico[3], 
+                                                                        as.numeric(input$anoInicioGrafico), 
+                                                                        as.numeric(input$anoFimGrafico))
+                                    
+                                  # CVaR Mensal Subsistema
+                                  } else if(as.numeric(input$tipoGrafico) == 9){
+                                    grafico <- graficoCVARSubsistema(baseSQLiteGrafico, 
+                                                                     chaveGrafico[1], 
+                                                                     chaveGrafico[2], 
+                                                                     chaveGrafico[3], 
+                                                                     as.numeric(input$anoInicioGrafico), 
+                                                                     as.numeric(input$anoFimGrafico))
+                                    
+                                  # Graficos com criterios de GF    
+                                  } else if(as.numeric(input$tipoGrafico) %in% c(10, 11, 12)){
+                                    grafico <- graficosGF(baseSQLiteGrafico, 
+                                                          chaveGrafico[1], 
+                                                          chaveGrafico[2], 
+                                                          chaveGrafico[3], 
+                                                          as.numeric(input$tipoGrafico))
                                   }
+                                  
                                   hide_spinner()
                                   return(grafico)
                                 })
