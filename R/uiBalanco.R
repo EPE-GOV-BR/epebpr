@@ -94,11 +94,11 @@ uiBalanco <- fluidPage(
                  tags$div(style="display:inline-block; width:7px"),
 
                  # Entrada para reserva operativa
-                 tags$div(style="display:inline-block; width:160px",
-                          numericInput(inputId = "reservaOperativa",
-                                       label = HTML("Reserva Operativa [%]:"),
-                                       min = 0,
-                                       value = 5)),
+                 # tags$div(style="display:inline-block; width:160px",
+                 #          numericInput(inputId = "reservaOperativa",
+                 #                       label = HTML("Reserva Operativa [%]:"),
+                 #                       min = 0,
+                 #                       value = 5)),
                  tags$br(),
                  
                  # Entrada de texto para a descricao do caso
@@ -106,26 +106,26 @@ uiBalanco <- fluidPage(
                            label = HTML("Descri&ccedil;&atilde;o do Caso:"),
                            value = NULL),
 
-                 conditionalPanel(condition = "input.tipoCaso == 1",
-                                  # Entrada para inicio da serie
-                                  tags$div(style="display:inline-block; width:100px",
-                                           numericInput(inputId = "anoMesInicioMDI",
-                                                        label = HTML("In&iacute;cio MDI:"),
-                                                        min = 201801,
-                                                        max = 205012,
-                                                        value = 201901)),
-                                  
-                                  # Espaco entre inputs
-                                  tags$div(style="display:inline-block; width:7px"),
-                                  
-                                  # Entrada para fim da serie
-                                  tags$div(style="display:inline-block; width:100px",
-                                           numericInput(inputId = "anoMesFimMDI",
-                                                        label = HTML("Fim MDI:"),
-                                                        min = 201801,
-                                                        max = 205012,
-                                                        value = 203312))
-                 ),
+                 # conditionalPanel(condition = "input.tipoCaso == 1",
+                 #                  # Entrada para inicio da serie
+                 #                  tags$div(style="display:inline-block; width:100px",
+                 #                           numericInput(inputId = "anoMesInicioMDI",
+                 #                                        label = HTML("In&iacute;cio MDI:"),
+                 #                                        min = 201801,
+                 #                                        max = 205012,
+                 #                                        value = 201901)),
+                 #                  
+                 #                  # Espaco entre inputs
+                 #                  tags$div(style="display:inline-block; width:7px"),
+                 #                  
+                 #                  # Entrada para fim da serie
+                 #                  tags$div(style="display:inline-block; width:100px",
+                 #                           numericInput(inputId = "anoMesFimMDI",
+                 #                                        label = HTML("Fim MDI:"),
+                 #                                        min = 201801,
+                 #                                        max = 205012,
+                 #                                        value = 203312))
+                 # ),
                  
                  wellPanel(style = "padding: 5px;",
                            tags$b(HTML("REEs N&atilde;o Modulam")),

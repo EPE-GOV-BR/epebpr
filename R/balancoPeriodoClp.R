@@ -12,7 +12,6 @@
 #' @param df.geracaoRenovaveisTotal data frame com os dados de renovaveis
 #' @param df.limitesAgrupamentoLinhasTotal data frame com os dados de agrupamento de transmissao
 #' @param df.demanda data frame com os dados de demanda
-#' @param df.casosAnalise data frame com os dados dos casos em analise
 #' @param df.geracaoHidroTotal data frame com os dados de hidro
 #' @param df.agrupamentoLinhas data frame com os dados de agrupamento de linhas
 #' @param tipoCaso variavel com o tipo de caso
@@ -34,8 +33,8 @@
 #' \dontrun{
 #' balancoPeriodo(201901, T, conexao, df.custoDefict, df.geracaoTermicaTotal,
 #' df.geracaoTransmissaoTotal, df.geracaoRenovaveisTotal,
-#' df.limitesAgrupamentoLinhasTotal, df.demanda, df.casosAnalise,
-#' df.geracaoHidroTotal, df.agrupamentoLinhas, tipoCaso, numeroCaso, codModelo,
+#' df.limitesAgrupamentoLinhasTotal, df.demanda, df.geracaoHidroTotal,
+#' df.agrupamentoLinhas, tipoCaso, numeroCaso, codModelo,
 #' df.subsistemas, cvuHidro)}
 #'
 #' @export
@@ -50,7 +49,6 @@ balancoPeriodoClp <- function(periodo,
                               df.geracaoRenovaveisTotal,
                               df.limitesAgrupamentoLinhasTotal,
                               df.demanda,
-                              df.casosAnalise,
                               df.geracaoHidroTotal,
                               df.agrupamentoLinhas,
                               tipoCaso, numeroCaso, codModelo,
@@ -169,7 +167,8 @@ balancoPeriodoClp <- function(periodo,
   matrizRestricoesDemanda <- (matrizRestricoesDemanda * sinalVariavel) %>% t() 
   # define os limites superior e inferior de cada linha de restricao para demanda. Como e uma igualdade, os limites superior e inferior sao iguais
   ubDemanda <- left_join(df.subsistemas, df.demandaLiquida, by = "subsistema") %>% 
-    mutate(demanda = ifelse(is.na(demanda), 0, demanda * (1 + df.casosAnalise$reserva))) %>% pull(demanda)
+    mutate(demanda = ifelse(is.na(demanda), 0, demanda)) %>% pull(demanda)
+  # ifelse(is.na(demanda), 0, demanda * (1 + df.casosAnalise$reserva))
   lbDemanda <- ubDemanda
   
   # tranmissao (geradores virtuais)

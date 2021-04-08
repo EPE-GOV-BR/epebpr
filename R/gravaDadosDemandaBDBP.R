@@ -64,9 +64,13 @@ gravacaoDadosDemandaBDBP <- function(pastaCaso, conexao, tipoCaso, numeroCaso, c
     stop("Patamares de carga e mercado n\u00E3o possuem os mesmos subsistemas!")
   }
   
+  # horizonte de simulacao, no formato anoMes (AAAAMM)
+  horizonte <- definePeriodo(pastaCaso) %>% pull(anoMes)
+  
   df.Demanda <- inner_join(df.mercado, df.patamar, by = c("anoMes", "codSubsistema")) %>% 
     mutate(tipoCaso = tipoCaso, numeroCaso = numeroCaso, codModelo = codModelo, numSequencialFrequencia = 1, valorFrequencia = 1, 
            demandaPonta = energiaMercado * profundidadeCarga) %>% 
+    filter(between(anoMes, min(horizonte), max(horizonte))) %>% 
     # renomeia os campos do data frame para compatibilizacao com a tabela do BDBP
     select(A01_TP_CASO = tipoCaso,
            A01_NR_CASO = numeroCaso,

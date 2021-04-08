@@ -123,20 +123,12 @@ serverBalanco <- function(input, output, session) {
     
     shiny::validate(
       need(input$numeroCaso, "Caso sem n\u00FAmero"),
-      need((as.integer(input$anoMesInicioMDI) %/% 100) >= 2018, "Ano da data de inicio do caso incorreto ou fora de formato (aaaamm)"),
-      need((as.integer(input$anoMesInicioMDI) %/% 100) <= 2050, "Ano da data de inicio do caso incorreto ou fora de formato (aaaamm)"),
-      need((as.integer(input$anoMesInicioMDI) %% 100) <= 12, "M\u00EAs da data de inicio do caso incorreto ou fora de formato (aaaamm)"),
-      need((as.integer(input$anoMesInicioMDI) %% 100) != 0, "M\u00EAs da data de inicio do caso incorreto ou fora de formato (aaaamm)"),
-      need((as.integer(input$anoMesFimMDI) %/% 100) >= 2018, "Ano da data de fim do caso incorreto ou fora de formato (aaaamm)"),
-      need((as.integer(input$anoMesFimMDI) %/% 100) <= 2050, "Ano da data de fim do caso incorreto ou fora de formato (aaaamm)"),
-      need((as.integer(input$anoMesFimMDI) %% 100) <= 12, "M\u00EAs da data de fim do caso incorreto ou fora de formato (aaaamm)"),
-      need((as.integer(input$anoMesFimMDI) %% 100) != 0, "M\u00EAs da data de fim do caso incorreto ou fora de formato (aaaamm)"),
       need(input$horasPonta, "Defina o n\u00FAmero de horas de ponta"),
       need(input$descricao, "Caso sem descri\u00E7\u00E3o"),
       need(pastaCaso != "", "Defina a pasta de caso"),
       need(pastaSaidas != "", "Defina a pasta com as sa\u00EDdas do caso (nwlistop)"),
       need(baseSQLite != "", "Defina a base de dados SQLite"),
-      need(input$reservaOperativa, "Defina valor de reserva operativa (0-100%)"),
+      # need(input$reservaOperativa, "Defina valor de reserva operativa (0-100%)"),
       need(validaModulacao == 0, "Sistemas que n\u00E3o modulam na ponta devem ser diferentes dos que n\u00E3o modulam na m\u00E9dia!")
       # need(input$sistemasNaoModulamPonta, "Defina os sistemas que n\u00E3o modulam na ponta"),
       # need(input$sistemasNaoModulamMedia, "Defina os sistemas que n\u00E3o modulam na m\u00E9dia")
@@ -172,15 +164,13 @@ serverBalanco <- function(input, output, session) {
                                                  as.integer(input$codModelo),
                                                  input$descricao,
                                                  as.integer(input$horasPonta),
-                                                 as.numeric(input$reservaOperativa)/100,
+                                                 # as.numeric(input$reservaOperativa)/100,
                                                  as.integer(input$idDemanda),
                                                  sistemasNaoModulamPonta,
                                                  sistemasNaoModulamMedia,
                                                  codTucurui,
                                                  cotaLimiteTucurui,
-                                                 potenciaLimiteTucurui,
-                                                 as.integer(input$anoMesInicioMDI),
-                                                 as.integer(input$anoMesFimMDI))
+                                                 potenciaLimiteTucurui)
       } else {
         mensagemBancoDados <- ""
       }
@@ -338,14 +328,20 @@ serverBalanco <- function(input, output, session) {
   output$btnDownload <- downloadHandler(
     filename = function() {
       chaveGrafico <- c(input$casoGrafico %>% str_split(";") %>% unlist() %>% as.numeric())
-      if (as.numeric(input$tipoGrafico) %in% c(4,8)) {
+      if (as.numeric(input$tipoGrafico) %in% c(4, 8)) {
         paste0("Risco de Deficit - Caso ", chaveGrafico[2], ".xlsx")
       } else if(as.numeric(input$tipoGrafico) == 9) {
         paste0("Profundidade de Deficit Subsistema - CVaR - Caso ", chaveGrafico[2], ".xlsx")
-      } else if(as.numeric(input$tipoGrafico) %in% c(1,2,3)) {
+      } else if(as.numeric(input$tipoGrafico) %in% c(1, 2, 3)) {
         paste0("Profundidade de Deficit - CVaR - ", ifelse(as.numeric(input$tipoGrafico) == 3, "Ano", "Mes")," - Caso ", chaveGrafico[2], ".xlsx")
-      } else {
+      } else if(as.numeric(input$tipoGrafico) %in% c(5, 6, 7)) {
         paste0("Profundidade de Deficit - VaR - ", ifelse(as.numeric(input$tipoGrafico) == 7, "Ano", "Mes")," - Caso ", chaveGrafico[2], ".xlsx")
+      } else if(as.numeric(input$tipoGrafico) %in% c(10, 11, 12)) {
+        paste0("Profundidade de Deficit - GF - ", ifelse(as.numeric(input$tipoGrafico) == 10, 
+                                                         "CVaR", 
+                                                         ifelse(as.numeric(input$tipoGrafico) == 11,
+                                                                "VaR - Mes",
+                                                                "VaR - Ano"))," - Caso ", chaveGrafico[2], ".xlsx")
       }
     },
     content = function(arquivoExcel) {

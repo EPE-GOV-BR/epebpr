@@ -50,7 +50,9 @@ graficosGF <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, tipoGrafico,
   dbDisconnect(conexao)
   
   # calcula risco Anual (LOLP)
-  lolp <- tib.resultados %>% mutate(defict = ifelse(defict > 0, 1,0)) %>%
+  lolp <- tib.resultados %>% group_by(anoMes, serie) %>% 
+    summarise(defict = sum(defict), .groups = "drop") %>% 
+    mutate(defict = ifelse(defict > 0, 1,0)) %>%
     summarise(lolp = sum(defict)/n(), .groups = "drop") %>% pull(lolp) %>% 
     percent(accuracy = 0.01, scale = 100, decimal.mark = ",", suffix = "%")
   
@@ -134,7 +136,7 @@ graficosGF <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, tipoGrafico,
       style(visible = "legendonly", traces = subsistemasEsconder)
     
   } else {
-    # calcula o VaR por subsistema e mes
+    # calcula o VaR por subsistema
     tib.resultadosVarAno <- tib.resultados %>%
       group_by(subsistema) %>%
       summarise(var = var(defict, 0.05), .groups = "drop")

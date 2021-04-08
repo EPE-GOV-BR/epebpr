@@ -11,7 +11,6 @@
 #' @param df.geracaoRenovaveisTotal data frame com os dados de renovaveis
 #' @param df.limitesAgrupamentoLinhasTotal data frame com os dados de agrupamento de transmissao
 #' @param df.demanda data frame com os dados de demanda
-#' @param df.casosAnalise data frame com os dados dos casos em analise
 #' @param df.geracaoHidroTotal data frame com os dados de hidro
 #' @param df.agrupamentoLinhas data frame com os dados de agrupamento de linhas
 #' @param tipoCaso variavel com o tipo de caso
@@ -33,7 +32,7 @@
 #' \dontrun{
 #' balancoPeriodo(201901, T, conexao, df.custoDefict, df.geracaoTermicaTotal,
 #' df.geracaoTransmissaoTotal, df.geracaoRenovaveisTotal,
-#' df.limitesAgrupamentoLinhasTotal, df.demanda, df.casosAnalise,
+#' df.limitesAgrupamentoLinhasTotal, df.demanda,
 #' df.geracaoHidroTotal, df.agrupamentoLinhas, tipoCaso, numeroCaso, codModelo,
 #' df.subsistemas, cvuHidro)}
 #'
@@ -49,7 +48,6 @@ balancoPeriodo <- function(periodo,
                            df.geracaoRenovaveisTotal,
                            df.limitesAgrupamentoLinhasTotal,
                            df.demanda,
-                           df.casosAnalise,
                            df.geracaoHidroTotal,
                            df.agrupamentoLinhas,
                            tipoCaso, numeroCaso, codModelo,
@@ -158,7 +156,7 @@ balancoPeriodo <- function(periodo,
     add.constraint(lpBalanco,
                    xt = xtDemanda[indicesDemanda], # define o sinal antes de cada valor (soma ou subtracao)
                    type = "=",
-                   rhs = valorDemanda * (1 + df.casosAnalise$reserva),
+                   rhs = valorDemanda,
                    indices = indicesDemanda)
   }
   # restricao de transmissao
@@ -256,7 +254,7 @@ balancoPeriodo <- function(periodo,
     add.constraint(lpBalancoSemTransmissao,
                    xt = xtDemanda[indicesDemanda], # define o sinal antes de cada valor (soma ou subtracao)
                    type = "=",
-                   rhs = valorDemanda * (1 + df.casosAnalise$reserva),
+                   rhs = valorDemanda,
                    indices = indicesDemanda)
   }
   # restricao de transmissao

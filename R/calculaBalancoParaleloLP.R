@@ -39,8 +39,8 @@ calculaBalancoParaleloLP <- function(baseSQLite, tipoCaso, numeroCaso, codModelo
     stop("N\u00E3o h\u00E1 dados de sistemas (BPO_A02_SUBSISTEMAS) para o caso!")
   }
   
-  # seleciona o percentual de reserva e o numero total de series hidrologicas
-  query <- paste0("SELECT A01_VL_RESERVA_OPERATIVA AS reserva, A01_NR_SERIES_HIDRO AS numSeriesHidro, ",
+  # seleciona o numero total de series hidrologicas
+  query <- paste0("SELECT A01_NR_SERIES_HIDRO AS numSeriesHidro, ",
                   "A01_NR_MES_INICIO AS inicioHorizonte, A01_NR_MES_FIM AS fimHorizonte ",
                   "FROM BPO_A01_CASOS_ANALISE WHERE A01_TP_CASO = ", tipoCaso, " AND A01_NR_CASO = ", numeroCaso, 
                   " AND A01_CD_MODELO = ", codModelo)
@@ -112,11 +112,31 @@ calculaBalancoParaleloLP <- function(baseSQLite, tipoCaso, numeroCaso, codModelo
                   " AND A01_CD_MODELO = ", codModelo)
   df.geracaoHidroTotal <- dbGetQuery(conexao, query)
   
-  # demanda
-  query <- paste0("SELECT A10_NR_MES AS anoMes, A02_NR_SUBSISTEMA AS subsistema, A10_NR_SEQ_FREQUENCIA as id, A10_VL_FREQUENCIA as probOcorrencia, ",
-                  "A10_VL_DEMANDA as demanda FROM BPO_A10_DEMANDA WHERE A01_TP_CASO = ", tipoCaso, " AND A01_NR_CASO = ", numeroCaso, 
-                  " AND A01_CD_MODELO = ", codModelo)
+  # demanda e reserva operativa
+  query <- paste0("SELECT 
+                    A.A10_NR_MES AS anoMes,
+                    A.A02_NR_SUBSISTEMA AS subsistema,
+                    A.A10_NR_SEQ_FREQUENCIA AS id,
+                    A.A10_VL_FREQUENCIA AS probOcorrencia,
+                    A.A10_VL_DEMANDA AS demanda,
+                    A21_VL_RESERVA_CARGA as reservaCarga,
+                    A21_VL_RESERVA_FONTES as reservaFontes
+                  FROM 
+                    BPO_A10_DEMANDA A,
+                    BPO_A21_RESERVA B
+                  WHERE 
+                    A.A01_TP_CASO = B.A01_TP_CASO AND 
+                    A.A01_NR_CASO = B.A01_NR_CASO AND 
+                    A.A01_CD_MODELO = B.A01_CD_MODELO AND 
+                    A.A10_NR_MES = B.A21_NR_MES AND 
+                    A.A02_NR_SUBSISTEMA = B.A02_NR_SUBSISTEMA AND 
+                    A.A10_NR_SEQ_FREQUENCIA = B.A10_NR_SEQ_FREQUENCIA AND
+                    A.A01_TP_CASO = ", tipoCaso, " AND 
+                    A.A01_NR_CASO = ", numeroCaso, " AND 
+                    A.A01_CD_MODELO = ", codModelo)
+  
   df.demanda <- dbGetQuery(conexao, query)
+  df.demanda <- df.demanda %>% mutate(demanda = demanda + reservaCarga + reservaFontes) %>% select(-reservaCarga, -reservaFontes)
   
   # monta data frame com a combinacao de horizonte de estudo, quantidade de demandas e quantidade de series hidro
   df.demandasAnoMes <- df.demanda %>% group_by(anoMes) %>% summarise(nDemandas = max(id, na.rm = T)) %>% ungroup()
@@ -165,7 +185,7 @@ calculaBalancoParaleloLP <- function(baseSQLite, tipoCaso, numeroCaso, codModelo
   }
   
   # processamento paralelo
-  coresParaUso <- detectCores() - 2 # disponibiliza todos os cores da CPU menos 2, para nao travar a maquina do usuario
+  coresParaUso <- detectCores() - 1 # disponibiliza todos os cores da CPU menos 1, para nao travar a maquina do usuario
   clusterBalanco <- makeCluster(coresParaUso)
   registerDoParallel(clusterBalanco)
   clusterExport(clusterBalanco, "balancoPeriodo")
@@ -196,7 +216,6 @@ calculaBalancoParaleloLP <- function(baseSQLite, tipoCaso, numeroCaso, codModelo
                                                                                                                df.geracaoRenovaveisTotal, 
                                                                                                                df.limitesAgrupamentoLinhasTotal,
                                                                                                                df.demanda,
-                                                                                                               df.casosAnalise,
                                                                                                                df.geracaoHidroTotal,
                                                                                                                df.agrupamentoLinhas,
                                                                                                                tipoCaso, numeroCaso, codModelo,
@@ -226,7 +245,6 @@ calculaBalancoParaleloLP <- function(baseSQLite, tipoCaso, numeroCaso, codModelo
                                                                                                              df.geracaoRenovaveisTotal, 
                                                                                                              df.limitesAgrupamentoLinhasTotal,
                                                                                                              df.demanda,
-                                                                                                             df.casosAnalise,
                                                                                                              df.geracaoHidroTotal,
                                                                                                              df.agrupamentoLinhas,
                                                                                                              tipoCaso, numeroCaso, codModelo,

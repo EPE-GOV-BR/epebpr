@@ -12,7 +12,6 @@
 #' @param codModelo valor inteiro com o codigo do modelo. 1:NEWAVE; 2:SUISHI
 #' @param descricaoCaso vetor de caracteres indicando a descricao do caso
 #' @param horasPonta valor inteiro com o numero de horas de ponta
-#' @param reservaOperativa valor com a reserva operativa usada no calculo do balanco. Ex. 0.05
 #' @param idDemandaLiquida identificador de calculo com demanda liquida. 1:Demanda Liquida; 0:Deterministica
 #' @param sistemasNaoModulamPonta vetor numerico com codigos dos sitemas que nao modulam na ponta
 #' @param sistemasNaoModulamMedia vetor numerico com codigos dos sitemas que nao modulam na media
@@ -24,9 +23,9 @@
 #' @return \code{mensagem} vetor de caracteres com a mensagem de sucesso de gravacao na base
 #'
 #' @export
-carregaDadosSQLite <- function(baseSQLite, pastaCaso, pastaSaidas, tipoCaso, numeroCaso, codModelo, descricaoCaso, horasPonta, reservaOperativa, 
+carregaDadosSQLite <- function(baseSQLite, pastaCaso, pastaSaidas, tipoCaso, numeroCaso, codModelo, descricaoCaso, horasPonta, 
                                idDemandaLiquida, sistemasNaoModulamPonta, sistemasNaoModulamMedia,
-                               codTucurui, cotaLimiteTucurui, geracaoLimiteTucurui, anoMesInicioMDI = NA, anoMesFimMDI = NA) {
+                               codTucurui, cotaLimiteTucurui, geracaoLimiteTucurui) {
   # pega dados gerais do NEWAVE
   df.dadosGerais <- leituraDadosGerais(pastaCaso)
   # pega dados de configuracao hidro
@@ -55,8 +54,28 @@ carregaDadosSQLite <- function(baseSQLite, pastaCaso, pastaSaidas, tipoCaso, num
     stop("Simula\u00E7\u00E3o final ap\u00F3s converg\u00EAncia PDDE do NEWAVE deve ser com s\u00E9ries sint\u00E9ticas ou hist\u00F3ricas!")
   }
   
-  # df.dadosGerais$anoMesInicio
-  
+  # somente verifica arquivo do MDI para casos do PDE
+  if (tipoCaso == 1) { 
+    # define inicio e fim de caso MDI
+    arquivoInfoMDI <- paste(pastaCaso, "infoMDI.txt", sep = "/")
+    # verifica exitencia do arquivo
+    if (!file.exists(arquivoInfoMDI)) {
+      stop(paste0("arquivo ", arquivoInfoMDI, " com dados gerais do MDI n\u00E3o encontrado!"))
+    }
+    
+    df.infoMDI <- read_delim(arquivoInfoMDI, 
+                             locale = locale(encoding = "latin1"),
+                             delim = ";", 
+                             col_types = "cc")
+    
+    anoMesInicioMDI <- df.infoMDI %>% filter(variavel == "inicioHorizonteEstudo") %>% pull(valor) %>% as.integer()
+    anoMesFimMDI <- df.infoMDI %>% filter(variavel == "fimHorizonteEstudo") %>% pull(valor) %>% as.integer()
+    
+  } else {
+    anoMesInicioMDI <- NA
+    anoMesFimMDI <- NA
+  }
+
   # inicio do processo de gravacao das tabelas BPO_A01_CASOS_ANALISE, BPO_A02_SUBSISTEMAS, BPO_A02_REES e BPO_A19_FATOR_PONTA_OFR
   # abre conexao
   conexao <- dbConnect(RSQLite::SQLite(), baseSQLite)
@@ -84,11 +103,10 @@ carregaDadosSQLite <- function(baseSQLite, pastaCaso, pastaSaidas, tipoCaso, num
                                 A01_NR_HORAS_PONTA =  horasPonta,
                                 A01_NR_COTA_LIMITE_TUCURUI = cotaLimiteTucurui,
                                 A01_NR_GERACAO_LIMITE_TUCURUI = geracaoLimiteTucurui,
-                                A01_VL_RESERVA_OPERATIVA = reservaOperativa,
                                 A01_IN_DEMANDA_LIQUIDA = idDemandaLiquida,
                                 A01_NR_SERIES_HIDRO = seriesHidro,
-                                A01_NR_MES_INICIO_MDI = ifelse(tipoCaso == 1, anoMesInicioMDI, NA),
-                                A01_NR_MES_FIM_MDI = ifelse(tipoCaso == 1, anoMesFimMDI, NA))
+                                A01_NR_MES_INICIO_MDI = anoMesInicioMDI,
+                                A01_NR_MES_FIM_MDI = anoMesFimMDI)
   # salva BPO_A01_CASOS_ANALISE
   dbWriteTable(conexao, "BPO_A01_CASOS_ANALISE", df.casosAnalise, append = T)
   
@@ -170,7 +188,10 @@ carregaDadosSQLite <- function(baseSQLite, pastaCaso, pastaSaidas, tipoCaso, num
   
   # grava dados de disponilidade das outras fontes renovaveis do NEWAVE na tabela BPO_A13_DISPONIBILIDADE_OFR do BDBP. 
   # alem disso, grava as tabelas de apoio BPO_A18_TIPOS_OFR e BPO_A19_FATOR_PONTA_OFR
-  gravacaoDadosDisponibilidadeOutrasFontesBDBP(pastaCaso, conexao, tipoCaso, numeroCaso, codModelo, anoMesInicioMDI, anoMesFimMDI)
+  lt.dadosOutrasFontes <- gravacaoDadosDisponibilidadeOutrasFontesBDBP(pastaCaso, conexao, tipoCaso, numeroCaso, codModelo, anoMesInicioMDI, anoMesFimMDI)
+  
+  # calcula e grava dados das reservas de carga e por motivo de renovaveis na tabela BPO_A21_RESERVA
+  gravacaoDadosReservaBDBP(pastaCaso, conexao, tipoCaso, numeroCaso, codModelo, lt.dadosOutrasFontes$df.capacidadeOFR) 
   
   # efetua commit no banco de dados confirmando todas as gravacoes com sucesso
   dbExecute(conexao, "COMMIT TRANSACTION;")

@@ -11,8 +11,12 @@
 #' @param anoMesInicioMDI caracter com o ano e mes do inicio da simulacao do MDI.
 #' @param anoMesFimMDI caracter com o ano e mes do final da simulacao do MDI.
 #'
-#' @return \code{mensagem} vetor de caracteres com a mensagem de sucesso de gravacao nas tabelas BPO_A13_DISPONIBILIDADE_OFR, 
-#' BPO_A18_TIPOS_OFR e BPO_A19_FATOR_PONTA_OFR
+#' @return \code{lista} 
+#' \itemize{
+#' \item \code{mensagem} vetor de caracteres com a mensagem de sucesso de gravacao nas tabelas BPO_A13_DISPONIBILIDADE_OFR, 
+#' BPO_A18_TIPOS_OFR e BPO_A19_FATOR_PONTA_OFR 
+#' \item \code{df.capacidadeOFR} data frame com a capacidade instalada das renovaveis
+#' }
 #' 
 #' @examples
 #' \dontrun{
@@ -95,7 +99,7 @@ gravacaoDadosDisponibilidadeOutrasFontesBDBP <- function(pastaCaso, conexao, tip
   abasExcelDadosOFR <- c("FatorPonta", "RelacaoIndicativas", "SazonalidadeIndicativas", "TipoContribuicaoPonta")
   abasExcelDadosOFRLidos <- excel_sheets(arquivoDadosOFR)
   abasExistentes <- setdiff(abasExcelDadosOFR,abasExcelDadosOFRLidos)
-  if(length(abasExistentes != 0)) {
+  if(length(abasExistentes) != 0) {
     dbDisconnect(conexao)
     stop(paste0("arquivo ", arquivoDadosOFR, " n\u00E3o possui a(s) aba(s) ", paste(abasExistentes, collapse = ", "), 
                 " ou h\u00E1 problema com o(s) nome(s) da(s) aba(s)!"))
@@ -277,5 +281,9 @@ gravacaoDadosDisponibilidadeOutrasFontesBDBP <- function(pastaCaso, conexao, tip
   
   mensagem <- "tabelas BPO_A13_DISPONIBILIDADE_OFR, BPO_A18_TIPOS_OFR e BPO_A19_FATOR_PONTA_OFR gravadas com sucesso!"
   
-  return(mensagem)
+  # prepara capacidade de renovaveis para calculos de reserva
+  df.capacidadeOFR <- inner_join(df.capacidadeOFR, df.tipoContribuicaoPonta, by = c("TIPO" = "A18_TX_DESCRICAO")) %>% 
+    select(tipoFonte = A18_CD_TIPO_FONTE, subsistema = sistema, anoMes, potencia = Potencia)
+  
+  return(list(mensagem = mensagem, df.capacidadeOFR = df.capacidadeOFR))
 }

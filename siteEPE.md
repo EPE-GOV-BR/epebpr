@@ -40,10 +40,19 @@ Para coment&aacute;rios sobre a ferramenta, favor enviar e-mail para modelos.sgr
 
 # Vers&otilde;es
 
+### v.0.10.0
+Corrige valor de lolp para gr&aacute;ficos de GF.
+
+Inclus&atilde;o de funcionalidade que l&ecirc; e passa a usar o percentual de reserva de carga por subsistema e m&ecirc;s e percentual de reserva por causa das renov&aacute;veis por tipo de renov&aacute;vel, subsistema e m&ecirc;s. Inclui a tabela BPO_A21_RESERVA para gravar essas informa&ccedil;&otilde;es.
+
+Passa a ler o arquivo infoMDI.txt para pegar o in&iacute;cio e fim do horizonte de estudo do MDI.
+
+Passa a gravar o horizonte da demanda de acordo com o horizonte do caso NEWAVE.
+
 ### v.0.9.2
 Verifica se os dados de mercado e patamar possuem os mesmo subsistemas e avisa caso negativo. Esse problema acontece em casos montados manualmente.
 
-Apresenta novos gr&aacute;ficos de CVaR e VaR seguindo os crit&eacute;rios de contabiliza&ccedil;&atilde;o de Garantia F&iacute;sica. 
+Apresenta novos gr&aacute;ficos de CVaR e VaR seguindo os crit&eacute;rios de contabiliza&ccedil;&atilde;o de Garantia F&iacute;sica.
 
 ### v.0.9.1
 Corrige erro ocorrido na atualiza&ccedil;&atilde;o de submotoriza&ccedil;&atilde;o quando n&atilde;o havia expans&atilde;o hidr&aacute;ulica no horizonte do estudo.

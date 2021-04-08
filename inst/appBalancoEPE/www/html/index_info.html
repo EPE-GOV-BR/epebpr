@@ -38,7 +38,7 @@
 		
 		<p>&bull; A informa&ccedil;&atilde;o de carga, presente no arquivo <font face = "Courier New">sistema.xxx</font>, deve apresentar dados para todos os subsistemas (mesmo que com valor zerado)</p>
 		
-		<p>&bull; Arquivo <font face = "Courier New"><b>dadosOFR.xlsx</b></font>: Possui as contribui&ccedil;&otilde;es das renov&aacute;veis n&atilde;o despachadas para a ponta. O arquivo possui quatro abas: FatorPonta, RelacaoIndicativas, SazonalidadeIndicativas e TipoContribuicaoPonta. Este arquivo deve estar presente na mesma pasta dos arquivos do caso, indicada na interface da ferramenta.</p>
+		<p>&bull; Arquivo <font face = "Courier New"><b>dadosOFR.xlsx</b></font>: Possui as contribui&ccedil;&otilde;es das renov&aacute;veis n&atilde;o despachadas para a ponta, o valor percentual das reservas de carga por subsistema e m&ecirc;s e o valor percentual da reserva por motivo da variabilidade das fontes renov&aacute;veis. Este &uacute;ltimo é o percentual da pot&ecirc;ncia instalada da respectiva fonte por subsistema e m&ecirc;s. O arquivo possui seis abas: FatorPonta, RelacaoIndicativas, SazonalidadeIndicativas, TipoContribuicaoPonta, ReservaRenovavel e Reserva. Este arquivo deve estar presente na mesma pasta dos arquivos do caso, indicada na interface da ferramenta.</p>
 		
 		<p style="margin-left: 20px">&bull; <b>FatorPonta</b>: Nessa aba ficam os fatores de contribui&ccedil;&atilde;o mensal para pot&ecirc;ncia informados em fun&ccedil;&atilde;o da pot&ecirc;ncia instalada da fonte. &Eacute; utilizado para fontes em que h&aacute; uma contribui&ccedil;&atilde;o espec&iacute;fica para pot&ecirc;ncia (fonte do tipo 1). Vale destacar que a coluna <font face = "Courier New">A18_CD_TIPO_FONTE</font> se refere ao c&oacute;digo do bloco de usinas n&atilde;o simuladas definida no arquivo <font face = "Courier New">patamar.*</font> e seu valor deve estar coerente com o definido no arquivo.</p>
 		
@@ -52,15 +52,25 @@
 		
 		<p style="margin-left: 30px; padding-top:6px"><img src = "../imagens/cabecalho_sazo_indicativas.png" /></p>
 		
-		<p style="margin-left: 20px">&bull; <b>TipoContribuicaoPonta</b>: Nessa aba ficam as indica&ccedil;ões do tipo de contribui&ccedil;&atilde;o de pot&ecirc;ncia das fontes. A disponibilidade de pot&ecirc;ncia pode ser informada a partir de uma sazonalidade m&eacute;ia mensal da sua gera&ccedil;&atilde;o (fontes do tipo 2), ou uma contribui&ccedil;&atilde;o mensal espec&iacute;fica informada em fun&ccedil;&atilde;o da pot&ecirc;ncia instalada (fontes do tipo 1). Para os casos do tipo 1, o fator de contribui&ccedil;&atilde;o de pot&ecirc;ncia em fun&ccedil;&atilde;o da capacidade instalada deve ser inclu&iacute;do na aba <b>FatorPonta</b>. As informa&ccedil;&otilde;es referentes &agrave; contribui&ccedil;&atilde;o sazonal m&eacute;dia mensal das usinas indicativas ficam na aba <b>SazonalidadeIndicativas</b>. O campo <font face = "Courier New">A18_TX_DESCRICAO</font>  corresponde ao campo TipoFonte da aba <b>RelacaoIndicativas</b> e devem se manter coerentes no mesmo formato do MDI.  O campo <font face = "Courier New">A18_CD_TIPO_FONTE</font> se refere ao c&oacute;digo do bloco de usinas n&atilde;o simuladas definida no arquivo <font face = "Courier New">patamar.*</font> e seu valor deve estar coerente com o definido no arquivo.</p>
+		<p style="margin-left: 20px">&bull; <b>TipoContribuicaoPonta</b>: Nessa aba ficam as indica&ccedil;ões do tipo de contribui&ccedil;&atilde;o de pot&ecirc;ncia das fontes. A disponibilidade de pot&ecirc;ncia pode ser informada a partir de uma sazonalidade m&eacute;ia mensal da sua gera&ccedil;&atilde;o (fontes do tipo 2), ou uma contribui&ccedil;&atilde;o mensal espec&iacute;fica informada em fun&ccedil;&atilde;o da pot&ecirc;ncia instalada (fontes do tipo 1). Para os casos do tipo 1, o fator de contribui&ccedil;&atilde;o de pot&ecirc;ncia em fun&ccedil;&atilde;o da capacidade instalada deve ser inclu&iacute;do na aba <b>FatorPonta</b>. As informa&ccedil;&otilde;es referentes &agrave; contribui&ccedil;&atilde;o sazonal m&eacute;dia mensal das usinas indicativas ficam na aba <b>SazonalidadeIndicativas</b>. O campo <font face = "Courier New">A18_TX_DESCRICAO</font>  corresponde ao campo TipoFonte da aba <b>RelacaoIndicativas</b> e deve se manter coerentes no mesmo formato do MDI.  O campo <font face = "Courier New">A18_CD_TIPO_FONTE</font> se refere ao c&oacute;digo do bloco de usinas n&atilde;o simuladas definida no arquivo <font face = "Courier New">patamar.*</font> e seu valor deve estar coerente com o definido no arquivo.</p>
 		
 		<p style="margin-left: 30px; padding-top:6px"><img src = "../imagens/cabecalho_tipo_contribuicao_ponta.png" /></p>
+		
+		<p style="margin-left: 20px">&bull; <b>ReservaRenovavel</b>: Nessa aba ficam os dados da reserva por motivo da variabilidade das fontes renov&aacute;veis. Este dado é o percentual da pot&ecirc;ncia instalada da respectiva fonte por subsistema e m&ecirc;s. O campo <font face = "Courier New">A18_CD_TIPO_FONTE</font> se refere ao c&oacute;digo do bloco de usinas n&atilde;o simuladas definida no arquivo <font face = "Courier New">patamar.*</font> e seu valor deve estar coerente com o definido no arquivo.</p>
+		
+		<p style="margin-left: 30px; padding-top:6px"><img src = "../imagens/cabecalho_reserva_renovavel.png" /></p>
+		
+		<p style="margin-left: 20px">&bull; <b>Reserva</b>: Nessa aba ficam os dados da reserva em fun&ccedil;&atilde;o da carga. Os valores s&atilde;o percentuais relativos aos subsistemas e m&ecirc;s.</p>
+		
+		<p style="margin-left: 30px; padding-top:6px"><img src = "../imagens/cabecalho_reserva_carga.png" /></p>
 		
 		<p>&bull; Arquivo <font face = "Courier New"><b>GeraPeq.xlsx</b></font>: Planilha excel contendo a gera&ccedil;&atilde;o sazonalizada das fontes n&atilde;o simuladas (pequenas). Os dados devem estar na aba de nome "Principal". Este arquivo deve estar presente na mesma pasta dos arquivos do caso. O campo TIPO deste arquivo corresponde ao campo <font face = "Courier New">A18_TX_DESCRICAO</font> da aba <b>TipoContribuicaoPonta</b> e ao campo TipoFonte da aba <b>RelacaoIndicativas</b>, ambas da planilha <font face = "Courier New"><b>dadosOFR.xlsx</b></font>. O campo NOME corresponde ao campo NomeFonteMDI da aba <b>RelacaoIndicativas</b> da planilha <font face = "Courier New"><b>dadosOFR.xlsx</b></font>.</p>
 		
 		<p style="margin-left: 30px; padding-top:6px"><img src = "../imagens/cabecalho_gerapeq.png" /></p>
 		
-		<p>&bull; Arquivo <font face = "Courier New"><b>saidaExpansao.txt</b></font>: Arquivo texto com a expans&atilde;o indicativa do MDI. Este arquivo deve estar presente na mesma pasta dos arquivos do caso, pois ser&aacute; utilizado para a identifica&ccedil;&atilde;o do montante de expans&atilde;o de usinas n&atilde;o simuladas no NEWAVE.</p>
+		<p>&bull; Arquivo <font face = "Courier New"><b>saidaExpansao.txt</b></font>: Arquivo texto com a expans&atilde;o indicativa do MDI. Este arquivo &eacute; um arquivo de sa&iacute;da do MDI. Este arquivo deve estar presente na mesma pasta dos arquivos do caso, pois ser&aacute; utilizado para a identifica&ccedil;&atilde;o do montante de expans&atilde;o de usinas n&atilde;o simuladas no NEWAVE.</p>
+		
+		<p>&bull; Arquivo <font face = "Courier New"><b>infoMDI.txt</b></font>: Arquivo texto com informa&ccedil;&otilde;es sobre o caso de expans&atilde;o executado pelo MDI. Este arquivo &eacute; um arquivo de sa&iacute;da do MDI. Este arquivo deve estar presente na mesma pasta dos arquivos do caso.</p>
 	</div>
 	<br>
 	<h2>Resumo das rotinas de execu&ccedil;&atilde;o do Balan&ccedil;o de Pot&ecirc;ncia</h2>
@@ -106,7 +116,9 @@
 				
 				<li>Finalmente, calcula a disponibilidade de ponta das usinas n&atilde;o simuladas, para cada per&iacute;odo do horizonte de simula&ccedil;&atilde;o, avaliando o tipo de contribui&ccedil;&atilde;o da ponta atribu&iacute;do. Se <font face = "Courier New">A18_TP_CONTRIBUICAO_PONTA</font> = 2 para a determinada fonte, a disponibilidade ser&aacute; igual a Energia x profundidade, caso contr&aacute;rio, a disponibilidade ser&aacute; igual a Pot&ecirc;ncia Instalada x Fator de contribui&ccedil;&atilde;o (definido na tabela <font face = "Courier New">BPO_A19_FATOR_PONTA_OFR</font>). A disponibilidade ser&aacute; gravada na tabela <font face = "Courier New">BPO_A13_DISPONIBILIDADE_OFR</font></li>
 			</ol>
-			</li>			
+			</li>
+
+			<li>Faz o c&aacute;lculo e a grava&ccedil;&atilde;o dos dados de reserva em fun&ccedil;&atilde;o da carga e em fun&ccedil;&atilde;o da pot&ecirc;ncia instalada de renov&aacute;veis na tabela <font face = "Courier New">BPO_A21_RESERVA</font></li>			
 		</ol>
 		<p>Passada a grava&ccedil;&atilde;o dos dados de entrada, se inicia o c&aacute;lculo da disponibilidade hidr&aacute;ulica e atualiza&ccedil;&atilde;o e grava&ccedil;&atilde;o das tabelas <font face = "Courier New">BPO_A06_SAIDA_HIDRO_NEWAVE</font>, <font face = "Courier New">BPO_A08_DADOS_CALCULADOS_UHE</font> e <font face = "Courier New">BPO_A09_DISPONIBILIDADE_HIDRO_PONTA_SUBSISTEMA</font></p>
 		<ol>
