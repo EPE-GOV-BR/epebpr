@@ -8,16 +8,16 @@
 #' @param tipoCaso caracter com o tipo de caso simulado. [1]=PDE [2]=PMO [3]=GF.
 #' @param numeroCaso caracter com o numero do caso, definido pelo usuario.
 #' @param codModelo caracter com a definicao do modelo utilizado. [1]=Newave [2]=Suishi.
-#' @param df.capacidadeOFR data frame com a capacidade instalada das renovaveis
+#' @param df.energiaOFR data frame com a energia esperada mensal das renovaveis
 #'
 #' @return \code{mensagem} vetor de caracteres com a mensagem de sucesso de gravacao na tabela BPO_A21_RESERVA
 #' 
 #' @examples
 #' \dontrun{
-#' gravacaoDadosReservaBDBP("C:/PDE2027_Caso080", conexao, 1, 80, 1, df.capacidadeOFR)}
+#' gravacaoDadosReservaBDBP("C:/PDE2027_Caso080", conexao, 1, 80, 1, df.energiaOFR)}
 #'
 #' @export
-gravacaoDadosReservaBDBP <- function(pastaCaso, conexao, tipoCaso, numeroCaso, codModelo, df.capacidadeOFR) {
+gravacaoDadosReservaBDBP <- function(pastaCaso, conexao, tipoCaso, numeroCaso, codModelo, df.energiaOFR) {
   if (missing(pastaCaso)) {
     stop("favor indicar a pasta com os arquivos do NEWAVE")
   }
@@ -97,10 +97,10 @@ gravacaoDadosReservaBDBP <- function(pastaCaso, conexao, tipoCaso, numeroCaso, c
   df.reservaRenovavel <- pivot_longer(df.reservaRenovavel, cols = c(-subsistema, -tipoFonte), names_to = "mes", values_to = "reservaRenovavel") %>% 
     mutate(mes = as.integer(mes))
   
-  # junta com tabela de potencia das renovaveis para calcular reserva
-  df.capacidadeOFR <- df.capacidadeOFR %>% mutate(mes = anoMes %% 100)
-  df.reservaRenovavel <- inner_join(df.reservaRenovavel, df.capacidadeOFR, by = c("tipoFonte", "subsistema", "mes")) %>% 
-    mutate(reservaRenovavel = reservaRenovavel * potencia) %>% 
+  # junta com tabela de energia das renovaveis para calcular reserva
+  df.energiaOFR <- df.energiaOFR %>% mutate(mes = anoMes %% 100)
+  df.reservaRenovavel <- inner_join(df.reservaRenovavel, df.energiaOFR, by = c("tipoFonte", "subsistema", "mes")) %>% 
+    mutate(reservaRenovavel = reservaRenovavel * energia) %>% 
     group_by(subsistema, anoMes) %>% 
     summarise(reservaRenovavel = sum(reservaRenovavel), .groups = "drop")
   
@@ -109,7 +109,7 @@ gravacaoDadosReservaBDBP <- function(pastaCaso, conexao, tipoCaso, numeroCaso, c
     mutate(reservaRenovavel = ifelse(is.na(reservaRenovavel), 
                                      0,
                                      reservaRenovavel)) %>% 
-    select(A02_NR_SUBSISTEMA = subsistema, 
+    select(A02_NR_SUBSISTEMA = subsistema,
            A21_NR_MES = anoMes, 
            A10_NR_SEQ_FREQUENCIA = id, 
            A21_VL_RESERVA_CARGA = reservaDemanda, 

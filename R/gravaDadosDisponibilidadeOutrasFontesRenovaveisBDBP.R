@@ -209,7 +209,7 @@ gravacaoDadosDisponibilidadeOutrasFontesBDBP <- function(pastaCaso, conexao, tip
   # define data frame com os dados de capacidade instalada das usinas nao simuladas, para cada periodo do horizonte de simulacao
   df.capacidadeOFR <- df.dadosOFR %>% 
     group_by(sistema, TIPO, dataRef) %>% 
-    summarise(POT = sum(`POT (MW)`)) %>% 
+    summarise(POT = sum(`POT (MW)`), .groups = "drop") %>% 
     mutate(aux = 1) %>% 
     inner_join(df.periodo, by = "aux") %>% 
     select(-aux) %>% 
@@ -217,14 +217,13 @@ gravacaoDadosDisponibilidadeOutrasFontesBDBP <- function(pastaCaso, conexao, tip
     filter(valpot != "nao") %>% 
     select(-valpot, -dataRef) %>% 
     group_by(sistema, TIPO, anoMes) %>% 
-    summarise(Potencia = sum(POT)) %>% 
-    ungroup()
+    summarise(Potencia = sum(POT), .groups = "drop")
   
   # define data frame com os dados de energia das usinas nao simuladas, para cada periodo do horizonte de simulacao
   df.energiaOFR <- df.dadosOFR %>% 
     select(-aux, -`POT (MW)`) %>% 
     group_by(sistema, TIPO, dataRef) %>% 
-    summarise_all(sum) %>% 
+    summarise(across(everything(), sum), .groups = "drop") %>% 
     mutate(aux = 1) %>% 
     inner_join(df.periodo, by = "aux") %>% 
     select(-aux) %>% 
@@ -232,8 +231,7 @@ gravacaoDadosDisponibilidadeOutrasFontesBDBP <- function(pastaCaso, conexao, tip
     filter(valpot != "nao") %>% 
     select(-valpot, -dataRef) %>% 
     group_by(sistema, TIPO, anoMes) %>% 
-    summarise_all(sum) %>% 
-    ungroup() %>% 
+    summarise(across(everything(), sum), .groups = "drop") %>% 
     pivot_longer(-c(sistema, TIPO, anoMes), names_to = "sazonalidade", values_to = "Energia") %>% 
     filter(str_sub(anoMes, 5, 6) == str_sub(sazonalidade, 5, 6)) %>% 
     select(-sazonalidade)
@@ -281,9 +279,9 @@ gravacaoDadosDisponibilidadeOutrasFontesBDBP <- function(pastaCaso, conexao, tip
   
   mensagem <- "tabelas BPO_A13_DISPONIBILIDADE_OFR, BPO_A18_TIPOS_OFR e BPO_A19_FATOR_PONTA_OFR gravadas com sucesso!"
   
-  # prepara capacidade de renovaveis para calculos de reserva
-  df.capacidadeOFR <- inner_join(df.capacidadeOFR, df.tipoContribuicaoPonta, by = c("TIPO" = "A18_TX_DESCRICAO")) %>% 
-    select(tipoFonte = A18_CD_TIPO_FONTE, subsistema = sistema, anoMes, potencia = Potencia)
+  # prepara energia de renovaveis para calculos de reserva
+  df.energiaOFR <- inner_join(df.energiaOFR, df.tipoContribuicaoPonta, by = c("TIPO" = "A18_TX_DESCRICAO")) %>% 
+    select(tipoFonte = A18_CD_TIPO_FONTE, subsistema = sistema, anoMes, energia = Energia)
   
-  return(list(mensagem = mensagem, df.capacidadeOFR = df.capacidadeOFR))
+  return(list(mensagem = mensagem, df.energiaOFR = df.energiaOFR))
 }

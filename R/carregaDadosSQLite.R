@@ -191,7 +191,7 @@ carregaDadosSQLite <- function(baseSQLite, pastaCaso, pastaSaidas, tipoCaso, num
   lt.dadosOutrasFontes <- gravacaoDadosDisponibilidadeOutrasFontesBDBP(pastaCaso, conexao, tipoCaso, numeroCaso, codModelo, anoMesInicioMDI, anoMesFimMDI)
   
   # calcula e grava dados das reservas de carga e por motivo de renovaveis na tabela BPO_A21_RESERVA
-  gravacaoDadosReservaBDBP(pastaCaso, conexao, tipoCaso, numeroCaso, codModelo, lt.dadosOutrasFontes$df.capacidadeOFR) 
+  gravacaoDadosReservaBDBP(pastaCaso, conexao, tipoCaso, numeroCaso, codModelo, lt.dadosOutrasFontes$df.energiaOFR) 
   
   # efetua commit no banco de dados confirmando todas as gravacoes com sucesso
   dbExecute(conexao, "COMMIT TRANSACTION;")

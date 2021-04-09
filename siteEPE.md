@@ -43,7 +43,7 @@ Para coment&aacute;rios sobre a ferramenta, favor enviar e-mail para modelos.sgr
 ### v.0.10.0
 Corrige valor de lolp para gr&aacute;ficos de GF.
 
-Inclus&atilde;o de funcionalidade que l&ecirc; e passa a usar o percentual de reserva de carga por subsistema e m&ecirc;s e percentual de reserva por causa das renov&aacute;veis por tipo de renov&aacute;vel, subsistema e m&ecirc;s. Inclui a tabela BPO_A21_RESERVA para gravar essas informa&ccedil;&otilde;es.
+Inclus&atilde;o de funcionalidade que l&ecirc; e passa a usar o percentual de reserva de carga por subsistema e m&ecirc;s e percentual de reserva por causa da incerteza na gera&ccedil;&atilde;o das renov&aacute;veis. Esse percentual tem como refer&ecirc;ncia a expectativa de gera&ccedil;&atilde;o por tipo de renov&aacute;vel, subsistema e m&ecirc;s. Inclui a tabela BPO_A21_RESERVA para gravar essas informa&ccedil;&otilde;es.
 
 Passa a ler o arquivo infoMDI.txt para pegar o in&iacute;cio e fim do horizonte de estudo do MDI.
 
