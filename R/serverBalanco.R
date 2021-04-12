@@ -376,6 +376,13 @@ serverBalanco <- function(input, output, session) {
                                               as.numeric(input$anoInicioGrafico), 
                                               as.numeric(input$anoFimGrafico)),
                    arquivoExcel) 
+      } else if(as.numeric(input$tipoGrafico) %in% c(10, 11, 12)) {
+        write_xlsx(dadosGraficosGF(baseSQLiteGrafico, 
+                                   chaveGrafico[1], 
+                                   chaveGrafico[2], 
+                                   chaveGrafico[3],
+                                   as.numeric(input$tipoGrafico)),
+                   arquivoExcel)
       } else {
         write_xlsx(dadosGraficoVAR(baseSQLiteGrafico, 
                                    chaveGrafico[1], 

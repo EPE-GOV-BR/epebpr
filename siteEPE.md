@@ -40,8 +40,11 @@ Para coment&aacute;rios sobre a ferramenta, favor enviar e-mail para modelos.sgr
 
 # Vers&otilde;es
 
+### v.0.10.1
+Corrige do download dos dados dos gr&aacute;ficos de GF.
+
 ### v.0.10.0
-Corrige valor de lolp para gr&aacute;ficos de GF.
+Corrige valor de LOLP para gr&aacute;ficos de GF.
 
 Inclus&atilde;o de funcionalidade que l&ecirc; e passa a usar o percentual de reserva de carga por subsistema e m&ecirc;s e percentual de reserva por causa da incerteza na gera&ccedil;&atilde;o das renov&aacute;veis. Esse percentual tem como refer&ecirc;ncia a expectativa de gera&ccedil;&atilde;o por tipo de renov&aacute;vel, subsistema e m&ecirc;s. Inclui a tabela BPO_A21_RESERVA para gravar essas informa&ccedil;&otilde;es.
 
