@@ -128,7 +128,7 @@ serverBalanco <- function(input, output, session) {
       need(pastaCaso != "", "Defina a pasta de caso"),
       need(pastaSaidas != "", "Defina a pasta com as sa\u00EDdas do caso (nwlistop)"),
       need(baseSQLite != "", "Defina a base de dados SQLite"),
-      # need(input$reservaOperativa, "Defina valor de reserva operativa (0-100%)"),
+      need(input$distribuicaoDeficit, "Defina valor de limite do rateio do d\u00E9ficit (0-100%)"),
       need(validaModulacao == 0, "Sistemas que n\u00E3o modulam na ponta devem ser diferentes dos que n\u00E3o modulam na m\u00E9dia!")
       # need(input$sistemasNaoModulamPonta, "Defina os sistemas que n\u00E3o modulam na ponta"),
       # need(input$sistemasNaoModulamMedia, "Defina os sistemas que n\u00E3o modulam na m\u00E9dia")
@@ -203,7 +203,8 @@ serverBalanco <- function(input, output, session) {
                                            cvuHidro,
                                            cvuRenovaveis,
                                            cvuOutrasTermicas,
-                                           as.logical(input$balancoResumido))
+                                           as.logical(input$balancoResumido),
+                                           as.double(input$distribuicaoDeficit)/100)
       } else {
         mensagem <- ""
       }

@@ -1,6 +1,7 @@
 #' Calcula um balanco de potencia usando o solver Coin
 #'
-#' Monta e resolve o problema linear de um balanco de potencia usando Clp (Coin-or linear programming). Funcao criada para poder executar processamento paralelo.
+#' Monta e resolve o problema linear de um balanco de potencia usando Clp (Coin-or linear programming). 
+#' Funcao criada para poder executar processamento paralelo.
 #'
 #' @param periodo vetor com o anoMes a ser ser processado. Ex. 201805
 #' @param balancoResumido variavel binaria para decidir se vai calcular somente o balanco resumido (\code{BPO_A16_BALANCO}) ou 
@@ -19,6 +20,7 @@
 #' @param codModelo variavel com o codigo do modelo
 #' @param df.subsistemas data frame com os dados de subsistemas
 #' @param cvuHidro valor de CVU das hidro
+#' @param df.defictRealocado data frame com os dados do limite de deficit a ser realocado por subsistema
 #'
 #' @return \code{lt.resultado} lista com data frames com as estruturas das tabelas com os resultados dos balancos. 
 #' A lista pode ter 2 ou 3 data frames conforme definido pela variavel \code{balancoResumido}.
@@ -53,7 +55,16 @@ balancoPeriodoClp <- function(periodo,
                               df.agrupamentoLinhas,
                               tipoCaso, numeroCaso, codModelo,
                               df.subsistemas,
-                              cvuHidro) {
+                              cvuHidro,
+                              df.defictRealocado) {
+  
+  # filtra demanda especifica (uso particular para carga liquida)
+  df.demandaLiquida <- df.demanda %>% filter(anoMes == periodo & id == idDemanda) %>% select(subsistema, probOcorrencia, demanda)
+  # critica de existencia de dados
+  if(nrow(df.demandaLiquida) == 0) {
+    dbDisconnect(conexao)
+    stop(paste0("N\u00E3o h\u00E1 demanda (BPO_A10_DEMANDA) para o per\u00EDodo de ", periodo, " e demanda ", idDemanda))
+  }
   
   # filtrando geracao termica para o mes especifico
   # critica de existencia de dados
@@ -82,7 +93,7 @@ balancoPeriodoClp <- function(periodo,
     dbDisconnect(conexao)
     stop(paste0("N\u00E3o h\u00E1 renov\u00E1veis (BPO_A13_DISPONIBILIDADE_OFR) para o per\u00EDodo de ", periodo))
   }
-  # filtrando geracao revnovavel
+  # filtrando geracao renovavel
   df.geracaoRenovaveis <- df.geracaoRenovaveisTotal %>% filter(anoMes == periodo) %>%
     select(tipoUsina, codUsina, subsistema, transmissao, inflexibilidade, disponibilidade, cvu)
   
@@ -106,21 +117,17 @@ balancoPeriodoClp <- function(periodo,
   }
   df.geracaoHidro$cvu <- cvuHidro
   
-  # geracao total
-  df.geracao <- rbind(df.geracaoHidro, df.geracaoRenovaveis, df.geracaoTermica, df.geracaoTransmissao, df.custoDefict)
+  # filtra deficit realocado especifico da execucao
+  df.defictRealocado <- df.defictRealocado %>% filter(anoMes == periodo & id == idDemanda) %>% 
+    select(tipoUsina, codUsina, subsistema, transmissao, inflexibilidade, disponibilidade, cvu)
+  
+    # geracao total
+  df.geracao <- rbind(df.geracaoHidro, df.geracaoRenovaveis, df.geracaoTermica, df.geracaoTransmissao, df.custoDefict, df.defictRealocado)
   # corrige pequenas distorcoes
   df.geracao <- df.geracao %>% mutate(disponibilidade = ifelse(((disponibilidade - inflexibilidade) < 0.0001 & (disponibilidade - inflexibilidade) > -0.0001),
                                                                inflexibilidade, disponibilidade))
   # geracao total para balanco sem restricao de transmissao
   df.geracaoSemTransmissao <- df.geracao %>% mutate(disponibilidade = replace(disponibilidade, tipoUsina == 'TRANSMISSAO', Inf))
-  
-  # filtra demanda especifica (uso particular para carga liquida)
-  df.demandaLiquida <- df.demanda %>% filter(anoMes == periodo & id == idDemanda) %>% select(subsistema, probOcorrencia, demanda)
-  # critica de existencia de dados
-  if(nrow(df.demandaLiquida) == 0) {
-    dbDisconnect(conexao)
-    stop(paste0("N\u00E3o h\u00E1 demanda (BPO_A10_DEMANDA) para o per\u00EDodo de ", periodo, " e demanda ", idDemanda))
-  }
   
   # verifica inconsistencia de limites das variaveis
   if (any(is.na(df.geracao$disponibilidade))) {
@@ -331,56 +338,64 @@ balancoPeriodoClp <- function(periodo,
   
   
   # gera resultado
-  df.geracao$balanco <- round(primalBalanco, 2)
-  df.geracao$balancoRedeIlimitada <- round(primalBalancoTransmissao, 2)
-  df.resultado <- df.geracao %>% group_by(tipoUsina, subsistema) %>%
-    summarise(A16_VL_GMIN = round(sum(inflexibilidade),2), A16_VL_DESPACHO = round(sum(balanco * ifelse(sign(transmissao) == -1,-1,1)),2),
-              A16_VL_DESPACHO_REDE_ILIMITADA = round(sum(balancoRedeIlimitada * ifelse(sign(transmissao) == -1,-1,1)),2),
-              A16_VL_NAO_DESPACHADO = round((sum(disponibilidade) - A16_VL_DESPACHO),2))
-  df.resultado <- ungroup(df.resultado) # remove atributos do df criados pelo group by
-  df.resultado$A01_TP_CASO <- tipoCaso
-  df.resultado$A01_NR_CASO <- numeroCaso
-  df.resultado$A01_CD_MODELO <- codModelo
-  df.resultado$A09_NR_MES <- periodo
-  df.resultado$A09_NR_SERIE <- idSerieHidro
-  df.resultado$A10_NR_SEQ_FREQUENCIA <- idDemanda
-  colnames(df.resultado) <- c("A16_TP_GERACAO", "A02_NR_SUBSISTEMA", "A16_VL_GMIN", "A16_VL_DESPACHO", "A16_VL_DESPACHO_REDE_ILIMITADA",
-                              "A16_VL_NAO_DESPACHADO", "A01_TP_CASO", "A01_NR_CASO", "A01_CD_MODELO", "A09_NR_MES",
-                              "A09_NR_SERIE", "A10_NR_SEQ_FREQUENCIA")
+  df.geracao <- df.geracao %>% mutate(balanco = round(primalBalanco, 2),
+                                      balancoRedeIlimitada = round(primalBalancoTransmissao, 2))
+  df.resultado <- df.geracao %>% mutate(tipoUsina = ifelse(tipoUsina == "DEFICITREALOCADO",
+                                                           "DEFICIT",
+                                                           tipoUsina)) %>% 
+    group_by(tipoUsina, subsistema) %>%
+    summarise(A16_VL_GMIN = round(sum(inflexibilidade), 2), 
+              A16_VL_DESPACHO = round(sum(balanco * ifelse(sign(transmissao) == -1, -1, 1)), 2),
+              A16_VL_DESPACHO_REDE_ILIMITADA = round(sum(balancoRedeIlimitada * ifelse(sign(transmissao) == -1, -1, 1)), 2),
+              A16_VL_NAO_DESPACHADO = round((sum(disponibilidade) - A16_VL_DESPACHO), 2), .groups = "drop") %>% 
+    mutate(A01_TP_CASO = tipoCaso,
+           A01_NR_CASO = numeroCaso,
+           A01_CD_MODELO = codModelo,
+           A09_NR_MES = periodo,
+           A09_NR_SERIE = idSerieHidro,
+           A10_NR_SEQ_FREQUENCIA = idDemanda) %>% 
+    dplyr::rename(A16_TP_GERACAO = tipoUsina, A02_NR_SUBSISTEMA = subsistema)
+  
   
   # gera resultados de CMO
   subsistemasReais <- df.subsistemas %>% filter(tipoSistema == 0) %>% pull(subsistema)
   idSubsistemasReais <- df.subsistemas %>% mutate(linha = row_number()) %>% filter(tipoSistema == 0) %>% pull(linha)
-  cmo <- dualBalanco[idSubsistemasReais] %>% round(2)
-  df.resultadoCMO <- data.frame(A20_VL_CMO = cmo)
-  df.resultadoCMO$A01_TP_CASO <- tipoCaso
-  df.resultadoCMO$A01_NR_CASO <- numeroCaso
-  df.resultadoCMO$A01_CD_MODELO <- codModelo
-  df.resultadoCMO$A20_NR_MES <- periodo
-  df.resultadoCMO$A20_NR_SERIE <- idSerieHidro
-  df.resultadoCMO$A10_NR_SEQ_FREQUENCIA <- idDemanda
-  df.resultadoCMO$A02_NR_SUBSISTEMA <- subsistemasReais
+  cmo <- dualBalanco[idSubsistemasReais] %>% round(2) # os primeiros resultados do dualBanco sao os subsistemas na ordem de codigo
+  df.resultadoCMO <- data.frame(A20_VL_CMO = cmo,
+                                A01_TP_CASO = tipoCaso,
+                                A01_NR_CASO = numeroCaso,
+                                A01_CD_MODELO = codModelo,
+                                A20_NR_MES = periodo,
+                                A20_NR_SERIE = idSerieHidro,
+                                A10_NR_SEQ_FREQUENCIA = idDemanda,
+                                A02_NR_SUBSISTEMA = subsistemasReais)
+
   
   # gera resultado por gerador
   if (balancoResumido == F) {
-    df.resultadoGerador <- df.geracao
-    indicesTransmissao <- which(df.geracao$tipoUsina == 'TRANSMISSAO')
-    df.resultadoGerador$codUsina[indicesTransmissao] <- abs(df.resultadoGerador$transmissao[indicesTransmissao])
-    df.resultadoGerador$A17_VL_NAO_DESPACHADO <- round((df.resultadoGerador$disponibilidade - df.resultadoGerador$balanco),2)
-    df.resultadoGerador$balanco[indicesTransmissao] <-
-      df.resultadoGerador$balanco[indicesTransmissao] * sign(df.resultadoGerador$transmissao[indicesTransmissao])
-    df.resultadoGerador$balancoRedeIlimitada[indicesTransmissao] <-
-      df.resultadoGerador$balancoRedeIlimitada[indicesTransmissao] * sign(df.resultadoGerador$transmissao[indicesTransmissao])
-    df.resultadoGerador <- df.resultadoGerador %>% select(-transmissao, -disponibilidade, -cvu)
-    df.resultadoGerador$A01_TP_CASO <- tipoCaso
-    df.resultadoGerador$A01_NR_CASO <- numeroCaso
-    df.resultadoGerador$A01_CD_MODELO <- codModelo
-    df.resultadoGerador$A09_NR_MES <- periodo
-    df.resultadoGerador$A09_NR_SERIE <- idSerieHidro
-    df.resultadoGerador$A10_NR_SEQ_FREQUENCIA <- idDemanda
-    colnames(df.resultadoGerador) <- c("A16_TP_GERACAO", "A17_CD_USINA", "A02_NR_SUBSISTEMA", "A17_VL_GMIN", "A17_VL_DESPACHO",
-                                       "A17_VL_DESPACHO_REDE_ILIMITADA", "A17_VL_NAO_DESPACHADO", "A01_TP_CASO", "A01_NR_CASO",
-                                       "A01_CD_MODELO", "A09_NR_MES", "A09_NR_SERIE", "A10_NR_SEQ_FREQUENCIA")
+
+    df.resultadoGerador <- df.geracao %>% mutate(A17_CD_USINA = ifelse(tipoUsina == 'TRANSMISSAO',
+                                                                       abs(transmissao),
+                                                                       codUsina),
+                                                 A17_VL_NAO_DESPACHADO = round((disponibilidade - balanco), 2),
+                                                 A17_VL_DESPACHO = ifelse(tipoUsina == 'TRANSMISSAO',
+                                                                          balanco * sign(transmissao),
+                                                                          balanco),
+                                                 A17_VL_DESPACHO_REDE_ILIMITADA = ifelse(tipoUsina == 'TRANSMISSAO',
+                                                                                         balancoRedeIlimitada * sign(transmissao),
+                                                                                         balancoRedeIlimitada),
+                                                 A01_TP_CASO = tipoCaso,
+                                                 A01_NR_CASO = numeroCaso,
+                                                 A01_CD_MODELO = codModelo,
+                                                 A09_NR_MES = periodo,
+                                                 A09_NR_SERIE = idSerieHidro,
+                                                 A10_NR_SEQ_FREQUENCIA = idDemanda) %>% 
+      select(-transmissao, -disponibilidade, -cvu, -balanco, -balancoRedeIlimitada, -codUsina) %>% 
+      dplyr::rename(A16_TP_GERACAO = tipoUsina, 
+                    A17_VL_GMIN = inflexibilidade, 
+                    A02_NR_SUBSISTEMA = subsistema)
+    
+    
   }
   # limpa o valor infinito do valor nao dispachado dos deficts
   df.resultado <- df.resultado %>% mutate(A16_VL_NAO_DESPACHADO = replace(A16_VL_NAO_DESPACHADO, A16_TP_GERACAO %in% c('DEFICIT','TRANSMISSAO'), NA))

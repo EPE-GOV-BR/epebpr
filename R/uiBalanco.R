@@ -92,13 +92,14 @@ uiBalanco <- fluidPage(
 
                  # Espaco entre inputs
                  tags$div(style="display:inline-block; width:7px"),
-
-                 # Entrada para reserva operativa
-                 # tags$div(style="display:inline-block; width:160px",
-                 #          numericInput(inputId = "reservaOperativa",
-                 #                       label = HTML("Reserva Operativa [%]:"),
-                 #                       min = 0,
-                 #                       value = 5)),
+                 
+                 # Entrada para percentual de rateio do deficit
+                 tags$div(style="display:inline-block; width:170px",
+                          numericInput(inputId = "distribuicaoDeficit",
+                                       label = HTML("Distribui&ccedil;&atilde;o D&eacute;ficit [%]:"),
+                                       min = 0,
+                                       max = 100,
+                                       value = 5)),
                  tags$br(),
                  
                  # Entrada de texto para a descricao do caso

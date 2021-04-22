@@ -10,8 +10,9 @@
 #' @param cvuHidro valor de "CVU" para uso das hidraulicas. Valor declarado baixo para dar 3a prioridade. Ex. 2e-8
 #' @param cvuRenovaveis valor de "CVU" para uso das outras renovaveis. Valor declarado baixo para dar 2a prioridade. Ex. 1e-8
 #' @param cvuOutrasTermicas valor de "CVU" para uso das termicas com CVU decalaro de 0. Valor declarado baixo para dar 4a prioridade. Ex. 0.1
-#' @param balancoResumido variavel binaria para decidir se vai gravar somente o balanco resumido (\code{BPO_A16_BALANCO}) ou tambem o por gerador (\code{BPO_A17_BALANCO_GERADOR}).
-#' Valor padrao T.
+#' @param balancoResumido variavel binaria para decidir se vai gravar somente o balanco resumido (\code{BPO_A16_BALANCO}) ou 
+#' tambem o por gerador (\code{BPO_A17_BALANCO_GERADOR}). Valor padrao T.
+#' @param distribuicaoDeficit variavel com valor (percentual) da demanda para ser o limite de disponibilidade do deficit distribuido. Valor padrao 0.05
 #'
 #' @return \code{mensagem} vetor de caracteres com a mensagem de sucesso de gravacao dos resultados dos balancos 
 #' nas tabelas BPO_A16_BALANCO, BPO_A17_BALANCO_GERADOR e BPO_A20_BALANCO_SUBSISTEMA
@@ -22,7 +23,7 @@
 #' 
 #' @export
 calculaBalancoParalelo <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, cvuTransmissao, cvuHidro, 
-                                   cvuRenovaveis, cvuOutrasTermicas, balancoResumido = T) {
+                                   cvuRenovaveis, cvuOutrasTermicas, balancoResumido = T, distribuicaoDeficit = 0.05) {
   
   # abre conexao
   conexao <- dbConnect(RSQLite::SQLite(), baseSQLite)
@@ -52,8 +53,37 @@ calculaBalancoParalelo <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
                   "0 AS inflexibilidade, 0 AS disponibilidade, A02_VL_CUSTO_DEFICIT as cvu ",
                   "FROM BPO_A02_SUBSISTEMAS WHERE A02_TP_FICTICIO = 0 AND A01_TP_CASO = ", tipoCaso, " AND A01_NR_CASO = ", numeroCaso, 
                   " AND A01_CD_MODELO = ", codModelo, " ORDER BY A02_NR_SUBSISTEMA")
-  df.custoDefict <- dbGetQuery(conexao, query)
-  df.custoDefict$disponibilidade <- 999999
+  df.custoDefict <- dbGetQuery(conexao, query) %>% 
+    mutate(disponibilidade = 999999,
+           cvu = cvu * 1.01) # aumenta em 1% o custo do deficit para usar o deficit realocado antes
+
+  # deficit realocado por subsistema
+  # cria uma primeira "geracao" de deficit limitada a um percentual da energia de cada substema com custo igual ao custo de deficit, 
+  # assim "forca" o PL a distribuir o deficit ate esse maximo em cada subsistema antes de alocar o deficit aleatoriamente dado que o problema tem multiplas
+  # solucoes otimas
+  query <- paste0("SELECT 
+                      'DEFICITREALOCADO' AS tipoUsina,
+                      A.A02_NR_SUBSISTEMA AS codUsina,
+                      A.A02_NR_SUBSISTEMA AS subsistema,
+                      A.A10_NR_MES AS anoMes,
+                      A.A10_NR_SEQ_FREQUENCIA AS id,
+                      0 AS transmissao,
+                      0 AS inflexibilidade,
+                      A.A10_VL_DEMANDA * ", distribuicaoDeficit, " AS disponibilidade,
+                      B.A02_VL_CUSTO_DEFICIT AS cvu
+                    FROM 
+                      BPO_A10_DEMANDA A,
+                      BPO_A02_SUBSISTEMAS B
+                   WHERE 
+                      A.A01_TP_CASO = B.A01_TP_CASO AND 
+                      A.A01_NR_CASO = B.A01_NR_CASO AND 
+                      A.A01_CD_MODELO = B.A01_CD_MODELO AND 
+                      A.A02_NR_SUBSISTEMA = B.A02_NR_SUBSISTEMA AND 
+                      A02_TP_FICTICIO = 0 AND 
+                      A.A01_TP_CASO = ", tipoCaso, " AND 
+                      A.A01_NR_CASO = ", numeroCaso, " AND 
+                      A.A01_CD_MODELO = ", codModelo)
+  df.defictRealocado <- dbGetQuery(conexao, query)
   
   # horizonte do balanco
   quantidadeMesesHorizonte <- ((df.casosAnalise$fimHorizonte %/% 100) * 12 + df.casosAnalise$fimHorizonte %% 100) - 
@@ -221,7 +251,8 @@ calculaBalancoParalelo <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
                                                                                                               df.agrupamentoLinhas,
                                                                                                               tipoCaso, numeroCaso, codModelo,
                                                                                                               df.subsistemas,
-                                                                                                              cvuHidro)
+                                                                                                              cvuHidro,
+                                                                                                              df.defictRealocado)
       # salva os resultados na base
       # BPO_A16_BALANCO
       dbWriteTable(conexao, "BPO_A16_BALANCO", lt.resultado$df.resultado, append = T)
@@ -250,7 +281,8 @@ calculaBalancoParalelo <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
                                                                                                             df.agrupamentoLinhas,
                                                                                                             tipoCaso, numeroCaso, codModelo,
                                                                                                             df.subsistemas,
-                                                                                                            cvuHidro)
+                                                                                                            cvuHidro,
+                                                                                                            df.defictRealocado)
       # salva os resultados na base
       # BPO_A16_BALANCO
       dbWriteTable(conexao, "BPO_A16_BALANCO", lt.resultado$df.resultado, append = T)

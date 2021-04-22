@@ -91,6 +91,14 @@ uiBalancoEPE <- fluidPage(
 
                  # Espaco entre inputs
                  tags$div(style="display:inline-block; width:7px"),
+                 
+                 # Entrada para percentual de rateio do deficit
+                 tags$div(style="display:inline-block; width:170px",
+                          numericInput(inputId = "distribuicaoDeficit",
+                                       label = HTML("Distribui&ccedil;&atilde;o D&eacute;ficit [%]:"),
+                                       min = 0,
+                                       max = 100,
+                                       value = 5)),
 
                  tags$br(),
                  
