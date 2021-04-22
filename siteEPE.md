@@ -44,7 +44,7 @@ Para coment&aacute;rios sobre a ferramenta, favor enviar e-mail para modelos.sgr
 Inclus&atilde;o de funcionalidade que distribui o d&eacute;ficit entre os subsistemas. Essa funcionalidade n&atilde;o altera a quantidade total de d&eacute;ficit do SIN, somente tenta encontrar uma solu&ccedil;&atilde;o &oacute;tima equivalente a atual onde h&aacute; a possibilidade de n&atilde;o concentrar os d&eacute;ficits em um &uacute;nico subsistema.
 
 ### v.0.10.1
-Corrige do download dos dados dos gr&aacute;ficos de GF.
+Corrige o download dos dados dos gr&aacute;ficos de GF.
 
 ### v.0.10.0
 Corrige valor de LOLP para gr&aacute;ficos de GF.
