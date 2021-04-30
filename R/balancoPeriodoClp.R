@@ -340,7 +340,7 @@ balancoPeriodoClp <- function(periodo,
   # gera resultado
   df.geracao <- df.geracao %>% mutate(balanco = round(primalBalanco, 2),
                                       balancoRedeIlimitada = round(primalBalancoTransmissao, 2))
-  df.resultado <- df.geracao %>% mutate(tipoUsina = ifelse(tipoUsina == "DEFICITREALOCADO",
+  df.resultado <- df.geracao %>% mutate(tipoUsina = ifelse(startsWith(tipoUsina, "DEFICIT"),
                                                            "DEFICIT",
                                                            tipoUsina)) %>% 
     group_by(tipoUsina, subsistema) %>%

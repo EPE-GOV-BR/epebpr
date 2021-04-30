@@ -41,6 +41,9 @@ Para coment&aacute;rios sobre a ferramenta, favor enviar e-mail para modelos.sgr
 # Vers&otilde;es
 
 ### v.0.11.0
+Teste com inclus&atilde;o de funcionalidade que distribui o d&eacute;ficit entre os subsistemas por faixas.
+
+### v.0.11.0
 Inclus&atilde;o de funcionalidade que distribui o d&eacute;ficit entre os subsistemas. Essa funcionalidade n&atilde;o altera a quantidade total de d&eacute;ficit do SIN, somente tenta encontrar uma solu&ccedil;&atilde;o &oacute;tima equivalente a atual onde h&aacute; a possibilidade de n&atilde;o concentrar os d&eacute;ficits em um &uacute;nico subsistema.
 
 ### v.0.10.1

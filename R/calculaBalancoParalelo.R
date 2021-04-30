@@ -55,7 +55,7 @@ calculaBalancoParalelo <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
                   " AND A01_CD_MODELO = ", codModelo, " ORDER BY A02_NR_SUBSISTEMA")
   df.custoDefict <- dbGetQuery(conexao, query) %>% 
     mutate(disponibilidade = 999999,
-           cvu = cvu * 1.01) # aumenta em 1% o custo do deficit para usar o deficit realocado antes
+           cvu = cvu * (1.01 + distribuicaoDeficit)) # aumenta em 1% o custo do deficit para usar o deficit realocado antes
 
   # deficit realocado por subsistema
   # cria uma primeira "geracao" de deficit limitada a um percentual da energia de cada substema com custo igual ao custo de deficit, 
@@ -69,7 +69,7 @@ calculaBalancoParalelo <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
                       A.A10_NR_SEQ_FREQUENCIA AS id,
                       0 AS transmissao,
                       0 AS inflexibilidade,
-                      A.A10_VL_DEMANDA * ", distribuicaoDeficit, " AS disponibilidade,
+                      A.A10_VL_DEMANDA AS disponibilidade,
                       B.A02_VL_CUSTO_DEFICIT AS cvu
                     FROM 
                       BPO_A10_DEMANDA A,
@@ -84,6 +84,17 @@ calculaBalancoParalelo <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
                       A.A01_NR_CASO = ", numeroCaso, " AND 
                       A.A01_CD_MODELO = ", codModelo)
   df.defictRealocado <- dbGetQuery(conexao, query)
+  
+  df.faixasDeficit <- data.frame(tipoUsina = "DEFICITREALOCADO", faixas = seq(0, distribuicaoDeficit, 0.005)) %>% 
+    mutate(tipoUsinaFaixa = paste0(tipoUsina, str_replace(faixas, "\\.", "_")))
+  
+  df.defictRealocado <- inner_join(df.defictRealocado, df.faixasDeficit, by = "tipoUsina") %>% 
+    mutate(tipoUsina = tipoUsinaFaixa, 
+           disponibilidade = disponibilidade * faixas,
+           cvu = cvu * (1 + faixas)) %>% 
+    filter(disponibilidade > 0) %>% 
+    select(-tipoUsinaFaixa, -faixas) %>% 
+    arrange(tipoUsina, codUsina, subsistema, anoMes, id)
   
   # horizonte do balanco
   quantidadeMesesHorizonte <- ((df.casosAnalise$fimHorizonte %/% 100) * 12 + df.casosAnalise$fimHorizonte %% 100) - 
