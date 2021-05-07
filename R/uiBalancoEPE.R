@@ -54,8 +54,8 @@ uiBalancoEPE <- fluidPage(
                  tags$div(style="display:inline-block; width:100px",
                           selectInput(inputId = "codModelo",
                                       label = "Modelo:",
-                                      choices = c("NEWAVE" = 1 #,
-                                                  #"SUISHI" = 2
+                                      choices = c("NEWAVE" = 1,
+                                                  "SUISHI" = 2
                                                   ),
                                       selected = 1)),
                  

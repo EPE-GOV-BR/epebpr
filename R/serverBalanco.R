@@ -182,6 +182,7 @@ serverBalanco <- function(input, output, session) {
         setProgress(message = "Calculando disponibilidade hidr\u00E1ulica...")
         mensagemDisponibilidade <- calculaDisponibilidadeHidro(baseSQLite,
                                                                pastaCaso,
+                                                               pastaSaidas,
                                                                as.integer(input$tipoCaso),
                                                                as.integer(input$numeroCaso),
                                                                as.integer(input$codModelo),

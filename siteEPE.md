@@ -40,7 +40,10 @@ Para coment&aacute;rios sobre a ferramenta, favor enviar e-mail para modelos.sgr
 
 # Vers&otilde;es
 
-### v.0.11.0
+### v.0.11.2
+Corre&ccedil;&atilde;o da disponibilidade por step de d&eacute;ficit que antes n&atilde;o estava com mesma disponibilidade em cada step. Disponibiliza&ccedil;&atilde;o de vers&atilde;o beta com leitura de PDISP_QMIN do SUISHI. A sa&iacute;da do SUISHI apresenta problemas com o valor de altura l&iacute;quida (QUED) e precisa ser revisto na fonte.
+
+### v.0.11.1
 Teste com inclus&atilde;o de funcionalidade que distribui o d&eacute;ficit entre os subsistemas por faixas.
 
 ### v.0.11.0

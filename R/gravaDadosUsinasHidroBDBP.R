@@ -47,8 +47,18 @@ gravaDadosUsinasHidroBDBP <- function(pasta, conexao, tipoCaso, numeroCaso, codM
     select(-nomeUsina, -codSubsistema)
   df.configuracaoHidro <- leituraConfiguracaoHidro(pasta) %>% select(codUsina, codREE, idUsinaExistente)
   # une dados em um unico data frame
-  df.dadosUsinasHidro <- inner_join(df.dadosUsinasHidroeletricas, df.polinomiosVazaoNivelJusante, by = c("codUsina"))
-  df.dadosUsinasHidro <- inner_join(df.dadosUsinasHidro, df.configuracaoHidro, by = c("codUsina"))
+  # se o modelo for o SUISHI (codModelo = 2) deixa todas as usinas mesmo que nao tenham dados de configuracao  
+  if (codModelo == 2) {
+    df.dadosUsinasHidro <- inner_join(df.dadosUsinasHidroeletricas, df.polinomiosVazaoNivelJusante, by = c("codUsina"))
+    df.dadosUsinasHidro <- left_join(df.dadosUsinasHidro, df.configuracaoHidro, by = c("codUsina")) %>% 
+      mutate(idUsinaExistente = if_else(is.na(idUsinaExistente),
+                                        "-",
+                                        idUsinaExistente))
+    
+  } else {
+    df.dadosUsinasHidro <- inner_join(df.dadosUsinasHidroeletricas, df.polinomiosVazaoNivelJusante, by = c("codUsina"))
+    df.dadosUsinasHidro <- inner_join(df.dadosUsinasHidro, df.configuracaoHidro, by = c("codUsina"))
+  }
   
   # ajusta dados de acordo com a tabela BPO_A03_DADOS_UHE
   df.dadosUsinasHidro <- df.dadosUsinasHidro %>% mutate(tipoCaso = tipoCaso, 
