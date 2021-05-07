@@ -90,7 +90,9 @@ calculaBalancoParalelo <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
   
   df.defictRealocado <- inner_join(df.defictRealocado, df.faixasDeficit, by = "tipoUsina") %>% 
     mutate(tipoUsina = tipoUsinaFaixa, 
-           disponibilidade = disponibilidade * faixas,
+           disponibilidade = if_else(faixas > 0, 
+                                     disponibilidade * 0.005,
+                                     0),
            cvu = cvu * (1 + faixas)) %>% 
     filter(disponibilidade > 0) %>% 
     select(-tipoUsinaFaixa, -faixas) %>% 
