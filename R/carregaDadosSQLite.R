@@ -62,11 +62,11 @@ carregaDadosSQLite <- function(baseSQLite, pastaCaso, pastaSaidas, tipoCaso, num
     if (!file.exists(arquivoInfoMDI)) {
       stop(paste0("arquivo ", arquivoInfoMDI, " com dados gerais do MDI n\u00E3o encontrado!"))
     }
-    
     df.infoMDI <- read_delim(arquivoInfoMDI, 
                              locale = locale(encoding = "latin1"),
                              delim = ";", 
-                             col_types = "cc")
+                             col_types = "cc",
+                             trim_ws = TRUE)
     
     anoMesInicioMDI <- df.infoMDI %>% filter(variavel == "inicioHorizonteEstudo") %>% pull(valor) %>% as.integer()
     anoMesFimMDI <- df.infoMDI %>% filter(variavel == "fimHorizonteEstudo") %>% pull(valor) %>% as.integer()
