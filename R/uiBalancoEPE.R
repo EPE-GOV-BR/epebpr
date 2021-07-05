@@ -230,7 +230,7 @@ uiBalancoEPE <- fluidPage(
                                                         label = NULL,
                                                         min = 2018,
                                                         max = 2050,
-                                                        value = 2020)),
+                                                        value = 2021)),
                                   
                                   # Espaco entre inputs
                                   tags$div(style="display:inline-block; width:7px"),
@@ -242,7 +242,7 @@ uiBalancoEPE <- fluidPage(
                                                         label = NULL,
                                                         min = 2018,
                                                         max = 2060,
-                                                        value = 2029)),
+                                                        value = 2031)),
                                   tags$br(),
                                   # Input dos casos na base
                                   selectInput(inputId = "tipoGrafico",
