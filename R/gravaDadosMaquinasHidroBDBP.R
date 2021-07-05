@@ -45,7 +45,7 @@ gravacaoDadosMaquinasHidroBDBP <- function(pastaCaso, conexao, tipoCaso, numeroC
   df.dadosConfiguracao <- lt.dadosUsinasHidro$df.dadosConfiguracao %>% select(-nomeUsina)
   
   df.configuracaoHidro <- leituraConfiguracaoHidro(pastaCaso) %>% 
-    select(codUsina, nomeUsina, codREE, idUsinaExistente, idModficacaoUsina)
+    select(codUsina, nomeUsina, codREE, idUsinaExistente, idModificacaoUsina)
   
   lt.alteracaoDadosUsinasHidro <- leituraAlteracaoDadosUsinasHidro(pastaCaso)
   df.alteracaoConjunto <- lt.alteracaoDadosUsinasHidro$df.alteracaoConjunto %>% rename(potenciaUnitaria = potenciaEfetiva)
@@ -59,13 +59,13 @@ gravacaoDadosMaquinasHidroBDBP <- function(pastaCaso, conexao, tipoCaso, numeroC
   # as informacoes sao definidas apenas para o inicio do horizonte de simulacao
   df.MaqUHE <- inner_join(df.dadosConfiguracao, df.configuracaoHidro, by = c("codUsina")) %>% 
     filter((!str_detect(nomeUsina, "FIC ") & !str_detect(nomeUsina, "FICT"))) %>% 
-    select(codUsina,idUsinaExistente,idModficacaoUsina,conjunto,numeroMaquinas,potenciaUnitaria,quedaEfetiva) %>% 
+    select(codUsina,idUsinaExistente,idModificacaoUsina,conjunto,numeroMaquinas,potenciaUnitaria,quedaEfetiva) %>% 
     mutate(aux = 1) %>% inner_join(mutate(definePeriodo(pastaCaso), aux = 1), by = c("aux")) %>% 
     left_join(df.alteracaoConjunto, by = c("codUsina","conjunto","anoMes")) %>% 
     left_join(df.dadosExpansaoHidroTempo, by = c("codUsina","conjunto","anoMes")) %>% 
     mutate(numeroMaquinasFinal = ifelse((idUsinaExistente=="NC"), 
                                          0, 
-                                         ifelse(!is.na(numeroMaquinas.y) & idModficacaoUsina==1 & is.na(numeroMaquinas), 
+                                         ifelse(!is.na(numeroMaquinas.y) & idModificacaoUsina==1 & is.na(numeroMaquinas), 
                                                 numeroMaquinas.y, 
                                                 ifelse((idUsinaExistente=="EE" | idUsinaExistente=="NE"), 
                                                        ifelse(!is.na(numeroMaquinas), 
@@ -74,7 +74,7 @@ gravacaoDadosMaquinasHidroBDBP <- function(pastaCaso, conexao, tipoCaso, numeroC
                                                        numeroMaquinas.x)))) %>% 
     mutate(potenciaUnitariaFinal = ifelse((idUsinaExistente=="NC"), 
                                         0, 
-                                        ifelse(!is.na(potenciaUnitaria.y) & idModficacaoUsina==1 & is.na(potenciaUnitaria), 
+                                        ifelse(!is.na(potenciaUnitaria.y) & idModificacaoUsina==1 & is.na(potenciaUnitaria), 
                                                potenciaUnitaria.y, 
                                                ifelse((idUsinaExistente=="EE" | idUsinaExistente=="NE"), 
                                                       ifelse(!is.na(potenciaUnitaria), 
