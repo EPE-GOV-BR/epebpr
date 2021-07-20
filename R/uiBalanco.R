@@ -99,7 +99,7 @@ uiBalanco <- fluidPage(
                                        label = HTML("Distribui&ccedil;&atilde;o D&eacute;ficit [%]:"),
                                        min = 0,
                                        max = 100,
-                                       value = 5)),
+                                       value = 100)),
                  tags$br(),
                  
                  # Entrada de texto para a descricao do caso

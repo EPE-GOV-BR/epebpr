@@ -149,7 +149,7 @@ serverBalanco <- function(input, output, session) {
         return("Outro tipo de simula\u00E7\u00E3o. <font color=red>Verifique o arquivo dger!</font>")
       }
     } else {
-      mensagemLeitura <- "Processando..."
+      mensagemLeitura <- "Processando a Leitura de Dados..."
     }
     
     withProgress(message = mensagemLeitura, value = 0, {
@@ -176,7 +176,6 @@ serverBalanco <- function(input, output, session) {
       }
 
       # bloco de calculo da disponibilidade hidro
-      incProgress(1/3)
       # verifica se o usuario escolheu efetuar o calculo da disponibilidade hidro
       if (as.logical(input$disponibilidadeHidro)) {
         setProgress(message = "Calculando disponibilidade hidr\u00E1ulica...")
@@ -192,7 +191,6 @@ serverBalanco <- function(input, output, session) {
       }
       
       # bloco de calculo de balanco
-      incProgress(1/3)
       # verifica se o usuario escolheu efetuar o calculo do BP
       if (as.logical(input$execucaoBP)) {
         setProgress(message = "Calculando balan\u00E7o de pot\u00EAncia...")

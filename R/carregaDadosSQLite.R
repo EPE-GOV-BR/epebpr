@@ -26,6 +26,9 @@
 carregaDadosSQLite <- function(baseSQLite, pastaCaso, pastaSaidas, tipoCaso, numeroCaso, codModelo, descricaoCaso, horasPonta, 
                                idDemandaLiquida, sistemasNaoModulamPonta, sistemasNaoModulamMedia,
                                codTucurui, cotaLimiteTucurui, geracaoLimiteTucurui) {
+  # barra de progresso
+  incProgress(3/100, detail = "Leitura de Dados Gerais")
+  
   # pega dados gerais do NEWAVE
   df.dadosGerais <- leituraDadosGerais(pastaCaso)
   # pega dados de configuracao hidro
@@ -54,6 +57,9 @@ carregaDadosSQLite <- function(baseSQLite, pastaCaso, pastaSaidas, tipoCaso, num
     stop("Simula\u00E7\u00E3o final ap\u00F3s converg\u00EAncia PDDE do NEWAVE deve ser com s\u00E9ries sint\u00E9ticas ou hist\u00F3ricas!")
   }
   
+  # barra de progresso
+  incProgress(3/100, detail = "Leitura dos Dados do MDI")  
+  
   # somente verifica arquivo do MDI para casos do PDE
   if (tipoCaso == 1) { 
     # define inicio e fim de caso MDI
@@ -75,6 +81,9 @@ carregaDadosSQLite <- function(baseSQLite, pastaCaso, pastaSaidas, tipoCaso, num
     anoMesInicioMDI <- NA
     anoMesFimMDI <- NA
   }
+  
+  # barra de progresso
+  incProgress(4/100, detail = "Gravando no Banco de Dados")
 
   # inicio do processo de gravacao das tabelas BPO_A01_CASOS_ANALISE, BPO_A02_SUBSISTEMAS, BPO_A02_REES e BPO_A19_FATOR_PONTA_OFR
   # abre conexao

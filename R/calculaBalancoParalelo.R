@@ -23,13 +23,14 @@
 #' 
 #' @export
 calculaBalancoParalelo <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, cvuTransmissao, cvuHidro, 
-                                   cvuRenovaveis, cvuOutrasTermicas, balancoResumido = T, distribuicaoDeficit = 0.05) {
+                                   cvuRenovaveis, cvuOutrasTermicas, balancoResumido = T, distribuicaoDeficit = 1) {
+  # barra de progresso
+  incProgress(0.05, detail = "Caregando Dados")
   
   # abre conexao
   conexao <- dbConnect(RSQLite::SQLite(), baseSQLite)
   # fecha conexao com a base SQLite na saida da funcao, seja por erro ou normalmente
   on.exit(dbDisconnect(conexao))
-  
   # seleciona os sistemas do balanco
   query <- paste0("SELECT A02_NR_SUBSISTEMA AS subsistema, A02_TP_FICTICIO AS tipoSistema ", 
                   "FROM BPO_A02_SUBSISTEMAS WHERE A01_TP_CASO = ", tipoCaso, " AND A01_NR_CASO = ", numeroCaso, 
@@ -247,6 +248,8 @@ calculaBalancoParalelo <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
   if (balancoResumido == F) {
     # for criado para nao estourar a alocacao de memoria e ao mesmo tempo nao compromenter desempenho na gravacao na base (gravacao em disco)
     for (andaJanela in 1:(quantidadeJanela - 1)) {
+      # barra de progresso
+      incProgress((1/(quantidadeJanela - 1))*0.45, detail = paste(round(andaJanela*100/(quantidadeJanela - 1), 0),"%"))
       lt.resultado <- foreach(cenario = seq(janelaCenarios[andaJanela], (janelaCenarios[andaJanela + 1] - 1)),
                               .combine = "subRBind",
                               .packages = c("dplyr", "clpAPI", "DBI", "RSQLite"))  %dopar%  balancoPeriodoClp(df.demandasAnoMesSerie$anoMes[cenario],
@@ -277,6 +280,8 @@ calculaBalancoParalelo <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
   # se for balanco resumido grava BPO_A16_BALANCO e BPO_A20_BALANCO_SUBSISTEMA
   } else {
     for (andaJanela in 1:(quantidadeJanela - 1)) {
+      # barra de progresso
+      incProgress((1/(quantidadeJanela - 1))*0.45, detail = paste(round(andaJanela*100/(quantidadeJanela - 1), 0),"%"))
       lt.resultado <- foreach(cenario = seq(janelaCenarios[andaJanela], (janelaCenarios[andaJanela + 1] - 1)),
                               .combine = "subRBind",
                               .packages = c("dplyr", "clpAPI", "DBI", "RSQLite")) %dopar% balancoPeriodoClp(df.demandasAnoMesSerie$anoMes[cenario],

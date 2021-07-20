@@ -45,6 +45,8 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipo
   
   # faz calculos com base em dados do SUISHI (codModelo = 2) ou do NEWAVE (codModelo = 1)
   if (codModelo == 2) {
+    # barra de progresso
+    incProgress(0.4, detail = "Disponibilidade Hidro pelo SUISHI")
     
     # descarta usinas com STATUS = 'NC' (fora do deck)
     sql <- paste0("SELECT 
@@ -164,6 +166,9 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipo
     
   } else {
     
+    # barra de progresso
+    incProgress(3/100, detail = "Atualiza\u00E7\u00E3o de Submotoriza\u00E7\u00E3o")
+    
     # atualizacao de submotorizacao
     quantidadeExpansaoHidro <- df.dadosExpansaoHidro <- leituraDadosExpansaoUsinasHidro(pastaCaso) %>% 
       extract2("df.dadosExpansaoHidro") %>% nrow()
@@ -192,6 +197,9 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipo
       dbExecute(conexaoSQLite, "COMMIT TRANSACTION;")
     }
     # fim atualizacao de submotorizacao
+    
+    # barra de progresso
+    incProgress(3/100, detail = "REEs que utilizam a GHm\u00E9dia")
     
     # filtro dos ree com calculo tipo 1
     sql <- paste0("SELECT A02_NR_REE FROM BPO_A02_REES
@@ -269,6 +277,9 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipo
                   A.A01_CD_MODELO = ", codModelo, ";")
     df.potMaquinas<- dbGetQuery(conexaoSQLite, sql)
     
+    # barra de progresso
+    incProgress(4/100, detail = "Excluindo outras execu\u00E7\u00F5s de BP para o mesmo caso")
+    
     # limpa base BPO_A08_DADOS_CALCULADOS_UHE de outras execucoes para o mesmo caso
     dbExecute(conexaoSQLite, "PRAGMA locking_mode = EXCLUSIVE;")
     dbExecute(conexaoSQLite, "PRAGMA journal_mode = TRUNCATE;")
@@ -295,6 +306,8 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipo
     quantidadeJanela <- length(janelaSeries)
     
     for (andaJanela in 1:(quantidadeJanela - 1)) {
+      # barra de progresso
+      incProgress((1/(quantidadeJanela - 1))*0.3, detail = paste(round(andaJanela*100/(quantidadeJanela - 1), 0),"%"))
       
       df.dadosCalculadosUHE <- inner_join(df.dadosVigentesUHE, 
                                           filter(df.saidasHidro, between(A06_NR_SERIE, janelaSeries[andaJanela], (janelaSeries[andaJanela + 1] - 1))), 

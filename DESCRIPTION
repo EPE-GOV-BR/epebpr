@@ -1,11 +1,12 @@
 Package: epebpr
 Title: Balanco de Potencia
 Type: Package
-Version: 0.11.4
-Date: 2021-05-07
+Version: 0.11.5
+Date: 2021-20-07
 Author: Gustavo Haydt [aut, cre],
   Simone Brandao [aut, cre],
-  Caio Leocadio [aut, cre]
+  Caio Leocadio [aut, cre],
+  Saulo Silva [aut, cre]
 Maintainer: Modelos EPE-DEE-SGR <modelos.sgr@epe.gov.br>
 Description: Ferramenta que efetua os balancos de geracao, transmissao e carga para os patamares de ponta, permitindo calcular os indicadores do criterio de suprimento.  
 License: GPL-2
