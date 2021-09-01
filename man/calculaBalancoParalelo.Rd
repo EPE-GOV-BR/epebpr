@@ -14,7 +14,7 @@ calculaBalancoParalelo(
   cvuRenovaveis,
   cvuOutrasTermicas,
   balancoResumido = T,
-  distribuicaoDeficit = 0.05
+  distribuicaoDeficit = 1
 )
 }
 \arguments{

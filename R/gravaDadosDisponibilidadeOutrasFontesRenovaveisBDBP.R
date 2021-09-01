@@ -163,11 +163,8 @@ gravacaoDadosDisponibilidadeOutrasFontesBDBP <- function(pastaCaso, conexao, tip
     }
     
     # le arquivo com as expansoes do MDI - trata ";" no fim para nao ter avisos
-    df.expansao <- read_lines(paste(pastaCaso, arquivoExpansao, sep = "/"), locale = locale(encoding = "latin1")) %>% 
-      str_remove(";$") %>% 
-      read_delim(guess_max = 10, 
-                 delim = ";", 
-                 col_types = cols()) %>% 
+    df.expansao <- read_delim(paste(pastaCaso, arquivoExpansao, sep = "/"), delim = ";", col_names = T, local = locale(encoding = "latin1")) %>% 
+      select(1:(ncol(.) -1)) %>% 
       select(df.relacaoIndicativas$NomeFonteMDI) # filtra somente as indicativas (as fontes estao em colunas)
     
     # cria vetor com todos os meses no horizonte do MDI e adiciona na df.expansao
