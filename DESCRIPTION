@@ -1,8 +1,8 @@
 Package: epebpr
 Title: Balanco de Potencia
 Type: Package
-Version: 0.11.6
-Date: 2021-01-09
+Version: 0.11.7
+Date: 2021-10-06
 Author: Gustavo Haydt [aut, cre],
   Simone Brandao [aut, cre],
   Caio Leocadio [aut, cre],
@@ -19,6 +19,7 @@ Depends: R (>= 3.6),
   writexl,
   dplyr, 
   stringr,
+  stringi,
   tidyr,
   clpAPI,
   DBI,
