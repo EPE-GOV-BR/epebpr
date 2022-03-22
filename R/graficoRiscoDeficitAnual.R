@@ -14,7 +14,7 @@
 #'
 #' @export
 graficoRiscoDeficitAnual <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, inicioHorizonteGrafico, fimHorizonteGrafico, 
-                                     tituloGrafico = paste0("Risco de D\u00E9ficit (LOLP) - Caso ", numeroCaso)) {
+                                     tituloGrafico = paste0("Risco de Déficit (LOLP) - Caso ", numeroCaso)) {
   
   conexao <- dbConnect(RSQLite::SQLite(), baseSQLite)
   # query no banco com join para buscar defict e demanda por serie para calculo da profundidade (informacao pelo SIN)
@@ -77,13 +77,13 @@ graficoRiscoDeficitAnual <- function(baseSQLite, tipoCaso, numeroCaso, codModelo
   graficoRisco <- plot_ly(data = tib.resultados, x = ~ano, y = ~riscoAnual, name = "", type = "bar", showlegend = F,
                           textposition = 'outside', texttemplate = "<b>%{y:.1%}</b>",
                           # <extra></extra> remove o trece do hover
-                          hovertemplate = "<b>Risco de D\u00E9ficit</b>: %{y:.1%}<br><b>Ano</b>: %{x}<extra></extra>") %>%
+                          hovertemplate = "<b>Risco de Déficit</b>: %{y:.1%}<br><b>Ano</b>: %{x}<extra></extra>") %>%
     add_trace(tib.resultados, x = ~ano, y = 0.05, type = 'scatter', mode = 'lines', color = I("red"),
-              hovertemplate = "<b>Limite de crit\u00E9rio de suprimento: %{y:.0%}<extra></extra>") %>%
+              hovertemplate = "<b>Limite de critério de suprimento: %{y:.0%}<extra></extra>") %>%
     layout( 
       title = paste0("<b>", tituloGrafico, "</b>"),
       yaxis = list( 
-        title = "<b>Risco de D\u00E9ficit</b>", 
+        title = "<b>Risco de Déficit</b>", 
         tickformat = "%"),
       xaxis = list(
         type = 'category')

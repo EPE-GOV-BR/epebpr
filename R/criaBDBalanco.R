@@ -16,7 +16,7 @@
 #' @export
 criaBDBalanco <- function(caminho, nomeBD) {
   if (!dir.exists(caminho)) {
-    mensagem <- "Pasta definida para gravar banco de dados n\u00E3o existe!"
+    mensagem <- "Pasta definida para gravar banco de dados não existe!"
   } else {
     caminhoSQL <- system.file("SQL", package = "epebpr")
     # monta query que vai criar estrutura do banco de dados

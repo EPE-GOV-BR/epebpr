@@ -14,7 +14,7 @@
 #'
 #' @export
 graficoRiscoDeficit <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, inicioHorizonteGrafico, fimHorizonteGrafico, 
-                                tituloGrafico = paste0("Risco de D\u00E9ficit - Caso ", numeroCaso)) {
+                                tituloGrafico = paste0("Risco de Déficit - Caso ", numeroCaso)) {
   
   conexao <- dbConnect(RSQLite::SQLite(), baseSQLite)
   # query no banco com join para buscar defict e demanda por serie para calculo da profundidade (informacao pelo SIN)
@@ -101,8 +101,8 @@ graficoRiscoDeficit <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, ini
     geom_text(aes(label = ifelse(anoMes %in% maximosAnuais, percent(riscoMensal, accuracy = 0.1, scale = 100, suffix = "%", decimal.mark = ","), "")), 
               nudge_y = (ceiling(max(tib.resultadosMes$riscoMensal)*10)/10 * 0.05),
               hjust = 0.4, show.legend = FALSE, fontface = "bold", size = 5, family = "sans") +
-    scale_x_date(name = "M\u00EAs", date_labels = "%b-%y", expand = c(0,0), breaks = marcasEixoMes) + 
-    scale_y_continuous(name = "Risco de D\u00E9ficit", expand = c(0,0), labels = percent_format(accuracy = 0.1, scale = 100, suffix = "%", decimal.mark = ","),
+    scale_x_date(name = "Mês", date_labels = "%b-%y", expand = c(0,0), breaks = marcasEixoMes) + 
+    scale_y_continuous(name = "Risco de Déficit", expand = c(0,0), labels = percent_format(accuracy = 0.1, scale = 100, suffix = "%", decimal.mark = ","),
                        breaks = seq(0, ceiling(max(tib.resultadosMes$riscoMensal)*10)/10, ceiling(max(tib.resultadosMes$riscoMensal)*10)/10/16),
                        limits = c(0, ceiling(max(tib.resultadosMes$riscoMensal)*10)/10)) +
     scale_fill_manual(name = NULL, values = "steelblue") +

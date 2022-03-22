@@ -21,7 +21,7 @@ gravacaoDadosHidroVigenteBDBP <- function(pastaCaso, conexao, tipoCaso, numeroCa
     stop("favor indicar a pasta com os arquivos do NEWAVE")
   }
   if (missing(conexao)) {
-    stop("favor indicar a conex\u00E3o com o banco de dados")
+    stop("favor indicar a conexão com o banco de dados")
   }
   if (missing(tipoCaso)) {
     stop("favor indicar tipo do caso")

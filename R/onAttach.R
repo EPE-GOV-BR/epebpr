@@ -6,7 +6,7 @@
   # for (andaDependencias in 1:length(dependencias)) {
   #   if (!(dependencias[andaDependencias] %in% rownames(installed.packages()))) {
   #     if (dependencias[andaDependencias] == 'leitorrcepel') {
-  #       packageStartupMessage(paste0("Biblioteca ", dependencias[andaDependencias], " n\u00E3o encontrada. Favor instalar."))
+  #       packageStartupMessage(paste0("Biblioteca ", dependencias[andaDependencias], " não encontrada. Favor instalar."))
   #     } else {
   #       install.packages(dependencias[andaDependencias], repos = "https://cran.fiocruz.br")
   #     }

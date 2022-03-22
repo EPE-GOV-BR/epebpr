@@ -22,7 +22,7 @@ gravacaoDadosReservaBDBP <- function(pastaCaso, conexao, tipoCaso, numeroCaso, c
     stop("favor indicar a pasta com os arquivos do NEWAVE")
   }
   if (missing(conexao)) {
-    stop("favor indicar a conex\u00E3o com o banco de dados")
+    stop("favor indicar a conexão com o banco de dados")
   }
   if (missing(tipoCaso)) {
     stop("favor indicar tipo do caso")
@@ -39,7 +39,7 @@ gravacaoDadosReservaBDBP <- function(pastaCaso, conexao, tipoCaso, numeroCaso, c
   # verifica exitencia do excel
   if (!file.exists(arquivoDadosOFR)) {
     dbDisconnect(conexao)
-    stop(paste0("arquivo ", arquivoDadosOFR, " com dados de oferta renov\u00E1vel n\u00E3o encontrado em ", pastaCaso))
+    stop(paste0("arquivo ", arquivoDadosOFR, " com dados de oferta renov\u00E1vel não encontrado em ", pastaCaso))
   }
   # verifica se o excel possui as abas corretas
   abasExcelDadosOFR <- c("ReservaRenovavel", "Reserva")
@@ -47,17 +47,17 @@ gravacaoDadosReservaBDBP <- function(pastaCaso, conexao, tipoCaso, numeroCaso, c
   abasExistentes <- setdiff(abasExcelDadosOFR, abasExcelDadosOFRLidos)
   if(length(abasExistentes) != 0) {
     dbDisconnect(conexao)
-    stop(paste0("arquivo ", arquivoDadosOFR, " n\u00E3o possui a(s) aba(s) ", paste(abasExistentes, collapse = ", "), 
+    stop(paste0("arquivo ", arquivoDadosOFR, " não possui a(s) aba(s) ", paste(abasExistentes, collapse = ", "), 
                 " ou h\u00E1 problema com o(s) nome(s) da(s) aba(s)!"))
   }
   
   # reserva em relacao a carga
   df.reserva <- read_xlsx(arquivoDadosOFR, sheet = "Reserva")
-  cabecalho <- c('subsistema', 'janeiro', 'fevereiro', 'mar\u00E7o', 'abril', 'maio', 'junho', 'julho', 
+  cabecalho <- c('subsistema', 'janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 
                  'agosto', 'setembro', 'outubro', 'novembro', 'dezembro')
   if(!identical(str_to_lower(colnames(df.reserva)), cabecalho)) {
     dbDisconnect(conexao)
-    stop(paste0("aba Reserva do arquivo ", arquivoDadosOFR, " n\u00E3o possui o cabe&ccedil;alho correto: ", paste(cabecalho, collapse = "| ")))
+    stop(paste0("aba Reserva do arquivo ", arquivoDadosOFR, " não possui o cabeçalho correto: ", paste(cabecalho, collapse = "| ")))
   }
   # acerta nome das colunas e transforma meses das colunas para variavel mes
   colnames(df.reserva) <- c("subsistema", 1:12) 
@@ -86,11 +86,11 @@ gravacaoDadosReservaBDBP <- function(pastaCaso, conexao, tipoCaso, numeroCaso, c
   
   # reserva em relacao as renovaveis
   df.reservaRenovavel <- read_xlsx(arquivoDadosOFR, sheet = "ReservaRenovavel")
-  cabecalho <- c('a18_cd_tipo_fonte', 'subsistema', 'janeiro', 'fevereiro', 'mar\u00E7o', 'abril', 'maio', 'junho', 'julho', 
+  cabecalho <- c('a18_cd_tipo_fonte', 'subsistema', 'janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 
                  'agosto', 'setembro', 'outubro', 'novembro', 'dezembro')
   if(!identical(str_to_lower(colnames(df.reservaRenovavel)), cabecalho)) {
     dbDisconnect(conexao)
-    stop(paste0("aba ReservaRenovavel do arquivo ", arquivoDadosOFR, " n\u00E3o possui o cabe&ccedil;alho correto: ", paste(cabecalho, collapse = "| ")))
+    stop(paste0("aba ReservaRenovavel do arquivo ", arquivoDadosOFR, " não possui o cabeçalho correto: ", paste(cabecalho, collapse = "| ")))
   }
   # acerta nome das colunas e transforma meses das colunas para variavel mes
   colnames(df.reservaRenovavel) <- c("tipoFonte", "subsistema", 1:12) 

@@ -16,7 +16,7 @@
 #' @export
 graficoCVARSubsistema <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
                                   inicioHorizonteGrafico, fimHorizonteGrafico, 
-                                  tituloGraficoCVARMes = paste0("Profundidade de D\u00E9ficit - CVAR Mensal 5% - Caso ", numeroCaso)) {
+                                  tituloGraficoCVARMes = paste0("Profundidade de Déficit - CVAR Mensal 5% - Caso ", numeroCaso)) {
   
   conexao <- dbConnect(RSQLite::SQLite(), baseSQLite)
   # query no banco com join para buscar defict e demanda por serie para calculo da profundidade
@@ -96,16 +96,16 @@ graficoCVARSubsistema <- function(baseSQLite, tipoCaso, numeroCaso, codModelo,
   marcasEixoMes <- tib.resultadosCvarMes %>% filter(months(anoMes) %in% c("janeiro","julho")) %>% pull(anoMes) %>% c(., max(tib.resultadosCvarMes$anoMes))
   
   grafico <- plot_ly(data = tib.resultadosCvarMes, x = ~anoMes, y = ~cvar, color = ~A02_TX_DESCRICAO_SUBSISTEMA, type = "bar",
-          hovertemplate = "<b>D\u00E9ficit % da Demanda</b>: %{y:.1%}<br><b>M\u00EAs</b>: %{x|%Y-%m}") %>% 
+          hovertemplate = "<b>Déficit % da Demanda</b>: %{y:.1%}<br><b>Mês</b>: %{x|%Y-%m}") %>% 
     layout( 
       title = paste0("<b>", tituloGraficoCVARMes, "</b>"),
       legend = list(title = list(text='<b> Subsistemas </b>')), #orientation = 'h'),
       yaxis = list( 
-        title = "<b>D\u00E9ficit % da Demanda</b>", 
+        title = "<b>Déficit % da Demanda</b>", 
         tickformat = "%" 
       ), 
       xaxis = list( 
-        title = "<b>M\u00EAs</b>", 
+        title = "<b>Mês</b>", 
         ticktext = as.list(as.character(as.yearmon(marcasEixoMes))), 
         tickvals = as.list(marcasEixoMes)
         )
@@ -124,7 +124,7 @@ graficoCVARSubsistema <- function(baseSQLite, tipoCaso, numeroCaso, codModelo,
   #   #           hjust = 0.2,
   #   #           show.legend = FALSE, 
   #   #           fontface = "bold", size = 5, family = "sans") +
-  #   scale_x_date(name = "M\u00EAs", date_labels = "%b-%y", expand = c(0,0), breaks = marcasEixoMes) +
+  #   scale_x_date(name = "Mês", date_labels = "%b-%y", expand = c(0,0), breaks = marcasEixoMes) +
   #   scale_y_continuous(name = "% da Demanda", expand = c(0,0), labels = percent_format(accuracy = 0.1, scale = 100, suffix = "%", decimal.mark = ","))#,
   #                      #breaks = seq(0, ceiling(max(tib.resultadosCvarMes$cvar)*10)/10, ceiling(max(tib.resultadosCvarMes$cvar)*10)/10/5),
   #                      #limits = c(0, ceiling(max(tib.resultadosCvarMes$cvar)*10)/10)) +

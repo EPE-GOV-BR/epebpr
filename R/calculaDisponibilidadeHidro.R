@@ -167,7 +167,7 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipo
   } else {
     
     # barra de progresso
-    incProgress(3/100, detail = "Atualiza\u00E7\u00E3o de Submotoriza\u00E7\u00E3o")
+    incProgress(3/100, detail = "Atualização de Submotorização")
     
     # atualizacao de submotorizacao
     quantidadeExpansaoHidro <- df.dadosExpansaoHidro <- leituraDadosExpansaoUsinasHidro(pastaCaso) %>% 
@@ -199,7 +199,7 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipo
     # fim atualizacao de submotorizacao
     
     # barra de progresso
-    incProgress(3/100, detail = "REEs que utilizam a GHm\u00E9dia")
+    incProgress(3/100, detail = "REEs que utilizam a GHmédia")
     
     # filtro dos ree com calculo tipo 1
     sql <- paste0("SELECT A02_NR_REE FROM BPO_A02_REES
@@ -278,7 +278,7 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipo
     df.potMaquinas<- dbGetQuery(conexaoSQLite, sql)
     
     # barra de progresso
-    incProgress(4/100, detail = "Excluindo outras execu\u00E7\u00F5s de BP para o mesmo caso")
+    incProgress(4/100, detail = "Excluindo outras execuç\u00F5s de BP para o mesmo caso")
     
     # limpa base BPO_A08_DADOS_CALCULADOS_UHE de outras execucoes para o mesmo caso
     dbExecute(conexaoSQLite, "PRAGMA locking_mode = EXCLUSIVE;")

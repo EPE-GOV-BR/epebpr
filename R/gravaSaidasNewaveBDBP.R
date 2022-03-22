@@ -23,10 +23,10 @@ gravaSaidasNewaveBDBP <- function(pasta, pastaSaidas, conexao, tipoCaso, numeroC
     stop("favor indicar a pasta com os arquivos do NEWAVE")
   }
   if (missing(pastaSaidas)) {
-    stop("favor indicar a pasta com os arquivos de sa\u00EDda do NEWAVE")
+    stop("favor indicar a pasta com os arquivos de saída do NEWAVE")
   }
   if (missing(conexao)) {
-    stop("favor indicar a conex\u00E3o com o banco de dados")
+    stop("favor indicar a conexão com o banco de dados")
   }
   if (missing(tipoCaso)) {
     stop("favor indicar tipo do caso")

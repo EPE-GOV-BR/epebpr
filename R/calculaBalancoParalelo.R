@@ -38,7 +38,7 @@ calculaBalancoParalelo <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
   df.subsistemas <- dbGetQuery(conexao, query)
   if(nrow(df.subsistemas) == 0) {
     dbDisconnect(conexao)
-    stop("N\u00E3o h\u00E1 dados de sistemas (BPO_A02_SUBSISTEMAS) para o caso!")
+    stop("Não h\u00E1 dados de sistemas (BPO_A02_SUBSISTEMAS) para o caso!")
   }
   
   # seleciona o numero total de series hidrologicas
@@ -316,5 +316,5 @@ calculaBalancoParalelo <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
   # # fecha conexao
   # dbDisconnect(conexao)
   
-  return("Balan\u00E7o de pot\u00EAncia executado e gravado com sucesso!")
+  return("Balanço de potência executado e gravado com sucesso!")
 }

@@ -1,61 +1,61 @@
-# Introdu&ccedil;&atilde;o 
+# Introdução 
 
-Balan&ccedil;o de pot&ecirc;ncia: A ferramenta tem como objetivo avaliar os montantes de pot&ecirc;ncia necess&aacute;rios nos momentos em que o sistema apresenta demanda m&aacute;xima instant&acirc;nea com o objetivo de verificar as condi&ccedil;&otilde;es de seu atendimento. Isto &eacute;, verificando a possibilidade de d&eacute;ficits e a auxiliando na avalia&ccedil;&atilde;o de contrata&ccedil;&atilde;o de pot&ecirc;ncia para o sistema. A ferramenta mant&eacute;m a compatibilidade com a an&aacute;lise energ&eacute;tica previamente efetuada.
+Balanço de potência: A ferramenta tem como objetivo avaliar os montantes de potência necessários nos momentos em que o sistema apresenta demanda máxima instant&acirc;nea com o objetivo de verificar as condiç&otilde;es de seu atendimento. Isto é, verificando a possibilidade de déficits e a auxiliando na avaliação de contratação de potência para o sistema. A ferramenta mantém a compatibilidade com a análise energética previamente efetuada.
 
-A ferramenta de balan&ccedil;o de pot&ecirc;ncia foi desenvolvida em linguagem de programa&ccedil;&atilde;o R e sua interface foi desenvolvida com Shiny, que &eacute; um pacote R que facilita a cria&ccedil;&atilde;o de aplica&ccedil;&otilde;es web diretamente do R e utiliza CSS, widgets, html e a&ccedil;&otilde;es JavaScript para maior flexibilidade. A ferramenta tamb&eacute;m usa o pacote clpAPI, que &eacute; uma Interface R para a API em C do COIN-OR Clp.
+A ferramenta de balanço de potência foi desenvolvida em linguagem de programação R e sua interface foi desenvolvida com Shiny, que é um pacote R que facilita a criação de aplicaç&otilde;es web diretamente do R e utiliza CSS, widgets, html e aç&otilde;es JavaScript para maior flexibilidade. A ferramenta também usa o pacote clpAPI, que é uma Interface R para a API em C do COIN-OR Clp.
 
 # Instalando o BP 
 
-1.  Para utilizar a ferramenta do Balan&ccedil;o de Pot&ecirc;ncia &eacute; necess&aacute;rio que o R esteja instalado. Para tal, basta baixar a instala&ccedil;&atilde;o e seguir as instru&ccedil;&otilde;es localizadas, por exemplo, no "mirror" do CRAN da Fiocruz em https://cran.fiocruz.br
+1.  Para utilizar a ferramenta do Balanço de Potência é necessário que o R esteja instalado. Para tal, basta baixar a instalação e seguir as instruç&otilde;es localizadas, por exemplo, no "mirror" do CRAN da Fiocruz em https://cran.fiocruz.br
 
-2.  Al&eacute;m do R, h&aacute; a necessidade da instala&ccedil;&atilde;o do Rtools, que &eacute; um conjunto de ferramentas importantes para a constru&ccedil;&atilde;o de novos pacotes. Para instalar basta acessar https://cran.r-project.org/bin/windows/Rtools/ para baixar o Rtools 4.0 para windows e depois executar o arquivo. 
+2.  Além do R, há a necessidade da instalação do Rtools, que é um conjunto de ferramentas importantes para a construção de novos pacotes. Para instalar basta acessar https://cran.r-project.org/bin/windows/Rtools/ para baixar o Rtools 4.0 para windows e depois executar o arquivo. 
 
-2.  Com o R e o Rtools j&aacute; instalados, execute o R e clique em Pacotes > Instalar pacote(s)... Selecione um "mirror" para baixar os pacotes. D&ecirc; prefer&ecirc;ncia para os que est&atilde;o no Brasil, pois o download ser&aacute; mais r&aacute;pido. Ap&oacute;s isso marque e instale os seguintes pacotes que ser&atilde;o necess&aacute;rios para execu&ccedil;&atilde;o do BP: readr, readxl, writexl, dplyr, stringr, tidyr, clpAPI, DBI, RSQLite, shiny, shinythemes, shinybusy, tictoc, plotly, zoo, scales, showtext, jsonlite, parallel, foreach, doParallel, numbers. Outra maneira de instalar as depend&ecirc;ncias &eacute; usando a instru&ccedil;&atilde;o abaixo no *command* do R. 
+2.  Com o R e o Rtools já instalados, execute o R e clique em Pacotes > Instalar pacote(s)... Selecione um "mirror" para baixar os pacotes. Dê preferência para os que estão no Brasil, pois o download será mais rápido. Após isso marque e instale os seguintes pacotes que serão necessários para execução do BP: readr, readxl, writexl, dplyr, stringr, tidyr, clpAPI, DBI, RSQLite, shiny, shinythemes, shinybusy, tictoc, plotly, zoo, scales, showtext, jsonlite, parallel, foreach, doParallel, numbers. Outra maneira de instalar as dependências é usando a instrução abaixo no *command* do R. 
 
 `install.packages(c("readr", "readxl", "writexl", "dplyr", "stringr", "tidyr", "clpAPI", "DBI",`
 `"RSQLite", "shiny", "shinythemes", "shinybusy", "tictoc", "plotly", "zoo", "scales", "showtext",`
 `"jsonlite", "parallel", "foreach", "doParallel", "numbers"), repos = "https://cran.fiocruz.br")`
 
-3. Ap&oacute;s a instala&ccedil;&atilde;o das depend&ecirc;ncias que est&atilde;o no CRAN, voc&ecirc; deve instalar o pacote do leitor de arquivos dos modelos de planejamento energ&eacute;tico do CEPEL. Este tamb&eacute;m &eacute; uma depend&ecirc;ncia, contudo, ele foi desenvolvido pela EPE e ainda n&atilde;o est&aacute; no CRAN. Para instalar esse pacote basta efetuar o download do pacote em zip mais recente em https://www.epe.gov.br/pt/publicacoes-dados-abertos/publicacoes/leitor-dos-arquivos-de-entrada-e-saida-dos-modelos-do-planejamento-energetico-do-cepel e, depois, no R, ir em Pacotes > Install package(s) from local files... e escolher o zip rec&eacute;m baixado.
+3. Após a instalação das dependências que estão no CRAN, você deve instalar o pacote do leitor de arquivos dos modelos de planejamento energético do CEPEL. Este também é uma dependência, contudo, ele foi desenvolvido pela EPE e ainda não está no CRAN. Para instalar esse pacote basta efetuar o download do pacote em zip mais recente em https://www.epe.gov.br/pt/publicacoes-dados-abertos/publicacoes/leitor-dos-arquivos-de-entrada-e-saida-dos-modelos-do-planejamento-energetico-do-cepel e, depois, no R, ir em Pacotes > Install package(s) from local files... e escolher o zip recém baixado.
 
-4. Finalmente, podemos instalar o pacote do BP. Para instalar o pacote basta efetuar o download do pacote em tar.gz na parte de arquivos desta p&aacute;gina e, depois, no R, ir em Pacotes > Install package(s) from local files... e escolher o tar.gz rec&eacute;m baixado. 
+4. Finalmente, podemos instalar o pacote do BP. Para instalar o pacote basta efetuar o download do pacote em tar.gz na parte de arquivos desta página e, depois, no R, ir em Pacotes > Install package(s) from local files... e escolher o tar.gz recém baixado. 
 
 # Executando o BP
 
-Ap&oacute;s ter o pacote instalado, basta usar as instru&ccedil;&otilde;es no *command* do R:
+Após ter o pacote instalado, basta usar as instruç&otilde;es no *command* do R:
 
 `library(epebpr)`    
 `aplicacaoBalanco()` 
 
-# Instru&ccedil;&otilde;es de uso da ferramenta 
+# Instruç&otilde;es de uso da ferramenta 
 
-Ap&oacute;s ter a ferramenta em execu&ccedil;&atilde;o basta clicar no &iacute;cone do livro ![](inst/appBalanco/www/imagens/logo-wiki.png){width=30px} para obter ajuda e toda a documenta&ccedil;&atilde;o necess&aacute;ria para entender a metodologia do BP e seu uso. 
+Após ter a ferramenta em execução basta clicar no ícone do livro ![](inst/appBalanco/www/imagens/logo-wiki.png){width=30px} para obter ajuda e toda a documentação necessária para entender a metodologia do BP e seu uso. 
 
-Para a execu&ccedil;&atilde;o do balan&ccedil;o de pot&ecirc;ncia para o caso do PDE 29, foi disponibilizado na &aacute;rea de Arquivos o deck do PDE com os arquivos extras necess&aacute;rios ao BP (PDE29 - deck NEWAVE e entradas BP.zip) e as sa&iacute;das do Newave (PDE29 - nwlistop.zip). 
+Para a execução do balanço de potência para o caso do PDE 29, foi disponibilizado na área de Arquivos o deck do PDE com os arquivos extras necessários ao BP (PDE29 - deck NEWAVE e entradas BP.zip) e as saídas do Newave (PDE29 - nwlistop.zip). 
 
 # Contato
-Para coment&aacute;rios sobre a ferramenta, favor enviar e-mail para modelos.sgr@epe.gov.br.
+Para comentários sobre a ferramenta, favor enviar e-mail para modelos.sgr@epe.gov.br.
 
 # Arquivos 
 
 # Vers&otilde;es
 
 ### v.0.11.2
-Corre&ccedil;&atilde;o da disponibilidade por step de d&eacute;ficit que antes n&atilde;o estava com mesma disponibilidade em cada step. Disponibiliza&ccedil;&atilde;o de vers&atilde;o beta com leitura de PDISP_QMIN do SUISHI. A sa&iacute;da do SUISHI apresenta problemas com o valor de altura l&iacute;quida (QUED) e precisa ser revisto na fonte.
+Correção da disponibilidade por step de déficit que antes não estava com mesma disponibilidade em cada step. Disponibilização de versão beta com leitura de PDISP_QMIN do SUISHI. A sa&iacute;da do SUISHI apresenta problemas com o valor de altura l&iacute;quida (QUED) e precisa ser revisto na fonte.
 
 ### v.0.11.1
-Teste com inclus&atilde;o de funcionalidade que distribui o d&eacute;ficit entre os subsistemas por faixas.
+Teste com inclusão de funcionalidade que distribui o déficit entre os subsistemas por faixas.
 
 ### v.0.11.0
-Inclus&atilde;o de funcionalidade que distribui o d&eacute;ficit entre os subsistemas. Essa funcionalidade n&atilde;o altera a quantidade total de d&eacute;ficit do SIN, somente tenta encontrar uma solu&ccedil;&atilde;o &oacute;tima equivalente a atual onde h&aacute; a possibilidade de n&atilde;o concentrar os d&eacute;ficits em um &uacute;nico subsistema.
+Inclusão de funcionalidade que distribui o déficit entre os subsistemas. Essa funcionalidade não altera a quantidade total de déficit do SIN, somente tenta encontrar uma solução ótima equivalente a atual onde há a possibilidade de não concentrar os déficits em um &uacute;nico subsistema.
 
 ### v.0.10.1
-Corrige o download dos dados dos gr&aacute;ficos de GF.
+Corrige o download dos dados dos gráficos de GF.
 
 ### v.0.10.0
-Corrige valor de LOLP para gr&aacute;ficos de GF.
+Corrige valor de LOLP para gráficos de GF.
 
-Inclus&atilde;o de funcionalidade que l&ecirc; e passa a usar o percentual de reserva de carga por subsistema e m&ecirc;s e percentual de reserva por causa da incerteza na gera&ccedil;&atilde;o das renov&aacute;veis. Esse percentual tem como refer&ecirc;ncia a expectativa de gera&ccedil;&atilde;o por tipo de renov&aacute;vel, subsistema e m&ecirc;s. Inclui a tabela BPO_A21_RESERVA para gravar essas informa&ccedil;&otilde;es.
+Inclusão de funcionalidade que l&ecirc; e passa a usar o percentual de reserva de carga por subsistema e m&ecirc;s e percentual de reserva por causa da incerteza na geração das renováveis. Esse percentual tem como refer&ecirc;ncia a expectativa de geração por tipo de renovável, subsistema e m&ecirc;s. Inclui a tabela BPO_A21_RESERVA para gravar essas informaç&otilde;es.
 
 Passa a ler o arquivo infoMDI.txt para pegar o in&iacute;cio e fim do horizonte de estudo do MDI.
 
@@ -64,15 +64,15 @@ Passa a gravar o horizonte da demanda de acordo com o horizonte do caso NEWAVE.
 ### v.0.9.2
 Verifica se os dados de mercado e patamar possuem os mesmo subsistemas e avisa caso negativo. Esse problema acontece em casos montados manualmente.
 
-Apresenta novos gr&aacute;ficos de CVaR e VaR seguindo os crit&eacute;rios de contabiliza&ccedil;&atilde;o de Garantia F&iacute;sica.
+Apresenta novos gráficos de CVaR e VaR seguindo os critérios de contabilização de Garantia F&iacute;sica.
 
 ### v.0.9.1
-Corrige erro ocorrido na atualiza&ccedil;&atilde;o de submotoriza&ccedil;&atilde;o quando n&atilde;o havia expans&atilde;o hidr&aacute;ulica no horizonte do estudo.
+Corrige erro ocorrido na atualização de submotorização quando não havia expansão hidráulica no horizonte do estudo.
 
-Passa a contabilizar o n&uacute;mero de s&eacute;ries hist&oacute;ricas hidr&aacute;ulicas para simula&ccedil;&atilde;o a partir do in&iacute;cio de varredura da s&eacute;rie hist&oacute;rica.
+Passa a contabilizar o n&uacute;mero de séries históricas hidráulicas para simulação a partir do in&iacute;cio de varredura da série histórica.
 
-Corrige gr&aacute;fico de LOLP para exibir anos que possuem risco anual exatamente igual a zero.
+Corrige gráfico de LOLP para exibir anos que possuem risco anual exatamente igual a zero.
 
 ### v.0.9.0
 
-Primeira vers&atilde;o divulgada 
+Primeira versão divulgada 

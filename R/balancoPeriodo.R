@@ -58,7 +58,7 @@ balancoPeriodo <- function(periodo,
   # critica de existencia de dados
   if(nrow(df.geracaoTermicaTotal %>% filter(anoMes == periodo)) == 0) {
     dbDisconnect(conexao)
-    stop(paste0("N\u00E3o h\u00E1 gera\u00E7\u00E3o t\u00E9rmica (BPO_A14_DISPONIBILIDADE_UTE) para o per\u00EDodo de ", periodo))
+    stop(paste0("Não há geração térmica (BPO_A14_DISPONIBILIDADE_UTE) para o período de ", periodo))
 
   }
   # filtrando geracao termica
@@ -69,7 +69,7 @@ balancoPeriodo <- function(periodo,
   # critica de existencia de dados
   if(nrow(df.geracaoTransmissaoTotal %>% filter(anoMes == periodo)) == 0) {
     dbDisconnect(conexao)
-    stop(paste0("N\u00E3o h\u00E1 transmiss\u00E3o (BPO_A11_INTERCAMBIOS) para o per\u00EDodo de ", periodo))
+    stop(paste0("Não há transmissão (BPO_A11_INTERCAMBIOS) para o período de ", periodo))
   }
   # filtrando limites das linhas de transmissao
   df.geracaoTransmissao <- df.geracaoTransmissaoTotal %>% filter(anoMes == periodo) %>%
@@ -79,7 +79,7 @@ balancoPeriodo <- function(periodo,
   # critica de existencia de dados
   if(nrow(df.geracaoRenovaveisTotal %>% filter(anoMes == periodo)) == 0) {
     dbDisconnect(conexao)
-    stop(paste0("N\u00E3o h\u00E1 renov\u00E1veis (BPO_A13_DISPONIBILIDADE_OFR) para o per\u00EDodo de ", periodo))
+    stop(paste0("Não há renováveis (BPO_A13_DISPONIBILIDADE_OFR) para o período de ", periodo))
   }
   # filtrando geracao revnovavel
   df.geracaoRenovaveis <- df.geracaoRenovaveisTotal %>% filter(anoMes == periodo) %>%
@@ -89,7 +89,7 @@ balancoPeriodo <- function(periodo,
   # critica de existencia de dados
   if(nrow(df.limitesAgrupamentoLinhasTotal %>% filter(anoMes == periodo)) == 0 & tipoCaso != 3) {
     dbDisconnect(conexao)
-    stop(paste0("N\u00E3o h\u00E1 limites de agrupamentos de linhas (BPO_A12_LIMITE_AGRUPAMENTOS_INTERCAMBIO) para o per\u00EDodo de ", periodo))
+    stop(paste0("Não há limites de agrupamentos de linhas (BPO_A12_LIMITE_AGRUPAMENTOS_INTERCAMBIO) para o período de ", periodo))
   }
   # filtrando limites dos grupos de linhas de transmissao
   df.limitesAgrupamentoLinhas <- df.limitesAgrupamentoLinhasTotal %>% filter(anoMes == periodo) %>% select(agrupamento, limite)
@@ -100,8 +100,8 @@ balancoPeriodo <- function(periodo,
   # critica de existencia de dados
   if(nrow(df.geracaoHidro) == 0) {
     dbDisconnect(conexao)
-    stop(paste0("N\u00E3o h\u00E1 h\u00EDdricas (BPO_A09_DISPONIBILIDADE_HIDRO_PONTA_SUBSISTEMA) para o per\u00EDodo de ", periodo, 
-                " e s\u00E9rie hidro ", idSerieHidro))
+    stop(paste0("Não há hídricas (BPO_A09_DISPONIBILIDADE_HIDRO_PONTA_SUBSISTEMA) para o período de ", periodo, 
+                " e série hidro ", idSerieHidro))
   }
   df.geracaoHidro$cvu <- cvuHidro
   
@@ -118,7 +118,7 @@ balancoPeriodo <- function(periodo,
   # critica de existencia de dados
   if(nrow(df.demandaLiquida) == 0) {
     dbDisconnect(conexao)
-    stop(paste0("N\u00E3o h\u00E1 demanda (BPO_A10_DEMANDA) para o per\u00EDodo de ", periodo, " e demanda ", idDemanda))
+    stop(paste0("Não há demanda (BPO_A10_DEMANDA) para o período de ", periodo, " e demanda ", idDemanda))
   }
   
   # verifica inconsistencia de limites das variaveis
@@ -127,8 +127,8 @@ balancoPeriodo <- function(periodo,
   inconsistenciaLimites <- any(inconsistenciaLimites == T)
   if(inconsistenciaLimites) {
     dbDisconnect(conexao)
-    stop(paste0("Problema de limites na gerac\u00E7\u00E3o para execu\u00E7\u00E3o de ", 
-                periodo, ", s\u00E9rie hidro ", idSerieHidro, ", demanda ", idDemanda))
+    stop(paste0("Problema de limites na geração para execução de ", 
+                periodo, ", série hidro ", idSerieHidro, ", demanda ", idDemanda))
   }
   
   # Balanco
@@ -200,7 +200,7 @@ balancoPeriodo <- function(periodo,
   if(solucao != 0) {
     dbDisconnect(conexao)
     # write.lp(lpBalanco, paste0("C:/Temp/", periodo, "sh",idSerieHidro, "d", idDemanda, "modelo.lp"), type="lp")
-    stop(paste0("N\u00E3o foi encontrada solu\u00E7\u00E3o vi\u00E1vel (problema ", solucao ,") para execu\u00E7\u00E3o de ", periodo, ", s\u00E9rie hidro ",
+    stop(paste0("Não foi encontrada solução viável (problema ", solucao ,") para execução de ", periodo, ", série hidro ",
                 idSerieHidro, ", demanda ", idDemanda))
     # 0: "optimal solution found"
     # 1: "the model is sub-optimal"
@@ -282,8 +282,8 @@ balancoPeriodo <- function(periodo,
   # critica
   if(solucaoSemTransmissao != 0) {
     dbDisconnect(conexao)
-    stop(paste0("N\u00E3o foi encontrada solu\u00E7\u00E3o vi\u00E1vel para execu\u00E7\u00E3o com transmiss\u00E3o ilimitada de ", periodo, ",
-                    s\u00E9rie hidro ", idSerieHidro, ", demanda ", idDemanda))
+    stop(paste0("Não foi encontrada solução viável para execução com transmissão ilimitada de ", periodo, ",
+                    série hidro ", idSerieHidro, ", demanda ", idDemanda))
     
   }
   # solucao primal das variaveis

@@ -14,7 +14,7 @@
 #'
 #' @export
 dadosGraficoRiscoDeficit <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, inicioHorizonteGrafico, fimHorizonteGrafico, 
-                                tituloGrafico = paste0("Risco de D\u00E9ficit - Caso ", numeroCaso)) {
+                                tituloGrafico = paste0("Risco de Déficit - Caso ", numeroCaso)) {
   
   conexao <- dbConnect(RSQLite::SQLite(), baseSQLite)
   # query no banco com join para buscar defict e demanda por serie para calculo da profundidade (informacao pelo SIN)

@@ -21,7 +21,7 @@ gravacaoDadosDemandaBDBP <- function(pastaCaso, conexao, tipoCaso, numeroCaso, c
     stop("favor indicar a pasta com os arquivos do NEWAVE")
   }
   if (missing(conexao)) {
-    stop("favor indicar a conex\u00E3o com o banco de dados")
+    stop("favor indicar a conexão com o banco de dados")
   }
   if (missing(tipoCaso)) {
     stop("favor indicar tipo do caso")
@@ -61,7 +61,7 @@ gravacaoDadosDemandaBDBP <- function(pastaCaso, conexao, tipoCaso, numeroCaso, c
   subsistemasConjuntos <- length(intersect(unique(df.mercado$codSubsistema), unique(df.patamar$codSubsistema)))
   if (length(unique(df.mercado$codSubsistema)) != subsistemasConjuntos | length(unique(df.patamar$codSubsistema)) != subsistemasConjuntos) {
     dbDisconnect(conexao)
-    stop("Patamares de carga e mercado n\u00E3o possuem os mesmos subsistemas!")
+    stop("Patamares de carga e mercado não possuem os mesmos subsistemas!")
   }
   
   # horizonte de simulacao, no formato anoMes (AAAAMM)

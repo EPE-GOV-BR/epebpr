@@ -17,8 +17,8 @@
 #' @export
 graficoCVAR <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
                         inicioHorizonteGrafico, fimHorizonteGrafico, tipoGrafico,
-                        tituloGraficoCVARMes = paste0("Profundidade de D\u00E9ficit - CVAR Mensal 5% - Caso ", numeroCaso),
-                        tituloGraficoCVARAno = paste0("Profundidade de D\u00E9ficit - CVAR Anual - Caso ", numeroCaso)) {
+                        tituloGraficoCVARMes = paste0("Profundidade de Déficit - CVAR Mensal 5% - Caso ", numeroCaso),
+                        tituloGraficoCVARAno = paste0("Profundidade de Déficit - CVAR Anual - Caso ", numeroCaso)) {
   
   conexao <- dbConnect(RSQLite::SQLite(), baseSQLite)
   # query no banco com join para buscar defict e demanda por serie para calculo da profundidade (informacao pelo SIN)
@@ -101,20 +101,20 @@ graficoCVAR <- function(baseSQLite, tipoCaso, numeroCaso, codModelo,
     mesesLinha <- seq(primeiroMes - 1/12, ultimoMes + 1/12, 1/12) %>% format("%Y-%m-%d")
     
     graficoCVaR <- plot_ly(data = tib.resultadosCvarMes, x = ~anoMes, y = ~cvar, name = "", type = "bar", showlegend = F,
-                           hovertemplate = "<b>D\u00E9ficit % da Demanda</b>: %{y:.1%}<br><b>M\u00EAs</b>: %{x|%Y-%m}<extra></extra>") %>% 
+                           hovertemplate = "<b>Déficit % da Demanda</b>: %{y:.1%}<br><b>Mês</b>: %{x|%Y-%m}<extra></extra>") %>% 
       add_trace(tib.resultadosCvarMes, x = ~anoMes, y = ~cvar, type = 'scatter',
                 mode = 'text', text = ~textoCVaR, textposition = 'top center', texttemplate = "<b>%{text}</b>") %>%
       add_trace(tib.resultadosCvarMes, x = mesesLinha, y = 0.05, type = 'scatter', mode = 'lines', color = I("red"),
-                hovertemplate = "<b>Limite de crit\u00E9rio de suprimento: %{y:.0%}<extra></extra>") %>% 
+                hovertemplate = "<b>Limite de critério de suprimento: %{y:.0%}<extra></extra>") %>% 
       layout( 
         title = paste0("<b>", tituloGraficoCVARMes, "</b>"),
         # legend = list(title = list(text='<b> Subsistemas </b>')), #orientation = 'h'),
         yaxis = list( 
-          title = "<b>D\u00E9ficit % da Demanda</b>", 
+          title = "<b>Déficit % da Demanda</b>", 
           tickformat = "%" 
         ), 
         xaxis = list( 
-          title = "<b>M\u00EAs</b>", 
+          title = "<b>Mês</b>", 
           ticktext = as.list(as.character(as.yearmon(marcasEixoMes))), 
           tickvals = as.list(marcasEixoMes)#,
           #range = c(min(tib.resultadosCvarMes$anoMes), max(tib.resultadosCvarMes$anoMes))
@@ -131,7 +131,7 @@ graficoCVAR <- function(baseSQLite, tipoCaso, numeroCaso, codModelo,
     #             hjust = 0.2,
     #             show.legend = FALSE, 
     #             fontface = "bold") + #, size = 5, family = "sans") +
-    #   scale_x_date(name = "M\u00EAs", date_labels = "%b-%y", expand = c(0,0), breaks = marcasEixoMes) +
+    #   scale_x_date(name = "Mês", date_labels = "%b-%y", expand = c(0,0), breaks = marcasEixoMes) +
     #   scale_y_continuous(name = "% da Demanda", expand = c(0,0), labels = percent_format(accuracy = 0.1, scale = 100, suffix = "%", decimal.mark = ","),
     #                      breaks = seq(0, ceiling(max(tib.resultadosCvarMes$cvar)*10)/10, ceiling(max(tib.resultadosCvarMes$cvar)*10)/10/5),
     #                      limits = c(0, ceiling(max(tib.resultadosCvarMes$cvar)*10)/10)) +
@@ -164,18 +164,18 @@ graficoCVAR <- function(baseSQLite, tipoCaso, numeroCaso, codModelo,
       mutate(textoCVaR = ifelse(cvar == maxCVAR, paste0(round(cvar * 100, 1), "%"), ""))
     
     graficoCVaR <- plot_ly(data = tib.resultadosCvarMes, x = ~anoMes, y = ~cvar, name = "", type = 'scatter', mode = 'lines', showlegend = F,
-                           hovertemplate = "<b>D\u00E9ficit % da Demanda</b>: %{y:.1%}<br><b>M\u00EAs</b>: %{x|%Y-%m}<extra></extra>") %>% 
+                           hovertemplate = "<b>Déficit % da Demanda</b>: %{y:.1%}<br><b>Mês</b>: %{x|%Y-%m}<extra></extra>") %>% 
       add_trace(tib.resultadosCvarMes, x = ~anoMes, y = ~cvar, type = 'scatter', name = "",
                 mode = 'text', text = ~textoCVaR, textposition = 'top center', texttemplate = "<b>%{text}</b>") %>%
       layout( 
         title = paste0("<b>", tituloGraficoCVARMes, "</b>"),
         # legend = list(title = list(text='<b> Subsistemas </b>')), #orientation = 'h'),
         yaxis = list( 
-          title = "<b>D\u00E9ficit % da Demanda</b>", 
+          title = "<b>Déficit % da Demanda</b>", 
           tickformat = "%" 
         ), 
         xaxis = list( 
-          title = "<b>M\u00EAs</b>", 
+          title = "<b>Mês</b>", 
           ticktext = as.list(as.character(as.yearmon(marcasEixoMes))), 
           tickvals = as.list(marcasEixoMes)
         )
@@ -183,7 +183,7 @@ graficoCVAR <- function(baseSQLite, tipoCaso, numeroCaso, codModelo,
     
     # graficoCVaR <- ggplot(tib.resultadosCvarMes, aes(x = anoMes, y = cvar, colour = tamanhoCVAR)) + 
     #   geom_line(size = 1.5, show.legend = FALSE) +
-    #   scale_x_date(name = "M\u00EAs", date_labels = "%b-%y", expand = c(0,0), breaks = marcasEixoMes) +
+    #   scale_x_date(name = "Mês", date_labels = "%b-%y", expand = c(0,0), breaks = marcasEixoMes) +
     #   scale_y_continuous(name = "% da Demanda", expand = c(0,0), labels = percent_format(accuracy = 0.1, scale = 100, suffix = "%", decimal.mark = ","),
     #                      breaks = seq(0, ceiling(max(tib.resultadosCvarMes$cvar)*10)/10, ceiling(max(tib.resultadosCvarMes$cvar)*10)/10/20),
     #                      limits = c(0, ceiling(max(tib.resultadosCvarMes$cvar)*10)/10)) +
@@ -230,12 +230,12 @@ graficoCVAR <- function(baseSQLite, tipoCaso, numeroCaso, codModelo,
     # exibe grafico anual de cvar
     graficoCVaR <- plot_ly(data = tib.resultadosCvarAno, x = ~ano, y = ~cvar, color = ~tamanhoCVAR, 
                            colors = "Set3", type = "bar",
-                           hovertemplate = "<b>D\u00E9ficit % da Demanda</b>: %{y:.1%}<br><b>Ano</b>: %{x}") %>% 
+                           hovertemplate = "<b>Déficit % da Demanda</b>: %{y:.1%}<br><b>Ano</b>: %{x}") %>% 
       layout( 
         title = paste0("<b>", tituloGraficoCVARAno, "</b>"),
         legend = list(orientation = 'h', x = "0.3"),
         yaxis = list( 
-          title = "<b>D\u00E9ficit % da Demanda</b>", 
+          title = "<b>Déficit % da Demanda</b>", 
           tickformat = "%"), 
         xaxis = list(
           type = 'category')) %>% 

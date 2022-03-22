@@ -47,14 +47,14 @@ carregaDadosSQLite <- function(baseSQLite, pastaCaso, pastaSaidas, tipoCaso, num
       mutate(seriesHidro = fimHistorico - inicioHistorico + 1) %>%
       summarise(media = mean(seriesHidro), minimo = min(seriesHidro), maximo = max(seriesHidro))
     if (seriesHidro$media != seriesHidro$minimo | seriesHidro$media != seriesHidro$maximo | seriesHidro$minimo != seriesHidro$maximo) {
-      stop("S\u00E9ries hidro n\u00E3o possuem mesmo horizonte cadastrado no arquivo confhd!")
+      stop("Séries hidro não possuem mesmo horizonte cadastrado no arquivo confhd!")
     }
     fimHistorico <- df.configuracaoHidro %>% pull(fimHistorico) %>% max()
     # resgata o valor de inicio de varredura da serie historica para contabilizar quantidade de series
     inicioSimulacaoHistorico <- leituraSeriesHistoricasSimulacaoFinal(pastaCaso) %>% extract2("df.varredura") %>% pull(anoInicio)
     seriesHidro <- fimHistorico - inicioSimulacaoHistorico + 1
   } else {
-    stop("Simula\u00E7\u00E3o final ap\u00F3s converg\u00EAncia PDDE do NEWAVE deve ser com s\u00E9ries sint\u00E9ticas ou hist\u00F3ricas!")
+    stop("Simulação final ap\u00F3s convergência PDDE do NEWAVE deve ser com séries sintéticas ou hist\u00F3ricas!")
   }
   
   # barra de progresso
@@ -66,7 +66,7 @@ carregaDadosSQLite <- function(baseSQLite, pastaCaso, pastaSaidas, tipoCaso, num
     arquivoInfoMDI <- paste(pastaCaso, "infoMDI.txt", sep = "/")
     # verifica exitencia do arquivo
     if (!file.exists(arquivoInfoMDI)) {
-      stop(paste0("arquivo ", arquivoInfoMDI, " com dados gerais do MDI n\u00E3o encontrado!"))
+      stop(paste0("arquivo ", arquivoInfoMDI, " com dados gerais do MDI não encontrado!"))
     }
     df.infoMDI <- read_delim(stri_enc_toutf8(arquivoInfoMDI), 
                              locale = locale(encoding = "latin1"),
@@ -207,5 +207,5 @@ carregaDadosSQLite <- function(baseSQLite, pastaCaso, pastaSaidas, tipoCaso, num
   # fecha conexao
   dbDisconnect(conexao)
   
-  return("Leitura e grava\u00E7\u00E3o dos dados do NEWAVE efetuadas com sucesso!")
+  return("Leitura e gravação dos dados do NEWAVE efetuadas com sucesso!")
 }

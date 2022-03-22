@@ -17,8 +17,8 @@
 #' @export
 graficoVAR <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
                        inicioHorizonteGrafico, fimHorizonteGrafico, tipoGrafico,
-                       tituloGraficoVARMes = paste0("Profundidade de D\u00E9ficit - VaR Mensal - Caso ", numeroCaso),
-                       tituloGraficoVARAno = paste0("Profundidade de D\u00E9ficit - VaR Anual - Caso ", numeroCaso)) {
+                       tituloGraficoVARMes = paste0("Profundidade de Déficit - VaR Mensal - Caso ", numeroCaso),
+                       tituloGraficoVARAno = paste0("Profundidade de Déficit - VaR Anual - Caso ", numeroCaso)) {
   
   conexao <- dbConnect(RSQLite::SQLite(), baseSQLite)
   # query no banco com join para buscar defict e demanda por serie para calculo da profundidade (informacao pelo SIN)
@@ -70,12 +70,12 @@ graficoVAR <- function(baseSQLite, tipoCaso, numeroCaso, codModelo,
   if (tipoGrafico == 5) {
     # exibe grafico mensal de var separado por tipo de var
     graficoVaR <- plot_ly(data = tib.resultadosVarMes, x = ~anoMes, y = ~var, color = ~tamanhoVAR, colors = "Set3", type = "bar",
-                       hovertemplate = "<b>D\u00E9ficit em MW</b>: %{y:.0f}<br><b>M\u00EAs</b>: %{x|%Y-%m}<extra></extra>") %>% 
+                       hovertemplate = "<b>Déficit em MW</b>: %{y:.0f}<br><b>Mês</b>: %{x|%Y-%m}<extra></extra>") %>% 
       layout( 
         title = paste0("<b>", tituloGraficoVARMes, "</b>"),
         legend = list(orientation = 'h', x = "0.3", y = "-0.15"),
         yaxis = list( 
-          title = "<b>D\u00E9ficit em MW</b>", 
+          title = "<b>Déficit em MW</b>", 
           tickformat = ".0f"
         ), 
         xaxis = list( 
@@ -93,7 +93,7 @@ graficoVAR <- function(baseSQLite, tipoCaso, numeroCaso, codModelo,
     
     # exibe grafico mensal de var
     graficoVaR <- plot_ly(data = tib.resultadosVarMes, x = ~anoMes, y = ~var, color = ~tamanhoVAR, type = "scatter", mode = "lines",
-                          hovertemplate = "<b>D\u00E9ficit em MW</b>: %{y:.0f}<br><b>M\u00EAs</b>: %{x|%Y-%m}<extra></extra>") %>% 
+                          hovertemplate = "<b>D\u00E9ficit em MW</b>: %{y:.0f}<br><b>Mês</b>: %{x|%Y-%m}<extra></extra>") %>% 
       layout( 
         title = paste0("<b>", tituloGraficoVARMes, "</b>"),
         legend = list(orientation = 'h', x = "0.3", y = "-0.15"),

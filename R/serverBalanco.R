@@ -12,7 +12,7 @@ serverBalanco <- function(input, output, session) {
   ####### ABA BALANCO #######
   output$textoPasta <- renderText("Escolha a pasta do caso:")
   pastaCaso <- ""
-  output$textoPastaSaidas <- renderText("Escolha a pasta com as sa\u00EDdas do caso (nwlistop):")
+  output$textoPastaSaidas <- renderText("Escolha a pasta com as saídas do caso (nwlistop):")
   pastaSaidas <- ""
   output$textoBaseSQLite <- renderText("Escolha a base SQLite ou crie nova:")
   baseSQLite <- ""
@@ -35,8 +35,8 @@ serverBalanco <- function(input, output, session) {
   observeEvent(input$btnCriaBaseSQLite, {
     showModal(
       modalDialog(
-        title = HTML("Criar nova base de dados para o Balan&ccedil;o de Pot\u00EAncia"),
-        tags$div(style="display:inline-block;", HTML("Localiza&ccedil;&atilde;o da pasta:")),
+        title = HTML("Criar nova base de dados para o Balanço de Potência"),
+        tags$div(style="display:inline-block;", HTML("Localização da pasta:")),
         span(strong(textOutput(outputId = "pastaBDModal"), style = "color:red; display:inline-block")),
         actionButton(inputId = "btnProcurarPastaBD",
                      label = NULL,
@@ -104,9 +104,9 @@ serverBalanco <- function(input, output, session) {
   
   # monitora o botao de selecao da pasta de saidas do caso (nwlistop)
   observeEvent(input$btnPastaSaidas, {
-    pastaSaidas <<- choose.dir(caption = "Escolha a pasta com as sa\u00EDdas do caso (nwlistop)")
+    pastaSaidas <<- choose.dir(caption = "Escolha a pasta com as saídas do caso (nwlistop)")
     output$pastaSaidas <- renderText(pastaSaidas)
-    output$textoPastaSaidas <- renderText("Pasta com as sa\u00EDdas do caso (nwlistop):")
+    output$textoPastaSaidas <- renderText("Pasta com as saídas do caso (nwlistop):")
   })
   
   # monitora o botao para encerrar o app
@@ -124,14 +124,14 @@ serverBalanco <- function(input, output, session) {
     shiny::validate(
       need(input$numeroCaso, "Caso sem n\u00FAmero"),
       need(input$horasPonta, "Defina o n\u00FAmero de horas de ponta"),
-      need(input$descricao, "Caso sem descri\u00E7\u00E3o"),
+      need(input$descricao, "Caso sem descrição"),
       need(pastaCaso != "", "Defina a pasta de caso"),
-      need(pastaSaidas != "", "Defina a pasta com as sa\u00EDdas do caso (nwlistop)"),
+      need(pastaSaidas != "", "Defina a pasta com as saídas do caso (nwlistop)"),
       need(baseSQLite != "", "Defina a base de dados SQLite"),
       need(input$distribuicaoDeficit, "Defina valor de limite do rateio do d\u00E9ficit (0-100%)"),
-      need(validaModulacao == 0, "Sistemas que n\u00E3o modulam na ponta devem ser diferentes dos que n\u00E3o modulam na m\u00E9dia!")
-      # need(input$sistemasNaoModulamPonta, "Defina os sistemas que n\u00E3o modulam na ponta"),
-      # need(input$sistemasNaoModulamMedia, "Defina os sistemas que n\u00E3o modulam na m\u00E9dia")
+      need(validaModulacao == 0, "Sistemas que não modulam na ponta devem ser diferentes dos que não modulam na m\u00E9dia!")
+      # need(input$sistemasNaoModulamPonta, "Defina os sistemas que não modulam na ponta"),
+      # need(input$sistemasNaoModulamMedia, "Defina os sistemas que não modulam na m\u00E9dia")
     )
 
     tic()
@@ -142,11 +142,11 @@ serverBalanco <- function(input, output, session) {
       # pega dados gerais do NEWAVE
       df.dadosGerais <- leituraDadosGerais(pastaCaso)
       if (df.dadosGerais$tipoSimulacao == 1) {
-        mensagemLeitura <- "Lendo dados de simula\u00E7\u00E3o com s\u00E9ries sint\u00E9ticas e gravando no banco de dados..."
+        mensagemLeitura <- "Lendo dados de simulação com s\u00E9ries sint\u00E9ticas e gravando no banco de dados..."
       } else if (df.dadosGerais$tipoSimulacao == 2){
-        mensagemLeitura <- "Lendo dados de simula\u00E7\u00E3o com s\u00E9ries hist\u00F3ricas e gravando no banco de dados..."
+        mensagemLeitura <- "Lendo dados de simulação com s\u00E9ries hist\u00F3ricas e gravando no banco de dados..."
       } else {
-        return("Outro tipo de simula\u00E7\u00E3o. <font color=red>Verifique o arquivo dger!</font>")
+        return("Outro tipo de simulação. <font color=red>Verifique o arquivo dger!</font>")
       }
     } else {
       mensagemLeitura <- "Processando a Leitura de Dados..."
@@ -193,7 +193,7 @@ serverBalanco <- function(input, output, session) {
       # bloco de calculo de balanco
       # verifica se o usuario escolheu efetuar o calculo do BP
       if (as.logical(input$execucaoBP)) {
-        setProgress(message = "Calculando balan\u00E7o de pot\u00EAncia...")
+        setProgress(message = "Calculando balanço de potência...")
         mensagem <- calculaBalancoParalelo(baseSQLite,
                                            as.integer(input$tipoCaso),
                                            as.integer(input$numeroCaso),
@@ -255,9 +255,9 @@ serverBalanco <- function(input, output, session) {
   grafico <- eventReactive(input$btnGrafico, 
                                 {
                                   shiny::validate(
-                                    need(input$anoInicioGrafico, HTML("Favor determinar o in\u00EDcio do horizonte para o gr\u00E1fico!")),
-                                    need(input$anoFimGrafico, HTML("Favor determinar o fim do horizonte para o gr\u00E1fico!")),
-                                    need(input$casoGrafico != -1, HTML("Favor selecionar um caso para o gr\u00E1fico!"))
+                                    need(input$anoInicioGrafico, HTML("Favor determinar o início do horizonte para o gráfico!")),
+                                    need(input$anoFimGrafico, HTML("Favor determinar o fim do horizonte para o gráfico!")),
+                                    need(input$casoGrafico != -1, HTML("Favor selecionar um caso para o gráfico!"))
                                   )
                                   show_spinner()
                                   chaveGrafico <- c(input$casoGrafico %>% str_split(";") %>% unlist() %>% as.numeric())
