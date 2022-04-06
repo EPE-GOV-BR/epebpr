@@ -30,7 +30,7 @@ gravacaoDadosHidroVigenteBDBP <- function(pastaCaso, conexao, tipoCaso, numeroCa
     stop("favor indicar o n\u00FAmero do caso")
   }
   if (missing(codModelo)) {
-    stop("favor indicar o c\u00F3digo do modelo")
+    stop("favor indicar o código do modelo")
   }
   
   # executa query para apagar da tabela BPO_A05_DADOS_VIGENTES_UHE os dados referentes a um possivel mesmo caso rodado anteriormente, 

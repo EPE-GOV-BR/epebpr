@@ -54,7 +54,7 @@ carregaDadosSQLite <- function(baseSQLite, pastaCaso, pastaSaidas, tipoCaso, num
     inicioSimulacaoHistorico <- leituraSeriesHistoricasSimulacaoFinal(pastaCaso) %>% extract2("df.varredura") %>% pull(anoInicio)
     seriesHidro <- fimHistorico - inicioSimulacaoHistorico + 1
   } else {
-    stop("Simulação final ap\u00F3s convergência PDDE do NEWAVE deve ser com séries sintéticas ou hist\u00F3ricas!")
+    stop("Simulação final após convergência PDDE do NEWAVE deve ser com séries sintéticas ou históricas!")
   }
   
   # barra de progresso

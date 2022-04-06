@@ -5,7 +5,6 @@
 #' @param input entradas da camada ui
 #' @param output saidas da camada ui
 #' @param session objeto contendo dados e funcionalidades da da sessao
-#'
 #' @export
 serverBalanco <- function(input, output, session) {
 
@@ -86,7 +85,7 @@ serverBalanco <- function(input, output, session) {
     }
   })
   ## fim dos eventos da janela popup ##
-
+  
   # monitora botao de selecao de base existente
   observeEvent(input$btnBaseSQLite, {
     baseSQLite <<- choose.files(caption = "Escolha a base SQLite",
@@ -94,7 +93,7 @@ serverBalanco <- function(input, output, session) {
     output$baseSQLite <- renderText(baseSQLite)
     output$textoBaseSQLite <- renderText("Base selecionada:")
   })
-
+  
   # monitora o botao de selecao da pasta do caso
   observeEvent(input$btnPasta, {
     pastaCaso <<- choose.dir(caption = "Escolha a pasta do caso")
@@ -113,7 +112,7 @@ serverBalanco <- function(input, output, session) {
   observeEvent(input$btnSair, {
     stopApp()
   })
-
+  
   # monitora botao do calculo do balanco
   textoSelecao <- eventReactive(input$btnBalanco, {
     
@@ -128,12 +127,12 @@ serverBalanco <- function(input, output, session) {
       need(pastaCaso != "", "Defina a pasta de caso"),
       need(pastaSaidas != "", "Defina a pasta com as saídas do caso (nwlistop)"),
       need(baseSQLite != "", "Defina a base de dados SQLite"),
-      need(input$distribuicaoDeficit, "Defina valor de limite do rateio do d\u00E9ficit (0-100%)"),
-      need(validaModulacao == 0, "Sistemas que não modulam na ponta devem ser diferentes dos que não modulam na m\u00E9dia!")
+      need(input$distribuicaoDeficit, "Defina valor de limite do rateio do déficit (0-100%)"),
+      need(validaModulacao == 0, "Sistemas que não modulam na ponta devem ser diferentes dos que não modulam na média!")
       # need(input$sistemasNaoModulamPonta, "Defina os sistemas que não modulam na ponta"),
-      # need(input$sistemasNaoModulamMedia, "Defina os sistemas que não modulam na m\u00E9dia")
+      # need(input$sistemasNaoModulamMedia, "Defina os sistemas que não modulam na média")
     )
-
+    
     tic()
     
     # mensagem de tipo de simulacao
@@ -142,9 +141,9 @@ serverBalanco <- function(input, output, session) {
       # pega dados gerais do NEWAVE
       df.dadosGerais <- leituraDadosGerais(pastaCaso)
       if (df.dadosGerais$tipoSimulacao == 1) {
-        mensagemLeitura <- "Lendo dados de simulação com s\u00E9ries sint\u00E9ticas e gravando no banco de dados..."
+        mensagemLeitura <- "Lendo dados de simulação com séries sintéticas e gravando no banco de dados..."
       } else if (df.dadosGerais$tipoSimulacao == 2){
-        mensagemLeitura <- "Lendo dados de simulação com s\u00E9ries hist\u00F3ricas e gravando no banco de dados..."
+        mensagemLeitura <- "Lendo dados de simulação com séries históricas e gravando no banco de dados..."
       } else {
         return("Outro tipo de simulação. <font color=red>Verifique o arquivo dger!</font>")
       }
@@ -174,7 +173,7 @@ serverBalanco <- function(input, output, session) {
       } else {
         mensagemBancoDados <- ""
       }
-
+      
       # bloco de calculo da disponibilidade hidro
       # verifica se o usuario escolheu efetuar o calculo da disponibilidade hidro
       if (as.logical(input$disponibilidadeHidro)) {
@@ -204,6 +203,11 @@ serverBalanco <- function(input, output, session) {
                                            cvuOutrasTermicas,
                                            as.logical(input$balancoResumido),
                                            as.double(input$distribuicaoDeficit)/100)
+        
+        # se o balanço foi calculado, gera saidas na BD e em excel
+        df.dadosGerais <- leituraDadosGerais(pastaCaso)
+        mensagemSaidas <- gravacaoSaidasAnalises(baseSQLite, as.integer(input$tipoCaso), as.integer(input$numeroCaso), as.integer(input$codModelo), df.dadosGerais)
+        
       } else {
         mensagem <- ""
       }
@@ -242,13 +246,6 @@ serverBalanco <- function(input, output, session) {
                                    inputId = "casoGrafico", 
                                    choices = lt.casosInputGrafico,
                                    selected = -1)
-                 
-                 # output$tabelaDadosCasos <- renderDT(
-                 #   datatable(data = leituraTabelaDadosCasos(baseSQLiteGrafico),
-                 #             options = list(pageLength = 12,
-                 #                            language = list(url = '//cdn.datatables.net/plug-ins/1.10.11/i18n/Portuguese-Brasil.json')),
-                 #             rownames = FALSE,
-                 #             selection = "none"))
                })
   )
   # monitora botao para exibir graficos
@@ -259,7 +256,7 @@ serverBalanco <- function(input, output, session) {
                                     need(input$anoFimGrafico, HTML("Favor determinar o fim do horizonte para o gráfico!")),
                                     need(input$casoGrafico != -1, HTML("Favor selecionar um caso para o gráfico!"))
                                   )
-                                  show_spinner()
+                                  show_modal_spinner()
                                   chaveGrafico <- c(input$casoGrafico %>% str_split(";") %>% unlist() %>% as.numeric())
                                   # CvaR
                                   if(as.numeric(input$tipoGrafico) %in% c(1, 2, 3)){
@@ -315,9 +312,17 @@ serverBalanco <- function(input, output, session) {
                                                           chaveGrafico[2], 
                                                           chaveGrafico[3], 
                                                           as.numeric(input$tipoGrafico))
+                                  # Requisitos de potencia  
+                                  } else if(as.numeric(input$tipoGrafico) == 13){
+                                    grafico <- graficoRequisitosPot(baseSQLiteGrafico, 
+                                                                    chaveGrafico[1], 
+                                                                    chaveGrafico[2], 
+                                                                    chaveGrafico[3], 
+                                                                    as.numeric(input$anoInicioGrafico), 
+                                                                    as.numeric(input$anoFimGrafico))
                                   }
                                   
-                                  hide_spinner()
+                                  remove_modal_spinner()
                                   return(grafico)
                                 })
   

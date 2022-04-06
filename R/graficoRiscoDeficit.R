@@ -17,94 +17,60 @@ graficoRiscoDeficit <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, ini
                                 tituloGrafico = paste0("Risco de Déficit - Caso ", numeroCaso)) {
   
   conexao <- dbConnect(RSQLite::SQLite(), baseSQLite)
-  # query no banco com join para buscar defict e demanda por serie para calculo da profundidade (informacao pelo SIN)
+  # query no banco
   query <- paste0("SELECT 
-                    A16.A09_NR_SERIE,
-                    A16.A09_NR_MES,
-                    SUM(A16_VL_DESPACHO) AS DEFICIT,
-                    A10.DEMANDA,
-                    A01.SERIES
-                   FROM 
-                    BPO_A16_BALANCO AS A16,
-                    (SELECT A10_NR_MES,
-                      A01_TP_CASO,
-                      A01_NR_CASO,
-                      A01_CD_MODELO,
-                      SUM(A10_VL_DEMANDA) AS DEMANDA
-                      FROM BPO_A10_DEMANDA
-                      GROUP BY A10_NR_MES,
-                      A01_TP_CASO,
-                      A01_NR_CASO,
-                      A01_CD_MODELO
-                    ) AS A10,
-                    (SELECT A01_TP_CASO,
-                      A01_NR_CASO,
-                      A01_CD_MODELO,
-                      A01_NR_SERIES_HIDRO AS SERIES FROM
-                      BPO_A01_CASOS_ANALISE
-                    ) AS A01
-                   WHERE 
-                    A16.A16_TP_GERACAO = 'DEFICIT' AND
-                    A16.A01_TP_CASO = ", tipoCaso," AND
-                    A16.A01_NR_CASO = ", numeroCaso," AND
-                    A16.A01_CD_MODELO = ", codModelo, " AND
-                    A10.A10_NR_MES = A16.A09_NR_MES AND
-                    A10.A01_TP_CASO = A16.A01_TP_CASO AND
-                    A10.A01_NR_CASO = A16.A01_NR_CASO AND
-                    A10.A01_CD_MODELO = A16.A01_CD_MODELO AND
-                    A01.A01_TP_CASO = A16.A01_TP_CASO AND
-                    A01.A01_NR_CASO = A16.A01_NR_CASO AND
-                    A01.A01_CD_MODELO = A16.A01_CD_MODELO
-                   GROUP BY 
-                    A16.A09_NR_SERIE,
-                    A16.A09_NR_MES;")
+                    A27_NR_MES,
+                    A27_VL_LOLP 
+                    FROM BPO_A27_LOLP_MENSAL
+                    WHERE 
+                    A01_TP_CASO = ", tipoCaso," AND
+                    A01_NR_CASO = ", numeroCaso," AND
+                    A01_CD_MODELO = ", codModelo, ";")
   
-  tib.resultados <- dbGetQuery(conexao, query) %>% as_tibble()
+  tib.resultadosMes <- dbGetQuery(conexao, query) %>% as_tibble()
+  
+  query <- paste0("SELECT 
+                    A28_NR_ANO,
+                    A28_VL_LOLP 
+                    FROM BPO_A28_LOLP_ANUAL
+                    WHERE 
+                    A01_TP_CASO = ", tipoCaso," AND
+                    A01_NR_CASO = ", numeroCaso," AND
+                    A01_CD_MODELO = ", codModelo, ";")
+  
+  tib.resultadosAno <- dbGetQuery(conexao, query) %>% as_tibble()
+  
   dbDisconnect(conexao)
   
   # cria coluna de data anoMes, mes e ano e filtra o horizonte para exibicao no grafico
-  tib.resultados <- tib.resultados %>% 
-    mutate(anoMes = as.character(A09_NR_MES) %>% as.yearmon("%Y%m") %>% zoo::as.Date(),
-           mes = A09_NR_MES %% 100, ano = A09_NR_MES %/% 100) %>% 
+  tib.resultadosMes <- tib.resultadosMes %>% 
+    mutate(anoMes = as.character(A27_NR_MES) %>% as.yearmon("%Y%m") %>% zoo::as.Date(),
+           mes = A27_NR_MES %% 100, ano = A27_NR_MES %/% 100) %>% 
     filter(between(ano, inicioHorizonteGrafico, fimHorizonteGrafico))
   
-  # calcula o risco mensal para os meses com defict
-  tib.resultadosMes <- tib.resultados %>% 
-    mutate(DEFICIT = ifelse(DEFICIT > 0, 1,0)) %>% 
-    group_by(ano, mes, anoMes) %>% summarise(riscoMensal = sum(DEFICIT)/max(SERIES), .groups = "drop")
-  
-  # calcula o risco de defict anual
-  tib.resultadosAno <- tib.resultados %>% 
-    mutate(DEFICIT = ifelse(DEFICIT > 0, 1,0)) %>%
-    group_by(ano) %>% summarise(riscoAnual = sum(DEFICIT)/max(SERIES)/12, .groups = "drop")
-  
   # efetua join entre as tibbles de mes e ano para se ter o risco anual na tibble mensal
-  tib.resultadosMes <- inner_join(tib.resultadosMes, tib.resultadosAno, by = "ano")
+  tib.resultadosMes <- inner_join(tib.resultadosMes, tib.resultadosAno, by = c("ano" = "A28_NR_ANO"))
   
   # cria vetor auxiliar com os marcadores que aparecerao no eixo de tempo no grafico
   marcasEixoMes <- tib.resultadosMes %>% filter(months(anoMes) %in% c("janeiro","julho")) %>% pull(anoMes) %>% c(.,max(tib.resultadosMes$anoMes))
   
   # cria vetor auxiliar com as datas em que ocorreu o maior risco mensal em cada ano do horizonte
-  maximosAnuais <- tib.resultadosMes %>% group_by(ano) %>% summarise(riscoMensal = max(riscoMensal), .groups = "drop") %>% 
-    semi_join(tib.resultadosMes, ., by = c("ano", "riscoMensal")) %>% pull (anoMes)
+  maximosAnuais <- tib.resultadosMes %>% group_by(ano) %>% summarise(A27_VL_LOLP = max(A27_VL_LOLP), .groups = "drop") %>% 
+    semi_join(tib.resultadosMes, ., by = c("ano", "A27_VL_LOLP")) %>% pull (anoMes)
   filtroDuplicados <- maximosAnuais %>% format("%Y") %>% duplicated() %>% not()
   maximosAnuais <- maximosAnuais[filtroDuplicados]
   
-  # carrega fontes de texto para o grafico
-  # font_add_google("Montserrat", "Montserrat")
-  # showtext_auto()
-  
   # exibe grafico mensal de risco
-  graficoRisco <- ggplot(tib.resultadosMes, aes(x = anoMes, y = riscoMensal)) + 
+  graficoRisco <- ggplot(tib.resultadosMes, aes(x = anoMes, y = A27_VL_LOLP)) + 
     geom_col(aes(fill = "Risco Mensal")) +
-    geom_line(aes(y = riscoAnual, colour = "Risco Anual"), size = 1.5) +
-    geom_text(aes(label = ifelse(anoMes %in% maximosAnuais, percent(riscoMensal, accuracy = 0.1, scale = 100, suffix = "%", decimal.mark = ","), "")), 
-              nudge_y = (ceiling(max(tib.resultadosMes$riscoMensal)*10)/10 * 0.05),
+    geom_line(aes(y = A28_VL_LOLP, colour = "Risco Anual"), size = 1.5) +
+    geom_text(aes(label = ifelse(anoMes %in% maximosAnuais, percent(A27_VL_LOLP, accuracy = 0.1, scale = 100, suffix = "%", decimal.mark = ","), "")), 
+              nudge_y = (ceiling(max(tib.resultadosMes$A27_VL_LOLP)*10)/10 * 0.05),
               hjust = 0.4, show.legend = FALSE, fontface = "bold", size = 5, family = "sans") +
     scale_x_date(name = "Mês", date_labels = "%b-%y", expand = c(0,0), breaks = marcasEixoMes) + 
     scale_y_continuous(name = "Risco de Déficit", expand = c(0,0), labels = percent_format(accuracy = 0.1, scale = 100, suffix = "%", decimal.mark = ","),
-                       breaks = seq(0, ceiling(max(tib.resultadosMes$riscoMensal)*10)/10, ceiling(max(tib.resultadosMes$riscoMensal)*10)/10/16),
-                       limits = c(0, ceiling(max(tib.resultadosMes$riscoMensal)*10)/10)) +
+                       breaks = seq(0, ceiling(max(tib.resultadosMes$A27_VL_LOLP)*10)/10, ceiling(max(tib.resultadosMes$A27_VL_LOLP)*10)/10/16),
+                       limits = c(0, ceiling(max(tib.resultadosMes$A27_VL_LOLP)*10)/10)) +
     scale_fill_manual(name = NULL, values = "steelblue") +
     scale_colour_manual(name = NULL, values = "red2") +
     ggtitle(label = tituloGrafico) + 

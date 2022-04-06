@@ -88,7 +88,7 @@ graficosGF <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, tipoGrafico,
         legend = list(title = list(text='<b> Subsistemas </b>')), #orientation = 'h'),
         yaxis = list( 
           title = "<b>Déficit % da Demanda</b>", 
-          tickformat = "%" 
+          tickformat = "p" 
         ), 
         xaxis = list( 
           title = "<b>Mês</b>", 

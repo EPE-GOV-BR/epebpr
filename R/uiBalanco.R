@@ -106,27 +106,6 @@ uiBalanco <- fluidPage(
                  textInput(inputId = "descricao",
                            label = HTML("Descrição do Caso:"),
                            value = NULL),
-
-                 # conditionalPanel(condition = "input.tipoCaso == 1",
-                 #                  # Entrada para inicio da serie
-                 #                  tags$div(style="display:inline-block; width:100px",
-                 #                           numericInput(inputId = "anoMesInicioMDI",
-                 #                                        label = HTML("Início MDI:"),
-                 #                                        min = 201801,
-                 #                                        max = 205012,
-                 #                                        value = 201901)),
-                 #                  
-                 #                  # Espaco entre inputs
-                 #                  tags$div(style="display:inline-block; width:7px"),
-                 #                  
-                 #                  # Entrada para fim da serie
-                 #                  tags$div(style="display:inline-block; width:100px",
-                 #                           numericInput(inputId = "anoMesFimMDI",
-                 #                                        label = HTML("Fim MDI:"),
-                 #                                        min = 201801,
-                 #                                        max = 205012,
-                 #                                        value = 203312))
-                 # ),
                  
                  wellPanel(style = "padding: 5px;",
                            tags$b(HTML("REEs Não Modulam")),

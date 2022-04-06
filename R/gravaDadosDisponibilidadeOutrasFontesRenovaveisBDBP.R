@@ -37,7 +37,7 @@ gravacaoDadosDisponibilidadeOutrasFontesBDBP <- function(pastaCaso, conexao, tip
     stop("favor indicar o n\u00FAmero do caso")
   }
   if (missing(codModelo)) {
-    stop("favor indicar o c\u00F3digo do modelo")
+    stop("favor indicar o código do modelo")
   }
   if (missing(anoMesInicioMDI)) {
     stop("favor indicar a data do inicio do caso simulado")
@@ -69,7 +69,7 @@ gravacaoDadosDisponibilidadeOutrasFontesBDBP <- function(pastaCaso, conexao, tip
   codificacao <- Encoding(colnames(df.renovaveis)) %>% .[. != "unknown"] %>% unique()
   if (length(codificacao) != 1) {
     dbDisconnect(conexao)
-    stop("Problema de codificação (UTF-8) na Planilha de pequenas. Uma solução \u00E9 remover os acentos dos nomes das colunas.")
+    stop("Problema de codificação (UTF-8) na Planilha de pequenas. Uma solução é remover os acentos dos nomes das colunas.")
   }
   colnames(df.renovaveis) <- iconv(colnames(df.renovaveis), from = codificacao, to = "ASCII//TRANSLIT")
 
@@ -152,7 +152,7 @@ gravacaoDadosDisponibilidadeOutrasFontesBDBP <- function(pastaCaso, conexao, tip
     if (length(codificacao) != 1) {
       dbDisconnect(conexao)
       stop("Problema de codificação (UTF-8) na Planilha ", arquivoDadosOFR,  
-           " na aba SazonalidadeIndicativas. Uma solução \u00E9 remover os acentos dos nomes das colunas.")
+           " na aba SazonalidadeIndicativas. Uma solução é remover os acentos dos nomes das colunas.")
     }
     colnames(df.sazonalidadeIndicativas) <- iconv(colnames(df.sazonalidadeIndicativas), from = codificacao, to = "ASCII//TRANSLIT")
     

@@ -5,7 +5,7 @@
 \alias{uiBalancoEPE}
 \title{Interface do usuario (ui) Shiny do Balanco de Potencia}
 \format{
-An object of class \code{shiny.tag.list} (inherits from \code{list}) of length 3.
+An object of class \code{shiny.tag.list} (inherits from \code{list}) of length 4.
 }
 \usage{
 uiBalancoEPE

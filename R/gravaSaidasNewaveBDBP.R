@@ -35,7 +35,7 @@ gravaSaidasNewaveBDBP <- function(pasta, pastaSaidas, conexao, tipoCaso, numeroC
     stop("favor indicar o n\u00FAmero do caso")
   }
   if (missing(codModelo)) {
-    stop("favor indicar o c\u00F3digo do modelo")
+    stop("favor indicar o código do modelo")
   }
   
   # limpa BPO_A06_SAIDA_HIDRO_NEWAVE de dados iguais de execucoes anteriores
