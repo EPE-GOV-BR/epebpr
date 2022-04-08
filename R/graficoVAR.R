@@ -40,11 +40,16 @@ graficoVAR <- function(baseSQLite, tipoCaso, numeroCaso, codModelo,
     
     # cria coluna do tipo data a partir do campo anoMes e filtra o horizonte para exibicao no grafico
     tib.resultadosVarMes <- tib.resultadosVarMes %>% mutate(anoMes = as.character(A25_NR_MES) %>% as.yearmon("%Y%m") %>% zoo::as.Date()) %>% 
-      filter(between(as.integer(format(anoMes, "%Y")), inicioHorizonteGrafico, fimHorizonteGrafico))
+      filter(between(as.integer(format(anoMes, "%Y")), inicioHorizonteGrafico, fimHorizonteGrafico)) %>% 
+      # faz um mutate para corrigir a ordem do grafico
+      mutate(A25_TX_PERCENT_VAR = ifelse(A25_TX_PERCENT_VAR == "1,5%", "1 1,5%",
+                                          ifelse(A25_TX_PERCENT_VAR == "2,5%", "2 2,5%",
+                                                 ifelse(A25_TX_PERCENT_VAR == "5%", "3 5%",
+                                                        ifelse(A25_TX_PERCENT_VAR == "10%", "4 10%", "")))))
     
     # inclusao de maximo var por tipo para possibilitar a identificacao dos maximos no grafico
     tib.resultadosVarMesMax <- tib.resultadosVarMes %>% group_by(A25_TX_PERCENT_VAR) %>% summarise(maxVAR = max(A25_VL_VAR)) %>% ungroup()
-    tib.resultadosVarMes <- inner_join(tib.resultadosVarMes, tib.resultadosVarMesMax, by = "A25_TX_PERCENT_VAR")
+    tib.resultadosVarMes <- inner_join(tib.resultadosVarMes, tib.resultadosVarMesMax, by = "A25_TX_PERCENT_VAR") 
     
     # tibble criado para possibilitar marcacao da area do grafico onde se encontra o maximo
     tib.localMaxVar <- rbind(tib.resultadosVarMes %>% filter(A25_VL_VAR == maxVAR), 
@@ -89,7 +94,12 @@ graficoVAR <- function(baseSQLite, tipoCaso, numeroCaso, codModelo,
     dbDisconnect(conexao)
 
     # filtra o horizonte para exibicao no grafico
-    tib.resultadosVarAno <- tib.resultadosVarAno %>% filter(between(A26_NR_ANO, inicioHorizonteGrafico, fimHorizonteGrafico))
+    tib.resultadosVarAno <- tib.resultadosVarAno %>% filter(between(A26_NR_ANO, inicioHorizonteGrafico, fimHorizonteGrafico)) %>% 
+      # faz um mutate para corrigir a ordem do grafico
+      mutate(A26_TX_PERCENT_VAR = ifelse(A26_TX_PERCENT_VAR == "1,5%", "1 1,5%",
+                                         ifelse(A26_TX_PERCENT_VAR == "2,5%", "2 2,5%",
+                                                ifelse(A26_TX_PERCENT_VAR == "5%", "3 5%",
+                                                       ifelse(A26_TX_PERCENT_VAR == "10%", "4 10%", "")))))
     
     # exibe grafico anual de var
     graficoVaR <- plot_ly(data = tib.resultadosVarAno, x = ~A26_NR_ANO, y = ~A26_VL_VAR, color = ~A26_TX_PERCENT_VAR, 
@@ -102,6 +112,7 @@ graficoVAR <- function(baseSQLite, tipoCaso, numeroCaso, codModelo,
           title = "<b>Déficit em MW</b>", 
           tickformat = ".0f"), 
         xaxis = list(
+          title = "<b>Ano</b>",
           type = 'category')) %>% 
       style(name = "VaR 1.5%", traces = 1) %>% 
       style(name = "VaR 2.5%", traces = 2) %>% 

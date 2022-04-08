@@ -96,7 +96,12 @@ graficoCVAR <- function(baseSQLite, tipoCaso, numeroCaso, codModelo,
     dbDisconnect(conexao)
     
     # filtra resultados por anos
-    tib.resultadosCvarAno <- tib.resultadosCvarAno %>% filter(between(A23_NR_ANO, inicioHorizonteGrafico, fimHorizonteGrafico))
+    tib.resultadosCvarAno <- tib.resultadosCvarAno %>% filter(between(A23_NR_ANO, inicioHorizonteGrafico, fimHorizonteGrafico)) %>% 
+      # faz um mutate para corrigir a ordem do grafico
+      mutate(A23_TX_PERCENT_CVAR = ifelse(A23_TX_PERCENT_CVAR == "1,5%", "1 1,5%",
+                                          ifelse(A23_TX_PERCENT_CVAR == "2,5%", "2 2,5%",
+                                                 ifelse(A23_TX_PERCENT_CVAR == "5%", "3 5%",
+                                                        ifelse(A23_TX_PERCENT_CVAR == "10%", "4 10%", "")))))
     
     # exibe grafico anual de cvar
     graficoCVaR <- plot_ly(data = tib.resultadosCvarAno, x = ~A23_NR_ANO, y = ~A23_VL_CVAR, color = ~A23_TX_PERCENT_CVAR, 
