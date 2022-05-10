@@ -100,7 +100,7 @@ gravacaoSaidasAnalises <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
   # LOLP Anual
   dadosRiscoAnual <- dadosRisco %>% ungroup() %>% select(ano, riscoAnual) %>% distinct()
   
-  # Risco
+  # Requisitos de Potencia
   dadosRequisitoPot <- dadosRequisitoPot(baseSQLite, 
                                          tipoCaso,
                                          numeroCaso,
@@ -110,6 +110,14 @@ gravacaoSaidasAnalises <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
     mutate(mes = A09_NR_MES%%100) %>% 
     select(ano, mes, everything(), -anoMes, -A09_NR_MES)
   
+  # Requisitos de Potencia quadrimestral
+  dadosRequisitoPotQuad <- dadosRequisitoPotQuad(baseSQLite, 
+                                                 tipoCaso,
+                                                 numeroCaso,
+                                                 codModelo, 
+                                                 df.dadosGerais$anoInicio, 
+                                                 (df.dadosGerais$anoInicio + df.dadosGerais$duracaoEstudo - 1))
+  
   # grava todos os df em uma planilha excel
   write_xlsx(list("CVaR Mensal" = dadosCvarMensal,
                   "CVaR Anual" = dadosCvarAnual, 
@@ -118,7 +126,8 @@ gravacaoSaidasAnalises <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
                   "VaR Anual" = dadosVarAnual, 
                   "LOLP Mensal" = dadosRiscoMensal,
                   "LOLP Anual" = dadosRiscoAnual,
-                  "Requisito de Potência" = dadosRequisitoPot),
+                  "Requisito de Potência" = dadosRequisitoPot,
+                  "Requisito de Potência Quadrimestral" = dadosRequisitoPotQuad),
              path = paste0(pastaSaidaExcel, "//resumoSaidasBP.xlsx"))
   
   # abre conexao
@@ -186,6 +195,13 @@ gravacaoSaidasAnalises <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
            A29_NR_MES = ano*100 + mes) %>% 
     rename(A29_VL_VIOLACAO_CRITERIO = violacaoCriterio, A29_VL_LIMITE_CRITERIO = var5) %>% 
     select(A01_TP_CASO, A01_NR_CASO, A01_CD_MODELO, A29_NR_MES, A29_VL_VIOLACAO_CRITERIO, A29_VL_LIMITE_CRITERIO)
+  
+  dadosRequisitoPotQuadSQL <- dadosRequisitoPotQuad %>% 
+    mutate(A01_TP_CASO = tipoCaso,
+           A01_NR_CASO = numeroCaso,
+           A01_CD_MODELO = codModelo) %>% 
+    rename(A30_NR_ANO = ano, A30_NR_QUADRIMESTRE = quad, A30_VL_REQUISITO = reqPot) %>% 
+    select(A01_TP_CASO, A01_NR_CASO, A01_CD_MODELO, A30_NR_ANO, A30_NR_QUADRIMESTRE, A30_VL_REQUISITO)
   
   # limpa as tabelas de uma eventual rodada anterior
   query <- paste0("SELECT COUNT(*) AS TOTAL 
@@ -316,6 +332,22 @@ gravacaoSaidasAnalises <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
     dbExecute(conexao, query)
   }
   
+  query <- paste0("SELECT COUNT(*) AS TOTAL 
+                   FROM 
+                   BPO_A30_REQUISITOS_POTENCIA_QUAD
+                   WHERE A01_TP_CASO = ", tipoCaso, 
+                  " AND A01_NR_CASO = ", numeroCaso, 
+                  " AND A01_CD_MODELO = ", codModelo)
+  apagar <- dbGetQuery(conexao, query) %>% pull()
+  
+  if (apagar > 0) {
+    query <- paste0("DELETE FROM BPO_A30_REQUISITOS_POTENCIA_QUAD 
+                     WHERE A01_TP_CASO = ", tipoCaso, 
+                    " AND A01_NR_CASO = ", numeroCaso, 
+                    " AND A01_CD_MODELO = ", codModelo)
+    dbExecute(conexao, query)
+  }
+  
   # salva no BDBP
   dbWriteTable(conexao, "BPO_A22_CVAR_MENSAL_SIN", dadosCvarMensalSQL, append = T)
   dbWriteTable(conexao, "BPO_A23_CVAR_ANUAL_SIN", dadosCvarAnualSQL, append = T)
@@ -325,6 +357,7 @@ gravacaoSaidasAnalises <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
   dbWriteTable(conexao, "BPO_A27_LOLP_MENSAL", dadosRiscoMensalSQL, append = T)
   dbWriteTable(conexao, "BPO_A28_LOLP_ANUAL", dadosRiscoAnualSQL, append = T)
   dbWriteTable(conexao, "BPO_A29_REQUISITOS_POTENCIA", dadosRequisitoPotSQL, append = T)
+  dbWriteTable(conexao, "BPO_A30_REQUISITOS_POTENCIA_QUAD", dadosRequisitoPotQuadSQL, append = T)
   
   mensagem <- "saidas de analise gravadas com sucesso!"
   

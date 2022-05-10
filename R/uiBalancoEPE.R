@@ -255,6 +255,7 @@ uiBalancoEPE <- fluidPage(
                                                           "VaR Mensal" = 6,
                                                           "VaR Anual" = 7,
                                                           "Requisitos de Potência" = 13,
+                                                          "Requisitos de Potência - Quadrimestral" = 14,
                                                           "CVaR Mensal GF" = 10,
                                                           "VaR Mensal GF" = 11,
                                                           "VaR Anual GF" = 12),

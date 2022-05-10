@@ -114,6 +114,7 @@ graficoCVAR <- function(baseSQLite, tipoCaso, numeroCaso, codModelo,
           title = "<b>Déficit % da Demanda</b>", 
           tickformat = "p"), 
         xaxis = list(
+          title = "<b>Ano</b>",
           type = 'category')) %>% 
       style(name = "CVaR 1.5%", traces = 1) %>% 
       style(name = "CVaR 2.5%", traces = 2) %>% 

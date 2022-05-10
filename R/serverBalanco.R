@@ -320,6 +320,14 @@ serverBalanco <- function(input, output, session) {
                                                                     chaveGrafico[3], 
                                                                     as.numeric(input$anoInicioGrafico), 
                                                                     as.numeric(input$anoFimGrafico))
+                                  # Requisitos de potencia quadrimestral
+                                  } else if(as.numeric(input$tipoGrafico) == 14){
+                                    grafico <- graficoRequisitosPotQuad(baseSQLiteGrafico, 
+                                                                        chaveGrafico[1], 
+                                                                        chaveGrafico[2], 
+                                                                        chaveGrafico[3], 
+                                                                        as.numeric(input$anoInicioGrafico), 
+                                                                        as.numeric(input$anoFimGrafico))
                                   }
                                   
                                   remove_modal_spinner()
