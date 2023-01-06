@@ -12,7 +12,7 @@ graficoCVAR(
   inicioHorizonteGrafico,
   fimHorizonteGrafico,
   tipoGrafico,
-  tituloGraficoCVARMes = paste0("Profundidade de DÃ©ficit - CVAR Mensal 5\% - Caso ",
+  tituloGraficoCVARMes = paste0("Profundidade de Déficit - CVAR Mensal 5\% - Caso ",
     numeroCaso),
   tituloGraficoCVARAno = paste0("Profundidade de Déficit - CVAR Anual - Caso ",
     numeroCaso)

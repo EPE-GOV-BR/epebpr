@@ -10,11 +10,11 @@ graficosGF(
   numeroCaso,
   codModelo,
   tipoGrafico,
-  tituloGraficoCVARMes = paste0("Profundidade de DÃ©ficit - CVaR Mensal 5\% - Caso ",
+  tituloGraficoCVARMes = paste0("Profundidade de Déficit - CVaR Mensal 5\% - Caso ",
     numeroCaso),
-  tituloGraficoVARMes = paste0("Profundidade de DÃ©ficit - VaR Mensal 5\% - Caso ",
+  tituloGraficoVARMes = paste0("Profundidade de Déficit - VaR Mensal 5\% - Caso ",
     numeroCaso),
-  tituloGraficoVARAno = paste0("Profundidade de DÃ©ficit - VaR Anual 5\% - Caso ",
+  tituloGraficoVARAno = paste0("Profundidade de Déficit - VaR Anual 5\% - Caso ",
     numeroCaso)
 )
 }

@@ -310,10 +310,93 @@
 					<p> &#8227; <font face = "Courier New">A21_VL_RESERVA_CARGA</font>: Valor da reserva da carga/demanda [MWmês]</p>
 					<p> &#8227; <font face = "Courier New">A21_VL_RESERVA_FONTES</font>: Valor da reserva em função das fontes renováveis [MWmês]</p>
 				<br>
-		</div>
-		<h2>Diagrama Entidade e Relacionamento</h2>
-		<br>
-		<img src = "../imagens/bd_balanco.png" />			
+				<h3><font face = "Courier New">BPO_A22_CVAR_MENSAL_SIN</font></h3>				
+					<p>A tabela apresenta o valor do CVaR do déficit em % da demanda, para diferentes níveis de risco</p>
+					<p>Campos:</p>
+					<p> &#8227; <font face = "Courier New">A01_TP_CASO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Tipo de caso (1:PDE)</p>
+					<p> &#8227; <font face = "Courier New">A01_NR_CASO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Número do caso. Identificador numérico do caso definido pelo usuário</p>
+					<p> &#8227; <font face = "Courier New">A01_CD_MODELO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Tipo de modelo dos dados de entrada (1= Newave)</p>
+					<p> &#8227; <font face = "Courier New">A22_NR_MES</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Ano mês no formato aaaamm</p>
+					<p> &#8227; <font face = "Courier New">A22_TX_PERCENT_CVAR</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Valor percentual das séries consideradas para o cálculo</p>
+					<p> &#8227; <font face = "Courier New">A22_VL_CVAR</font>: Valor percentual da demanda de potência não suprida</p>
+				<br>
+				<h3><font face = "Courier New">BPO_A23_CVAR_ANUAL_SIN</font></h3>				
+					<p>A tabela apresenta o valor do CVaR do déficit em % da demanda, para diferentes níveis de risco</p>
+					<p>Campos:</p>
+					<p> &#8227; <font face = "Courier New">A01_TP_CASO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Tipo de caso (1:PDE)</p>
+					<p> &#8227; <font face = "Courier New">A01_NR_CASO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Número do caso. Identificador numérico do caso definido pelo usuário</p>
+					<p> &#8227; <font face = "Courier New">A01_CD_MODELO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Tipo de modelo dos dados de entrada (1= Newave)</p>
+					<p> &#8227; <font face = "Courier New">A23_NR_ANO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Ano no formato aaaa</p>
+					<p> &#8227; <font face = "Courier New">A23_TX_PERCENT_CVAR</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Valor percentual das séries consideradas para o cálculo</p>
+					<p> &#8227; <font face = "Courier New">A23_VL_CVAR</font>: Valor percentual da demanda de potência não suprida</p>
+				<br>
+				<h3><font face = "Courier New">BPO_A24_CVAR_MENSAL_SUBS</font></h3>				
+					<p>A tabela apresenta o valor do CVaR do déficit em % da demanda, para diferentes níveis de risco para cada subsistema</p>
+					<p>Campos:</p>
+					<p> &#8227; <font face = "Courier New">A01_TP_CASO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Tipo de caso (1:PDE)</p>
+					<p> &#8227; <font face = "Courier New">A01_NR_CASO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Número do caso. Identificador numérico do caso definido pelo usuário</p>
+					<p> &#8227; <font face = "Courier New">A01_CD_MODELO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Tipo de modelo dos dados de entrada (1= Newave)</p>
+					<p> &#8227; <font face = "Courier New">A02_TX_DESCRICAO_SUBSISTEMA</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Nome do subsistema</p>
+					<p> &#8227; <font face = "Courier New">A24_NR_MES</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Ano mês no formato aaaamm</p>
+					<p> &#8227; <font face = "Courier New">A24_VL_CVAR_5</font>: Valor percentual da demanda de potência não suprida para os 5% cenários com maior déficit</p>
+				<br>
+				<h3><font face = "Courier New">BPO_A25_VAR_MENSAL_SIN</font></h3>				
+					<p>A tabela apresenta o valor do VaR do déficit para o SIN em MWmês, para diferentes níveis de risco</p>
+					<p>Campos:</p>
+					<p> &#8227; <font face = "Courier New">A01_TP_CASO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Tipo de caso (1:PDE)</p>
+					<p> &#8227; <font face = "Courier New">A01_NR_CASO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Número do caso. Identificador numérico do caso definido pelo usuário</p>
+					<p> &#8227; <font face = "Courier New">A01_CD_MODELO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Tipo de modelo dos dados de entrada (1= Newave)</p>
+					<p> &#8227; <font face = "Courier New">A25_NR_MES</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Ano mês no formato aaaamm</p>
+					<p> &#8227; <font face = "Courier New">A25_TX_PERCENT_VAR</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Valor do percentil do VaR</p>
+					<p> &#8227; <font face = "Courier New">A25_VL_VAR</font>: Valor da demanda de potência não suprida [MWmês]</p>
+				<br>
+<h3><font face = "Courier New">BPO_A26_VAR_ANUAL_SIN</font></h3>				
+					<p>A tabela apresenta o valor do VaR do déficit do déficit para o SIN em MWmês, para diferentes níveis de risco</p>
+					<p>Campos:</p>
+					<p> &#8227; <font face = "Courier New">A01_TP_CASO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Tipo de caso (1:PDE)</p>
+					<p> &#8227; <font face = "Courier New">A01_NR_CASO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Número do caso. Identificador numérico do caso definido pelo usuário</p>
+					<p> &#8227; <font face = "Courier New">A01_CD_MODELO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Tipo de modelo dos dados de entrada (1= Newave)</p>
+					<p> &#8227; <font face = "Courier New">A26_NR_ANO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Ano no formato aaaa</p>
+					<p> &#8227; <font face = "Courier New">A26_TX_PERCENT_VAR</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Valor do percentil do VaR</p>
+					<p> &#8227; <font face = "Courier New">A26_VL_VAR</font>: Valor da demanda de potência não suprida [MWmês]</p>
+				<br>
+<h3><font face = "Courier New">BPO_A27_LOLP_MENSAL</font></h3>				
+					<p>A tabela apresenta o valor da LOLP para cada mês do horizonte de estudo</p>
+					<p>Campos:</p>
+					<p> &#8227; <font face = "Courier New">A01_TP_CASO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Tipo de caso (1:PDE)</p>
+					<p> &#8227; <font face = "Courier New">A01_NR_CASO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Número do caso. Identificador numérico do caso definido pelo usuário</p>
+					<p> &#8227; <font face = "Courier New">A01_CD_MODELO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Tipo de modelo dos dados de entrada (1= Newave)</p>
+					<p> &#8227; <font face = "Courier New">A27_NR_MES</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Ano mês no formato aaaamm</p>
+					<p> &#8227; <font face = "Courier New">A27_VL_LOLP</font>: Valor da probabilidade de corte de carga</p>
+				<br>
+<h3><font face = "Courier New">BPO_A28_LOLP_ANUAL</font></h3>				
+					<p>A tabela apresenta o valor da LOLP para cada ano do horizonte de estudo</p>
+					<p>Campos:</p>
+					<p> &#8227; <font face = "Courier New">A01_TP_CASO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Tipo de caso (1:PDE)</p>
+					<p> &#8227; <font face = "Courier New">A01_NR_CASO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Número do caso. Identificador numérico do caso definido pelo usuário</p>
+					<p> &#8227; <font face = "Courier New">A01_CD_MODELO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Tipo de modelo dos dados de entrada (1= Newave)</p>
+					<p> &#8227; <font face = "Courier New">A28_NR_ANO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Ano no formato aaaa</p>
+					<p> &#8227; <font face = "Courier New">A28_VL_LOLP</font>: Valor da probabilidade de corte de carga</p>
+				<br>
+<h3><font face = "Courier New">BPO_A29_REQUISITOS_POTENCIA</font></h3>				
+					<p>A tabela apresenta o valor dos requisitos de potência por período, considerando as métricas adotadas pela EPE</p>
+					<p>Campos:</p>
+					<p> &#8227; <font face = "Courier New">A01_TP_CASO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Tipo de caso (1:PDE)</p>
+					<p> &#8227; <font face = "Courier New">A01_NR_CASO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Número do caso. Identificador numérico do caso definido pelo usuário</p>
+					<p> &#8227; <font face = "Courier New">A01_CD_MODELO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Tipo de modelo dos dados de entrada (1= Newave)</p>
+          <p> &#8227; <font face = "Courier New">A29_NR_MES</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Ano mês no formato aaaamm</p>
+					<p> &#8227; <font face = "Courier New">A29_VL_VIOLACAO_CRITERIO</font>: Valor do requisito de potência para o critéiro CVaR(PNS) ≤ 5% da Demanda [MWmês]</p>
+					<p> &#8227; <font face = "Courier New">A29_VL_LIMITE_CRITERIO</font>: Valor do requisito de potência para o critéiro LOLP ≤ 5% [MWmês]</p>
+<br>
+<h3><font face = "Courier New">BPO_A30_REQUISITOS_POTENCIA_QUAD</font></h3>				
+					<p>A tabela apresenta o valor dos requisitos de potência por quadrimestre, considerando as métricas adotadas pela EPE</p>
+					<p>Campos:</p>
+					<p> &#8227; <font face = "Courier New">A01_TP_CASO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Tipo de caso (1:PDE)</p>
+					<p> &#8227; <font face = "Courier New">A01_NR_CASO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Número do caso. Identificador numérico do caso definido pelo usuário</p>
+					<p> &#8227; <font face = "Courier New">A01_CD_MODELO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Tipo de modelo dos dados de entrada (1= Newave)</p>
+          <p> &#8227; <font face = "Courier New">A30_NR_ANO</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Ano no formato aaaa</p>
+					<p> &#8227; <font face = "Courier New">A30_NR_QUADRIMESTRE</font>&nbsp;<img src = "../imagens/key-solid.svg" height = "12px"/>&nbsp;: Quadrimestre do ano</p>
+					<p> &#8227; <font face = "Courier New">A30_VL_REQUISITO</font>: Valor do requisito de potência [MWmês]</p>
 </body>
 
 

@@ -265,16 +265,7 @@ uiBalancoEPE <- fluidPage(
                                   actionButton(inputId = "btnGrafico",
                                                label = NULL,
                                                icon = icon("chart-area"),
-                                               width = 70),
-                                  # Botao de download
-                                  tags$div(style = "display:inline-block;",
-                                           # Exibe/esconde botao se nao tiver caso selecionado
-                                           conditionalPanel(condition = "input.casoGrafico != -1",
-                                                            downloadButton(outputId = "btnDownload", 
-                                                                           label = NULL, 
-                                                                           style = "width: 70px;")
-                                           )
-                                  )
+                                               width = 70)
                  )
                ),
                

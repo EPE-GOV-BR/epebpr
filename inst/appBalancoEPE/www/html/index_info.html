@@ -17,7 +17,7 @@
 	<div class="boxed">
 		<h3>Linguagem e principais bibliotecas</h3>
 		<p></p>
-		<p>&bull; A ferramenta de Balan&ccedil;o de Potência foi desenvolvida em linguagem <a href = "https://www.r-project.org/">R</a> vers&atilde;o 4.</p>
+		<p>&bull; A ferramenta de Balan&ccedil;o de Pot&ecirc;ncia foi desenvolvida em linguagem <a href = "https://www.r-project.org/">R</a> vers&atilde;o 4.</p>
 		<p>&bull; A interface foi desenvolvida com <a href = "https://shiny.rstudio.com/">Shiny</a>. Este &eacute; um pacote R que facilita a cria&ccedil;&atilde;o de aplica&ccedil;&otilde;es Web diretamente do R e utiliza CSS, widgets, html e a&ccedil;&otilde;es JavaScript para maior flexibilidade.</p>
 		<p>&bull; A ferramenta tamb&eacute;m usa o pacote <a href = "https://cran.r-project.org/web/packages/clpAPI/index.html">clpAPI</a>: Interface R para a API em C do COIN-OR Clp.</p>		
 		<p>&bull; Os dados de entrada e de saída utilizados na ferramenta s&atilde;o estruturados em uma base de dados usando SQLite, onde todos as informa&ccedil;&otilde;es s&atilde;o armazenadas. Para mais informa&ccedil;&otilde;es sobre as tabelas de dados acesse o link: <a href="index_db.html">sobre a base</a>.</p>
@@ -25,7 +25,7 @@
 	<br>
 	<h2>Dados de entrada</h2>
 	<div class="boxed">
-		<p>O Balan&ccedil;o de Potência &eacute; executado principalmente a partir de alguns arquivos de entrada e de sa&iacute;da de uma simula&ccedil;&atilde;o completa do NEWAVE. Al&eacute;m desses dados, s&atilde;o necess&aacute;rios tamb&eacute;m alguns outros arquivos com informa&ccedil;&otilde;es complementares sobre caracter&iacute;sticas das fontes n&atilde;o despach&aacute;veis (dadosOFR.xlsx, GeraPeq.xlsx e expans&atilde;o.txt).</p>
+		<p>O Balan&ccedil;o de Pot&ecirc;ncia &eacute; executado principalmente a partir de alguns arquivos de entrada e de sa&iacute;da de uma simula&ccedil;&atilde;o completa do NEWAVE. Al&eacute;m desses dados, s&atilde;o necess&aacute;rios tamb&eacute;m alguns outros arquivos com informa&ccedil;&otilde;es complementares sobre caracter&iacute;sticas das fontes n&atilde;o despach&aacute;veis (dadosOFR.xlsx, GeraPeq.xlsx e expans&atilde;o.txt).</p>
 		<h3>Para um caso NEWAVE</h3>
 		<p></p>
 		<p>&bull; Após simula&ccedil;&atilde;o do caso NEWAVE que será objeto de análise, deve-se utilizar o software de impress&atilde;o de sa&iacute;das NWLISTOP para obter as seguintes sa&iacute;das por Reservatório Equivalente de Energia (REE): Gera&ccedil;&atilde;o hidráulica total (acr&ocirc;nimo <font face = "Courier New">ghtot</font>), energia armazenada final em percentual do armazenamento máximo (acr&ocirc;nimo <font face = "Courier New">earmfp</font>) e vertimento turbinável fio d&rsquo;água (acr&ocirc;nimo <font face = "Courier New">vertturb</font>), de acordo com o tipo de s&eacute;ries de entrada da simula&ccedil;&atilde;o realizada - s&eacute;ries históricas ou sint&eacute;ticas. &Eacute; importante verificar o formato indicado para as sa&iacute;das e n&atilde;o confundir com os arquivos de sufixo &quot;m&quot;, que trazem dados por submercado e n&atilde;o por REE, conforme indicado.</p>
@@ -38,9 +38,9 @@
 		
 		<p>&bull; A informa&ccedil;&atilde;o de carga, presente no arquivo <font face = "Courier New">sistema.xxx</font>, deve apresentar dados para todos os subsistemas (mesmo que com valor zerado)</p>
 		
-		<p>&bull; Arquivo <font face = "Courier New"><b>dadosOFR.xlsx</b></font>: Possui as contribui&ccedil;&otilde;es das renováveis n&atilde;o despachadas para a ponta, o valor percentual das reservas de carga por subsistema e mês e o valor percentual da reserva por motivo da variabilidade das fontes renováveis. O arquivo possui seis abas: FatorPonta, RelacaoIndicativas, SazonalidadeIndicativas, TipoContribuicaoPonta, ReservaRenovavel e Reserva. Este arquivo deve estar presente na mesma pasta dos arquivos do caso, indicada na interface da ferramenta.</p>
+		<p>&bull; Arquivo <font face = "Courier New"><b>dadosOFR.xlsx</b></font>: Possui as contribui&ccedil;&otilde;es das renováveis n&atilde;o despachadas para a ponta, o valor percentual das reservas de carga por subsistema e m&ecirc;s e o valor percentual da reserva por motivo da variabilidade das fontes renováveis. O arquivo possui seis abas: FatorPonta, RelacaoIndicativas, SazonalidadeIndicativas, TipoContribuicaoPonta, ReservaRenovavel e Reserva. Este arquivo deve estar presente na mesma pasta dos arquivos do caso, indicada na interface da ferramenta.</p>
 		
-		<p style="margin-left: 20px">&bull; <b>FatorPonta</b>: Nessa aba ficam os fatores de contribui&ccedil;ão mensal para potência informados em fun&ccedil;ão da potência instalada da fonte. &Eacute; utilizado para fontes em que há uma contribui&ccedil;ão específica para potência (fonte do tipo 1). Vale destacar que a coluna <font face = "Courier New">A18_CD_TIPO_FONTE</font> se refere ao código do bloco de usinas não simuladas definida no arquivo <font face = "Courier New">patamar.*</font> e seu valor deve estar coerente com o definido no arquivo.</p>
+		<p style="margin-left: 20px">&bull; <b>FatorPonta</b>: Nessa aba ficam os fatores de contribui&ccedil;&atilde;o mensal para pot&ecirc;ncia informados em fun&ccedil;&atilde;o da pot&ecirc;ncia instalada da fonte. &Eacute; utilizado para fontes em que há uma contribui&ccedil;&atilde;o espec&iacute;fica para pot&ecirc;ncia (fonte do tipo 1). Vale destacar que a coluna <font face = "Courier New">A18_CD_TIPO_FONTE</font> se refere ao código do bloco de usinas n&atilde;o simuladas definida no arquivo <font face = "Courier New">patamar.*</font> e seu valor deve estar coerente com o definido no arquivo.</p>
 		
 		<p style="margin-left: 30px; padding-top:6px"><img src = "../imagens/cabecalho_fator_ponta.png" /></p>
 		
@@ -48,7 +48,7 @@
 		
 		<p style="margin-left: 30px; padding-top:6px"><img src = "../imagens/cabecalho_relacao_indicativas.png" /></p>
 		
-		<p style="margin-left: 20px">&bull; <b>SazonalidadeIndicativas</b>: Nessa aba ficam os dados de sazonalidade m&eacute;dia mensal das fontes indicativas da expansão.</p>
+		<p style="margin-left: 20px">&bull; <b>SazonalidadeIndicativas</b>: Nessa aba ficam os dados de sazonalidade m&eacute;dia mensal das fontes indicativas da expans&atilde;o.</p>
 		
 		<p style="margin-left: 30px; padding-top:6px"><img src = "../imagens/cabecalho_sazo_indicativas.png" /></p>
 		
@@ -56,11 +56,11 @@
 		
 		<p style="margin-left: 30px; padding-top:6px"><img src = "../imagens/cabecalho_tipo_contribuicao_ponta.png" /></p>
 		
-		<p style="margin-left: 20px">&bull; <b>ReservaRenovavel</b>: Nessa aba ficam os dados da reserva por motivo da variabilidade das fontes renováveis. Este dado é o percentual da expectativa de gera&ccedil;ão da respectiva fonte por subsistema e mês. O campo <font face = "Courier New">A18_CD_TIPO_FONTE</font> se refere ao código do bloco de usinas não simuladas definida no arquivo <font face = "Courier New">patamar.*</font> e seu valor deve estar coerente com o definido no arquivo.</p>
+		<p style="margin-left: 20px">&bull; <b>ReservaRenovavel</b>: Nessa aba ficam os dados da reserva por motivo da variabilidade das fontes renováveis. Este dado é o percentual da expectativa de gera&ccedil;&atilde;o da respectiva fonte por subsistema e mês. O campo <font face = "Courier New">A18_CD_TIPO_FONTE</font> se refere ao código do bloco de usinas n&atilde;o simuladas definida no arquivo <font face = "Courier New">patamar.*</font> e seu valor deve estar coerente com o definido no arquivo.</p>
 		
 		<p style="margin-left: 30px; padding-top:6px"><img src = "../imagens/cabecalho_reserva_renovavel.png" /></p>
 		
-		<p style="margin-left: 20px">&bull; <b>Reserva</b>: Nessa aba ficam os dados da reserva em fun&ccedil;ão da carga. Os valores são percentuais relativos aos subsistemas e mês.</p>
+		<p style="margin-left: 20px">&bull; <b>Reserva</b>: Nessa aba ficam os dados da reserva em fun&ccedil;&atilde;o da carga. Os valores s&atilde;o percentuais relativos aos subsistemas e mês.</p>
 		
 		<p style="margin-left: 30px; padding-top:6px"><img src = "../imagens/cabecalho_reserva_carga.png" /></p>
 		
@@ -70,12 +70,12 @@
 		
 		<p>&bull; Arquivo <font face = "Courier New"><b>saidaExpansao.txt</b></font>: Arquivo texto com a expansão indicativa do MDI. Este arquivo &eacute; um arquivo de saída do MDI. Este arquivo deve estar presente na mesma pasta dos arquivos do caso, pois será utilizado para a identifica&ccedil;ão do montante de expansão de usinas não simuladas no NEWAVE.</p>
 		
-		<p>&bull; Arquivo <font face = "Courier New"><b>infoMDI.txt</b></font>: Arquivo texto com informa&ccedil;&otilde;es sobre o caso de expansão executado pelo MDI. Este arquivo é um arquivo de saída do MDI. Este arquivo deve estar presente na mesma pasta dos arquivos do caso.</p>
+		<p>&bull; Arquivo <font face = "Courier New"><b>infoMDI.txt</b></font>: Arquivo texto com informa&ccedil;&otilde;es sobre o caso de expansão executado pelo MDI. Este arquivo &eacute; um arquivo de saída do MDI. Este arquivo deve estar presente na mesma pasta dos arquivos do caso.</p>
 	</div>
 	<br>
 	<h2>Resumo das rotinas de execu&ccedil;ão do Balan&ccedil;o de Potência</h2>
 	<div class="boxed">
-		<p>Após o preenchimento de todos os dados de entrada no painel &ldquo;Balan&ccedil;o de Potência&rdquo; e a solicita&ccedil;ão de execu&ccedil;ão da aplica&ccedil;ão através do botão &ldquo;Calcula Balan&ccedil;o de Potência&rdquo;, a ferramenta inicia sua execu&ccedil;ão com a leitura dos dados de entrada e saída do NEWAVE, das planilhas adicionais e do arquivo com as expans&otilde;es do MDI. Este processo executa as seguintes etapas:</p>
+		<p>Após o preenchimento de todos os dados de entrada no painel &ldquo;Balan&ccedil;o de Potência&rdquo; e a solicita&ccedil;ão de execu&ccedil;ão da aplica&ccedil;ão atrav&eacute;s do botão &ldquo;Calcula Balan&ccedil;o de Potência&rdquo;, a ferramenta inicia sua execu&ccedil;ão com a leitura dos dados de entrada e saída do NEWAVE, das planilhas adicionais e do arquivo com as expans&otilde;es do MDI. Este processo executa as seguintes etapas:</p>
 		<ol>
 			<li>Efetua a leitura dos dados gerais e da configura&ccedil;ão hidráulica (pacote <font face = "Courier New">leitorrmpe</font>) a fim de definir a quantidade de cenários que serão utilizados na execu&ccedil;ão do BP. A defini&ccedil;ão segue o campo &quot;TIPO SIMUL. FINAL&quot; do arquivo <font face = "Courier New">dger.d*</font> de dados gerais (1: série sintética; 2: série histórica)</li>
 			
@@ -120,15 +120,15 @@
 
 			<li>Faz o cálculo e a grava&ccedil;ão dos dados de reserva em fun&ccedil;ão da carga e em fun&ccedil;ão da potência instalada de renováveis na tabela <font face = "Courier New">BPO_A21_RESERVA</font></li>			
 		</ol>
-		<p>Passada a gravação dos dados de entrada, se inicia o cálculo da disponibilidade hidráulica e atualização e gravação das tabelas <font face = "Courier New">BPO_A06_SAIDA_HIDRO_NEWAVE</font>, <font face = "Courier New">BPO_A08_DADOS_CALCULADOS_UHE</font> e <font face = "Courier New">BPO_A09_DISPONIBILIDADE_HIDRO_PONTA_SUBSISTEMA</font></p>
+		<p>Passada a grava&ccedil;ão dos dados de entrada, se inicia o cálculo da disponibilidade hidráulica e atualiza&ccedil;ão e grava&ccedil;ão das tabelas <font face = "Courier New">BPO_A06_SAIDA_HIDRO_NEWAVE</font>, <font face = "Courier New">BPO_A08_DADOS_CALCULADOS_UHE</font> e <font face = "Courier New">BPO_A09_DISPONIBILIDADE_HIDRO_PONTA_SUBSISTEMA</font></p>
 		<ol>
-			<li>Atualiza a informação de submotorização da tabela <font face = "Courier New">BPO_A06_SAIDA_HIDRO_NEWAVE</font> com dados de submotorização por REE (<font face = "Courier New">relat.d*</font>)</li>
+			<li>Atualiza a informa&ccedil;ão de submotoriza&ccedil;ão da tabela <font face = "Courier New">BPO_A06_SAIDA_HIDRO_NEWAVE</font> com dados de submotoriza&ccedil;ão por REE (<font face = "Courier New">relat.d*</font>)</li>
 			
-			<li>Pega a informação das usinas do tipo 1 (que modulam) para cálculo de disponibilidade</li>
+			<li>Pega a informa&ccedil;ão das usinas do tipo 1 (que modulam) para cálculo de disponibilidade</li>
 			
 			<li>Calcula o volume operativo por usina como: (volume máximo por usina &ndash; volume mínimo por usina) * armazenamento percentual por REE + volume mínimo por usina</li>
 			
-			<li>Atualiza a geração hidráulica por REE original da <font face = "Courier New">BPO_A06_SAIDA_HIDRO_NEWAVE</font> somando-se a submotorização do respectivo REE</li>
+			<li>Atualiza a gera&ccedil;ão hidráulica por REE original da <font face = "Courier New">BPO_A06_SAIDA_HIDRO_NEWAVE</font> somando-se a submotoriza&ccedil;ão do respectivo REE</li>
 			
 			<li>Calcula a cota operativa a partir do volume operativo e do polin&ocirc;mio cota-volume</li>
 			
@@ -160,9 +160,9 @@
 			<li>São organizados os agrupamentos de linhas e suas restriç&otilde;es de acordo com os novos códigos estabelecidos das linhas</li>
 			<li>Estrutura os valores da demanda no horizonte de estudos, assim como a reserva. Estes se tornarão uma restrição de igualdade no problema linear (PL)</li>
 			<li>Com a estrutura base para se montar os PLs, faz-se uso de processamento paralelo para resolver cada problema. Além do problema completo, com transmissão, também é criado um problema sem essa restrição para eventual análise</li>
-			<li>Os resultados são gravados nas tabelas <font face = "Courier New">BPO_A16_BALANCO</font>, <font face = "Courier New">BPO_A17_BALANCO_GERADOR</font> e <font face = "Courier New">BPO_A20_BALANCO_SUBSISTEMA</font>. Na tabela <font face = "Courier New">BPO_A16_BALANCO</font> são gravados os balanços para cada mês, ano e série hídrica de forma agregada por subsistema. A tabela <font face = "Courier New">BPO_A17_BALANCO_GERADOR</font> receberá as mesmas informaç&otilde;es da tabela anterior, contudo, desagregada por gerador (essa tabela só será gravada se o usuário selecionar essa necessidade na tela de navegação da ferramenta). Por fim a tabela <font face = "Courier New">BPO_A20_BALANCO_SUBSISTEMA</font> apresenta a solução dual do problema, no caso, os CMOs</li>			
+			<li>Os resultados são gravados nas tabelas <font face = "Courier New">BPO_A16_BALANCO</font>, <font face = "Courier New">BPO_A17_BALANCO_GERADOR</font> e <font face = "Courier New">BPO_A20_BALANCO_SUBSISTEMA</font>. Na tabela <font face = "Courier New">BPO_A16_BALANCO</font> são gravados os balanços para cada mês, ano e série hídrica de forma agregada por subsistema. A tabela <font face = "Courier New">BPO_A17_BALANCO_GERADOR</font> receberá as mesmas informaç&otilde;es da tabela anterior, contudo, desagregada por gerador (essa tabela só será gravada se o usuário selecionar essa necessidade na tela de navegação da ferramenta). A tabela <font face = "Courier New">BPO_A20_BALANCO_SUBSISTEMA</font> apresenta a solução dual do problema, no caso, os CMOs. Por fim,  As tabelas <font face = "Courier New">BPO_A21</font> a <font face = "Courier New">BPO_A30</font> apresentam as métricas utilizadas para o cálculo dos requisitos de potência pela EPE.</li>
+			<li>Um arquivo em formato excel com o nome <font face = "Courier New">resumoSaidasBP.xlsx</font>, contendo as principais saídas da ferramenta, é criado no mesmo diretório onde está armazenada a BD.</li>
 		</ol>
-		<p>Após o cálculo dos diversos balanços de potência, a ferramenta chega ao fim de sua execução.</p>
 	</div>
 </body>
 </html>
