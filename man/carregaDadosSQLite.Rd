@@ -38,7 +38,7 @@ carregaDadosSQLite(
 
 \item{horasPonta}{valor inteiro com o numero de horas de ponta}
 
-\item{idDemandaLiquida}{identificador de calculo com demanda liquida. 1:Demanda Liquida; 0:Deterministica}
+\item{idDemandaLiquida}{identificador de calculo com demanda liquida. [1]=Deterministica [2]=Liquida}
 
 \item{sistemasNaoModulamPonta}{vetor numerico com codigos dos sitemas que nao modulam na ponta}
 
