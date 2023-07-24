@@ -8,6 +8,7 @@
 #' @param tipoCaso caracter com o tipo de caso simulado. [1]=PDE [2]=PMO [3]=GF.
 #' @param numeroCaso caracter com o numero do caso, definido pelo usuario.
 #' @param codModelo caracter com a definicao do modelo utilizado. [1]=Newave [2]=Suishi.
+#' @param tipoDemanda caracter com a definicao do tipo de demanda do caso. [1]=Deterministica [2]=Liquida
 #'
 #' @return \code{mensagem} vetor de caracteres com a mensagem de sucesso de gravacao na tabela BPO_A10_DEMANDA 
 #'
@@ -16,7 +17,7 @@
 #' gravacaoDadosDemandaBDBP("C:/PDE2027_Caso080", conexao, 1, 80, 1)}
 #'
 #' @export
-gravacaoDadosDemandaBDBP <- function(pastaCaso, conexao, tipoCaso, numeroCaso, codModelo) {
+gravacaoDadosDemandaBDBP <- function(pastaCaso, conexao, tipoCaso, numeroCaso, codModelo, tipoDemanda) {
   if (missing(pastaCaso)) {
     stop("favor indicar a pasta com os arquivos do NEWAVE")
   }
@@ -27,10 +28,13 @@ gravacaoDadosDemandaBDBP <- function(pastaCaso, conexao, tipoCaso, numeroCaso, c
     stop("favor indicar tipo do caso")
   }
   if (missing(numeroCaso)) {
-    stop("favor indicar o n\u00FAmero do caso")
+    stop("favor indicar o número do caso")
   }
   if (missing(codModelo)) {
     stop("favor indicar o código do modelo")
+  }
+  if (missing(tipoDemanda)) {
+    stop("favor indicar o tipo de demanda")
   }
   
   # executa query para apagar da tabela BPO_A10_DEMANDA os dados referentes a um possivel mesmo caso rodado anteriormente, 
@@ -68,8 +72,9 @@ gravacaoDadosDemandaBDBP <- function(pastaCaso, conexao, tipoCaso, numeroCaso, c
   horizonte <- definePeriodo(pastaCaso) %>% pull(anoMes)
   
   df.Demanda <- inner_join(df.mercado, df.patamar, by = c("anoMes", "codSubsistema")) %>% 
-    mutate(tipoCaso = tipoCaso, numeroCaso = numeroCaso, codModelo = codModelo, numSequencialFrequencia = 1, valorFrequencia = 1, 
-           demandaPonta = energiaMercado * profundidadeCarga) %>% 
+    mutate(tipoCaso = tipoCaso, numeroCaso = numeroCaso, codModelo = codModelo, numSequencialFrequencia = tipoDemanda, valorFrequencia = 1, 
+           # se o caso for carga liquida, desconta 15 GW na demanda do NE
+           demandaPonta = ifelse(tipoDemanda == 2 & codSubsistema == 3, energiaMercado * profundidadeCarga - 15000, energiaMercado * profundidadeCarga)) %>% 
     filter(between(anoMes, min(horizonte), max(horizonte))) %>% 
     # renomeia os campos do data frame para compatibilizacao com a tabela do BDBP
     select(A01_TP_CASO = tipoCaso,

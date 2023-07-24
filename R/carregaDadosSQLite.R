@@ -178,7 +178,7 @@ carregaDadosSQLite <- function(baseSQLite, pastaCaso, pastaSaidas, tipoCaso, num
   gravaSaidasNewaveBDBP(pastaCaso, pastaSaidas, conexao, tipoCaso, numeroCaso, codModelo)
   
   # grava dados de demanda de ponta do NEWAVE na tabela BPO_A10_DEMANDA
-  gravacaoDadosDemandaBDBP(pastaCaso, conexao, tipoCaso, numeroCaso, codModelo)
+  gravacaoDadosDemandaBDBP(pastaCaso, conexao, tipoCaso, numeroCaso, codModelo, idDemandaLiquida)
   
   # grava dados dos limites de intercambio ao longo do horizonte de simulacao do NEWAVE na tabela BPO_A11_INTERCAMBIOS
   gravacaoDadosIntercambioBDBP(pastaCaso, conexao, tipoCaso, numeroCaso, codModelo)
@@ -197,7 +197,7 @@ carregaDadosSQLite <- function(baseSQLite, pastaCaso, pastaSaidas, tipoCaso, num
   
   # grava dados de disponilidade das outras fontes renovaveis do NEWAVE na tabela BPO_A13_DISPONIBILIDADE_OFR do BDBP. 
   # alem disso, grava as tabelas de apoio BPO_A18_TIPOS_OFR e BPO_A19_FATOR_PONTA_OFR
-  lt.dadosOutrasFontes <- gravacaoDadosDisponibilidadeOutrasFontesBDBP(pastaCaso, conexao, tipoCaso, numeroCaso, codModelo, anoMesInicioMDI, anoMesFimMDI)
+  lt.dadosOutrasFontes <- gravacaoDadosDisponibilidadeOutrasFontesBDBP(pastaCaso, conexao, tipoCaso, numeroCaso, idDemandaLiquida, codModelo, anoMesInicioMDI, anoMesFimMDI)
   
   # calcula e grava dados das reservas de carga e por motivo de renovaveis na tabela BPO_A21_RESERVA
   gravacaoDadosReservaBDBP(pastaCaso, conexao, tipoCaso, numeroCaso, codModelo, lt.dadosOutrasFontes$df.energiaOFR) 

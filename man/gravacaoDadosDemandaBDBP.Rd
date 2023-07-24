@@ -4,7 +4,14 @@
 \alias{gravacaoDadosDemandaBDBP}
 \title{Gravacao dos dados de demanda de ponta}
 \usage{
-gravacaoDadosDemandaBDBP(pastaCaso, conexao, tipoCaso, numeroCaso, codModelo)
+gravacaoDadosDemandaBDBP(
+  pastaCaso,
+  conexao,
+  tipoCaso,
+  numeroCaso,
+  codModelo,
+  tipoDemanda
+)
 }
 \arguments{
 \item{pastaCaso}{caracter com a localizacao dos arquivos NEWAVE.}
@@ -16,6 +23,8 @@ gravacaoDadosDemandaBDBP(pastaCaso, conexao, tipoCaso, numeroCaso, codModelo)
 \item{numeroCaso}{caracter com o numero do caso, definido pelo usuario.}
 
 \item{codModelo}{caracter com a definicao do modelo utilizado. [1]=Newave [2]=Suishi.}
+
+\item{tipoDemanda}{caracter com a definicao do tipo de demanda do caso. [1]=Deterministica [2]=Liquida}
 }
 \value{
 \code{mensagem} vetor de caracteres com a mensagem de sucesso de gravacao na tabela BPO_A10_DEMANDA

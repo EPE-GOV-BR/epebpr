@@ -1,7 +1,7 @@
 Package: epebpr
 Title: Balanco de Potencia
 Type: Package
-Version: 0.12
+Version: 0.13.0
 Date: 2023-01-06
 Author: Gustavo Haydt [aut, cre],
   Simone Brandao [aut, cre],
@@ -12,7 +12,7 @@ Description: Ferramenta que efetua os balancos de geracao, transmissao e carga p
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: TRUE
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3
 Depends: R (>= 3.6),
   readr,
   readxl,

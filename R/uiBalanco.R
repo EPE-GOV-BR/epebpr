@@ -67,9 +67,9 @@ uiBalanco <- fluidPage(
                  tags$div(style="display:inline-block; width:140px",
                           selectInput(inputId = "idDemanda",
                                       label = "Demanda:",
-                                      choices = c("Líquida" = 1,
-                                                  "Determinística" = 0),
-                                      selected = 0)),
+                                      choices = c("Líquida" = 2,
+                                                  "Determinística" = 1),
+                                      selected = 1)),
                  tags$br(),
 
 
@@ -233,7 +233,7 @@ uiBalanco <- fluidPage(
                                                         label = NULL,
                                                         min = 2018,
                                                         max = 2050,
-                                                        value = 2020)),
+                                                        value = 2023)),
                                   
                                   # Espaco entre inputs
                                   tags$div(style="display:inline-block; width:7px"),
@@ -245,7 +245,7 @@ uiBalanco <- fluidPage(
                                                         label = NULL,
                                                         min = 2018,
                                                         max = 2060,
-                                                        value = 2029)),
+                                                        value = 2033)),
                                   tags$br(),
                                   # Input dos casos na base
                                   selectInput(inputId = "tipoGrafico",

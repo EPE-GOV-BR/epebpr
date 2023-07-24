@@ -234,18 +234,20 @@ serverBalanco <- function(input, output, session) {
                withLogErrors({
                  # importante <<- para passar valor para variavel global
                  baseSQLiteGrafico <<- choose.files(caption = "Escolha a base SQLite",
-                                                    filters = matrix(c("SQLite", "*.db;*.sqlite;*.sqlite3"), ncol = 2)) 
-                 output$baseSQLiteGrafico <- renderText(baseSQLiteGrafico)
-                 output$textoBaseSQLiteGrafico <- renderText("Base selecionada:")
-                 df.casosInputGrafico <- leituraTabelaDadosCasos(baseSQLiteGrafico)
-                 # monta lista para input
-                 lt.casosInputGrafico <- as.list(df.casosInputGrafico$caso)
-                 names(lt.casosInputGrafico) <- df.casosInputGrafico$descricao
-                 lt.casosInputGrafico <- append(list("Selecione um Caso" = -1), lt.casosInputGrafico)
-                 updateSelectInput(session, 
-                                   inputId = "casoGrafico", 
-                                   choices = lt.casosInputGrafico,
-                                   selected = -1)
+                                                    filters = matrix(c("SQLite", "*.db;*.sqlite;*.sqlite3"), ncol = 2))
+                 if(!identical(baseSQLiteGrafico, character(0))){
+                   output$baseSQLiteGrafico <- renderText(baseSQLiteGrafico)
+                   output$textoBaseSQLiteGrafico <- renderText("Base selecionada:")
+                   df.casosInputGrafico <- leituraTabelaDadosCasos(baseSQLiteGrafico)
+                   # monta lista para input
+                   lt.casosInputGrafico <- as.list(df.casosInputGrafico$caso)
+                   names(lt.casosInputGrafico) <- df.casosInputGrafico$descricao
+                   lt.casosInputGrafico <- append(list("Selecione um Caso" = -1), lt.casosInputGrafico)
+                   updateSelectInput(session, 
+                                     inputId = "casoGrafico", 
+                                     choices = lt.casosInputGrafico,
+                                     selected = -1)
+                 }
                })
   )
   # monitora botao para exibir graficos
