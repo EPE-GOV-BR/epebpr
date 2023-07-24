@@ -115,6 +115,7 @@ serverBalanco <- function(input, output, session) {
   
   # monitora botao do calculo do balanco
   textoSelecao <- eventReactive(input$btnBalanco, {
+    browser()
     
     sistemasNaoModulamPonta <- strsplit(input$sistemasNaoModulamPonta, ",") %>% unlist() %>% as.numeric()
     sistemasNaoModulamMedia <- strsplit(input$sistemasNaoModulamMedia, ",") %>% unlist() %>% as.numeric()
@@ -163,7 +164,6 @@ serverBalanco <- function(input, output, session) {
                                                  as.integer(input$codModelo),
                                                  input$descricao,
                                                  as.integer(input$horasPonta),
-                                                 # as.numeric(input$reservaOperativa)/100,
                                                  as.integer(input$idDemanda),
                                                  sistemasNaoModulamPonta,
                                                  sistemasNaoModulamMedia,

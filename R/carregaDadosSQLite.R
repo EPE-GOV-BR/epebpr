@@ -12,7 +12,7 @@
 #' @param codModelo valor inteiro com o codigo do modelo. 1:NEWAVE; 2:SUISHI
 #' @param descricaoCaso vetor de caracteres indicando a descricao do caso
 #' @param horasPonta valor inteiro com o numero de horas de ponta
-#' @param idDemandaLiquida identificador de calculo com demanda liquida. 1:Demanda Liquida; 0:Deterministica
+#' @param idDemandaLiquida identificador de calculo com demanda liquida. [1]=Deterministica [2]=Liquida
 #' @param sistemasNaoModulamPonta vetor numerico com codigos dos sitemas que nao modulam na ponta
 #' @param sistemasNaoModulamMedia vetor numerico com codigos dos sitemas que nao modulam na media
 #' @param codTucurui codigo atribuido para a usina de Tucurui
@@ -23,9 +23,20 @@
 #' @return \code{mensagem} vetor de caracteres com a mensagem de sucesso de gravacao na base
 #'
 #' @export
-carregaDadosSQLite <- function(baseSQLite, pastaCaso, pastaSaidas, tipoCaso, numeroCaso, codModelo, descricaoCaso, horasPonta, 
-                               idDemandaLiquida, sistemasNaoModulamPonta, sistemasNaoModulamMedia,
-                               codTucurui, cotaLimiteTucurui, geracaoLimiteTucurui) {
+carregaDadosSQLite <- function(baseSQLite, 
+                               pastaCaso, 
+                               pastaSaidas, 
+                               tipoCaso, 
+                               numeroCaso, 
+                               codModelo, 
+                               descricaoCaso, 
+                               horasPonta, 
+                               idDemandaLiquida, 
+                               sistemasNaoModulamPonta, 
+                               sistemasNaoModulamMedia,
+                               codTucurui, 
+                               cotaLimiteTucurui, 
+                               geracaoLimiteTucurui) {
   # barra de progresso
   incProgress(3/100, detail = "Leitura de Dados Gerais")
   

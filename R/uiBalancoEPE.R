@@ -66,8 +66,8 @@ uiBalancoEPE <- fluidPage(
                  tags$div(style="display:inline-block; width:140px",
                           selectInput(inputId = "idDemanda",
                                       label = "Demanda:",
-                                      choices = c("Líquida" = 1,
-                                                  "Determinística" = 0),
+                                      choices = c("Líquida" = 2,
+                                                  "Determinística" = 1),
                                       selected = 0)),
                  tags$br(),
 
