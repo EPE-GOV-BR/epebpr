@@ -72,7 +72,7 @@ gravacaoDadosDemandaBDBP <- function(pastaCaso, conexao, tipoCaso, numeroCaso, c
   horizonte <- definePeriodo(pastaCaso) %>% pull(anoMes)
   
   df.Demanda <- inner_join(df.mercado, df.patamar, by = c("anoMes", "codSubsistema")) %>% 
-    mutate(tipoCaso = tipoCaso, numeroCaso = numeroCaso, codModelo = codModelo, numSequencialFrequencia = tipoDemanda, valorFrequencia = 1, 
+    mutate(tipoCaso = tipoCaso, numeroCaso = numeroCaso, codModelo = codModelo, tipoDemanda, 
            # se o caso for carga liquida, desconta 15 GW na demanda do NE
            demandaPonta = ifelse(tipoDemanda == 2 & codSubsistema == 3, energiaMercado * profundidadeCarga - 15000, energiaMercado * profundidadeCarga)) %>% 
     filter(between(anoMes, min(horizonte), max(horizonte))) %>% 
@@ -82,8 +82,7 @@ gravacaoDadosDemandaBDBP <- function(pastaCaso, conexao, tipoCaso, numeroCaso, c
            A01_CD_MODELO = codModelo,
            A02_NR_SUBSISTEMA = codSubsistema,
            A10_NR_MES = anoMes,
-           A10_NR_SEQ_FREQUENCIA = numSequencialFrequencia,
-           A10_VL_FREQUENCIA = valorFrequencia,
+           A10_NR_TIPO_DEMANDA = tipoDemanda,
            A10_VL_DEMANDA = demandaPonta)
   
   # executa query para gravar os dados da demanda de ponta na tabela BPO_A10_DEMANDA do BDBP

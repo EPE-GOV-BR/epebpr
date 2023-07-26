@@ -67,7 +67,6 @@ calculaBalancoParalelo <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
                       A.A02_NR_SUBSISTEMA AS codUsina,
                       A.A02_NR_SUBSISTEMA AS subsistema,
                       A.A10_NR_MES AS anoMes,
-                      A.A10_NR_SEQ_FREQUENCIA AS id,
                       0 AS transmissao,
                       0 AS inflexibilidade,
                       A.A10_VL_DEMANDA AS disponibilidade,
@@ -97,7 +96,7 @@ calculaBalancoParalelo <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
            cvu = cvu * (1 + faixas)) %>% 
     filter(disponibilidade > 0) %>% 
     select(-tipoUsinaFaixa, -faixas) %>% 
-    arrange(tipoUsina, codUsina, subsistema, anoMes, id)
+    arrange(tipoUsina, codUsina, subsistema, anoMes)
   
   # horizonte do balanco
   quantidadeMesesHorizonte <- ((df.casosAnalise$fimHorizonte %/% 100) * 12 + df.casosAnalise$fimHorizonte %% 100) - 
@@ -160,8 +159,7 @@ calculaBalancoParalelo <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
   query <- paste0("SELECT 
                     A.A10_NR_MES AS anoMes,
                     A.A02_NR_SUBSISTEMA AS subsistema,
-                    A.A10_NR_SEQ_FREQUENCIA AS id,
-                    A.A10_VL_FREQUENCIA AS probOcorrencia,
+                    A.A10_NR_TIPO_DEMANDA AS id,
                     A.A10_VL_DEMANDA AS demanda,
                     A21_VL_RESERVA_CARGA as reservaCarga,
                     A21_VL_RESERVA_FONTES as reservaFontes
@@ -174,7 +172,7 @@ calculaBalancoParalelo <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
                     A.A01_CD_MODELO = B.A01_CD_MODELO AND 
                     A.A10_NR_MES = B.A21_NR_MES AND 
                     A.A02_NR_SUBSISTEMA = B.A02_NR_SUBSISTEMA AND 
-                    A.A10_NR_SEQ_FREQUENCIA = B.A10_NR_SEQ_FREQUENCIA AND
+                    A.A10_NR_TIPO_DEMANDA = B.A10_NR_TIPO_DEMANDA AND
                     A.A01_TP_CASO = ", tipoCaso, " AND 
                     A.A01_NR_CASO = ", numeroCaso, " AND 
                     A.A01_CD_MODELO = ", codModelo)
@@ -182,17 +180,8 @@ calculaBalancoParalelo <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
   df.demanda <- dbGetQuery(conexao, query)
   df.demanda <- df.demanda %>% mutate(demanda = demanda + reservaCarga + reservaFontes) %>% select(-reservaCarga, -reservaFontes)
   
-  # monta data frame com a combinacao de horizonte de estudo, quantidade de demandas e quantidade de series hidro
-  df.demandasAnoMes <- df.demanda %>% group_by(anoMes) %>% summarise(nDemandas = max(id, na.rm = T), .groups = "drop") 
-  df.demandasAnoMesSerie <- data.frame(anoMes = integer(), demanda = numeric())
-  for (andaHorizonte in horizonte) {
-    df.demandasAnoMesSerie <- crossing(data.frame(anoMes = andaHorizonte), 
-                                       data.frame(demanda = seq(1, df.demandasAnoMes %>% filter(anoMes == andaHorizonte) %>% pull(nDemandas)))) %>% 
-      rbind(df.demandasAnoMesSerie, .)
-  }
-  # expande data frame para incluir todas as combinacoes possiveis de valores
-  df.demandasAnoMesSerie <- crossing(df.demandasAnoMesSerie, data.frame(serie = seq(1, df.casosAnalise$numSeriesHidro)))
-  rm(df.demandasAnoMes)
+  # monta data frame com a combinacao de horizonte de estudo e quantidade de series hidro
+  df.demandasAnoMesSerie <- crossing(data.frame(anoMes = df.demanda$anoMes), data.frame(serie = seq(1, df.casosAnalise$numSeriesHidro)))
   
   dbExecute(conexao, "BEGIN TRANSACTION;")
 
@@ -253,7 +242,6 @@ calculaBalancoParalelo <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
       lt.resultado <- foreach(cenario = seq(janelaCenarios[andaJanela], (janelaCenarios[andaJanela + 1] - 1)),
                               .combine = "subRBind",
                               .packages = c("dplyr", "clpAPI", "DBI", "RSQLite"))  %dopar%  balancoPeriodoClp(df.demandasAnoMesSerie$anoMes[cenario],
-                                                                                                              df.demandasAnoMesSerie$demanda[cenario],
                                                                                                               df.demandasAnoMesSerie$serie[cenario],
                                                                                                               balancoResumido, 
                                                                                                               conexao,
@@ -285,7 +273,6 @@ calculaBalancoParalelo <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
       lt.resultado <- foreach(cenario = seq(janelaCenarios[andaJanela], (janelaCenarios[andaJanela + 1] - 1)),
                               .combine = "subRBind",
                               .packages = c("dplyr", "clpAPI", "DBI", "RSQLite")) %dopar% balancoPeriodoClp(df.demandasAnoMesSerie$anoMes[cenario],
-                                                                                                            df.demandasAnoMesSerie$demanda[cenario],
                                                                                                             df.demandasAnoMesSerie$serie[cenario], 
                                                                                                             balancoResumido, 
                                                                                                             conexao,

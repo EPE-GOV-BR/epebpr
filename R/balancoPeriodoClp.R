@@ -4,6 +4,7 @@
 #' Funcao criada para poder executar processamento paralelo.
 #'
 #' @param periodo vetor com o anoMes a ser ser processado. Ex. 201805
+#' @param idSerieHidro variavel com o valor da serie hidrologica para a qual sera calculada o balanco
 #' @param balancoResumido variavel binaria para decidir se vai calcular somente o balanco resumido (\code{BPO_A16_BALANCO}) ou 
 #' tambem o por gerador (\code{BPO_A17_BALANCO_GERADOR})
 #' @param conexao conexao com o banco de dados (classe SQLiteConnection)
@@ -33,15 +34,14 @@
 #'
 #' @examples
 #' \dontrun{
-#' balancoPeriodo(201901, T, conexao, df.custoDefict, df.geracaoTermicaTotal,
+#' balancoPeriodoClp(201901, 1, T, conexao, df.custoDefict, df.geracaoTermicaTotal,
 #' df.geracaoTransmissaoTotal, df.geracaoRenovaveisTotal,
 #' df.limitesAgrupamentoLinhasTotal, df.demanda, df.geracaoHidroTotal,
 #' df.agrupamentoLinhas, tipoCaso, numeroCaso, codModelo,
-#' df.subsistemas, cvuHidro)}
+#' df.subsistemas, cvuHidro, df.defictRealocado)}
 #'
 #' @export
 balancoPeriodoClp <- function(periodo,
-                              idDemanda,
                               idSerieHidro,
                               balancoResumido,
                               conexao,
@@ -59,11 +59,11 @@ balancoPeriodoClp <- function(periodo,
                               df.defictRealocado) {
   
   # filtra demanda especifica (uso particular para carga liquida)
-  df.demandaLiquida <- df.demanda %>% filter(anoMes == periodo & id == idDemanda) %>% select(subsistema, probOcorrencia, demanda)
+  df.demandaLiquida <- df.demanda %>% filter(anoMes == periodo) %>% select(subsistema, demanda)
   # critica de existencia de dados
   if(nrow(df.demandaLiquida) == 0) {
     dbDisconnect(conexao)
-    stop(paste0("Não há demanda (BPO_A10_DEMANDA) para o período de ", periodo, " e demanda ", idDemanda))
+    stop(paste0("Não há demanda (BPO_A10_DEMANDA) definida para o período de ", periodo))
   }
   
   # filtrando geracao termica para o mes especifico
@@ -118,7 +118,7 @@ balancoPeriodoClp <- function(periodo,
   df.geracaoHidro$cvu <- cvuHidro
   
   # filtra deficit realocado especifico da execucao
-  df.defictRealocado <- df.defictRealocado %>% filter(anoMes == periodo & id == idDemanda) %>% 
+  df.defictRealocado <- df.defictRealocado %>% filter(anoMes == periodo) %>% 
     select(tipoUsina, codUsina, subsistema, transmissao, inflexibilidade, disponibilidade, cvu)
   
     # geracao total
@@ -133,12 +133,12 @@ balancoPeriodoClp <- function(periodo,
   if (any(is.na(df.geracao$disponibilidade))) {
     dbDisconnect(conexao)
     stop(paste0("Problema na disponibilidade da geração para execução de ",
-                periodo, ", série hidro ", idSerieHidro, ", demanda ", idDemanda))
+                periodo, ", série hidro ", idSerieHidro))
   }
   if (any(is.na(df.geracao$inflexibilidade))) {
     dbDisconnect(conexao)
     stop(paste0("Problema na inflexibilidade da geração para execução de ",
-                periodo, ", série hidro ", idSerieHidro, ", demanda ", idDemanda))
+                periodo, ", série hidro ", idSerieHidro))
   }
   inconsistenciaLimites <- df.geracao$disponibilidade - df.geracao$inflexibilidade
   inconsistenciaLimites <- inconsistenciaLimites < 0
@@ -146,7 +146,7 @@ balancoPeriodoClp <- function(periodo,
   if(inconsistenciaLimites) {
     dbDisconnect(conexao)
     stop(paste0("Problema de limites na geração para execução de ",
-                periodo, ", série hidro ", idSerieHidro, ", demanda ", idDemanda))
+                periodo, ", série hidro ", idSerieHidro))
   }
   
   # Balanco
@@ -277,7 +277,7 @@ balancoPeriodoClp <- function(periodo,
   if(solucao != 0) {
     dbDisconnect(conexao)
     stop(paste0("Não foi encontrada solução viável (", status_codeCLP(solucao),") para execução de ", 
-                periodo, ", série hidro ", idSerieHidro, ", demanda ", idDemanda))
+                periodo, ", série hidro ", idSerieHidro))
   }
   # solucao primal das variaveis
   primalBalanco <- getColPrimCLP(lpBalanco)
@@ -326,7 +326,7 @@ balancoPeriodoClp <- function(periodo,
     dbDisconnect(conexao)
     stop(paste0("Não foi encontrada solução viável (", 
                 status_codeCLP(solucao),") para execução com transmissão ilimitada de ", 
-                periodo, ", série hidro ", idSerieHidro, ", demanda ", idDemanda))
+                periodo, ", série hidro ", idSerieHidro))
   }
   
   # solucao primal das variaveis
@@ -352,8 +352,7 @@ balancoPeriodoClp <- function(periodo,
            A01_NR_CASO = numeroCaso,
            A01_CD_MODELO = codModelo,
            A09_NR_MES = periodo,
-           A09_NR_SERIE = idSerieHidro,
-           A10_NR_SEQ_FREQUENCIA = idDemanda) %>% 
+           A09_NR_SERIE = idSerieHidro) %>% 
     dplyr::rename(A16_TP_GERACAO = tipoUsina, A02_NR_SUBSISTEMA = subsistema)
   
   
@@ -367,7 +366,6 @@ balancoPeriodoClp <- function(periodo,
                                 A01_CD_MODELO = codModelo,
                                 A20_NR_MES = periodo,
                                 A20_NR_SERIE = idSerieHidro,
-                                A10_NR_SEQ_FREQUENCIA = idDemanda,
                                 A02_NR_SUBSISTEMA = subsistemasReais)
 
   
@@ -388,8 +386,7 @@ balancoPeriodoClp <- function(periodo,
                                                  A01_NR_CASO = numeroCaso,
                                                  A01_CD_MODELO = codModelo,
                                                  A09_NR_MES = periodo,
-                                                 A09_NR_SERIE = idSerieHidro,
-                                                 A10_NR_SEQ_FREQUENCIA = idDemanda) %>% 
+                                                 A09_NR_SERIE = idSerieHidro) %>% 
       select(-transmissao, -disponibilidade, -cvu, -balanco, -balancoRedeIlimitada, -codUsina) %>% 
       dplyr::rename(A16_TP_GERACAO = tipoUsina, 
                     A17_VL_GMIN = inflexibilidade, 

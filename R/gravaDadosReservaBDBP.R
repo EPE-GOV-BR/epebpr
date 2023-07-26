@@ -68,7 +68,7 @@ gravacaoDadosReservaBDBP <- function(pastaCaso, conexao, tipoCaso, numeroCaso, c
   query <- paste0("SELECT 
                     A02_NR_SUBSISTEMA AS subsistema, 
                     A10_NR_MES AS anoMes,  
-                    A10_NR_SEQ_FREQUENCIA as id, 
+                    A10_NR_TIPO_DEMANDA as id, 
                     A10_VL_DEMANDA as demanda 
                   FROM 
                     BPO_A10_DEMANDA 
@@ -111,7 +111,7 @@ gravacaoDadosReservaBDBP <- function(pastaCaso, conexao, tipoCaso, numeroCaso, c
                                      reservaRenovavel)) %>% 
     select(A02_NR_SUBSISTEMA = subsistema,
            A21_NR_MES = anoMes, 
-           A10_NR_SEQ_FREQUENCIA = id, 
+           A10_NR_TIPO_DEMANDA = id, 
            A21_VL_RESERVA_CARGA = reservaDemanda, 
            A21_VL_RESERVA_FONTES = reservaRenovavel) %>% 
     mutate(A01_TP_CASO = tipoCaso, A01_NR_CASO = numeroCaso, A01_CD_MODELO = codModelo)
