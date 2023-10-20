@@ -183,7 +183,8 @@ serverBalanco <- function(input, output, session) {
                                                                as.integer(input$tipoCaso),
                                                                as.integer(input$numeroCaso),
                                                                as.integer(input$codModelo),
-                                                               codTucurui)
+                                                               codTucurui,
+                                                               input$flagVert)
       } else {
         mensagemDisponibilidade <- ""
       }

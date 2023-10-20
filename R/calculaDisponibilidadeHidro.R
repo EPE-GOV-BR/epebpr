@@ -10,11 +10,12 @@
 #' @param numeroCaso valor inteiro com o numero do caso
 #' @param codModelo valor inteiro com o codigo do modelo. 1:NEWAVE; 2:SUISHI
 #' @param codTucurui codigo atribuido para a usina de Tucurui
+#' @param flagVert booleano que indica se considera ou nao o vertimento para todas as UHE
 #'
 #' @return \code{mensagem} vetor de caracteres com a mensagem de sucesso de gravacao na base
 #'
 #' @export
-calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipoCaso, numeroCaso, codModelo, codTucurui) {
+calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipoCaso, numeroCaso, codModelo, codTucurui, flagVert) {
   # SQLite
   conexaoSQLite <- dbConnect(RSQLite::SQLite(), baseSQLite)
   # fecha conexao com a base SQLite na saida da funcao, seja por erro ou normalmente
@@ -245,7 +246,7 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipo
     df.dadosVigentesUHE <- dbGetQuery(conexaoSQLite, sql)
     
     
-    sql <- paste0("SELECT A02_NR_REE, A06_NR_MES, A06_NR_SERIE, A06_VL_PERC_ARMAZENAMENTO, A06_VL_GERACAO_HIDRAULICA, A06_VL_SUBMOTORIZACAO 
+    sql <- paste0("SELECT A02_NR_REE, A06_NR_MES, A06_NR_SERIE, A06_VL_PERC_ARMAZENAMENTO, A06_VL_GERACAO_HIDRAULICA, A06_VL_SUBMOTORIZACAO, A06_VL_VERTIMENTO_TURBINAVEL 
                FROM BPO_A06_SAIDA_HIDRO_NEWAVE
                WHERE
                 A06_NR_MES BETWEEN ", df.dadosCaso$dataInicioCaso , " AND ", df.dadosCaso$dataFimCaso, " AND
@@ -313,7 +314,11 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipo
                                           filter(df.saidasHidro, between(A06_NR_SERIE, janelaSeries[andaJanela], (janelaSeries[andaJanela + 1] - 1))), 
                                           by = c("A02_NR_REE", "A05_NR_MES" = "A06_NR_MES")) %>% 
         mutate(A08_VL_VOLUME_OPERATIVO = (A05_VL_VOL_MAX - A05_VL_VOL_MIN) * A06_VL_PERC_ARMAZENAMENTO + A05_VL_VOL_MIN, 
-               A06_VL_GERACAO_HIDRAULICA = A06_VL_GERACAO_HIDRAULICA + A06_VL_SUBMOTORIZACAO)
+               # verifica o flag de vertimento, se verdadeiro soma o vertimento na variavel de GH
+               A06_VL_GERACAO_HIDRAULICA = ifelse(flagVert,
+                                                  A06_VL_GERACAO_HIDRAULICA + A06_VL_SUBMOTORIZACAO + A06_VL_VERTIMENTO_TURBINAVEL,
+                                                  A06_VL_GERACAO_HIDRAULICA + A06_VL_SUBMOTORIZACAO)
+               )
       
       df.dadosCalculadosUHE <- inner_join(df.dadosCalculadosUHE, df.dadosMaquinasUHE, by = "A03_CD_USINA") %>% 
         mutate(VL_POT_EXP = round(A05_VL_POTENCIA - POT_TOTAL, 2))

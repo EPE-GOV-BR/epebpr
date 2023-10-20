@@ -6,7 +6,6 @@
 \usage{
 balancoPeriodoClp(
   periodo,
-  idDemanda,
   idSerieHidro,
   balancoResumido,
   conexao,
@@ -28,6 +27,8 @@ balancoPeriodoClp(
 }
 \arguments{
 \item{periodo}{vetor com o anoMes a ser ser processado. Ex. 201805}
+
+\item{idSerieHidro}{variavel com o valor da serie hidrologica para a qual sera calculada o balanco}
 
 \item{balancoResumido}{variavel binaria para decidir se vai calcular somente o balanco resumido (\code{BPO_A16_BALANCO}) ou 
 tambem o por gerador (\code{BPO_A17_BALANCO_GERADOR})}
@@ -78,10 +79,10 @@ Funcao criada para poder executar processamento paralelo.
 }
 \examples{
 \dontrun{
-balancoPeriodo(201901, T, conexao, df.custoDefict, df.geracaoTermicaTotal,
+balancoPeriodoClp(201901, 1, T, conexao, df.custoDefict, df.geracaoTermicaTotal,
 df.geracaoTransmissaoTotal, df.geracaoRenovaveisTotal,
 df.limitesAgrupamentoLinhasTotal, df.demanda, df.geracaoHidroTotal,
 df.agrupamentoLinhas, tipoCaso, numeroCaso, codModelo,
-df.subsistemas, cvuHidro)}
+df.subsistemas, cvuHidro, df.defictRealocado)}
 
 }

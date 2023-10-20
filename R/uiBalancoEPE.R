@@ -168,6 +168,7 @@ uiBalancoEPE <- fluidPage(
                               label = NULL,
                               icon = icon("calculator"),
                               width = 77),
+                 tags$br(),
                  tags$div(style = "display:inline-block; width:10px"),
                  tags$div(style="display:inline-block;",
                           checkboxInput(inputId = "balancoResumido",
@@ -187,7 +188,14 @@ uiBalancoEPE <- fluidPage(
                  tags$div(style="display:inline-block;",
                           checkboxInput(inputId = "execucaoBP",
                                         value = T,
-                                        label = HTML("BP")))
+                                        label = HTML("BP"))),
+                 tags$br(),
+                 tags$div(style = "display:inline-block; width:5px"),
+                 tags$div(style="display:inline-block;",
+                          checkboxInput(inputId = "flagVert",
+                                        value = F,
+                                        label = HTML("Considerar Vertimento para todas UHE")))
+                 
                ),
 
                # Output:
