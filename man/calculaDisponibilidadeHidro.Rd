@@ -11,7 +11,8 @@ calculaDisponibilidadeHidro(
   tipoCaso,
   numeroCaso,
   codModelo,
-  codTucurui
+  codTucurui,
+  flagVert
 )
 }
 \arguments{
@@ -28,6 +29,8 @@ calculaDisponibilidadeHidro(
 \item{codModelo}{valor inteiro com o codigo do modelo. 1:NEWAVE; 2:SUISHI}
 
 \item{codTucurui}{codigo atribuido para a usina de Tucurui}
+
+\item{flagVert}{booleano que indica se considera ou nao o vertimento para todas as UHE}
 }
 \value{
 \code{mensagem} vetor de caracteres com a mensagem de sucesso de gravacao na base

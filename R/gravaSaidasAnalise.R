@@ -88,7 +88,7 @@ gravacaoSaidasAnalises <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
     mutate(percentualVar = str_sub(tamanhoVAR, 6)) %>% 
     select(ano, percentualVar, everything(), -tamanhoVAR)
   
-  # Risco
+  # Risco SIN
   dadosRisco <- dadosGraficoRiscoDeficit(baseSQLite, 
                                          tipoCaso,
                                          numeroCaso,
@@ -99,6 +99,18 @@ gravacaoSaidasAnalises <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
   
   # LOLP Anual
   dadosRiscoAnual <- dadosRisco %>% ungroup() %>% select(ano, riscoAnual) %>% distinct()
+  
+  # Risco Subs
+  dadosRiscoSubs <- dadosGraficoRiscoDeficitSubsistema(baseSQLite, 
+                                                       tipoCaso,
+                                                       numeroCaso,
+                                                       codModelo, 
+                                                       df.dadosGerais$anoInicio, 
+                                                       (df.dadosGerais$anoInicio + df.dadosGerais$duracaoEstudo - 1))
+  dadosRiscoMensalSubs <- dadosRiscoSubs %>% select(-anoMes, -riscoAnual)
+  
+  # LOLP Anual Subs
+  dadosRiscoAnualSubs <- dadosRiscoSubs %>% select(subsistema, ano, riscoAnual) %>% distinct()
   
   # Requisitos de Potencia
   dadosRequisitoPot <- dadosRequisitoPot(baseSQLite, 
@@ -124,8 +136,10 @@ gravacaoSaidasAnalises <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
                   "CVaR Mensal Subs" = dadosCvarMensalSubs, 
                   "VaR Mensal" = dadosVarMensal, 
                   "VaR Anual" = dadosVarAnual, 
-                  "LOLP Mensal" = dadosRiscoMensal,
-                  "LOLP Anual" = dadosRiscoAnual,
+                  "LOLP Mensal SIN" = dadosRiscoMensal,
+                  "LOLP Anual SIN" = dadosRiscoAnual,
+                  "LOLP Mensal Subs" = dadosRiscoMensalSubs,
+                  "LOLP Anual Subs" = dadosRiscoAnualSubs,
                   "Requisito de Potência" = dadosRequisitoPot,
                   "Requisito de Potência Quadrimestral" = dadosRequisitoPotQuad),
              path = paste0(pastaSaidaExcel, "//resumoSaidasBP.xlsx"))

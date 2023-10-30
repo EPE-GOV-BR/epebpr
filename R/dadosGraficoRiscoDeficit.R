@@ -71,12 +71,14 @@ dadosGraficoRiscoDeficit <- function(baseSQLite, tipoCaso, numeroCaso, codModelo
   # calcula o risco mensal para os meses com defict
   tib.resultadosMes <- tib.resultados %>% 
     mutate(DEFICIT = ifelse(DEFICIT > 0, 1,0)) %>% 
-    group_by(ano, mes, anoMes) %>% summarise(riscoMensal = sum(DEFICIT)/max(SERIES), .groups = "drop")
+    group_by(ano, mes, anoMes) %>% 
+    reframe(riscoMensal = sum(DEFICIT)/n())
 
   # calcula o risco de defict anual
   tib.resultadosAno <- tib.resultados %>% 
     mutate(DEFICIT = ifelse(DEFICIT > 0, 1,0)) %>%
-    group_by(ano) %>% summarise(riscoAnual = sum(DEFICIT)/max(SERIES)/12, .groups = "drop")
+    group_by(ano) %>% 
+    reframe(riscoAnual = sum(DEFICIT)/n())
   
   # efetua join entre as tibbles de mes e ano para se ter o risco anual na tibble mensal
   tib.resultadosRisco <- inner_join(tib.resultadosMes, tib.resultadosAno, by = "ano")
