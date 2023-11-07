@@ -22,37 +22,61 @@ dadosGraficoCVAR <- function(baseSQLite, tipoCaso, numeroCaso, codModelo,
                     A16.A09_NR_SERIE,
                     A16.A09_NR_MES,
                     SUM(A16_VL_DESPACHO) AS DEFICIT,
-                    A10.DEMANDA 
-                    FROM BPO_A16_BALANCO AS A16,
-                    ( SELECT A10_NR_MES,
-                      A01_TP_CASO,
-                      A01_NR_CASO,
-                      A01_CD_MODELO,
-                      SUM(A10_VL_DEMANDA) AS DEMANDA
-                      FROM BPO_A10_DEMANDA
-                      GROUP BY A10_NR_MES,
-                      A01_TP_CASO,
-                      A01_NR_CASO,
-                      A01_CD_MODELO
-                    ) AS A10
+                    A10.DEMANDA,
+                    A21.RESERVA_F,
+                    A21.RESERVA_C
+                  FROM 
+                    BPO_A16_BALANCO AS A16,
+                    ( SELECT 
+                        A10_NR_MES,
+                        A01_TP_CASO,
+                        A01_NR_CASO,
+                        A01_CD_MODELO,
+                        SUM(A10_VL_DEMANDA) AS DEMANDA
+                      FROM 
+                        BPO_A10_DEMANDA
+                      GROUP BY 
+                        A10_NR_MES,
+                        A01_TP_CASO,
+                        A01_NR_CASO,
+                        A01_CD_MODELO
+                    ) AS A10,
+                    ( SELECT 
+                        A21_NR_MES,
+                        A01_TP_CASO,
+                        A01_NR_CASO,
+                        A01_CD_MODELO,
+                        SUM(A21_VL_RESERVA_CARGA) AS RESERVA_C,
+                        SUM(A21_VL_RESERVA_FONTES) AS RESERVA_F
+                      FROM 
+                        BPO_A21_RESERVA
+                      GROUP BY 
+                        A21_NR_MES,
+                        A01_TP_CASO,
+                        A01_NR_CASO,
+                        A01_CD_MODELO
+                    ) AS A21
                     WHERE 
-                    A16.A16_TP_GERACAO = 'DEFICIT' AND
-                    A16.A01_TP_CASO = ", tipoCaso," AND
-                    A16.A01_NR_CASO = ", numeroCaso," AND
-                    A16.A01_CD_MODELO = ", codModelo, " AND
-                    A10.A10_NR_MES = A16.A09_NR_MES AND
-                    A10.A01_TP_CASO = A16.A01_TP_CASO AND
-                    A10.A01_NR_CASO = A16.A01_NR_CASO AND
-                    A10.A01_CD_MODELO = A16.A01_CD_MODELO
+                      A16.A16_TP_GERACAO = 'DEFICIT' AND
+                      A16.A01_TP_CASO = ", tipoCaso," AND
+                      A16.A01_NR_CASO = ", numeroCaso," AND
+                      A16.A01_CD_MODELO = ", codModelo, " AND
+                      A10.A10_NR_MES = A16.A09_NR_MES AND
+                      A21.A21_NR_MES = A16.A09_NR_MES AND
+                      A10.A01_TP_CASO = A16.A01_TP_CASO AND
+                      A10.A01_TP_CASO = A16.A01_TP_CASO AND
+                      A21.A01_NR_CASO = A16.A01_NR_CASO AND
+                      A10.A01_CD_MODELO = A16.A01_CD_MODELO AND
+                      A21.A01_CD_MODELO = A16.A01_CD_MODELO
                     GROUP BY
-                    A16.A09_NR_SERIE,
-                    A16.A09_NR_MES;")
+                      A16.A09_NR_SERIE,
+                      A16.A09_NR_MES;")
   
   tib.resultados <- dbGetQuery(conexao, squery) %>% as_tibble()
   dbDisconnect(conexao)
   
   # calcula a profundidade dos deficts
-  tib.resultados <- tib.resultados %>% mutate(PROFUNDIDADE = DEFICIT/DEMANDA)
+  tib.resultados <- tib.resultados %>% mutate(PROFUNDIDADE = DEFICIT/(DEMANDA + RESERVA_F + RESERVA_C))
   
   # calcula o CVAR por ano e mes
   tib.resultadosCvarMes <- tib.resultados %>%

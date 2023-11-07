@@ -101,12 +101,12 @@ gravacaoSaidasAnalises <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
   dadosRiscoAnual <- dadosRisco %>% ungroup() %>% select(ano, riscoAnual) %>% distinct()
   
   # Risco Subs
-  dadosRiscoSubs <- dadosGraficoRiscoDeficitSubsistema(baseSQLite, 
-                                                       tipoCaso,
-                                                       numeroCaso,
-                                                       codModelo, 
-                                                       df.dadosGerais$anoInicio, 
-                                                       (df.dadosGerais$anoInicio + df.dadosGerais$duracaoEstudo - 1))
+  dadosRiscoSubs <- dadosGraficoRiscoDeficitSubs(baseSQLite, 
+                                                 tipoCaso,
+                                                 numeroCaso,
+                                                 codModelo, 
+                                                 df.dadosGerais$anoInicio, 
+                                                 (df.dadosGerais$anoInicio + df.dadosGerais$duracaoEstudo - 1))
   dadosRiscoMensalSubs <- dadosRiscoSubs %>% select(-anoMes, -riscoAnual)
   
   # LOLP Anual Subs
