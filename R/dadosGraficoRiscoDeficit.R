@@ -17,26 +17,14 @@ dadosGraficoRiscoDeficit <- function(baseSQLite, tipoCaso, numeroCaso, codModelo
                                 tituloGrafico = paste0("Risco de Déficit - Caso ", numeroCaso)) {
   
   conexao <- dbConnect(RSQLite::SQLite(), baseSQLite)
-  # query no banco com join para buscar defict e demanda por serie para calculo da profundidade (informacao pelo SIN)
+  # query no banco para buscar defict por serie para calculo do risco
   query <- paste0("SELECT 
                     A16.A09_NR_SERIE,
                     A16.A09_NR_MES,
                     SUM(A16_VL_DESPACHO) AS DEFICIT,
-                    A10.DEMANDA,
                     A01.SERIES
                    FROM 
                     BPO_A16_BALANCO AS A16,
-                    (SELECT A10_NR_MES,
-                      A01_TP_CASO,
-                      A01_NR_CASO,
-                      A01_CD_MODELO,
-                      SUM(A10_VL_DEMANDA) AS DEMANDA
-                      FROM BPO_A10_DEMANDA
-                      GROUP BY A10_NR_MES,
-                      A01_TP_CASO,
-                      A01_NR_CASO,
-                      A01_CD_MODELO
-                    ) AS A10,
                     (SELECT A01_TP_CASO,
                       A01_NR_CASO,
                       A01_CD_MODELO,
@@ -48,10 +36,6 @@ dadosGraficoRiscoDeficit <- function(baseSQLite, tipoCaso, numeroCaso, codModelo
                     A16.A01_TP_CASO = ", tipoCaso," AND
                     A16.A01_NR_CASO = ", numeroCaso," AND
                     A16.A01_CD_MODELO = ", codModelo, " AND
-                    A10.A10_NR_MES = A16.A09_NR_MES AND
-                    A10.A01_TP_CASO = A16.A01_TP_CASO AND
-                    A10.A01_NR_CASO = A16.A01_NR_CASO AND
-                    A10.A01_CD_MODELO = A16.A01_CD_MODELO AND
                     A01.A01_TP_CASO = A16.A01_TP_CASO AND
                     A01.A01_NR_CASO = A16.A01_NR_CASO AND
                     A01.A01_CD_MODELO = A16.A01_CD_MODELO

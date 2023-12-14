@@ -1,8 +1,8 @@
 Package: epebpr
 Title: Balanco de Potencia
 Type: Package
-Version: 0.14.1
-Date: 2023-01-06
+Version: 0.14.2
+Date: 14-12-2023
 Author: Gustavo Haydt [aut, cre],
   Simone Brandao [aut, cre],
   Caio Leocadio [aut, cre],

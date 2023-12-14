@@ -130,6 +130,12 @@ gravacaoSaidasAnalises <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
                                                  df.dadosGerais$anoInicio, 
                                                  (df.dadosGerais$anoInicio + df.dadosGerais$duracaoEstudo - 1))
   
+  # Dados de distribuição do Déficit e CVaR
+  dadosDistDef <- dadosDistDeficit(baseSQLite, 
+                                   tipoCaso,
+                                   numeroCaso,
+                                   codModelo)
+  
   # grava todos os df em uma planilha excel
   write_xlsx(list("CVaR Mensal" = dadosCvarMensal,
                   "CVaR Anual" = dadosCvarAnual, 
@@ -141,7 +147,10 @@ gravacaoSaidasAnalises <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
                   "LOLP Mensal Subs" = dadosRiscoMensalSubs,
                   "LOLP Anual Subs" = dadosRiscoAnualSubs,
                   "Requisito de Potência" = dadosRequisitoPot,
-                  "Requisito de Potência Quadrimestral" = dadosRequisitoPotQuad),
+                  "Requisito de Potência Quadrimestral" = dadosRequisitoPotQuad,
+                  "Distribuição do Déficit" = dadosDistDef[["distDef"]],
+                  "Variação do CVaR Mensal" = dadosDistDef[["distCvar"]],
+                  "Dist Déficit x CVaR Max" = dadosDistDef[["distDefxCvarMax"]]),
              path = paste0(pastaSaidaExcel, "//resumoSaidasBP.xlsx"))
   
   # abre conexao
