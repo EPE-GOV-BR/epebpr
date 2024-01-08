@@ -336,7 +336,6 @@ balancoPeriodoClp <- function(periodo,
   delProbCLP(lpBalancoSemTransmissao)
   # Fim Balanco sem limite de transmissao
   
-  
   # gera resultado
   df.geracao <- df.geracao %>% mutate(balanco = round(primalBalanco, 2),
                                       balancoRedeIlimitada = round(primalBalancoTransmissao, 2))
@@ -355,6 +354,19 @@ balancoPeriodoClp <- function(periodo,
            A09_NR_SERIE = idSerieHidro) %>% 
     dplyr::rename(A16_TP_GERACAO = tipoUsina, A02_NR_SUBSISTEMA = subsistema)
   
+  # calcula deficit sem reserva
+  df.deficitSemReserva <- df.resultado %>% 
+    filter(A16_TP_GERACAO == "DEFICIT") %>% 
+    left_join(df.demanda, by = c("A02_NR_SUBSISTEMA" = "subsistema", "A09_NR_MES" = "anoMes")) %>% 
+    mutate(A16_VL_DESPACHO = A16_VL_DESPACHO - reservaCarga - reservaFontes,
+           A16_VL_DESPACHO = ifelse(A16_VL_DESPACHO < 0,
+                                    0,
+                                    A16_VL_DESPACHO),
+           A16_TP_GERACAO = "DEFICIT_R") %>% 
+    select(-id, -demanda, -reservaCarga, -reservaFontes)
+  
+  # adiciona ao df.resultado
+  df.resultado <- rbind(df.resultado, df.deficitSemReserva)
   
   # gera resultados de CMO
   subsistemasReais <- df.subsistemas %>% filter(tipoSistema == 0) %>% pull(subsistema)
@@ -394,7 +406,7 @@ balancoPeriodoClp <- function(periodo,
     
     
   }
-  # limpa o valor infinito do valor nao dispachado dos deficts
+  # limpa o valor infinito do valor nao despachado dos deficts
   df.resultado <- df.resultado %>% mutate(A16_VL_NAO_DESPACHADO = replace(A16_VL_NAO_DESPACHADO, A16_TP_GERACAO %in% c('DEFICIT','TRANSMISSAO'), NA))
   if (balancoResumido == F) {
     df.resultadoGerador <- df.resultadoGerador %>% mutate(A17_VL_NAO_DESPACHADO = replace(A17_VL_NAO_DESPACHADO, A16_TP_GERACAO == 'DEFICIT', NA))

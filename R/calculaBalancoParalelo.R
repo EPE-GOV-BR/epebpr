@@ -178,7 +178,7 @@ calculaBalancoParalelo <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
                     A.A01_CD_MODELO = ", codModelo)
   
   df.demanda <- dbGetQuery(conexao, query)
-  df.demanda <- df.demanda %>% mutate(demanda = demanda + reservaCarga + reservaFontes) %>% select(-reservaCarga, -reservaFontes)
+  df.demanda <- df.demanda %>% mutate(demanda = demanda + reservaCarga + reservaFontes)
   
   # monta data frame com a combinacao de horizonte de estudo e quantidade de series hidro
   df.demandasAnoMesSerie <- crossing(data.frame(anoMes = df.demanda$anoMes), data.frame(serie = seq(1, df.casosAnalise$numSeriesHidro)))
