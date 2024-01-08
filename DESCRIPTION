@@ -1,4 +1,4 @@
-Package: epebpr_dsr
+Package: epebpr.dsr
 Title: Balanco de Potencia
 Type: Package
 Version: 0.14.2
