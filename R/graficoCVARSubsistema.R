@@ -18,7 +18,7 @@ graficoCVARSubsistema <- function(baseSQLite, tipoCaso, numeroCaso, codModelo,
                                   inicioHorizonteGrafico, fimHorizonteGrafico, 
                                   tituloGraficoCVARMes = paste0("Profundidade de Déficit - CVAR Mensal 5% - Caso ", numeroCaso)) {
   
-  conexao <- dbConnect(RSQLite::SQLite(), baseSQLite)
+  conexao <- DBI::dbConnect(RSQLite::SQLite(), baseSQLite)
   # query no banco com join para buscar defict e demanda por serie para calculo da profundidade
   squery <- paste0("SELECT 
                     A24_NR_MES,
@@ -30,27 +30,35 @@ graficoCVARSubsistema <- function(baseSQLite, tipoCaso, numeroCaso, codModelo,
                     A01_NR_CASO = ", numeroCaso," AND
                     A01_CD_MODELO = ", codModelo, ";")
   
-  tib.resultadosCvarMes <- dbGetQuery(conexao, squery) %>% as_tibble()
-  dbDisconnect(conexao)
+  tib.resultadosCvarMes <- DBI::dbGetQuery(conexao, squery) %>% 
+    tidyr::as_tibble()
+  
+  DBI::dbDisconnect(conexao)
   
   # cria coluna do tipo data a partir do campo anoMes e filtra o horizonte para exibicao no grafico
-  tib.resultadosCvarMes <- tib.resultadosCvarMes %>% mutate(anoMes = as.character(A24_NR_MES) %>% as.yearmon("%Y%m") %>% zoo::as.Date()) %>% 
-    filter(between(as.integer(format(anoMes, "%Y")), inicioHorizonteGrafico, fimHorizonteGrafico))
+  tib.resultadosCvarMes <- tib.resultadosCvarMes %>% 
+    dplyr::mutate(anoMes = as.character(A24_NR_MES) %>% zoo::as.yearmon("%Y%m") %>% zoo::as.Date()) %>% 
+    dplyr::filter(dplyr::between(as.integer(format(anoMes, "%Y")), inicioHorizonteGrafico, fimHorizonteGrafico))
   
   # inclusao de maximo cvar por SUBSISTEMA para possibilitar a identificacao dos maximos no grafico
-  tib.resultadosCvarMesMax <- tib.resultadosCvarMes %>% group_by(A02_TX_DESCRICAO_SUBSISTEMA) %>% summarise(maxCVAR = max(A24_VL_CVAR_5), .groups = 'drop')
-  tib.resultadosCvarMes <- inner_join(tib.resultadosCvarMes, tib.resultadosCvarMesMax, by = "A02_TX_DESCRICAO_SUBSISTEMA")
+  tib.resultadosCvarMesMax <- tib.resultadosCvarMes %>% 
+    dplyr::group_by(A02_TX_DESCRICAO_SUBSISTEMA) %>% 
+    dplyr::summarise(maxCVAR = max(A24_VL_CVAR_5), .groups = 'drop')
+  
+  tib.resultadosCvarMes <- dplyr::inner_join(tib.resultadosCvarMes, tib.resultadosCvarMesMax, by = "A02_TX_DESCRICAO_SUBSISTEMA")
   
   # tibble criado para possibilitar marcacao da area do grafico onde se encontra o maximo
-  tib.localMaxCvar <- rbind(tib.resultadosCvarMes %>% filter(A24_VL_CVAR_5 == maxCVAR), 
-                            tib.resultadosCvarMes %>% filter(A24_VL_CVAR_5 == maxCVAR) %>% mutate(anoMes = zoo::as.Date(as.yearmon(anoMes)+1/12)))
+  tib.localMaxCvar <- rbind(tib.resultadosCvarMes %>% dplyr::filter(A24_VL_CVAR_5 == maxCVAR), 
+                            tib.resultadosCvarMes %>% dplyr::filter(A24_VL_CVAR_5 == maxCVAR) %>% dplyr::mutate(anoMes = zoo::as.Date(zoo::as.yearmon(anoMes)+1/12)))
   
   # cria vetor auxiliar com os marcadores que aparecerao no eixo de tempo no grafico
-  marcasEixoMes <- tib.resultadosCvarMes %>% filter(months(anoMes) %in% c("janeiro","julho")) %>% pull(anoMes) %>% c(., max(tib.resultadosCvarMes$anoMes))
+  marcasEixoMes <- tib.resultadosCvarMes %>% 
+    dplyr::filter(months(anoMes) %in% c("janeiro","julho")) %>% 
+    dplyr::pull(anoMes) %>% c(., max(tib.resultadosCvarMes$anoMes))
   
-  grafico <- plot_ly(data = tib.resultadosCvarMes, x = ~anoMes, y = ~A24_VL_CVAR_5, color = ~A02_TX_DESCRICAO_SUBSISTEMA, type = "bar",
-          hovertemplate = "<b>Déficit % da Demanda</b>: %{y:.1%}<br><b>Mês</b>: %{x|%Y-%m}") %>% 
-    layout( 
+  grafico <- plotly::plot_ly(data = tib.resultadosCvarMes, x = ~anoMes, y = ~A24_VL_CVAR_5, color = ~A02_TX_DESCRICAO_SUBSISTEMA, type = "bar",
+                             hovertemplate = "<b>Déficit % da Demanda</b>: %{y:.1%}<br><b>Mês</b>: %{x|%Y-%m}") %>% 
+    plotly::layout( 
       title = paste0("<b>", tituloGraficoCVARMes, "</b>"),
       legend = list(title = list(text='<b> Subsistemas </b>')), #orientation = 'h'),
       yaxis = list( 
@@ -59,12 +67,12 @@ graficoCVARSubsistema <- function(baseSQLite, tipoCaso, numeroCaso, codModelo,
       ), 
       xaxis = list( 
         title = "<b>Mês</b>", 
-        ticktext = as.list(as.character(as.yearmon(marcasEixoMes))), 
+        ticktext = as.list(as.character(zoo::as.yearmon(marcasEixoMes))), 
         tickvals = as.list(marcasEixoMes)
-        )
-      ) %>% 
+      )
+    ) %>% 
     # deixa aparecer somente o primeiro subsistema
-    style(visible = "legendonly", traces = 2:length(unique(tib.resultadosCvarMes$A02_TX_DESCRICAO_SUBSISTEMA)))
+    plotly::style(visible = "legendonly", traces = 2:length(unique(tib.resultadosCvarMes$A02_TX_DESCRICAO_SUBSISTEMA)))
   
   return(grafico)
 }

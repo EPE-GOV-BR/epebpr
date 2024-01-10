@@ -38,31 +38,31 @@ gravacaoDadosReservaBDBP <- function(pastaCaso, conexao, tipoCaso, numeroCaso, c
   arquivoDadosOFR <- paste(pastaCaso, "dadosOFR.xlsx", sep = "/")
   # verifica exitencia do excel
   if (!file.exists(arquivoDadosOFR)) {
-    dbDisconnect(conexao)
+    DBI::dbDisconnect(conexao)
     stop(paste0("arquivo ", arquivoDadosOFR, " com dados de oferta renov\u00E1vel não encontrado em ", pastaCaso))
   }
   # verifica se o excel possui as abas corretas
   abasExcelDadosOFR <- c("ReservaRenovavel", "Reserva")
-  abasExcelDadosOFRLidos <- excel_sheets(arquivoDadosOFR)
-  abasExistentes <- setdiff(abasExcelDadosOFR, abasExcelDadosOFRLidos)
+  abasExcelDadosOFRLidos <- readxl::excel_sheets(arquivoDadosOFR)
+  abasExistentes <- dplyr::setdiff(abasExcelDadosOFR, abasExcelDadosOFRLidos)
   if(length(abasExistentes) != 0) {
-    dbDisconnect(conexao)
+    DBI::dbDisconnect(conexao)
     stop(paste0("arquivo ", arquivoDadosOFR, " não possui a(s) aba(s) ", paste(abasExistentes, collapse = ", "), 
                 " ou h\u00E1 problema com o(s) nome(s) da(s) aba(s)!"))
   }
   
   # reserva em relacao a carga
-  df.reserva <- read_xlsx(arquivoDadosOFR, sheet = "Reserva")
+  df.reserva <- readxl::read_xlsx(arquivoDadosOFR, sheet = "Reserva")
   cabecalho <- c('subsistema', 'janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 
                  'agosto', 'setembro', 'outubro', 'novembro', 'dezembro')
-  if(!identical(str_to_lower(colnames(df.reserva)), cabecalho)) {
-    dbDisconnect(conexao)
+  if(!identical(stringr::str_to_lower(colnames(df.reserva)), cabecalho)) {
+    DBI::dbDisconnect(conexao)
     stop(paste0("aba Reserva do arquivo ", arquivoDadosOFR, " não possui o cabeçalho correto: ", paste(cabecalho, collapse = "| ")))
   }
   # acerta nome das colunas e transforma meses das colunas para variavel mes
   colnames(df.reserva) <- c("subsistema", 1:12) 
-  df.reserva <- pivot_longer(df.reserva, cols = -subsistema, names_to = "mes", values_to = "reservaDemanda") %>% 
-    mutate(mes = as.integer(mes))
+  df.reserva <- tidyr::pivot_longer(df.reserva, cols = -subsistema, names_to = "mes", values_to = "reservaDemanda") %>% 
+    dplyr::mutate(mes = as.integer(mes))
   
   # demanda
   query <- paste0("SELECT 
@@ -76,45 +76,45 @@ gravacaoDadosReservaBDBP <- function(pastaCaso, conexao, tipoCaso, numeroCaso, c
                     A01_TP_CASO = ", tipoCaso, " AND 
                     A01_NR_CASO = ", numeroCaso, " AND 
                     A01_CD_MODELO = ", codModelo)
-  df.demanda <- dbGetQuery(conexao, query)
-  df.demanda <- df.demanda %>% mutate(mes = anoMes %% 100)
+  df.demanda <- DBI::dbGetQuery(conexao, query)
+  df.demanda <- df.demanda %>% dplyr::mutate(mes = anoMes %% 100)
   
   # junta com tabela de demanda para calcular reserva
-  df.reserva <- inner_join(df.demanda, df.reserva, by = c("subsistema", "mes")) %>% 
-    mutate(reservaDemanda = reservaDemanda * demanda)
+  df.reserva <- dplyr::inner_join(df.demanda, df.reserva, by = c("subsistema", "mes")) %>% 
+    dplyr::mutate(reservaDemanda = reservaDemanda * demanda)
   
   
   # reserva em relacao as renovaveis
-  df.reservaRenovavel <- read_xlsx(arquivoDadosOFR, sheet = "ReservaRenovavel")
+  df.reservaRenovavel <- readxl::read_xlsx(arquivoDadosOFR, sheet = "ReservaRenovavel")
   cabecalho <- c('a18_cd_tipo_fonte', 'subsistema', 'janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 
                  'agosto', 'setembro', 'outubro', 'novembro', 'dezembro')
-  if(!identical(str_to_lower(colnames(df.reservaRenovavel)), cabecalho)) {
-    dbDisconnect(conexao)
+  if(!identical(stringr::str_to_lower(colnames(df.reservaRenovavel)), cabecalho)) {
+    DBI::dbDisconnect(conexao)
     stop(paste0("aba ReservaRenovavel do arquivo ", arquivoDadosOFR, " não possui o cabeçalho correto: ", paste(cabecalho, collapse = "| ")))
   }
   # acerta nome das colunas e transforma meses das colunas para variavel mes
   colnames(df.reservaRenovavel) <- c("tipoFonte", "subsistema", 1:12) 
-  df.reservaRenovavel <- pivot_longer(df.reservaRenovavel, cols = c(-subsistema, -tipoFonte), names_to = "mes", values_to = "reservaRenovavel") %>% 
-    mutate(mes = as.integer(mes))
+  df.reservaRenovavel <- tidyr::pivot_longer(df.reservaRenovavel, cols = c(-subsistema, -tipoFonte), names_to = "mes", values_to = "reservaRenovavel") %>% 
+    dplyr::mutate(mes = as.integer(mes))
   
   # junta com tabela de energia das renovaveis para calcular reserva
-  df.energiaOFR <- df.energiaOFR %>% mutate(mes = anoMes %% 100)
-  df.reservaRenovavel <- inner_join(df.reservaRenovavel, df.energiaOFR, by = c("tipoFonte", "subsistema", "mes")) %>% 
-    mutate(reservaRenovavel = reservaRenovavel * energia) %>% 
-    group_by(subsistema, anoMes) %>% 
-    summarise(reservaRenovavel = sum(reservaRenovavel), .groups = "drop")
+  df.energiaOFR <- df.energiaOFR %>% dplyr::mutate(mes = anoMes %% 100)
+  df.reservaRenovavel <- dplyr::inner_join(df.reservaRenovavel, df.energiaOFR, by = c("tipoFonte", "subsistema", "mes")) %>% 
+    dplyr::mutate(reservaRenovavel = reservaRenovavel * energia) %>% 
+    dplyr::group_by(subsistema, anoMes) %>% 
+    dplyr::summarise(reservaRenovavel = sum(reservaRenovavel), .groups = "drop")
   
   # junta reservas para criar formato a ser inserido no BD
-  df.reserva <- left_join(df.reserva, df.reservaRenovavel, by = c("subsistema", "anoMes")) %>% 
-    mutate(reservaRenovavel = ifelse(is.na(reservaRenovavel), 
-                                     0,
-                                     reservaRenovavel)) %>% 
-    select(A02_NR_SUBSISTEMA = subsistema,
-           A21_NR_MES = anoMes, 
-           A10_NR_TIPO_DEMANDA = id, 
-           A21_VL_RESERVA_CARGA = reservaDemanda, 
-           A21_VL_RESERVA_FONTES = reservaRenovavel) %>% 
-    mutate(A01_TP_CASO = tipoCaso, A01_NR_CASO = numeroCaso, A01_CD_MODELO = codModelo)
+  df.reserva <- dplyr::left_join(df.reserva, df.reservaRenovavel, by = c("subsistema", "anoMes")) %>% 
+    dplyr::mutate(reservaRenovavel = ifelse(is.na(reservaRenovavel), 
+                                            0,
+                                            reservaRenovavel)) %>% 
+    dplyr::select(A02_NR_SUBSISTEMA = subsistema,
+                  A21_NR_MES = anoMes, 
+                  A10_NR_TIPO_DEMANDA = id, 
+                  A21_VL_RESERVA_CARGA = reservaDemanda, 
+                  A21_VL_RESERVA_FONTES = reservaRenovavel) %>% 
+    dplyr::mutate(A01_TP_CASO = tipoCaso, A01_NR_CASO = numeroCaso, A01_CD_MODELO = codModelo)
   
   # limpa a tabela de uma eventual rodada anterior
   query <- paste0("SELECT COUNT(*) AS TOTAL 
@@ -123,18 +123,18 @@ gravacaoDadosReservaBDBP <- function(pastaCaso, conexao, tipoCaso, numeroCaso, c
                    WHERE A01_TP_CASO = ", tipoCaso, 
                   " AND A01_NR_CASO = ", numeroCaso, 
                   " AND A01_CD_MODELO = ", codModelo)
-  apagar <- dbGetQuery(conexao, query) %>% pull()
+  apagar <- DBI::dbGetQuery(conexao, query) %>% dplyr::pull()
   
   if (apagar > 0) {
     query <- paste0("DELETE FROM BPO_A21_RESERVA 
                      WHERE A01_TP_CASO = ", tipoCaso, 
                     " AND A01_NR_CASO = ", numeroCaso, 
                     " AND A01_CD_MODELO = ", codModelo)
-    dbExecute(conexao, query)
+    DBI::dbExecute(conexao, query)
   }
   
   # salva BPO_A21_RESERVA
-  dbWriteTable(conexao, "BPO_A21_RESERVA", df.reserva, append = T)
+  DBI::dbWriteTable(conexao, "BPO_A21_RESERVA", df.reserva, append = T)
   
   mensagem <- "tabela BPO_A21_RESERVA gravada com sucesso!"
   

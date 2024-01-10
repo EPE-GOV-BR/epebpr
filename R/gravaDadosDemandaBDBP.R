@@ -40,53 +40,53 @@ gravacaoDadosDemandaBDBP <- function(pastaCaso, conexao, tipoCaso, numeroCaso, c
   # executa query para apagar da tabela BPO_A10_DEMANDA os dados referentes a um possivel mesmo caso rodado anteriormente, 
   # de forma a evitar duplicacao dos dados
   
-  dbExecute(conexao, paste0("DELETE FROM BPO_A10_DEMANDA
+  DBI::dbExecute(conexao, paste0("DELETE FROM BPO_A10_DEMANDA
                               WHERE A01_TP_CASO = ", tipoCaso, 
-                            " AND A01_NR_CASO = ", numeroCaso, 
-                            " AND A01_CD_MODELO = ", codModelo))
+                                 " AND A01_NR_CASO = ", numeroCaso, 
+                                 " AND A01_CD_MODELO = ", codModelo))
   
   # executa as funcoes de leitura do pacote leitorrcepel para o carregamento dos dados da demanda de ponta (patamar = 1)
   # insere as variaveis associadas ao tipoCaso, numeroCaso e codModelo
   # define a demanda para o patamar de ponta (demandaPonta = limiteInterligacao * profundidadeIntercambio)
-  df.mercado <- leituraMercadoEnergia(pastaCaso)
-  df.patamar <- filter(leituraDadosProfundidadePatamarCarga(pastaCaso), patamar == 1)
+  df.mercado <- leitorrmpe::leituraMercadoEnergia(pastaCaso)
+  df.patamar <- dplyr::filter(leitorrmpe::leituraDadosProfundidadePatamarCarga(pastaCaso), patamar == 1)
   
   # verifica se mercado e patamar estao com o mesmo horizonte de meses
-  if (length(setdiff(unique(df.patamar$anoMes), unique(df.mercado$anoMes))) != 0 & tipoCaso != 2) {
-    dbDisconnect(conexao)
+  if (length(dplyr::setdiff(unique(df.patamar$anoMes), unique(df.mercado$anoMes))) != 0 & tipoCaso != 2) {
+    DBI::dbDisconnect(conexao)
     stop("Horizonte de mercado inferior ao horizonte dos patamares de carga!")
   }
-  if (length(setdiff(unique(df.mercado$anoMes), unique(df.patamar$anoMes))) != 0) {
-    dbDisconnect(conexao)
+  if (length(dplyr::setdiff(unique(df.mercado$anoMes), unique(df.patamar$anoMes))) != 0) {
+    DBI::dbDisconnect(conexao)
     stop("Horizonte dos patamares de carga inferior ao horizonte de mercado!")
   }
   
   # verifica se mercado e patamar estao com os mesmos subsistemas
-  subsistemasConjuntos <- length(intersect(unique(df.mercado$codSubsistema), unique(df.patamar$codSubsistema)))
+  subsistemasConjuntos <- length(dplyr::intersect(unique(df.mercado$codSubsistema), unique(df.patamar$codSubsistema)))
   if (length(unique(df.mercado$codSubsistema)) != subsistemasConjuntos | length(unique(df.patamar$codSubsistema)) != subsistemasConjuntos) {
-    dbDisconnect(conexao)
+    DBI::dbDisconnect(conexao)
     stop("Patamares de carga e mercado não possuem os mesmos subsistemas!")
   }
   
   # horizonte de simulacao, no formato anoMes (AAAAMM)
-  horizonte <- definePeriodo(pastaCaso) %>% pull(anoMes)
+  horizonte <- leitorrmpe::definePeriodo(pastaCaso) %>% dplyr::pull(anoMes)
   
-  df.Demanda <- inner_join(df.mercado, df.patamar, by = c("anoMes", "codSubsistema")) %>% 
-    mutate(tipoCaso = tipoCaso, numeroCaso = numeroCaso, codModelo = codModelo, tipoDemanda, 
-           # se o caso for carga liquida, desconta 15 GW na demanda do NE
-           demandaPonta = ifelse(tipoDemanda == 2 & codSubsistema == 3, energiaMercado * profundidadeCarga - 15000, energiaMercado * profundidadeCarga)) %>% 
-    filter(between(anoMes, min(horizonte), max(horizonte))) %>% 
+  df.Demanda <- dplyr::inner_join(df.mercado, df.patamar, by = c("anoMes", "codSubsistema")) %>% 
+    dplyr::mutate(tipoCaso = tipoCaso, numeroCaso = numeroCaso, codModelo = codModelo, tipoDemanda, 
+                  # se o caso for carga liquida, desconta 15 GW na demanda do NE
+                  demandaPonta = ifelse(tipoDemanda == 2 & codSubsistema == 3, energiaMercado * profundidadeCarga - 15000, energiaMercado * profundidadeCarga)) %>% 
+    dplyr::filter(dplyr::between(anoMes, min(horizonte), max(horizonte))) %>% 
     # renomeia os campos do data frame para compatibilizacao com a tabela do BDBP
-    select(A01_TP_CASO = tipoCaso,
-           A01_NR_CASO = numeroCaso,
-           A01_CD_MODELO = codModelo,
-           A02_NR_SUBSISTEMA = codSubsistema,
-           A10_NR_MES = anoMes,
-           A10_NR_TIPO_DEMANDA = tipoDemanda,
-           A10_VL_DEMANDA = demandaPonta)
+    dplyr::select(A01_TP_CASO = tipoCaso,
+                  A01_NR_CASO = numeroCaso,
+                  A01_CD_MODELO = codModelo,
+                  A02_NR_SUBSISTEMA = codSubsistema,
+                  A10_NR_MES = anoMes,
+                  A10_NR_TIPO_DEMANDA = tipoDemanda,
+                  A10_VL_DEMANDA = demandaPonta)
   
   # executa query para gravar os dados da demanda de ponta na tabela BPO_A10_DEMANDA do BDBP
-  dbWriteTable(conexao, "BPO_A10_DEMANDA", df.Demanda, append = TRUE)
+  DBI::dbWriteTable(conexao, "BPO_A10_DEMANDA", df.Demanda, append = TRUE)
   
   mensagem <- "tabela BPO_A10_DEMANDA gravada com sucesso!"
   

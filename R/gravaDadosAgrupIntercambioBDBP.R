@@ -35,25 +35,25 @@ gravacaoDadosAgrupIntercambioBDBP <- function(pastaCaso, conexao, tipoCaso, nume
   
   # executa query para apagar da tabela BPO_A15_AGRUPAMENTOS_INTERCAMBIO os dados referentes a um possivel mesmo caso rodado anteriormente, 
   # de forma a evitar duplicacao dos dados
-  dbSendQuery(conexao, paste0("DELETE FROM BPO_A15_AGRUPAMENTOS_INTERCAMBIO
+  DBI::dbSendQuery(conexao, paste0("DELETE FROM BPO_A15_AGRUPAMENTOS_INTERCAMBIO
                                 WHERE A01_TP_CASO = ", tipoCaso, 
-                              " AND A01_NR_CASO = ", numeroCaso, 
-                              " AND A01_CD_MODELO = ", codModelo))
-
+                                   " AND A01_NR_CASO = ", numeroCaso, 
+                                   " AND A01_CD_MODELO = ", codModelo))
+  
   # executa as funcoes de leitura do pacote leitorrcepel para o carregamento dos dados dos agrupamentos de intercambio
   # insere as variaveis associadas ao tipoCaso, numeroCaso e codModelo
-  df.DadosAgrupIntercambio <- leituraAgrupamentoInterligacoes(pastaCaso) %>% 
-    mutate(tipoCaso = tipoCaso, numeroCaso = numeroCaso, codModelo = codModelo) %>% 
+  df.DadosAgrupIntercambio <- leitorrmpe::leituraAgrupamentoInterligacoes(pastaCaso) %>% 
+    dplyr::mutate(tipoCaso = tipoCaso, numeroCaso = numeroCaso, codModelo = codModelo) %>% 
     # renomeia os campos do data frame para compatibilizacao com a tabela do BDBP
-    select(A01_TP_CASO = tipoCaso, 
-           A01_NR_CASO = numeroCaso, 
-           A01_CD_MODELO = codModelo, 
-           A12_CD_AGRUPAMENTO = codAgrup,
-           A11_NR_SUBSISTEMA_ORIGEM = codSubsistemaOrigem,
-           A11_NR_SUBSISTEMA_DESTINO = codSubsistemaDestino)
-
+    dplyr::select(A01_TP_CASO = tipoCaso, 
+                  A01_NR_CASO = numeroCaso, 
+                  A01_CD_MODELO = codModelo, 
+                  A12_CD_AGRUPAMENTO = codAgrup,
+                  A11_NR_SUBSISTEMA_ORIGEM = codSubsistemaOrigem,
+                  A11_NR_SUBSISTEMA_DESTINO = codSubsistemaDestino)
+  
   # executa query para gravar os dados dos agrupamentos de intercambios na tabela BPO_A15_AGRUPAMENTOS_INTERCAMBIO do BDBP
-  dbWriteTable(conexao, "BPO_A15_AGRUPAMENTOS_INTERCAMBIO", df.DadosAgrupIntercambio, append = TRUE)
+  DBI::dbWriteTable(conexao, "BPO_A15_AGRUPAMENTOS_INTERCAMBIO", df.DadosAgrupIntercambio, append = TRUE)
   
   mensagem <- "tabela BPO_A15_AGRUPAMENTOS_INTERCAMBIO gravada com sucesso!"
   

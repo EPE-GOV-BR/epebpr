@@ -56,42 +56,51 @@ gravacaoDadosDisponibilidadeOutrasFontesBDBP <- function(pastaCaso, conexao, tip
     ## leitura da planilha GeraPeq
     planilhaPequenas <- list.files(path = pastaCaso, pattern = "^GeraPeq")
     if (length(planilhaPequenas) != 1) {
-      dbDisconnect(conexao)
+      DBI::dbDisconnect(conexao)
       stop("Planilha de pequenas não encontrada ou multiplos arquivos com nome GeraPeq em ", pastaCaso)
     }
     # verifica se o excel possui a aba correta
     abasExcelPequenas <- "Principal"
-    abasExcelPequenasLidos <- excel_sheets(paste(pastaCaso, planilhaPequenas, sep = "/"))
-    abasExistentes <- setdiff(abasExcelPequenas,abasExcelPequenasLidos)
+    abasExcelPequenasLidos <- readxl::excel_sheets(paste(pastaCaso, planilhaPequenas, sep = "/"))
+    abasExistentes <- dplyr::setdiff(abasExcelPequenas,abasExcelPequenasLidos)
     if(length(abasExistentes != 0)) {
-      dbDisconnect(conexao)
+      DBI::dbDisconnect(conexao)
       stop(paste0("arquivo ", planilhaPequenas, " não possui a aba de nome Principal!"))
     }
     
     # leitura do excel com informacao das usinas contratadas
-    df.renovaveis <- read_xlsx(path = paste(pastaCaso, planilhaPequenas, sep = "/"), sheet = "Principal", range = cell_cols("B:S"), 
-                                col_types = c("text", "text", "numeric", "date", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric",
-                                              "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric"))
+    df.renovaveis <- readxl::read_xlsx(path = paste(pastaCaso, planilhaPequenas, sep = "/"), sheet = "Principal", range = cellranger::cell_cols("B:S"), 
+                                       col_types = c("text", "text", "numeric", "date", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric",
+                                                     "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric"))
     # trata nome de colunas com acentos
     codificacao <- Encoding(colnames(df.renovaveis)) %>% .[. != "unknown"] %>% unique()
     if (length(codificacao) != 1) {
-      dbDisconnect(conexao)
+      DBI::dbDisconnect(conexao)
       stop("Problema de codificação (UTF-8) na Planilha de pequenas. Uma solução é remover os acentos dos nomes das colunas.")
     }
     colnames(df.renovaveis) <- iconv(colnames(df.renovaveis), from = codificacao, to = "ASCII//TRANSLIT")
-  
+    
     # garante que nenhuma informacao indesejada de fontes indicativas esteja na tabela
-    df.renovaveis <- df.renovaveis %>% filter(!str_detect(NOME, "Indicativa")) %>% 
-      mutate(`Data entrada` = format(`Data entrada`, "%Y-%m-%d")) %>% 
+    df.renovaveis <- df.renovaveis %>% 
+      dplyr::filter(!stringr::str_detect(NOME, "Indicativa")) %>% 
+      dplyr::mutate(`Data entrada` = format(`Data entrada`, "%Y-%m-%d")) %>% 
       # converte os fatores das renovaveis em energia
-      mutate_at(vars(matches("FSAZ")), ~(. * `POT (MW)` * `FCMedio (%)`)) %>% select(-`FCMedio (%)`, -NOME)
+      dplyr::mutate_at(dplyr::vars(dplyr::matches("FSAZ")), ~(. * `POT (MW)` * `FCMedio (%)`)) %>% 
+      dplyr::select(-`FCMedio (%)`, -NOME)
     
     # leitura dos REES/subsistemas cadastrados para garantir que nao haja geracao em local inexistente
-    reeCadastradas <- dbReadTable(conexao, "BPO_A02_SUBSISTEMAS") %>% pull(A02_NR_SUBSISTEMA)
-    reeRenovaveis <- df.renovaveis %>% pull(sistema) %>% unique()
-    diferencaREE <- setdiff(reeRenovaveis, reeCadastradas) %>% length()
+    reeCadastradas <- DBI::dbReadTable(conexao, "BPO_A02_SUBSISTEMAS") %>% 
+      dplyr::pull(A02_NR_SUBSISTEMA)
+    
+    reeRenovaveis <- df.renovaveis %>% 
+      dplyr::pull(sistema) %>% 
+      unique()
+    
+    diferencaREE <- dplyr::setdiff(reeRenovaveis, reeCadastradas) %>% 
+      length()
+    
     if (diferencaREE != 0) {
-      dbDisconnect(conexao)
+      DBI::dbDisconnect(conexao)
       stop("Planilha de pequenas com oferta renov\u00E1vel em subsistema/REE não cadastrado!")
     }
     
@@ -99,15 +108,15 @@ gravacaoDadosDisponibilidadeOutrasFontesBDBP <- function(pastaCaso, conexao, tip
     arquivoDadosOFR <- paste(pastaCaso, "dadosOFR.xlsx", sep = "/")
     # verifica exitencia do excel
     if (!file.exists(arquivoDadosOFR)) {
-      dbDisconnect(conexao)
+      DBI::dbDisconnect(conexao)
       stop(paste0("arquivo ", arquivoDadosOFR, " com dados de oferta renov\u00E1vel não encontrado em ", pastaCaso))
     }
     # verifica se o excel possui as abas corretas
     abasExcelDadosOFR <- c("FatorPonta", "RelacaoIndicativas", "SazonalidadeIndicativas", "TipoContribuicaoPonta")
-    abasExcelDadosOFRLidos <- excel_sheets(arquivoDadosOFR)
-    abasExistentes <- setdiff(abasExcelDadosOFR,abasExcelDadosOFRLidos)
+    abasExcelDadosOFRLidos <- readxl::excel_sheets(arquivoDadosOFR)
+    abasExistentes <- dplyr::setdiff(abasExcelDadosOFR,abasExcelDadosOFRLidos)
     if(length(abasExistentes) != 0) {
-      dbDisconnect(conexao)
+      DBI::dbDisconnect(conexao)
       stop(paste0("arquivo ", arquivoDadosOFR, " não possui a(s) aba(s) ", paste(abasExistentes, collapse = ", "), 
                   " ou h\u00E1 problema com o(s) nome(s) da(s) aba(s)!"))
     }
@@ -115,213 +124,248 @@ gravacaoDadosDisponibilidadeOutrasFontesBDBP <- function(pastaCaso, conexao, tip
     # BPO_A18_TIPOS_OFR
     # limpa a tabela de uma eventual rodada anterior
     query <- "SELECT COUNT(*) AS TOTAL FROM BPO_A18_TIPOS_OFR"
-    apagar <- dbGetQuery(conexao, query) %>% pull()
+    
+    apagar <- DBI::dbGetQuery(conexao, query) %>% 
+      dplyr::pull()
+    
     if (apagar > 0) {
       query <- "DELETE FROM BPO_A18_TIPOS_OFR"
-      dbExecute(conexao, query)
+      DBI::dbExecute(conexao, query)
     }
-  
-    df.tipoContribuicaoPonta <- read_xlsx(arquivoDadosOFR, sheet = "TipoContribuicaoPonta")
+    
+    df.tipoContribuicaoPonta <- readxl::read_xlsx(arquivoDadosOFR, sheet = "TipoContribuicaoPonta")
     
     # salva BPO_A18_TIPOS_OFR
-    dbWriteTable(conexao, "BPO_A18_TIPOS_OFR", df.tipoContribuicaoPonta, append = T)
+    DBI::dbWriteTable(conexao, "BPO_A18_TIPOS_OFR", df.tipoContribuicaoPonta, append = T)
     
     # BPO_A19_FATOR_PONTA_OFR
     # limpa a tabela de uma eventual rodada anterior
     query <- paste0("SELECT COUNT(*) AS TOTAL FROM BPO_A19_FATOR_PONTA_OFR WHERE A01_TP_CASO = ", tipoCaso, " AND A01_NR_CASO = ", numeroCaso,
                     " AND A01_CD_MODELO = ", codModelo)
-    apagar <- dbGetQuery(conexao, query) %>% pull()
+    
+    apagar <- DBI::dbGetQuery(conexao, query) %>% 
+      dplyr::pull()
+    
     if (apagar > 0) {
       query <- paste0("DELETE FROM BPO_A19_FATOR_PONTA_OFR WHERE A01_TP_CASO = ", tipoCaso, " AND A01_NR_CASO = ", numeroCaso,
                       " AND A01_CD_MODELO = ", codModelo)
-      dbExecute(conexao, query)
+      DBI::dbExecute(conexao, query)
     }
     
-    df.fatorPontaOFR <- read_xlsx(arquivoDadosOFR, sheet = "FatorPonta") %>% 
-      mutate(A01_TP_CASO = tipoCaso, A01_NR_CASO = numeroCaso, A01_CD_MODELO = codModelo)
+    df.fatorPontaOFR <- readxl::read_xlsx(arquivoDadosOFR, sheet = "FatorPonta") %>% 
+      dplyr::mutate(A01_TP_CASO = tipoCaso, A01_NR_CASO = numeroCaso, A01_CD_MODELO = codModelo)
     
     # salva BPO_A19_FATOR_PONTA_OFR
-    dbWriteTable(conexao, "BPO_A19_FATOR_PONTA_OFR", df.fatorPontaOFR, append = T)
+    DBI::dbWriteTable(conexao, "BPO_A19_FATOR_PONTA_OFR", df.fatorPontaOFR, append = T)
     
     # processa informacoes das indicativas para incluir no arquivo de renovaveis se for PDE
     if (tipoCaso == 1) {
       # tabela com de/para dos nomes das indicativas
-      df.relacaoIndicativas <- read_xlsx(path = arquivoDadosOFR, sheet = "RelacaoIndicativas",  
-                                          col_types = c("text", "text", "text", "numeric" ))
+      df.relacaoIndicativas <- readxl::read_xlsx(path = arquivoDadosOFR, sheet = "RelacaoIndicativas",  
+                                                 col_types = c("text", "text", "text", "numeric" ))
       
       # tabela com as sazonalidades das indicativas
-      df.sazonalidadeIndicativas <- read_xlsx(path = arquivoDadosOFR, sheet = "SazonalidadeIndicativas",  
-                                               col_types = c("text", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric",
-                                                             "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric"))
+      df.sazonalidadeIndicativas <- readxl::read_xlsx(path = arquivoDadosOFR, sheet = "SazonalidadeIndicativas",  
+                                                      col_types = c("text", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric",
+                                                                    "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric"))
       
       # trata nome de colunas com acentos
       codificacao <- Encoding(colnames(df.sazonalidadeIndicativas)) %>% .[. != "unknown"] %>% unique()
+      
       if (length(codificacao) != 1) {
-        dbDisconnect(conexao)
+        DBI::dbDisconnect(conexao)
         stop("Problema de codificação (UTF-8) na Planilha ", arquivoDadosOFR,  
              " na aba SazonalidadeIndicativas. Uma solução é remover os acentos dos nomes das colunas.")
       }
+      
       colnames(df.sazonalidadeIndicativas) <- iconv(colnames(df.sazonalidadeIndicativas), from = codificacao, to = "ASCII//TRANSLIT")
       
       arquivoExpansao <- list.files(path = pastaCaso, pattern = "saidaExpansao.txt")
+      
       if (length(arquivoExpansao) != 1) {
-        dbDisconnect(conexao)
+        DBI::dbDisconnect(conexao)
         stop("Arquivo texto saidaExpansao não encontrado ou multiplos arquivos com nome saidaExpansao em ", pastaCaso)
       }
       
       # le arquivo com as expansoes do MDI - trata ";" no fim para nao ter avisos
-      df.expansao <- read_delim(stri_enc_toutf8(paste(pastaCaso, arquivoExpansao, sep = "/")), delim = ";", col_names = T, local = locale(encoding = "latin1")) %>% 
-        select(1:(ncol(.) -1)) %>% 
-        select(df.relacaoIndicativas$NomeFonteMDI) # filtra somente as indicativas (as fontes estao em colunas)
+      df.expansao <- readr::read_delim(stringi::stri_enc_toutf8(paste(pastaCaso, arquivoExpansao, sep = "/")), delim = ";", col_names = T, local = readr::locale(encoding = "latin1")) %>% 
+        dplyr::select(1:(ncol(.) -1)) %>% 
+        dplyr::select(df.relacaoIndicativas$NomeFonteMDI) # filtra somente as indicativas (as fontes estao em colunas)
       
       # cria vetor com todos os meses no horizonte do MDI e adiciona na df.expansao
       quantidadeMesesHorizonte <- ((anoMesFimMDI %/% 100) * 12 + anoMesFimMDI %% 100) - 
         ((anoMesInicioMDI %/% 100) * 12 + anoMesInicioMDI %% 100)
+      
       horizonte <- ((zoo::as.yearmon(as.character(anoMesInicioMDI), "%Y%m")) + seq(0, (quantidadeMesesHorizonte/12), (1/12))) %>% 
-        format("%Y%m") %>% as.integer()
-      df.expansao <- df.expansao %>% mutate("Data entrada" = horizonte) %>% select("Data entrada", everything())
+        format("%Y%m") %>% 
+        as.integer()
+      
+      df.expansao <- df.expansao %>% 
+        dplyr::mutate("Data entrada" = horizonte) %>% 
+        dplyr::select("Data entrada", tidyr::everything())
       
       # calcula os deltas da expansao (incremento por mes)
-      df.expansao <- df.expansao %>% mutate_at(vars(-matches("Data entrada")), ~(. - lag(.))) %>% 
-        filter_at(vars(-matches("Data entrada")), any_vars(. != 0)) %>% 
-        gather(key = "NomeFonteMDI", value = "POT (MW)", -1) %>% 
-        filter(`POT (MW)` != 0)
-      df.expansao <- inner_join(df.expansao, df.relacaoIndicativas, by = "NomeFonteMDI") %>% select(-NomeFonteMDI)
-      df.expansao <- inner_join(df.expansao, df.sazonalidadeIndicativas, by = c("NomeFonte", "Subsistema")) %>% 
-        select(TIPO = TipoFonte, sistema = Subsistema, "Data entrada", `POT (MW)`, `FCMedio (%)`, everything()) %>% 
+      df.expansao <- df.expansao %>% 
+        dplyr::mutate_at(dplyr::vars(-dplyr::matches("Data entrada")), ~(. - lag(.))) %>% 
+        dplyr::filter_at(dplyr::vars(-dplyr::matches("Data entrada")), dplyr::any_vars(. != 0)) %>% 
+        tidyr::gather(key = "NomeFonteMDI", value = "POT (MW)", -1) %>% 
+        dplyr::filter(`POT (MW)` != 0)
+      
+      df.expansao <- dplyr::inner_join(df.expansao, df.relacaoIndicativas, by = "NomeFonteMDI") %>% 
+        dplyr::select(-NomeFonteMDI)
+      
+      df.expansao <- dplyr::inner_join(df.expansao, df.sazonalidadeIndicativas, by = c("NomeFonte", "Subsistema")) %>% 
+        dplyr::select(TIPO = TipoFonte, sistema = Subsistema, "Data entrada", `POT (MW)`, `FCMedio (%)`, tidyr::everything()) %>% 
         # converte os fatores das renovaveis em energia
-        mutate_at(vars(matches("FSAZ")), ~(. * `POT (MW)` * `FCMedio (%)`)) %>% select(-`FCMedio (%)`, -NomeFonte) %>% 
-        mutate(`Data entrada` = paste(str_sub(`Data entrada`, 1, 4), str_sub(`Data entrada`, 5, 6), "01", sep = "-"))
+        dplyr::mutate_at(dplyr::vars(dplyr::matches("FSAZ")), ~(. * `POT (MW)` * `FCMedio (%)`)) %>% dplyr::select(-`FCMedio (%)`, -NomeFonte) %>% 
+        dplyr::mutate(`Data entrada` = paste(stringr::str_sub(`Data entrada`, 1, 4), stringr::str_sub(`Data entrada`, 5, 6), "01", sep = "-"))
       
       df.dadosOFR <- rbind(df.renovaveis, df.expansao)
+      
     } else {
+      
       df.dadosOFR <- df.renovaveis
+      
     }
     
     df.dadosOFR <- df.dadosOFR %>% 
-      mutate(dataRef = as.integer(substr(as.character(`Data entrada`), 0, 4))*100 + as.integer(substr(as.character(`Data entrada`), 6, 7)), aux = 1) %>% 
-      select(-c("Data entrada"))
+      dplyr::mutate(dataRef = as.integer(substr(as.character(`Data entrada`), 0, 4))*100 + as.integer(substr(as.character(`Data entrada`), 6, 7)), aux = 1) %>% 
+      dplyr::select(-c("Data entrada"))
     
     # define data frame com todos os periodos do horizonte de simulacao, no formato anoMes (AAAAMM)
-    df.periodo <- definePeriodo(pastaCaso) %>% select(anoMes) %>% mutate(aux = 1)
+    df.periodo <- leitorrmpe::definePeriodo(pastaCaso) %>% 
+      dplyr::select(anoMes) %>% 
+      dplyr::mutate(aux = 1)
     
     # define data frame com os dados de profundidade do patamar de ponta (patamar == 1) das usinas nao simuladas
-    df.profundidadeOFR <- leituraDadosPatamarUsinasNaoSimuladas(pastaCaso) %>% filter(patamar == 1)
-      
-    # mutate(tipofonte = fontes[codBlocoUNS,2]) %>% 
+    df.profundidadeOFR <- leitorrmpe::leituraDadosPatamarUsinasNaoSimuladas(pastaCaso) %>% 
+      dplyr::filter(patamar == 1)
     
     # define data frame com os dados de capacidade instalada das usinas nao simuladas, para cada periodo do horizonte de simulacao
     df.capacidadeOFR <- df.dadosOFR %>% 
-      group_by(sistema, TIPO, dataRef) %>% 
-      summarise(POT = sum(`POT (MW)`), .groups = "drop") %>% 
-      mutate(aux = 1) %>% 
-      inner_join(df.periodo, by = "aux") %>% 
-      select(-aux) %>% 
-      mutate(valpot = ifelse((anoMes >= dataRef), "sim", "nao")) %>% 
-      filter(valpot != "nao") %>% 
-      select(-valpot, -dataRef) %>% 
-      group_by(sistema, TIPO, anoMes) %>% 
-      summarise(Potencia = sum(POT), .groups = "drop")
+      dplyr::group_by(sistema, TIPO, dataRef) %>% 
+      dplyr::summarise(POT = sum(`POT (MW)`), .groups = "drop") %>% 
+      dplyr::mutate(aux = 1) %>% 
+      dplyr::inner_join(df.periodo, by = "aux") %>% 
+      dplyr::select(-aux) %>% 
+      dplyr::mutate(valpot = ifelse((anoMes >= dataRef), "sim", "nao")) %>% 
+      dplyr::filter(valpot != "nao") %>% 
+      dplyr::select(-valpot, -dataRef) %>% 
+      dplyr::group_by(sistema, TIPO, anoMes) %>% 
+      dplyr::summarise(Potencia = sum(POT), .groups = "drop")
     
     # define data frame com os dados de energia das usinas nao simuladas, para cada periodo do horizonte de simulacao
     df.energiaOFR <- df.dadosOFR %>% 
-      select(-aux, -`POT (MW)`) %>% 
-      group_by(sistema, TIPO, dataRef) %>% 
-      summarise(across(everything(), sum), .groups = "drop") %>% 
-      mutate(aux = 1) %>% 
-      inner_join(df.periodo, by = "aux") %>% 
-      select(-aux) %>% 
-      mutate(valpot = ifelse((anoMes >= dataRef),"sim", "nao")) %>% 
-      filter(valpot != "nao") %>% 
-      select(-valpot, -dataRef) %>% 
-      group_by(sistema, TIPO, anoMes) %>% 
-      summarise(across(everything(), sum), .groups = "drop") %>% 
-      pivot_longer(-c(sistema, TIPO, anoMes), names_to = "sazonalidade", values_to = "Energia") %>% 
-      filter(str_sub(anoMes, 5, 6) == str_sub(sazonalidade, 5, 6)) %>% 
-      select(-sazonalidade)
+      dplyr::select(-aux, -`POT (MW)`) %>% 
+      dplyr::group_by(sistema, TIPO, dataRef) %>% 
+      dplyr::summarise(dplyr::across(tidyr::everything(), sum), .groups = "drop") %>% 
+      dplyr::mutate(aux = 1) %>% 
+      dplyr::inner_join(df.periodo, by = "aux") %>% 
+      dplyr::select(-aux) %>% 
+      dplyr::mutate(valpot = ifelse((anoMes >= dataRef),"sim", "nao")) %>% 
+      dplyr::filter(valpot != "nao") %>% 
+      dplyr::select(-valpot, -dataRef) %>% 
+      dplyr::group_by(sistema, TIPO, anoMes) %>% 
+      dplyr::summarise(dplyr::across(tidyr::everything(), sum), .groups = "drop") %>% 
+      tidyr::pivot_longer(-c(sistema, TIPO, anoMes), names_to = "sazonalidade", values_to = "Energia") %>% 
+      dplyr::filter(stringr::str_sub(anoMes, 5, 6) == stringr::str_sub(sazonalidade, 5, 6)) %>% 
+      dplyr::select(-sazonalidade)
     
     # define data frame com o calculo final da disponibilidade de ponta das usinas nao simuladas, 
     # para cada periodo do horizonte de simulacao
     # avalia o tipo de contribuicao da ponta atribuido para cada a OFR: 
     # se (A18_TP_CONTRIBUICAO_PONTA == 2), a disponibilidade sera igual a Energia x profundidadeUNS
     # caso contrario, a disponibilidade sera igual a Potencia Instalada x Fator de contribuicao (definido na tabela BPO_A19_FATOR_PONTA_OFR)
-    df.disponibilidadeOFR <- inner_join(df.capacidadeOFR, df.energiaOFR, by = c("sistema", "TIPO", "anoMes")) %>% 
-      inner_join(df.tipoContribuicaoPonta, by = c("TIPO" = "A18_TX_DESCRICAO")) %>% 
-      left_join(df.profundidadeOFR, by = c("sistema" = "codSubsistema", "A18_CD_TIPO_FONTE" = "codBlocoUNS", "anoMes" = "anoMes")) %>% 
-      # inner_join(tipoOFR, by = c("TIPO" = "fontes")) %>% 
-      mutate(mes = as.integer(substr(as.character(anoMes), 5, 6))) %>% 
-      left_join(df.fatorPontaOFR, by = c("sistema" = "A02_NR_SUBSISTEMA", "A18_CD_TIPO_FONTE" = "A18_CD_TIPO_FONTE", "mes" = "A19_NR_MES")) %>% 
-      # inner_join(fontes,  by = c("TIPO" = "nome_fonte")) %>% 
-      mutate(disponibilidade = ifelse(A18_TP_CONTRIBUICAO_PONTA == 2, 
-                                      Energia * ifelse(is.na(patamar), 
-                                                       1, 
-                                                       profundidadeUNS), 
-                                      Potencia * A19_VL_FATOR)) %>% 
-      mutate(A01_TP_CASO = tipoCaso, A01_NR_CASO = numeroCaso, A01_CD_MODELO = codModelo) %>% 
+    df.disponibilidadeOFR <- dplyr::inner_join(df.capacidadeOFR, df.energiaOFR, by = c("sistema", "TIPO", "anoMes")) %>% 
+      dplyr::inner_join(df.tipoContribuicaoPonta, by = c("TIPO" = "A18_TX_DESCRICAO")) %>% 
+      dplyr::left_join(df.profundidadeOFR, by = c("sistema" = "codSubsistema", "A18_CD_TIPO_FONTE" = "codBlocoUNS", "anoMes" = "anoMes")) %>% 
+      dplyr::mutate(mes = as.integer(substr(as.character(anoMes), 5, 6))) %>% 
+      dplyr::left_join(df.fatorPontaOFR, by = c("sistema" = "A02_NR_SUBSISTEMA", "A18_CD_TIPO_FONTE" = "A18_CD_TIPO_FONTE", "mes" = "A19_NR_MES")) %>% 
+      dplyr::mutate(disponibilidade = ifelse(A18_TP_CONTRIBUICAO_PONTA == 2, 
+                                             Energia * ifelse(is.na(patamar), 
+                                                              1, 
+                                                              profundidadeUNS), 
+                                             Potencia * A19_VL_FATOR)) %>% 
+      dplyr::mutate(A01_TP_CASO = tipoCaso, A01_NR_CASO = numeroCaso, A01_CD_MODELO = codModelo) %>% 
       # renomeia os campos do data frame para compatibilizacao com a tabela do BDBP
-      select(A01_TP_CASO, 
-             A01_NR_CASO, 
-             A01_CD_MODELO, 
-             A02_NR_SUBSISTEMA = sistema, 
-             A13_NR_MES = anoMes, 
-             A13_CD_TIPO_FONTE = A18_CD_TIPO_FONTE,
-             A13_VL_DISPONIBILIDADE_MAXIMA_PONTA = disponibilidade)
-  
+      dplyr::select(A01_TP_CASO, 
+                    A01_NR_CASO, 
+                    A01_CD_MODELO, 
+                    A02_NR_SUBSISTEMA = sistema, 
+                    A13_NR_MES = anoMes, 
+                    A13_CD_TIPO_FONTE = A18_CD_TIPO_FONTE,
+                    A13_VL_DISPONIBILIDADE_MAXIMA_PONTA = disponibilidade)
+    
     # executa query para apagar da tabela BPO_A13_DISPONIBILIDADE_OFR os dados referentes a um possivel mesmo caso rodado anteriormente, 
     # de forma a evitar duplicacao dos dados
     query <- paste0("SELECT COUNT(*) AS TOTAL FROM BPO_A13_DISPONIBILIDADE_OFR WHERE A01_TP_CASO = ", tipoCaso, 
                     " AND A01_NR_CASO = ", numeroCaso, " AND A01_CD_MODELO = ", codModelo)
-    apagar <- dbGetQuery(conexao, query) %>% pull()
+    
+    apagar <- DBI::dbGetQuery(conexao, query) %>% 
+      dplyr::pull()
+    
     if (apagar > 0) {
+      
       query <- paste0("DELETE FROM BPO_A13_DISPONIBILIDADE_OFR WHERE A01_TP_CASO = ", tipoCaso, 
                       " AND A01_NR_CASO = ", numeroCaso, " AND A01_CD_MODELO = ", codModelo)
-      dbExecute(conexao, query)
+      
+      DBI::dbExecute(conexao, query)
+      
     }
     
     # executa query para gravar os dados de disponilidade das outras fontes renovaveis na tabela BPO_A13_DISPONIBILIDADE_OFR do BDBP
-    dbWriteTable(conexao, "BPO_A13_DISPONIBILIDADE_OFR", df.disponibilidadeOFR, append = TRUE)
+    DBI::dbWriteTable(conexao, "BPO_A13_DISPONIBILIDADE_OFR", df.disponibilidadeOFR, append = TRUE)
     
     mensagem <- "tabelas BPO_A13_DISPONIBILIDADE_OFR, BPO_A18_TIPOS_OFR e BPO_A19_FATOR_PONTA_OFR gravadas com sucesso!"
     
     # prepara energia de renovaveis para calculos de reserva
-    df.energiaOFR <- inner_join(df.energiaOFR, df.tipoContribuicaoPonta, by = c("TIPO" = "A18_TX_DESCRICAO")) %>% 
-      select(tipoFonte = A18_CD_TIPO_FONTE, subsistema = sistema, anoMes, energia = Energia)
+    df.energiaOFR <- dplyr::inner_join(df.energiaOFR, df.tipoContribuicaoPonta, by = c("TIPO" = "A18_TX_DESCRICAO")) %>% 
+      dplyr::select(tipoFonte = A18_CD_TIPO_FONTE, subsistema = sistema, anoMes, energia = Energia)
     
     return(list(mensagem = mensagem, df.energiaOFR = df.energiaOFR))
+    
   }else{
+    
     ## caso seja carga líquida
     ## leitura da planilha de detalhes da carga liquida maxima
     detalhesCargaLiqMax <- list.files(path = pastaCaso, pattern = "^detalhesCargaLiquida")
     if (length(detalhesCargaLiqMax) != 1) {
-      dbDisconnect(conexao)
+      DBI::dbDisconnect(conexao)
       stop("Planilha de detalhes da carga líquida máxima não encontrada ou multiplos arquivos com nome detalhesCargaLiquida em ", pastaCaso)
     }
-
+    
     # leitura do excel com detalhes da carga liquida máxima
-    df.detalhesCLiqMax <- read_xlsx(path = paste(pastaCaso, detalhesCargaLiqMax, sep = "/"))
-
+    df.detalhesCLiqMax <- readxl::read_xlsx(path = paste(pastaCaso, detalhesCargaLiqMax, sep = "/"))
+    
     # leitura dos REES/subsistemas cadastrados para garantir que nao haja geracao em local inexistente
-    reeCadastradas <- dbReadTable(conexao, "BPO_A02_SUBSISTEMAS") %>% pull(A02_NR_SUBSISTEMA)
-    reeDetalhes <- df.detalhesCLiqMax %>% pull(codSubsistema) %>% unique()
-    diferencaREE <- setdiff(reeDetalhes, reeCadastradas) %>% length()
+    reeCadastradas <- DBI::dbReadTable(conexao, "BPO_A02_SUBSISTEMAS") %>% 
+      dplyr::pull(A02_NR_SUBSISTEMA)
+    
+    reeDetalhes <- df.detalhesCLiqMax %>% 
+      dplyr::pull(codSubsistema) %>% 
+      unique()
+    
+    diferencaREE <- dplyr::setdiff(reeDetalhes, reeCadastradas) %>% length()
+    
     if (diferencaREE != 0) {
-      dbDisconnect(conexao)
+      DBI::dbDisconnect(conexao)
       stop("Planilha de detalhes com dados em subsistema/REE não cadastrado!")
     }
     
     ## arquivo dadosORF
     arquivoDadosOFR <- paste(pastaCaso, "dadosOFR.xlsx", sep = "/")
+    
     # verifica exitencia do excel
     if (!file.exists(arquivoDadosOFR)) {
-      dbDisconnect(conexao)
+      DBI::dbDisconnect(conexao)
       stop(paste0("arquivo ", arquivoDadosOFR, " com dados de oferta renov\u00E1vel não encontrado em ", pastaCaso))
     }
     # verifica se o excel possui as abas corretas
     abasExcelDadosOFR <- c("FatorPonta", "RelacaoIndicativas", "SazonalidadeIndicativas", "TipoContribuicaoPonta")
-    abasExcelDadosOFRLidos <- excel_sheets(arquivoDadosOFR)
-    abasExistentes <- setdiff(abasExcelDadosOFR,abasExcelDadosOFRLidos)
+    abasExcelDadosOFRLidos <- readxl::excel_sheets(arquivoDadosOFR)
+    abasExistentes <- dplyr::setdiff(abasExcelDadosOFR,abasExcelDadosOFRLidos)
     if(length(abasExistentes) != 0) {
-      dbDisconnect(conexao)
+      DBI::dbDisconnect(conexao)
       stop(paste0("arquivo ", arquivoDadosOFR, " não possui a(s) aba(s) ", paste(abasExistentes, collapse = ", "), 
                   " ou h\u00E1 problema com o(s) nome(s) da(s) aba(s)!"))
     }
@@ -329,82 +373,83 @@ gravacaoDadosDisponibilidadeOutrasFontesBDBP <- function(pastaCaso, conexao, tip
     # BPO_A18_TIPOS_OFR
     # limpa a tabela de uma eventual rodada anterior
     query <- "SELECT COUNT(*) AS TOTAL FROM BPO_A18_TIPOS_OFR"
-    apagar <- dbGetQuery(conexao, query) %>% pull()
+    apagar <- DBI::dbGetQuery(conexao, query) %>% 
+      dplyr::pull()
     if (apagar > 0) {
       query <- "DELETE FROM BPO_A18_TIPOS_OFR"
-      dbExecute(conexao, query)
+      DBI::dbExecute(conexao, query)
     }
     
-    df.tipoContribuicaoPonta <- read_xlsx(arquivoDadosOFR, sheet = "TipoContribuicaoPonta")
+    df.tipoContribuicaoPonta <- readxl::read_xlsx(arquivoDadosOFR, sheet = "TipoContribuicaoPonta")
     
     # salva BPO_A18_TIPOS_OFR
-    dbWriteTable(conexao, "BPO_A18_TIPOS_OFR", df.tipoContribuicaoPonta, append = T)
+    DBI::dbWriteTable(conexao, "BPO_A18_TIPOS_OFR", df.tipoContribuicaoPonta, append = T)
     
     # BPO_A19_FATOR_PONTA_OFR
     # limpa a tabela de uma eventual rodada anterior e não escreve nada pois não é utilizada em casos de carga líquida
     query <- paste0("SELECT COUNT(*) AS TOTAL FROM BPO_A19_FATOR_PONTA_OFR WHERE A01_TP_CASO = ", tipoCaso, " AND A01_NR_CASO = ", numeroCaso,
                     " AND A01_CD_MODELO = ", codModelo)
-    apagar <- dbGetQuery(conexao, query) %>% pull()
+    apagar <- DBI::dbGetQuery(conexao, query) %>% dplyr::pull()
     if (apagar > 0) {
       query <- paste0("DELETE FROM BPO_A19_FATOR_PONTA_OFR WHERE A01_TP_CASO = ", tipoCaso, " AND A01_NR_CASO = ", numeroCaso,
                       " AND A01_CD_MODELO = ", codModelo)
-      dbExecute(conexao, query)
+      DBI::dbExecute(conexao, query)
     }
     
     # define data frame com os dados de energia das usinas nao simuladas, para cada periodo do horizonte de simulacao
     df.energiaOFR <- df.detalhesCLiqMax %>% 
-      select(sistema = codSubsistema, 
-             ano, 
-             mes, 
-             EOL = geracaoEol, 
-             SOL = geracaoUfv, 
-             GD_UFV = geracaoGD,
-             GD_Demais = outrasGD,
-             PCH,
-             BIO = PCT) %>% 
-      mutate(anoMes = ano*100 + mes,
-             MGD = GD_UFV + GD_Demais) %>% 
-      select(-ano, -mes, -GD_UFV, -GD_Demais) %>% 
-      pivot_longer(cols = c("EOL", "SOL", "PCH", "BIO", "MGD"), names_to = "TIPO", values_to = "Energia") %>% 
-      select(sistema, TIPO, everything())
+      dplyr::select(sistema = codSubsistema, 
+                    ano, 
+                    mes, 
+                    EOL = geracaoEol, 
+                    SOL = geracaoUfv, 
+                    GD_UFV = geracaoGD,
+                    GD_Demais = outrasGD,
+                    PCH,
+                    BIO = PCT) %>% 
+      dplyr::mutate(anoMes = ano*100 + mes,
+                    MGD = GD_UFV + GD_Demais) %>% 
+      dplyr::select(-ano, -mes, -GD_UFV, -GD_Demais) %>% 
+      tidyr::pivot_longer(cols = c("EOL", "SOL", "PCH", "BIO", "MGD"), names_to = "TIPO", values_to = "Energia") %>% 
+      dplyr::select(sistema, TIPO, tidyr::everything())
     
     # define data frame com a disponibilidade de ponta das usinas nao simuladas, 
     # para cada periodo do horizonte de simulacao
     # para o caso da carga liquida corresponde à contribuição das renovaveis no momento da 
     # carga liquida maxima do SIN para cada periodo
     df.disponibilidadeOFR <- df.energiaOFR %>% 
-      inner_join(df.tipoContribuicaoPonta, by = c("TIPO" = "A18_TX_DESCRICAO")) %>%
-      group_by(sistema, anoMes, A18_CD_TIPO_FONTE) %>% 
-      reframe(disponibilidade = sum(Energia)) %>% 
-      mutate(A01_TP_CASO = tipoCaso, A01_NR_CASO = numeroCaso, A01_CD_MODELO = codModelo) %>% 
+      dplyr::inner_join(df.tipoContribuicaoPonta, by = c("TIPO" = "A18_TX_DESCRICAO")) %>%
+      dplyr::group_by(sistema, anoMes, A18_CD_TIPO_FONTE) %>% 
+      dplyr::reframe(disponibilidade = sum(Energia)) %>% 
+      dplyr::mutate(A01_TP_CASO = tipoCaso, A01_NR_CASO = numeroCaso, A01_CD_MODELO = codModelo) %>% 
       # renomeia os campos do data frame para compatibilizacao com a tabela do BDBP
-      select(A01_TP_CASO, 
-             A01_NR_CASO, 
-             A01_CD_MODELO, 
-             A02_NR_SUBSISTEMA = sistema, 
-             A13_NR_MES = anoMes, 
-             A13_CD_TIPO_FONTE = A18_CD_TIPO_FONTE,
-             A13_VL_DISPONIBILIDADE_MAXIMA_PONTA = disponibilidade)
+      dplyr::select(A01_TP_CASO, 
+                    A01_NR_CASO, 
+                    A01_CD_MODELO, 
+                    A02_NR_SUBSISTEMA = sistema, 
+                    A13_NR_MES = anoMes, 
+                    A13_CD_TIPO_FONTE = A18_CD_TIPO_FONTE,
+                    A13_VL_DISPONIBILIDADE_MAXIMA_PONTA = disponibilidade)
     
     # executa query para apagar da tabela BPO_A13_DISPONIBILIDADE_OFR os dados referentes a um possivel mesmo caso rodado anteriormente, 
     # de forma a evitar duplicacao dos dados
     query <- paste0("SELECT COUNT(*) AS TOTAL FROM BPO_A13_DISPONIBILIDADE_OFR WHERE A01_TP_CASO = ", tipoCaso, 
                     " AND A01_NR_CASO = ", numeroCaso, " AND A01_CD_MODELO = ", codModelo)
-    apagar <- dbGetQuery(conexao, query) %>% pull()
+    apagar <- DBI::dbGetQuery(conexao, query) %>% dplyr::pull()
     if (apagar > 0) {
       query <- paste0("DELETE FROM BPO_A13_DISPONIBILIDADE_OFR WHERE A01_TP_CASO = ", tipoCaso, 
                       " AND A01_NR_CASO = ", numeroCaso, " AND A01_CD_MODELO = ", codModelo)
-      dbExecute(conexao, query)
+      DBI::dbExecute(conexao, query)
     }
     
     # executa query para gravar os dados de disponilidade das outras fontes renovaveis na tabela BPO_A13_DISPONIBILIDADE_OFR do BDBP
-    dbWriteTable(conexao, "BPO_A13_DISPONIBILIDADE_OFR", df.disponibilidadeOFR, append = TRUE)
+    DBI::dbWriteTable(conexao, "BPO_A13_DISPONIBILIDADE_OFR", df.disponibilidadeOFR, append = TRUE)
     
     mensagem <- "tabelas BPO_A13_DISPONIBILIDADE_OFR, BPO_A18_TIPOS_OFR e BPO_A19_FATOR_PONTA_OFR gravadas com sucesso!"
     
     # prepara energia de renovaveis para calculos de reserva
-    df.energiaOFR <- inner_join(df.energiaOFR, df.tipoContribuicaoPonta, by = c("TIPO" = "A18_TX_DESCRICAO")) %>% 
-      select(tipoFonte = A18_CD_TIPO_FONTE, subsistema = sistema, anoMes, energia = Energia)
+    df.energiaOFR <- dplyr::inner_join(df.energiaOFR, df.tipoContribuicaoPonta, by = c("TIPO" = "A18_TX_DESCRICAO")) %>% 
+      dplyr::select(tipoFonte = A18_CD_TIPO_FONTE, subsistema = sistema, anoMes, energia = Energia)
     
     return(list(mensagem = mensagem, df.energiaOFR = df.energiaOFR))
   }

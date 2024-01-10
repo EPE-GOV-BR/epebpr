@@ -16,7 +16,7 @@
 dadosGraficoCVAR <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
                              inicioHorizonteGrafico, fimHorizonteGrafico, tipoGrafico) {
   
-  conexao <- dbConnect(RSQLite::SQLite(), baseSQLite)
+  conexao <- DBI::dbConnect(RSQLite::SQLite(), baseSQLite)
   # query no banco com join para buscar defict e demanda por serie para calculo da profundidade (informacao pelo SIN)
   squery <- paste0("SELECT 
                     A16.A09_NR_SERIE,
@@ -72,42 +72,52 @@ dadosGraficoCVAR <- function(baseSQLite, tipoCaso, numeroCaso, codModelo,
                       A16.A09_NR_SERIE,
                       A16.A09_NR_MES;")
   
-  tib.resultados <- dbGetQuery(conexao, squery) %>% as_tibble()
-  dbDisconnect(conexao)
+  tib.resultados <- DBI::dbGetQuery(conexao, squery) %>% 
+    tidyr::as_tibble()
+  
+  DBI::dbDisconnect(conexao)
   
   # calcula a profundidade dos deficts
-  tib.resultados <- tib.resultados %>% mutate(PROFUNDIDADE = DEFICIT/(DEMANDA + RESERVA_F + RESERVA_C))
+  tib.resultados <- tib.resultados %>% 
+    dplyr::mutate(PROFUNDIDADE = DEFICIT/(DEMANDA + RESERVA_F + RESERVA_C))
   
   # calcula o CVAR por ano e mes
   tib.resultadosCvarMes <- tib.resultados %>%
-    group_by(A09_NR_MES) %>%
-    summarise(#"cvar 1%" = cvar(PROFUNDIDADE, 0.01),
+    dplyr::group_by(A09_NR_MES) %>%
+    dplyr::summarise(#"cvar 1%" = cvar(PROFUNDIDADE, 0.01),
       "1cvar 1,5%" = cvar(PROFUNDIDADE, 0.015),
       #"cvar 2%" = cvar(PROFUNDIDADE, 0.02),
       "2cvar 2,5%" = cvar(PROFUNDIDADE, 0.025),
       "3cvar 5%" = cvar(PROFUNDIDADE, 0.05),
-      "4cvar 10%" = cvar(PROFUNDIDADE, 0.1)) %>% ungroup()
+      "4cvar 10%" = cvar(PROFUNDIDADE, 0.1)) %>% 
+    dplyr::ungroup()
   
   # faz a transposicao dos dados de cvar por coluna para um campo de identificacao do cvar (1%; 1,5%; 2%; 5%...) e outro de valor de cvar
-  tib.resultadosCvarMes <- tib.resultadosCvarMes %>% gather(key = "tamanhoCVAR", value = "cvar", -A09_NR_MES)
+  tib.resultadosCvarMes <- tib.resultadosCvarMes %>% 
+    tidyr::gather(key = "tamanhoCVAR", value = "cvar", -A09_NR_MES)
   
   # cria coluna do tipo data a partir do campo anoMes e filtra o horizonte para exibicao no grafico
-  tib.resultadosCvarMes <- tib.resultadosCvarMes %>% mutate(anoMes = as.character(A09_NR_MES) %>% as.yearmon("%Y%m") %>% zoo::as.Date()) %>% 
-    filter(between(as.integer(format(anoMes, "%Y")), inicioHorizonteGrafico, fimHorizonteGrafico))
+  tib.resultadosCvarMes <- tib.resultadosCvarMes %>% 
+    dplyr::mutate(anoMes = as.character(A09_NR_MES) %>% zoo::as.yearmon("%Y%m") %>% zoo::as.Date()) %>% 
+    dplyr::filter(dplyr::between(as.integer(format(anoMes, "%Y")), inicioHorizonteGrafico, fimHorizonteGrafico))
   
   # inclusao de maximo cvar por tipo para possibilitar a identificacao dos maximos no grafico
-  tib.resultadosCvarMesMax <- tib.resultadosCvarMes %>% group_by(tamanhoCVAR) %>% summarise(maxCVAR = max(cvar)) %>% ungroup()
-  tib.resultadosCvarMes <- inner_join(tib.resultadosCvarMes, tib.resultadosCvarMesMax, by = "tamanhoCVAR")
+  tib.resultadosCvarMesMax <- tib.resultadosCvarMes %>% 
+    dplyr::group_by(tamanhoCVAR) %>% 
+    dplyr::summarise(maxCVAR = max(cvar)) %>% 
+    dplyr::ungroup()
+  
+  tib.resultadosCvarMes <- dplyr::inner_join(tib.resultadosCvarMes, tib.resultadosCvarMesMax, by = "tamanhoCVAR")
   
   if (tipoGrafico %in% c(1,2)) {
     tib.dadosGraficoCVAR <- tib.resultadosCvarMes
-    
   } else {
     # cvar anual
     # cria coluna de ano e calcula o CVAR por ano
-    tib.resultadosCvarAno <- tib.resultados %>% mutate(ano = A09_NR_MES%/%100) %>% 
-      group_by(ano) %>%
-      summarise(# "cvar 1%" = cvar(PROFUNDIDADE, 0.01),
+    tib.resultadosCvarAno <- tib.resultados %>% 
+      dplyr::mutate(ano = A09_NR_MES%/%100) %>% 
+      dplyr::group_by(ano) %>%
+      dplyr::summarise(# "cvar 1%" = cvar(PROFUNDIDADE, 0.01),
         "1cvar 1,5%" = cvar(PROFUNDIDADE, 0.015),
         # "cvar 2%" = cvar(PROFUNDIDADE, 0.02),
         "2cvar 2,5%" = cvar(PROFUNDIDADE, 0.025),
@@ -115,10 +125,12 @@ dadosGraficoCVAR <- function(baseSQLite, tipoCaso, numeroCaso, codModelo,
         "4cvar 10%" = cvar(PROFUNDIDADE, 0.1))
     
     # faz a transposicao dos dados de cvar por coluna para um campo de identificacao do cvar (1%; 1,5%; 2%; 5%...) e outro de valor de cvar
-    tib.resultadosCvarAno <- tib.resultadosCvarAno %>% gather(key = "tamanhoCVAR", value = "cvar", -ano) 
+    tib.resultadosCvarAno <- tib.resultadosCvarAno %>% 
+      tidyr::gather(key = "tamanhoCVAR", value = "cvar", -ano) 
     
     # filtra o horizonte
-    tib.resultadosCvarAno <- tib.resultadosCvarAno %>% filter(between(ano, inicioHorizonteGrafico, fimHorizonteGrafico))
+    tib.resultadosCvarAno <- tib.resultadosCvarAno %>% 
+      dplyr::filter(dplyr::between(ano, inicioHorizonteGrafico, fimHorizonteGrafico))
     
     tib.dadosGraficoCVAR <- tib.resultadosCvarAno
   }

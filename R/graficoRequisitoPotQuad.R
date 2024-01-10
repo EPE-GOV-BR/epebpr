@@ -12,7 +12,7 @@
 #' @export
 graficoRequisitosPotQuad <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, inicioHorizonteGrafico, fimHorizonteGrafico) {
   
-  conexao <- dbConnect(RSQLite::SQLite(), baseSQLite)
+  conexao <- DBI::dbConnect(RSQLite::SQLite(), baseSQLite)
   
   squery <- paste0("SELECT 
                     A30_NR_ANO,
@@ -24,17 +24,19 @@ graficoRequisitosPotQuad <- function(baseSQLite, tipoCaso, numeroCaso, codModelo
                     A01_NR_CASO = ", numeroCaso," AND
                     A01_CD_MODELO = ", codModelo, ";")
   
-  tib.resultados <- dbGetQuery(conexao, squery) %>% as_tibble()
-  dbDisconnect(conexao)
+  tib.resultados <- DBI::dbGetQuery(conexao, squery) %>% 
+    tidyr::as_tibble()
+  
+  DBI::dbDisconnect(conexao)
   
   # cria coluna de quadrimestre e filtra o horizonte para exibicao no grafico
   tib.requisitosPotQuad <- tib.resultados %>%
-    filter(between(A30_NR_ANO, inicioHorizonteGrafico, fimHorizonteGrafico)) %>% 
-    mutate(anoQuad = paste0(A30_NR_ANO, "-", A30_NR_QUADRIMESTRE))
+    dplyr::filter(dplyr::between(A30_NR_ANO, inicioHorizonteGrafico, fimHorizonteGrafico)) %>% 
+    dplyr::mutate(anoQuad = paste0(A30_NR_ANO, "-", A30_NR_QUADRIMESTRE))
   
-  graficoReqPotQuad <- plot_ly(data = tib.requisitosPotQuad, x = ~anoQuad, y = ~A30_VL_REQUISITO, name = "", type = "bar", color = I("gray"), showlegend = F,
-                           hovertemplate = "<b>Requisito de potência</b>: %{y:.2f} MW<extra></extra>") %>% 
-    layout( 
+  graficoReqPotQuad <- plotly::plot_ly(data = tib.requisitosPotQuad, x = ~anoQuad, y = ~A30_VL_REQUISITO, name = "", type = "bar", color = I("gray"), showlegend = F,
+                                       hovertemplate = "<b>Requisito de potência</b>: %{y:.2f} MW<extra></extra>") %>% 
+    plotly::layout( 
       title = "<b>Requisito de Potência Quadrimestral</b>",
       legend = list(orientation = 'h', x = "0.3"),
       yaxis = list( 

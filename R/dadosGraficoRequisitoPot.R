@@ -11,10 +11,9 @@
 #'
 #' @export
 dadosRequisitoPot <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
-                             inicioHorizonteGrafico, fimHorizonteGrafico) {
+                              inicioHorizonteGrafico, fimHorizonteGrafico) {
   
-  conexao <- dbConnect(RSQLite::SQLite(), baseSQLite)
-  # query no banco com join para buscar defict e demanda por serie para calculo da profundidade (informacao pelo SIN)
+  conexao <- DBI::dbConnect(RSQLite::SQLite(), baseSQLite)
   # query no banco com join para buscar defict e demanda por serie para calculo da profundidade (informacao pelo SIN)
   squery <- paste0("SELECT 
                     A16.A09_NR_SERIE,
@@ -70,27 +69,36 @@ dadosRequisitoPot <- function(baseSQLite, tipoCaso, numeroCaso, codModelo,
                       A16.A09_NR_SERIE,
                       A16.A09_NR_MES;")
   
-  tib.resultados <- dbGetQuery(conexao, squery) %>% as_tibble()
-  dbDisconnect(conexao)
+  tib.resultados <- DBI::dbGetQuery(conexao, squery) %>% 
+    tidyr::as_tibble()
+  
+  DBI::dbDisconnect(conexao)
   
   # calcula o requisito por mês
   tib.resultadosCvarMes <- tib.resultados %>%
-    group_by(A09_NR_MES, DEMANDA, RESERVA_F, RESERVA_C) %>%
-    summarise(cvar5 = cvar(DEFICIT, 0.05)) %>% ungroup() %>% 
-    mutate(limiteCriterio = (DEMANDA +  RESERVA_F + RESERVA_C)* 0.05, violacaoCriterio = ifelse(cvar5 > limiteCriterio, cvar5 - limiteCriterio, 0), ano = A09_NR_MES%/%100) %>% 
-    select(A09_NR_MES, ano, violacaoCriterio)
+    dplyr::group_by(A09_NR_MES, DEMANDA, RESERVA_F, RESERVA_C) %>%
+    dplyr::summarise(cvar5 = cvar(DEFICIT, 0.05)) %>% 
+    dplyr::ungroup() %>% 
+    dplyr::mutate(limiteCriterio = (DEMANDA +  RESERVA_F + RESERVA_C)* 0.05, 
+                  violacaoCriterio = ifelse(cvar5 > limiteCriterio, 
+                                            cvar5 - limiteCriterio, 
+                                            0), 
+                  ano = A09_NR_MES%/%100) %>% 
+    dplyr::select(A09_NR_MES, ano, violacaoCriterio)
   
   # calcula o VAR 5 por ano
-  tib.resultadosVarAno <- tib.resultados %>% mutate(ano = A09_NR_MES%/%100) %>% 
-    group_by(ano) %>%
-    summarise(var5 = var(DEFICIT, 0.05), .groups = "drop")
+  tib.resultadosVarAno <- tib.resultados %>% 
+    dplyr::mutate(ano = A09_NR_MES%/%100) %>% 
+    dplyr::group_by(ano) %>%
+    dplyr::summarise(var5 = var(DEFICIT, 0.05), .groups = "drop")
   
   # cria coluna do tipo data a partir do campo anoMes e filtra o horizonte para exibicao no grafico
-  tib.resultadosCvarMes <- tib.resultadosCvarMes %>% mutate(anoMes = as.character(A09_NR_MES) %>% as.yearmon("%Y%m") %>% zoo::as.Date()) %>% 
-    filter(between(as.integer(format(anoMes, "%Y")), inicioHorizonteGrafico, fimHorizonteGrafico))
+  tib.resultadosCvarMes <- tib.resultadosCvarMes %>% 
+    dplyr::mutate(anoMes = as.character(A09_NR_MES) %>% zoo::as.yearmon("%Y%m") %>% zoo::as.Date()) %>% 
+    dplyr::filter(dplyr::between(as.integer(format(anoMes, "%Y")), inicioHorizonteGrafico, fimHorizonteGrafico))
   
   # cria tibble de requisitos fazendo o join
-  tib.requisitosPot <- left_join(tib.resultadosCvarMes, tib.resultadosVarAno, by = "ano")
-    
+  tib.requisitosPot <- dplyr::left_join(tib.resultadosCvarMes, tib.resultadosVarAno, by = "ano")
+  
   return(tib.requisitosPot)
 }

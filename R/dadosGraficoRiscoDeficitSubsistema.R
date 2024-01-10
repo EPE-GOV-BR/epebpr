@@ -14,9 +14,9 @@
 #'
 #' @export
 dadosGraficoRiscoDeficitSubs <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, inicioHorizonteGrafico, fimHorizonteGrafico, 
-                                     tituloGrafico = paste0("Risco de Déficit por Subsistema - Caso ", numeroCaso)) {
+                                         tituloGrafico = paste0("Risco de Déficit por Subsistema - Caso ", numeroCaso)) {
   
-  conexao <- dbConnect(RSQLite::SQLite(), baseSQLite)
+  conexao <- DBI::dbConnect(RSQLite::SQLite(), baseSQLite)
   # query no banco com join para buscar defict e demanda por serie para calculo da profundidade
   squery <- paste0("SELECT 
                       A02.A02_TX_DESCRICAO_SUBSISTEMA,
@@ -61,36 +61,42 @@ dadosGraficoRiscoDeficitSubs <- function(baseSQLite, tipoCaso, numeroCaso, codMo
                       A16.A09_NR_SERIE,
                       A16.A09_NR_MES;")
   
-  tib.resultados <- dbGetQuery(conexao, squery) %>% as_tibble()
-  dbDisconnect(conexao)
+  tib.resultados <- DBI::dbGetQuery(conexao, squery) %>% 
+    tidyr::as_tibble()
+  
+  DBI::dbDisconnect(conexao)
   
   # filtra subsistemas sem demanda
-  filtroSubsistemaSemDemanda <- tib.resultados %>% group_by(A02_TX_DESCRICAO_SUBSISTEMA) %>% summarise(demanda = sum(DEMANDA), .groups = "drop") %>% 
-    filter(demanda > 0) %>% pull(A02_TX_DESCRICAO_SUBSISTEMA)
+  filtroSubsistemaSemDemanda <- tib.resultados %>% 
+    dplyr::group_by(A02_TX_DESCRICAO_SUBSISTEMA) %>% 
+    dplyr::summarise(demanda = sum(DEMANDA), .groups = "drop") %>% 
+    dplyr::filter(demanda > 0) %>% 
+    dplyr::pull(A02_TX_DESCRICAO_SUBSISTEMA)
   
-  tib.resultados <- tib.resultados %>% filter(A02_TX_DESCRICAO_SUBSISTEMA %in% filtroSubsistemaSemDemanda)
+  tib.resultados <- tib.resultados %>% 
+    dplyr::filter(A02_TX_DESCRICAO_SUBSISTEMA %in% filtroSubsistemaSemDemanda)
   
   # cria coluna de data anoMes, mes e ano e filtra o horizonte para exibicao no grafico
   tib.resultados <- tib.resultados %>% 
-    mutate(anoMes = as.character(A09_NR_MES) %>% as.yearmon("%Y%m") %>% zoo::as.Date(),
-           mes = A09_NR_MES %% 100, ano = A09_NR_MES %/% 100) %>% 
-    rename(subsistema = A02_TX_DESCRICAO_SUBSISTEMA) %>% 
-    filter(between(ano, inicioHorizonteGrafico, fimHorizonteGrafico))
+    dplyr::mutate(anoMes = as.character(A09_NR_MES) %>% zoo::as.yearmon("%Y%m") %>% zoo::as.Date(),
+                  mes = A09_NR_MES %% 100, ano = A09_NR_MES %/% 100) %>% 
+    dplyr::rename(subsistema = A02_TX_DESCRICAO_SUBSISTEMA) %>% 
+    dplyr::filter(dplyr::between(ano, inicioHorizonteGrafico, fimHorizonteGrafico))
   
   # calcula o risco mensal para os meses com defict
   tib.resultadosMes <- tib.resultados %>% 
-    mutate(DEFICIT = ifelse(DEFICIT > 0, 1,0)) %>% 
-    group_by(subsistema, ano, mes, anoMes) %>% 
-    reframe(riscoMensal = sum(DEFICIT)/n())
+    dplyr::mutate(DEFICIT = ifelse(DEFICIT > 0, 1,0)) %>% 
+    dplyr::group_by(subsistema, ano, mes, anoMes) %>% 
+    dplyr::reframe(riscoMensal = sum(DEFICIT)/n())
   
   # calcula o risco de defict anual
   tib.resultadosAno <- tib.resultados %>% 
-    mutate(DEFICIT = ifelse(DEFICIT > 0, 1,0)) %>%
-    group_by(subsistema, ano) %>% 
-    reframe(riscoAnual = sum(DEFICIT)/n())
+    dplyr::mutate(DEFICIT = ifelse(DEFICIT > 0, 1,0)) %>%
+    dplyr::group_by(subsistema, ano) %>% 
+    dplyr::reframe(riscoAnual = sum(DEFICIT)/n())
   
   # efetua join entre as tibbles de mes e ano para se ter o risco anual na tibble mensal
-  tib.resultadosRisco <- inner_join(tib.resultadosMes, tib.resultadosAno, by = c("ano", "subsistema"))
+  tib.resultadosRisco <- dplyr::inner_join(tib.resultadosMes, tib.resultadosAno, by = c("ano", "subsistema"))
   
   return(tib.resultadosRisco)
 }

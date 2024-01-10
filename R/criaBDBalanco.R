@@ -20,17 +20,17 @@ criaBDBalanco <- function(caminho, nomeBD) {
   } else {
     caminhoSQL <- system.file("SQL", package = "epebpr")
     # monta query que vai criar estrutura do banco de dados
-    query <- read_file(paste(caminhoSQL, "criaBDBalanco.sql", sep = "/"), )
-    query <- str_remove_all(query, "--.*\\\r")
-    query <- str_remove_all(query, "\\\r")
-    query <- str_remove_all(query, "\\\n")
-    query <- str_split(query, ";")
+    query <- readr::read_file(paste(caminhoSQL, "criaBDBalanco.sql", sep = "/"), )
+    query <- stringr::str_remove_all(query, "--.*\\\r")
+    query <- stringr::str_remove_all(query, "\\\r")
+    query <- stringr::str_remove_all(query, "\\\n")
+    query <- stringr::str_split(query, ";")
     query <- unlist(query)
     query <- query[query != ""]
-    conexao <- dbConnect(RSQLite::SQLite(), dbname = paste0(caminho, "/", nomeBD, ".sqlite3"))
+    conexao <- DBI::dbConnect(RSQLite::SQLite(), dbname = paste0(caminho, "/", nomeBD, ".sqlite3"))
     # executa multiplas execucoes no banco
-    resultado <- sapply(query, dbExecute, conn = conexao, USE.NAMES = F)
-    dbDisconnect(conexao)
+    resultado <- sapply(query, DBI::dbExecute, conn = conexao, USE.NAMES = F)
+    DBI::dbDisconnect(conexao)
     resultado <- sum(resultado)
     if (resultado == 0) {
       mensagem <- "Base de dados criada com sucesso!"

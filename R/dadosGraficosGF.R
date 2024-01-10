@@ -13,7 +13,7 @@
 #' @export
 dadosGraficosGF <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, tipoGrafico) {
   
-  conexao <- dbConnect(RSQLite::SQLite(), baseSQLite)
+  conexao <- DBI::dbConnect(RSQLite::SQLite(), baseSQLite)
   # query no banco com join para buscar defict e demanda por serie para calculo da profundidade
   squery <- paste0("SELECT
                       A16.A09_NR_SERIE as serie,
@@ -40,46 +40,51 @@ dadosGraficosGF <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, tipoGra
                       A02.A01_CD_MODELO = A16.A01_CD_MODELO AND
                       A02.A02_NR_SUBSISTEMA = A16.A02_NR_SUBSISTEMA;")
   
-  tib.resultados <- dbGetQuery(conexao, squery) %>% as_tibble()
-  dbDisconnect(conexao)
+  tib.resultados <- DBI::dbGetQuery(conexao, squery) %>% tidyr::as_tibble()
+  DBI::dbDisconnect(conexao)
   
   # calcula risco Anual (LOLP)
-  lolp <- tib.resultados %>% mutate(defict = ifelse(defict > 0, 1,0)) %>%
-    summarise(lolp = sum(defict)/n(), .groups = "drop") %>% pull(lolp) %>% 
-    percent(accuracy = 0.01, scale = 100, decimal.mark = ",", suffix = "%")
+  lolp <- tib.resultados %>% dplyr::mutate(defict = ifelse(defict > 0, 1,0)) %>%
+    dplyr::summarise(lolp = sum(defict)/n(), .groups = "drop") %>% dplyr::pull(lolp) %>% 
+    scales::percent(accuracy = 0.01, scale = 100, decimal.mark = ",", suffix = "%")
   
   # cria SIN e adiciona
-  tib.resultadosSIN <- tib.resultados %>% group_by(serie, anoMes) %>% 
-    summarise(defict = sum(defict), demanda = sum(demanda), .groups = "drop") %>% 
-    mutate(subsistema = "SIN") %>% select(serie, anoMes, subsistema, defict, demanda)
+  tib.resultadosSIN <- tib.resultados %>% 
+    dplyr::group_by(serie, anoMes) %>% 
+    dplyr::summarise(defict = sum(defict), demanda = sum(demanda), .groups = "drop") %>% 
+    dplyr::mutate(subsistema = "SIN") %>% 
+    dplyr::select(serie, anoMes, subsistema, defict, demanda)
   
-  tib.resultados <- bind_rows(tib.resultados, tib.resultadosSIN)
+  tib.resultados <- dplyr::bind_rows(tib.resultados, tib.resultadosSIN)
   
   # calcula a profundidade dos deficts
   tib.resultados <- tib.resultados %>% 
-    mutate(profundidade = ifelse(is.nan(defict/demanda), 0, defict/demanda),
-           mes = anoMes %% 100)
+    dplyr::mutate(profundidade = ifelse(is.nan(defict/demanda), 0, defict/demanda),
+                  mes = anoMes %% 100)
   
   # cria vetor auxiliar com os marcadores que aparecerao no eixo de tempo no grafico
-  nomeMes <- (1:12 * 100 + 20000001) %>% as.character() %>% as.Date("%Y%m%d") %>% months(abbreviate = T)
+  nomeMes <- (1:12 * 100 + 20000001) %>% 
+    as.character() %>% 
+    zoo::as.Date("%Y%m%d") %>% 
+    months(abbreviate = T)
   
   if (tipoGrafico == 10) {
     # calcula o CVaR por subsistema e mes
     tib.resultados <- tib.resultados %>%
-      group_by(subsistema, mes) %>%
-      summarise(cvar = cvar(profundidade, 0.05), .groups = "drop")
+      dplyr::group_by(subsistema, mes) %>%
+      dplyr::summarise(cvar = cvar(profundidade, 0.05), .groups = "drop")
     
   } else if (tipoGrafico == 11) {
     # calcula o VaR por subsistema e mes
     tib.resultados <- tib.resultados %>%
-      group_by(subsistema, mes) %>%
-      summarise(var = var(defict, 0.05), .groups = "drop")
+      dplyr::group_by(subsistema, mes) %>%
+      dplyr::summarise(var = var(defict, 0.05), .groups = "drop")
     
   } else {
     # calcula o VaR por subsistema
     tib.resultados <- tib.resultados %>%
-      group_by(subsistema) %>%
-      summarise(var = var(defict, 0.05), .groups = "drop")
+      dplyr::group_by(subsistema) %>%
+      dplyr::summarise(var = var(defict, 0.05), .groups = "drop")
   }
   
   return(tib.resultados)

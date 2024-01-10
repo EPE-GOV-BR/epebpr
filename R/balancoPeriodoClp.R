@@ -59,84 +59,99 @@ balancoPeriodoClp <- function(periodo,
                               df.defictRealocado) {
   
   # filtra demanda especifica (uso particular para carga liquida)
-  df.demandaLiquida <- df.demanda %>% filter(anoMes == periodo) %>% select(subsistema, demanda)
+  df.demandaLiquida <- df.demanda %>% 
+    dplyr::filter(anoMes == periodo) %>% 
+    dplyr::select(subsistema, demanda)
+  
   # critica de existencia de dados
   if(nrow(df.demandaLiquida) == 0) {
-    dbDisconnect(conexao)
+    DBI::dbDisconnect(conexao)
     stop(paste0("Não há demanda (BPO_A10_DEMANDA) definida para o período de ", periodo))
   }
   
   # filtrando geracao termica para o mes especifico
   # critica de existencia de dados
-  if(nrow(df.geracaoTermicaTotal %>% filter(anoMes == periodo)) == 0) {
-    dbDisconnect(conexao)
+  if(nrow(df.geracaoTermicaTotal %>% dplyr::filter(anoMes == periodo)) == 0) {
+    DBI::dbDisconnect(conexao)
     stop(paste0("Não há geração térmica (BPO_A14_DISPONIBILIDADE_UTE) para o período de ", periodo))
     
   }
   # filtrando geracao termica
-  df.geracaoTermica <- df.geracaoTermicaTotal %>% filter(anoMes == periodo) %>%
-    select(tipoUsina, codUsina, subsistema, transmissao, inflexibilidade, disponibilidade, cvu)
+  df.geracaoTermica <- df.geracaoTermicaTotal %>% 
+    dplyr::filter(anoMes == periodo) %>%
+    dplyr::select(tipoUsina, codUsina, subsistema, transmissao, inflexibilidade, disponibilidade, cvu)
   
   # filtrando limites das linhas de transmissao para o mes especifico
   # critica de existencia de dados
-  if(nrow(df.geracaoTransmissaoTotal %>% filter(anoMes == periodo)) == 0) {
-    dbDisconnect(conexao)
+  if(nrow(df.geracaoTransmissaoTotal %>% dplyr::filter(anoMes == periodo)) == 0) {
+    DBI::dbDisconnect(conexao)
     stop(paste0("Não há transmissão (BPO_A11_INTERCAMBIOS) para o período de ", periodo))
   }
+  
   # filtrando limites das linhas de transmissao
-  df.geracaoTransmissao <- df.geracaoTransmissaoTotal %>% filter(anoMes == periodo) %>%
-    select(tipoUsina, codUsina, subsistema, transmissao, inflexibilidade, disponibilidade, cvu)
+  df.geracaoTransmissao <- df.geracaoTransmissaoTotal %>% dplyr::filter(anoMes == periodo) %>%
+    dplyr::select(tipoUsina, codUsina, subsistema, transmissao, inflexibilidade, disponibilidade, cvu)
   
   # filtrando geracao revnovavel para o mes especifico
   # critica de existencia de dados
-  if(nrow(df.geracaoRenovaveisTotal %>% filter(anoMes == periodo)) == 0) {
-    dbDisconnect(conexao)
+  if(nrow(df.geracaoRenovaveisTotal %>% dplyr::filter(anoMes == periodo)) == 0) {
+    DBI::dbDisconnect(conexao)
     stop(paste0("Não há renováveis (BPO_A13_DISPONIBILIDADE_OFR) para o período de ", periodo))
   }
+  
   # filtrando geracao renovavel
-  df.geracaoRenovaveis <- df.geracaoRenovaveisTotal %>% filter(anoMes == periodo) %>%
-    select(tipoUsina, codUsina, subsistema, transmissao, inflexibilidade, disponibilidade, cvu)
+  df.geracaoRenovaveis <- df.geracaoRenovaveisTotal %>% dplyr::filter(anoMes == periodo) %>%
+    dplyr::select(tipoUsina, codUsina, subsistema, transmissao, inflexibilidade, disponibilidade, cvu)
   
   # filtrando limites dos grupos de linhas de transmissao para o mes especifico
   # critica de existencia de dados caso nao seja caso de GF
-  if(nrow(df.limitesAgrupamentoLinhasTotal %>% filter(anoMes == periodo)) == 0 & tipoCaso != 3) {
-    dbDisconnect(conexao)
+  if(nrow(df.limitesAgrupamentoLinhasTotal %>% dplyr::filter(anoMes == periodo)) == 0 & tipoCaso != 3) {
+    DBI::dbDisconnect(conexao)
     stop(paste0("Não há limites de agrupamentos de linhas (BPO_A12_LIMITE_AGRUPAMENTOS_INTERCAMBIO) para o período de ", periodo))
   }
+  
   # filtrando limites dos grupos de linhas de transmissao
-  df.limitesAgrupamentoLinhas <- df.limitesAgrupamentoLinhasTotal %>% filter(anoMes == periodo) %>% select(agrupamento, limite)
+  df.limitesAgrupamentoLinhas <- df.limitesAgrupamentoLinhasTotal %>% 
+    dplyr::filter(anoMes == periodo) %>% 
+    dplyr::select(agrupamento, limite)
   
   # geracao hidro
-  df.geracaoHidro <- df.geracaoHidroTotal %>% filter(anoMes == periodo, serieHidro == idSerieHidro) %>%
-    select(tipoUsina, codUsina, subsistema, transmissao, inflexibilidade, disponibilidade, cvu)
+  df.geracaoHidro <- df.geracaoHidroTotal %>% 
+    dplyr::filter(anoMes == periodo, serieHidro == idSerieHidro) %>%
+    dplyr::select(tipoUsina, codUsina, subsistema, transmissao, inflexibilidade, disponibilidade, cvu)
+  
   # critica de existencia de dados
   if(nrow(df.geracaoHidro) == 0) {
-    dbDisconnect(conexao)
+    DBI::dbDisconnect(conexao)
     stop(paste0("Não há hídricas (BPO_A09_DISPONIBILIDADE_HIDRO_PONTA_SUBSISTEMA) para o período de ", 
                 periodo, " e série hidro ", idSerieHidro))
   }
   df.geracaoHidro$cvu <- cvuHidro
   
   # filtra deficit realocado especifico da execucao
-  df.defictRealocado <- df.defictRealocado %>% filter(anoMes == periodo) %>% 
-    select(tipoUsina, codUsina, subsistema, transmissao, inflexibilidade, disponibilidade, cvu)
+  df.defictRealocado <- df.defictRealocado %>% dplyr::filter(anoMes == periodo) %>% 
+    dplyr::select(tipoUsina, codUsina, subsistema, transmissao, inflexibilidade, disponibilidade, cvu)
   
-    # geracao total
+  # geracao total
   df.geracao <- rbind(df.geracaoHidro, df.geracaoRenovaveis, df.geracaoTermica, df.geracaoTransmissao, df.custoDefict, df.defictRealocado)
+  
   # corrige pequenas distorcoes
-  df.geracao <- df.geracao %>% mutate(disponibilidade = ifelse(((disponibilidade - inflexibilidade) < 0.0001 & (disponibilidade - inflexibilidade) > -0.0001),
-                                                               inflexibilidade, disponibilidade))
+  df.geracao <- df.geracao %>% 
+    dplyr::mutate(disponibilidade = ifelse(((disponibilidade - inflexibilidade) < 0.0001 & (disponibilidade - inflexibilidade) > -0.0001),
+                                           inflexibilidade, 
+                                           disponibilidade))
   # geracao total para balanco sem restricao de transmissao
-  df.geracaoSemTransmissao <- df.geracao %>% mutate(disponibilidade = replace(disponibilidade, tipoUsina == 'TRANSMISSAO', Inf))
+  df.geracaoSemTransmissao <- df.geracao %>% 
+    dplyr::mutate(disponibilidade = replace(disponibilidade, tipoUsina == 'TRANSMISSAO', Inf))
   
   # verifica inconsistencia de limites das variaveis
   if (any(is.na(df.geracao$disponibilidade))) {
-    dbDisconnect(conexao)
+    DBI::dbDisconnect(conexao)
     stop(paste0("Problema na disponibilidade da geração para execução de ",
                 periodo, ", série hidro ", idSerieHidro))
   }
   if (any(is.na(df.geracao$inflexibilidade))) {
-    dbDisconnect(conexao)
+    DBI::dbDisconnect(conexao)
     stop(paste0("Problema na inflexibilidade da geração para execução de ",
                 periodo, ", série hidro ", idSerieHidro))
   }
@@ -144,7 +159,7 @@ balancoPeriodoClp <- function(periodo,
   inconsistenciaLimites <- inconsistenciaLimites < 0
   inconsistenciaLimites <- any(inconsistenciaLimites == T)
   if(inconsistenciaLimites) {
-    dbDisconnect(conexao)
+    DBI::dbDisconnect(conexao)
     stop(paste0("Problema de limites na geração para execução de ",
                 periodo, ", série hidro ", idSerieHidro))
   }
@@ -155,11 +170,11 @@ balancoPeriodoClp <- function(periodo,
   # onde: 
   # limiteInferiorLinha <= Ax <= limiteSuperiorLinha
   # limiteInferiorColuna <= x <= limiteSuperiorColuna
-  lpBalanco <- initProbCLP()
+  lpBalanco <- clpAPI::initProbCLP()
   
   # define sentido da otimizacao (minimizacao = 1, maximizacao = -1)
-  setObjDirCLP(lpBalanco, 1)
-
+  clpAPI::setObjDirCLP(lpBalanco, 1)
+  
   # define restricoes
   # sinais das variaveis - as variaveis podem ser geradores ou linhas de transmissao. 
   # os geradores recebem valor 0 na coluna transmissao do data frame de geracao. As linhas transmissao recebem um codigo indicando os subsistemas 
@@ -173,8 +188,8 @@ balancoPeriodoClp <- function(periodo,
   matrizRestricoesDemanda <- sapply(df.subsistemas$subsistema, identificaSubsistema)   
   matrizRestricoesDemanda <- (matrizRestricoesDemanda * sinalVariavel) %>% t() 
   # define os limites superior e inferior de cada linha de restricao para demanda. Como e uma igualdade, os limites superior e inferior sao iguais
-  ubDemanda <- left_join(df.subsistemas, df.demandaLiquida, by = "subsistema") %>% 
-    mutate(demanda = ifelse(is.na(demanda), 0, demanda)) %>% pull(demanda)
+  ubDemanda <- dplyr::left_join(df.subsistemas, df.demandaLiquida, by = "subsistema") %>% 
+    dplyr::mutate(demanda = ifelse(is.na(demanda), 0, demanda)) %>% dplyr::pull(demanda)
   # ifelse(is.na(demanda), 0, demanda * (1 + df.casosAnalise$reserva))
   lbDemanda <- ubDemanda
   
@@ -190,14 +205,14 @@ balancoPeriodoClp <- function(periodo,
   # como sao geradores virtuiais alocados em 2 subsistemas, a 'soma' deve ser 0. E como e uma igualdade, os limites sao iguais
   ubTransmissao <- rep(0, nrow(matrizRestricoesTransmissao))
   lbTransmissao <- ubTransmissao
-
+  
   # agrupamento transmissao
   # nao considera agrupamento caso seja caso de GF
   if (tipoCaso == 3) {
     matrizRestricoesAgrupamento <- numeric()
   } else {
     # seleciona os agrupamentos de transmissao
-    varAgrupamento <- df.limitesAgrupamentoLinhas %>% pull(agrupamento)
+    varAgrupamento <- df.limitesAgrupamentoLinhas %>% dplyr::pull(agrupamento)
     # funcao para identificar os agrupamentos de transmissao
     identificaAgrupamento <- function(x) ifelse(df.geracao$transmissao %in% df.agrupamentoLinhas$transmissao[df.agrupamentoLinhas$agrupamento == x], 1, 0)
     # define a parte da matriz de restricoes A referente aos agrupamentos de transmissao
@@ -205,7 +220,7 @@ balancoPeriodoClp <- function(periodo,
     matrizRestricoesAgrupamento <- (matrizRestricoesAgrupamento * sinalVariavel) %>% t()
   }
   # define os limites superior e inferior de cada linha de restricao para os agrupamentos de transmissao
-  ubAgrupamento <- df.limitesAgrupamentoLinhas %>% pull(limite)
+  ubAgrupamento <- df.limitesAgrupamentoLinhas %>% dplyr::pull(limite)
   lbAgrupamento <- rep(0, length(ubAgrupamento))
   
   # junta todas as retricoes e cria o problema a ser resolvido
@@ -259,43 +274,43 @@ balancoPeriodoClp <- function(periodo,
   # ja <- c(0, 2, 4, 6, 8, 10, 11, 12, 14)
   # ra <- c(3.0, 5.6, 1.0, 2.0, 1.1, 1.0, -2.0, 2.8,-1.0, 1.0, 1.0, -1.2, -1.0, 1.9)
   
-  loadProblemCLP(lp = lpBalanco, 
-                 ncols = nrow(df.geracao), 
-                 nrows = nlinhas, 
-                 ia = ia, 
-                 ja = ja, 
-                 ra = ra,
-                 lb = df.geracao$inflexibilidade, # define limite inferior das variaveis
-                 ub = df.geracao$disponibilidade, # define limite superior das variaveis
-                 obj_coef = df.geracao$cvu, # funcao objetivo
-                 rlb = rlb, 
-                 rub = rub)
-
+  clpAPI::loadProblemCLP(lp = lpBalanco, 
+                         ncols = nrow(df.geracao), 
+                         nrows = nlinhas, 
+                         ia = ia, 
+                         ja = ja, 
+                         ra = ra,
+                         lb = df.geracao$inflexibilidade, # define limite inferior das variaveis
+                         ub = df.geracao$disponibilidade, # define limite superior das variaveis
+                         obj_coef = df.geracao$cvu, # funcao objetivo
+                         rlb = rlb, 
+                         rub = rub)
+  
   # resolve o modelo linear
-  solucao <- solveInitialCLP(lpBalanco)
+  solucao <- clpAPI::solveInitialCLP(lpBalanco)
   # critica
   if(solucao != 0) {
-    dbDisconnect(conexao)
-    stop(paste0("Não foi encontrada solução viável (", status_codeCLP(solucao),") para execução de ", 
+    DBI::dbDisconnect(conexao)
+    stop(paste0("Não foi encontrada solução viável (", clpAPI::status_codeCLP(solucao),") para execução de ", 
                 periodo, ", série hidro ", idSerieHidro))
   }
   # solucao primal das variaveis
-  primalBalanco <- getColPrimCLP(lpBalanco)
+  primalBalanco <- clpAPI::getColPrimCLP(lpBalanco)
   
   # solucao dual das restricoes
-  dualBalanco <- getRowDualCLP(lpBalanco)
+  dualBalanco <- clpAPI::getRowDualCLP(lpBalanco)
   
   # libera o problema da memoria
-  delProbCLP(lpBalanco)
+  clpAPI::delProbCLP(lpBalanco)
   # Fim Balanco
   
   
   # Balanco sem limite de transmissao
   # cria modelo para ser resolvido no solver Coin-or Linear Programming
-  lpBalancoSemTransmissao <- initProbCLP()
+  lpBalancoSemTransmissao <- clpAPI::initProbCLP()
   
   # define sentido da otimizacao (minimizacao = 1)
-  setObjDirCLP(lpBalancoSemTransmissao, 1)
+  clpAPI::setObjDirCLP(lpBalancoSemTransmissao, 1)
   
   # junta todas as retricoes definidas no balanco e cria o problema sem limites de transmissao a ser resolvido
   matrizRestricoes <- rbind(matrizRestricoesDemanda, matrizRestricoesTransmissao) %>% t()
@@ -306,72 +321,80 @@ balancoPeriodoClp <- function(periodo,
   rub <- c(ubDemanda, ubTransmissao)
   rlb <- c(lbDemanda, lbTransmissao)
   
-  loadProblemCLP(lp = lpBalancoSemTransmissao, 
-                 ncols = nrow(df.geracaoSemTransmissao), 
-                 nrows = nlinhas, 
-                 ia = ia, 
-                 ja = ja, 
-                 ra = ra,
-                 lb = df.geracaoSemTransmissao$inflexibilidade, # define limite inferior das variaveis
-                 ub = df.geracaoSemTransmissao$disponibilidade, # define limite superior das variaveis
-                 obj_coef = df.geracaoSemTransmissao$cvu, # funcao objetivo
-                 rlb = rlb, 
-                 rub = rub)
+  clpAPI::loadProblemCLP(lp = lpBalancoSemTransmissao, 
+                         ncols = nrow(df.geracaoSemTransmissao), 
+                         nrows = nlinhas, 
+                         ia = ia, 
+                         ja = ja, 
+                         ra = ra,
+                         lb = df.geracaoSemTransmissao$inflexibilidade, # define limite inferior das variaveis
+                         ub = df.geracaoSemTransmissao$disponibilidade, # define limite superior das variaveis
+                         obj_coef = df.geracaoSemTransmissao$cvu, # funcao objetivo
+                         rlb = rlb, 
+                         rub = rub)
   
   # resolve o modelo linear
-  solucao <- solveInitialCLP(lpBalancoSemTransmissao)
+  solucao <- clpAPI::solveInitialCLP(lpBalancoSemTransmissao)
   
   # critica
   if(solucao != 0) {
-    dbDisconnect(conexao)
+    DBI::dbDisconnect(conexao)
     stop(paste0("Não foi encontrada solução viável (", 
-                status_codeCLP(solucao),") para execução com transmissão ilimitada de ", 
+                clpAPI::status_codeCLP(solucao),") para execução com transmissão ilimitada de ", 
                 periodo, ", série hidro ", idSerieHidro))
   }
   
   # solucao primal das variaveis
-  primalBalancoTransmissao <- getColPrimCLP(lpBalancoSemTransmissao)
+  primalBalancoTransmissao <- clpAPI::getColPrimCLP(lpBalancoSemTransmissao)
   
   # libera o problema da memoria
-  delProbCLP(lpBalancoSemTransmissao)
+  clpAPI::delProbCLP(lpBalancoSemTransmissao)
   # Fim Balanco sem limite de transmissao
   
   # gera resultado
-  df.geracao <- df.geracao %>% mutate(balanco = round(primalBalanco, 2),
-                                      balancoRedeIlimitada = round(primalBalancoTransmissao, 2))
-  df.resultado <- df.geracao %>% mutate(tipoUsina = ifelse(startsWith(tipoUsina, "DEFICIT"),
-                                                           "DEFICIT",
-                                                           tipoUsina)) %>% 
-    group_by(tipoUsina, subsistema) %>%
-    summarise(A16_VL_GMIN = round(sum(inflexibilidade), 2), 
-              A16_VL_DESPACHO = round(sum(balanco * ifelse(sign(transmissao) == -1, -1, 1)), 2),
-              A16_VL_DESPACHO_REDE_ILIMITADA = round(sum(balancoRedeIlimitada * ifelse(sign(transmissao) == -1, -1, 1)), 2),
-              A16_VL_NAO_DESPACHADO = round((sum(disponibilidade) - A16_VL_DESPACHO), 2), .groups = "drop") %>% 
-    mutate(A01_TP_CASO = tipoCaso,
-           A01_NR_CASO = numeroCaso,
-           A01_CD_MODELO = codModelo,
-           A09_NR_MES = periodo,
-           A09_NR_SERIE = idSerieHidro) %>% 
+  df.geracao <- df.geracao %>% dplyr::mutate(balanco = round(primalBalanco, 2),
+                                             balancoRedeIlimitada = round(primalBalancoTransmissao, 2))
+  df.resultado <- df.geracao %>% dplyr::mutate(tipoUsina = ifelse(startsWith(tipoUsina, "DEFICIT"),
+                                                                  "DEFICIT",
+                                                                  tipoUsina)) %>% 
+    dplyr::group_by(tipoUsina, subsistema) %>%
+    dplyr::summarise(A16_VL_GMIN = round(sum(inflexibilidade), 2), 
+                     A16_VL_DESPACHO = round(sum(balanco * ifelse(sign(transmissao) == -1, -1, 1)), 2),
+                     A16_VL_DESPACHO_REDE_ILIMITADA = round(sum(balancoRedeIlimitada * ifelse(sign(transmissao) == -1, -1, 1)), 2),
+                     A16_VL_NAO_DESPACHADO = round((sum(disponibilidade) - A16_VL_DESPACHO), 2), .groups = "drop") %>% 
+    dplyr::mutate(A01_TP_CASO = tipoCaso,
+                  A01_NR_CASO = numeroCaso,
+                  A01_CD_MODELO = codModelo,
+                  A09_NR_MES = periodo,
+                  A09_NR_SERIE = idSerieHidro) %>% 
     dplyr::rename(A16_TP_GERACAO = tipoUsina, A02_NR_SUBSISTEMA = subsistema)
   
   # calcula deficit sem reserva
   df.deficitSemReserva <- df.resultado %>% 
-    filter(A16_TP_GERACAO == "DEFICIT") %>% 
-    left_join(df.demanda, by = c("A02_NR_SUBSISTEMA" = "subsistema", "A09_NR_MES" = "anoMes")) %>% 
-    mutate(A16_VL_DESPACHO = A16_VL_DESPACHO - reservaCarga - reservaFontes,
-           A16_VL_DESPACHO = ifelse(A16_VL_DESPACHO < 0,
-                                    0,
-                                    A16_VL_DESPACHO),
-           A16_TP_GERACAO = "DEFICIT_R") %>% 
-    select(-id, -demanda, -reservaCarga, -reservaFontes)
+    dplyr::filter(A16_TP_GERACAO == "DEFICIT") %>% 
+    dplyr::left_join(df.demanda, by = c("A02_NR_SUBSISTEMA" = "subsistema", "A09_NR_MES" = "anoMes")) %>% 
+    dplyr::mutate(A16_VL_DESPACHO = A16_VL_DESPACHO - reservaCarga - reservaFontes,
+                  A16_VL_DESPACHO = ifelse(A16_VL_DESPACHO < 0,
+                                           0,
+                                           A16_VL_DESPACHO),
+                  A16_TP_GERACAO = "DEFICIT_R") %>% 
+    dplyr::select(-id, -demanda, -reservaCarga, -reservaFontes)
   
   # adiciona ao df.resultado
   df.resultado <- rbind(df.resultado, df.deficitSemReserva)
   
   # gera resultados de CMO
-  subsistemasReais <- df.subsistemas %>% filter(tipoSistema == 0) %>% pull(subsistema)
-  idSubsistemasReais <- df.subsistemas %>% mutate(linha = row_number()) %>% filter(tipoSistema == 0) %>% pull(linha)
+  subsistemasReais <- df.subsistemas %>% 
+    dplyr::filter(tipoSistema == 0) %>% 
+    dplyr::pull(subsistema)
+  
+  idSubsistemasReais <- df.subsistemas %>% 
+    dplyr::mutate(linha = row_number()) %>% 
+    dplyr::filter(tipoSistema == 0) %>% 
+    dplyr::pull(linha)
+  
   cmo <- dualBalanco[idSubsistemasReais] %>% round(2) # os primeiros resultados do dualBanco sao os subsistemas na ordem de codigo
+  
   df.resultadoCMO <- data.frame(A20_VL_CMO = cmo,
                                 A01_TP_CASO = tipoCaso,
                                 A01_NR_CASO = numeroCaso,
@@ -379,27 +402,27 @@ balancoPeriodoClp <- function(periodo,
                                 A20_NR_MES = periodo,
                                 A20_NR_SERIE = idSerieHidro,
                                 A02_NR_SUBSISTEMA = subsistemasReais)
-
+  
   
   # gera resultado por gerador
   if (balancoResumido == F) {
-
-    df.resultadoGerador <- df.geracao %>% mutate(A17_CD_USINA = ifelse(tipoUsina == 'TRANSMISSAO',
-                                                                       abs(transmissao),
-                                                                       codUsina),
-                                                 A17_VL_NAO_DESPACHADO = round((disponibilidade - balanco), 2),
-                                                 A17_VL_DESPACHO = ifelse(tipoUsina == 'TRANSMISSAO',
-                                                                          balanco * sign(transmissao),
-                                                                          balanco),
-                                                 A17_VL_DESPACHO_REDE_ILIMITADA = ifelse(tipoUsina == 'TRANSMISSAO',
-                                                                                         balancoRedeIlimitada * sign(transmissao),
-                                                                                         balancoRedeIlimitada),
-                                                 A01_TP_CASO = tipoCaso,
-                                                 A01_NR_CASO = numeroCaso,
-                                                 A01_CD_MODELO = codModelo,
-                                                 A09_NR_MES = periodo,
-                                                 A09_NR_SERIE = idSerieHidro) %>% 
-      select(-transmissao, -disponibilidade, -cvu, -balanco, -balancoRedeIlimitada, -codUsina) %>% 
+    
+    df.resultadoGerador <- df.geracao %>% dplyr::mutate(A17_CD_USINA = ifelse(tipoUsina == 'TRANSMISSAO',
+                                                                              abs(transmissao),
+                                                                              codUsina),
+                                                        A17_VL_NAO_DESPACHADO = round((disponibilidade - balanco), 2),
+                                                        A17_VL_DESPACHO = ifelse(tipoUsina == 'TRANSMISSAO',
+                                                                                 balanco * sign(transmissao),
+                                                                                 balanco),
+                                                        A17_VL_DESPACHO_REDE_ILIMITADA = ifelse(tipoUsina == 'TRANSMISSAO',
+                                                                                                balancoRedeIlimitada * sign(transmissao),
+                                                                                                balancoRedeIlimitada),
+                                                        A01_TP_CASO = tipoCaso,
+                                                        A01_NR_CASO = numeroCaso,
+                                                        A01_CD_MODELO = codModelo,
+                                                        A09_NR_MES = periodo,
+                                                        A09_NR_SERIE = idSerieHidro) %>% 
+      dplyr::select(-transmissao, -disponibilidade, -cvu, -balanco, -balancoRedeIlimitada, -codUsina) %>% 
       dplyr::rename(A16_TP_GERACAO = tipoUsina, 
                     A17_VL_GMIN = inflexibilidade, 
                     A02_NR_SUBSISTEMA = subsistema)
@@ -407,9 +430,13 @@ balancoPeriodoClp <- function(periodo,
     
   }
   # limpa o valor infinito do valor nao despachado dos deficts
-  df.resultado <- df.resultado %>% mutate(A16_VL_NAO_DESPACHADO = replace(A16_VL_NAO_DESPACHADO, A16_TP_GERACAO %in% c('DEFICIT','DEFICIT_R','TRANSMISSAO'), NA))
+  df.resultado <- df.resultado %>% 
+    dplyr::mutate(A16_VL_NAO_DESPACHADO = replace(A16_VL_NAO_DESPACHADO, A16_TP_GERACAO %in% c('DEFICIT','DEFICIT_R','TRANSMISSAO'), NA))
+  
   if (balancoResumido == F) {
-    df.resultadoGerador <- df.resultadoGerador %>% mutate(A17_VL_NAO_DESPACHADO = replace(A17_VL_NAO_DESPACHADO, A16_TP_GERACAO == 'DEFICIT', NA))
+    df.resultadoGerador <- df.resultadoGerador %>% 
+      dplyr::mutate(A17_VL_NAO_DESPACHADO = replace(A17_VL_NAO_DESPACHADO, A16_TP_GERACAO == 'DEFICIT', NA))
+    
     lt.resultado <- list(df.resultadoGerador = df.resultadoGerador, df.resultado = df.resultado, df.resultadoCMO = df.resultadoCMO)
   } else {
     lt.resultado <- list(df.resultado = df.resultado, df.resultadoCMO = df.resultadoCMO)
