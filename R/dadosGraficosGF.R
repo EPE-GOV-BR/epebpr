@@ -45,7 +45,7 @@ dadosGraficosGF <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, tipoGra
   
   # calcula risco Anual (LOLP)
   lolp <- tib.resultados %>% dplyr::mutate(defict = ifelse(defict > 0, 1,0)) %>%
-    dplyr::summarise(lolp = sum(defict)/n(), .groups = "drop") %>% dplyr::pull(lolp) %>% 
+    dplyr::summarise(lolp = sum(defict)/dplyr::n(), .groups = "drop") %>% dplyr::pull(lolp) %>% 
     scales::percent(accuracy = 0.01, scale = 100, decimal.mark = ",", suffix = "%")
   
   # cria SIN e adiciona

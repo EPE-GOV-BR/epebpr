@@ -206,9 +206,9 @@ gravacaoDadosDisponibilidadeOutrasFontesBDBP <- function(pastaCaso, conexao, tip
       
       # calcula os deltas da expansao (incremento por mes)
       df.expansao <- df.expansao %>% 
-        dplyr::mutate_at(dplyr::vars(-dplyr::matches("Data entrada")), ~(. - lag(.))) %>% 
+        dplyr::mutate_at(dplyr::vars(-dplyr::matches("Data entrada")), ~(. - dplyr::lag(.))) %>% 
         dplyr::filter_at(dplyr::vars(-dplyr::matches("Data entrada")), dplyr::any_vars(. != 0)) %>% 
-        tidyr::gather(key = "NomeFonteMDI", value = "POT (MW)", -1) %>% 
+        tidyr::pivot_longer(!`Data entrada`, names_to = "NomeFonteMDI", values_to = "POT (MW)") %>% 
         dplyr::filter(`POT (MW)` != 0)
       
       df.expansao <- dplyr::inner_join(df.expansao, df.relacaoIndicativas, by = "NomeFonteMDI") %>% 

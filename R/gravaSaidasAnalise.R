@@ -102,7 +102,7 @@ gravacaoSaidasAnalises <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
   dadosRiscoAnual <- dadosRisco %>% 
     dplyr::ungroup() %>% 
     dplyr::select(ano, riscoAnual) %>% 
-    distinct()
+    dplyr::distinct()
   
   # Risco Subs
   dadosRiscoSubs <- dadosGraficoRiscoDeficitSubs(baseSQLite, 
@@ -117,7 +117,7 @@ gravacaoSaidasAnalises <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
   # LOLP Anual Subs
   dadosRiscoAnualSubs <- dadosRiscoSubs %>% 
     dplyr::select(subsistema, ano, riscoAnual) %>% 
-    distinct()
+    dplyr::distinct()
   
   # Requisitos de Potencia
   dadosRequisitoPot <- dadosRequisitoPot(baseSQLite, 

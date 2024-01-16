@@ -98,7 +98,7 @@ dadosDistDeficit <- function(baseSQLite, tipoCaso, numeroCaso, codModelo) {
     rbind(tib.defSIN) %>% 
     dplyr::mutate(!!!setNames(rep(NA, length(colunasCvar)), colunasCvar)) %>% 
     dplyr::group_by(subsistema, ano, mes) %>%
-    dplyr::summarise(dplyr::across(starts_with("cvar"), ~ cvar(DEFICIT, as.numeric(stringr::str_replace(cur_column(), "cvar", ""))/100)))
+    dplyr::summarise(dplyr::across(starts_with("cvar"), ~ cvar(DEFICIT, as.numeric(stringr::str_replace(dplyr::cur_column(), "cvar", ""))/100)))
   
   tib.distDefxCvarMax <- tib.distCvar %>% 
     tidyr::pivot_longer(4:13, names_to = "cvar", values_to = "valor") %>% 
@@ -106,7 +106,7 @@ dadosDistDeficit <- function(baseSQLite, tipoCaso, numeroCaso, codModelo) {
     dplyr::summarise(valor = max(valor)) %>% 
     dplyr::right_join(tib.distDef, by = c("subsistema", "ano"), relationship = "many-to-many") %>% 
     tidyr::pivot_wider(names_from = cvar, values_from = valor) %>% 
-    dplyr::relocate(cvar10, .after = last_col())
+    dplyr::relocate(cvar10, .after = dplyr::last_col())
   
   lt.distDef <- list(distDef = tib.distDef, distCvar = tib.distCvar, distDefxCvarMax = tib.distDefxCvarMax)
   

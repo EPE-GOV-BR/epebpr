@@ -53,7 +53,7 @@ graficosGF <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, tipoGrafico,
   lolp <- tib.resultados %>% dplyr::group_by(anoMes, serie) %>% 
     dplyr::summarise(defict = sum(defict), .groups = "drop") %>% 
     dplyr::mutate(defict = ifelse(defict > 0, 1,0)) %>%
-    dplyr::summarise(lolp = sum(defict)/n(), .groups = "drop") %>% dplyr::pull(lolp) %>% 
+    dplyr::summarise(lolp = sum(defict)/dplyr::n(), .groups = "drop") %>% dplyr::pull(lolp) %>% 
     scales::percent(accuracy = 0.01, scale = 100, decimal.mark = ",", suffix = "%")
   
   # cria SIN e adiciona

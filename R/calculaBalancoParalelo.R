@@ -21,6 +21,8 @@
 #' \dontrun{
 #' calculaBalancoParalelo("C:/PDE2027_Caso080/bp.slqlite3", 1, 80, 1, 1e-10, 2e-8, 1e-8, 0.1, F)}
 #' 
+#' @importFrom foreach %dopar%
+#' 
 #' @export
 calculaBalancoParalelo <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, cvuTransmissao, cvuHidro, 
                                    cvuRenovaveis, cvuOutrasTermicas, balancoResumido = T, distribuicaoDeficit = 1) {
