@@ -188,7 +188,11 @@ gravacaoDadosDisponibilidadeOutrasFontesBDBP <- function(pastaCaso, conexao, tip
       }
       
       # le arquivo com as expansoes do MDI - trata ";" no fim para nao ter avisos
-      df.expansao <- readr::read_delim(stringi::stri_enc_toutf8(paste(pastaCaso, arquivoExpansao, sep = "/")), delim = ";", col_names = T, local = readr::locale(encoding = "latin1")) %>% 
+      df.expansao <- readr::read_delim(stringi::stri_enc_toutf8(paste(pastaCaso, arquivoExpansao, sep = "/")), 
+                                       delim = ";", 
+                                       col_names = T, 
+                                       local = readr::locale(encoding = "latin1"),
+                                       show_col_types = FALSE) %>% 
         dplyr::select(1:(ncol(.) -1)) %>% 
         dplyr::select(df.relacaoIndicativas$NomeFonteMDI) # filtra somente as indicativas (as fontes estao em colunas)
       
