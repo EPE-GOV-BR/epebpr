@@ -32,7 +32,7 @@ graficosGF <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, tipoGrafico,
                       BPO_A10_DEMANDA AS A10,
                       BPO_A02_SUBSISTEMAS AS A02
                     WHERE 
-                      A16.A16_TP_GERACAO = 'DEFICIT_R' AND 
+                      A16.A16_TP_GERACAO = 'DEFICIT' AND 
                       A16.A01_TP_CASO = ", tipoCaso," AND
                       A16.A01_NR_CASO = ", numeroCaso," AND
                       A16.A01_CD_MODELO = ", codModelo, " AND 
