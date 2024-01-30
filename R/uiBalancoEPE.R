@@ -17,10 +17,10 @@ uiBalancoEPE <- fluidPage(
             tags$style(HTML(".navbar-default .navbar-nav>.active>a, .navbar-default .navbar-nav>.active>a:hover, .navbar-default 
                              .navbar-nav>.active>a:focus {color: #000000; font-weight: bold;}"))
   ),
-
+  
   # spinner de processamento
   use_busy_spinner(spin = "fading-circle", color="#274580", margins = c(300, 500), height = "80px", width = "80px"),
-
+  
   navbarPage(
     title = tagList(img(src = 'http://www.epe.gov.br/PublishingImages/Logos/logo-epe-azul.png', height = '40px'),
                     # link para ajuda
@@ -56,7 +56,7 @@ uiBalancoEPE <- fluidPage(
                                       label = "Modelo:",
                                       choices = c("NEWAVE" = 1,
                                                   "SUISHI" = 2
-                                                  ),
+                                      ),
                                       selected = 1)),
                  
                  # Espaco entre inputs
@@ -70,25 +70,25 @@ uiBalancoEPE <- fluidPage(
                                                   "Determinística" = 1),
                                       selected = 1)),
                  tags$br(),
-
-
+                 
+                 
                  # Entrada numerica para o numero do caso
                  tags$div(style="display:inline-block; width:80px",
                           numericInput(inputId = "numeroCaso",
                                        label = HTML("Caso:"),
                                        min = 1,
                                        value = NULL)),
-
+                 
                  # Espaco entre inputs
                  tags$div(style="display:inline-block; width:7px"),
-
+                 
                  # Entrada para horas de ponta
                  tags$div(style="display:inline-block; width:120px",
                           numericInput(inputId = "horasPonta",
                                        label = HTML("Horas de Ponta:"),
                                        min = 1,
                                        value = 10)),
-
+                 
                  # Espaco entre inputs
                  tags$div(style="display:inline-block; width:7px"),
                  
@@ -99,14 +99,14 @@ uiBalancoEPE <- fluidPage(
                                        min = 0,
                                        max = 100,
                                        value = 100)),
-
+                 
                  tags$br(),
                  
                  # Entrada de texto para a descricao do caso
                  textInput(inputId = "descricao",
                            label = HTML("Descrição do Caso:"),
                            value = NULL),
-
+                 
                  wellPanel(style = "padding: 5px;",
                            tags$b(HTML("REEs Não Modulam")),
                            tags$br(),
@@ -126,7 +126,7 @@ uiBalancoEPE <- fluidPage(
                                               label = HTML("GHMédia:"),
                                               value = "6, 8, 13",
                                               placeholder = "sist1, sist2, etc."))),
-
+                 
                  # Localiza base SQLite
                  textOutput(outputId = "textoBaseSQLite"),
                  tags$span(strong(textOutput(outputId = "baseSQLite"), style = c("color:red"))),
@@ -159,7 +159,7 @@ uiBalancoEPE <- fluidPage(
                               label = NULL,
                               icon = icon("search"),
                               width = 77),
-
+                 
                  # Action button
                  tags$div(style = "height:8px"),
                  HTML("Calcula Balanço de Potência"),
@@ -197,7 +197,7 @@ uiBalancoEPE <- fluidPage(
                                         label = HTML("Considerar Vertimento para todas UHE")))
                  
                ),
-
+               
                # Output:
                mainPanel(
                  htmlOutput(outputId = "selecao")
@@ -208,79 +208,79 @@ uiBalancoEPE <- fluidPage(
     tabPanel(HTML("Gráficos"),
              sidebarLayout(
                sidebarPanel(width = 3,
-                 # Localiza base SQLite
-                 textOutput(outputId = "textoBaseSQLiteGrafico"),
-                 tags$span(strong(textOutput(outputId = "baseSQLiteGrafico"), style = c("color:red"))),
-                 tags$div(style = "height:3px"),
-                 actionButton(inputId = "btnBaseSQLiteGrafico",
-                              label = NULL,
-                              icon = icon("search"),
-                              width = 70),
-                 
-                 # Exibe/esconde input com resultado da base
-                 conditionalPanel(condition = "input.casoGrafico != -2",
-                                  tags$div(style = "height:8px"),
-                                  # Input dos casos na base
-                                  selectInput(inputId = "casoGrafico",
-                                              label = "Caso:",
-                                              choices = c(escondido = -2),
-                                              selected = -2),
-                                  
-                                  # Horizonte do grafico
-                                  HTML("Defina o horizonte de exibição do gráfico"),
-                                  tags$br(),
-                                  # Espaco
-                                  tags$div(style = "height:3px"),
-                                  # Entrada para inicio da serie do grafico
-                                  HTML("Início:"),
-                                  tags$div(style="display:inline-block; width:100px",
-                                           numericInput(inputId = "anoInicioGrafico", 
-                                                        label = NULL,
-                                                        min = 2018,
-                                                        max = 2050,
-                                                        value = 2023)),
-                                  
-                                  # Espaco entre inputs
-                                  tags$div(style="display:inline-block; width:7px"),
-                                  
-                                  # Entrada para fim da serie do grafico
-                                  HTML("Fim:"),
-                                  tags$div(style="display:inline-block; width:100px",
-                                           numericInput(inputId = "anoFimGrafico", 
-                                                        label = NULL,
-                                                        min = 2018,
-                                                        max = 2060,
-                                                        value = 2033)),
-                                  tags$br(),
-                                  # Input dos casos na base
-                                  selectInput(inputId = "tipoGrafico",
-                                              label = HTML("Tipo de Gráfico:"),
-                                              choices = c("CVaR Mensal" = 1,
-                                                          "CVaR Mensal Subsistema" = 9,
-                                                          "CVaR Anual" = 3, 
-                                                          "Risco (LOLP) Mensal" = 4,
-                                                          "Risco (LOLP) Anual" = 8,
-                                                          "VaR Mensal" = 6,
-                                                          "VaR Anual" = 7,
-                                                          "Requisitos de Potência" = 13,
-                                                          "Requisitos de Potência - Quadrimestral" = 14,
-                                                          "CVaR Mensal GF" = 10,
-                                                          "VaR Mensal GF" = 11,
-                                                          "VaR Anual GF" = 12),
-                                              selected = -2),
-                                  
-                                  # Botao para exibir grafico
-                                  actionButton(inputId = "btnGrafico",
-                                               label = NULL,
-                                               icon = icon("chart-area"),
-                                               width = 70)
-                 )
+                            # Localiza base SQLite
+                            textOutput(outputId = "textoBaseSQLiteGrafico"),
+                            tags$span(strong(textOutput(outputId = "baseSQLiteGrafico"), style = c("color:red"))),
+                            tags$div(style = "height:3px"),
+                            actionButton(inputId = "btnBaseSQLiteGrafico",
+                                         label = NULL,
+                                         icon = icon("search"),
+                                         width = 70),
+                            
+                            # Exibe/esconde input com resultado da base
+                            conditionalPanel(condition = "input.casoGrafico != -2",
+                                             tags$div(style = "height:8px"),
+                                             # Input dos casos na base
+                                             selectInput(inputId = "casoGrafico",
+                                                         label = "Caso:",
+                                                         choices = c(escondido = -2),
+                                                         selected = -2),
+                                             
+                                             # Horizonte do grafico
+                                             HTML("Defina o horizonte de exibição do gráfico"),
+                                             tags$br(),
+                                             # Espaco
+                                             tags$div(style = "height:3px"),
+                                             # Entrada para inicio da serie do grafico
+                                             HTML("Início:"),
+                                             tags$div(style="display:inline-block; width:100px",
+                                                      numericInput(inputId = "anoInicioGrafico", 
+                                                                   label = NULL,
+                                                                   min = 2018,
+                                                                   max = 2050,
+                                                                   value = 2023)),
+                                             
+                                             # Espaco entre inputs
+                                             tags$div(style="display:inline-block; width:7px"),
+                                             
+                                             # Entrada para fim da serie do grafico
+                                             HTML("Fim:"),
+                                             tags$div(style="display:inline-block; width:100px",
+                                                      numericInput(inputId = "anoFimGrafico", 
+                                                                   label = NULL,
+                                                                   min = 2018,
+                                                                   max = 2060,
+                                                                   value = 2033)),
+                                             tags$br(),
+                                             # Input dos casos na base
+                                             selectInput(inputId = "tipoGrafico",
+                                                         label = HTML("Tipo de Gráfico:"),
+                                                         choices = c("CVaR Mensal" = 1,
+                                                                     "CVaR Mensal Subsistema" = 9,
+                                                                     "CVaR Anual" = 3, 
+                                                                     "Risco (LOLP) Mensal" = 4,
+                                                                     "Risco (LOLP) Anual" = 8,
+                                                                     "VaR Mensal" = 6,
+                                                                     "VaR Anual" = 7,
+                                                                     "Requisitos de Potência" = 13,
+                                                                     "Requisitos de Potência - Quadrimestral" = 14,
+                                                                     "CVaR Mensal GF" = 10,
+                                                                     "VaR Mensal GF" = 11,
+                                                                     "VaR Anual GF" = 12),
+                                                         selected = -2),
+                                             
+                                             # Botao para exibir grafico
+                                             actionButton(inputId = "btnGrafico",
+                                                          label = NULL,
+                                                          icon = icon("chart-area"),
+                                                          width = 70)
+                            )
                ),
                
                # Output:
                mainPanel(
                  # plotOutput(outputId = "graficosCVar")
-                 plotlyOutput(outputId = "graficoBalanco", width = 1100, height = 600)
+                 plotly::plotlyOutput(outputId = "graficoBalanco", width = 1100, height = 600)
                )
              )
     )

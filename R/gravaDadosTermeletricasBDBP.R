@@ -35,32 +35,32 @@ gravacaoDadosTermeletricasBDBP <- function(pastaCaso, conexao, tipoCaso, numeroC
   
   # executa query para apagar da tabela BPO_A14_DISPONIBILIDADE_UTE os dados referentes a um possivel mesmo caso rodado anteriormente, 
   # de forma a evitar duplicacao dos dados
-  dbExecute(conexao, paste0("DELETE FROM BPO_A14_DISPONIBILIDADE_UTE
+  DBI::dbExecute(conexao, paste0("DELETE FROM BPO_A14_DISPONIBILIDADE_UTE
                               WHERE A01_TP_CASO = ", tipoCaso, 
-                            " AND A01_NR_CASO = ", numeroCaso, 
-                            " AND A01_CD_MODELO = ", codModelo))
+                                 " AND A01_NR_CASO = ", numeroCaso, 
+                                 " AND A01_CD_MODELO = ", codModelo))
   
   # executa as funcoes de leitutra do pacote leitorrcepel para o carregamento dos dados das termeletricas
   # insere as variaveis associadas ao tipoCaso, numeroCaso e codModelo
-  df.consolidadoUTE <- consolidaTermeletricasnoHorizonte(pastaCaso) %>% 
-    mutate(tipoCaso = tipoCaso, numeroCaso = numeroCaso, codModelo = codModelo) %>% 
+  df.consolidadoUTE <- leitorrmpe::consolidaTermeletricasnoHorizonte(pastaCaso) %>% 
+    dplyr::mutate(tipoCaso = tipoCaso, numeroCaso = numeroCaso, codModelo = codModelo) %>% 
     # renomeia os campos do data frame para compatibilizacao com a tabela do BDBP
-    select(A01_TP_CASO = tipoCaso, 
-           A01_NR_CASO = numeroCaso, 
-           A01_CD_MODELO = codModelo,
-           A02_NR_SUBSISTEMA = codSubsistema,
-           A14_NR_MES = anoMes,
-           A14_CD_USINA = codUsinaTermica,
-           A14_VL_POTENCIA = capacidaInstalada,
-           A14_VL_FATOR_CAPACIDADE = FCMaximo,
-           A14_VL_PERC_TEIF = TEIF,
-           A14_VL_PERC_IP = IP,
-           A14_VL_INFLEXIBILIDADE = GTMin,
-           A14_VL_DISPONIBILIDADE_MAXIMA_PONTA = PDISP,
-           A14_VL_CVU = CVU)
-
+    dplyr::select(A01_TP_CASO = tipoCaso, 
+                  A01_NR_CASO = numeroCaso, 
+                  A01_CD_MODELO = codModelo,
+                  A02_NR_SUBSISTEMA = codSubsistema,
+                  A14_NR_MES = anoMes,
+                  A14_CD_USINA = codUsinaTermica,
+                  A14_VL_POTENCIA = capacidaInstalada,
+                  A14_VL_FATOR_CAPACIDADE = FCMaximo,
+                  A14_VL_PERC_TEIF = TEIF,
+                  A14_VL_PERC_IP = IP,
+                  A14_VL_INFLEXIBILIDADE = GTMin,
+                  A14_VL_DISPONIBILIDADE_MAXIMA_PONTA = PDISP,
+                  A14_VL_CVU = CVU)
+  
   # executa query para gravar os dados das termeletricas na tabela BPO_A14_DISPONIBILIDADE_UTE do BDBP
-  dbWriteTable(conexao, "BPO_A14_DISPONIBILIDADE_UTE", df.consolidadoUTE, append = TRUE)
+  DBI::dbWriteTable(conexao, "BPO_A14_DISPONIBILIDADE_UTE", df.consolidadoUTE, append = TRUE)
   
   mensagem <- "tabela BPO_A14_DISPONIBILIDADE_UTE gravada com sucesso!"
   

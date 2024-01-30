@@ -7,7 +7,7 @@
 #' @param session objeto contendo dados e funcionalidades da da sessao
 #' @export
 serverBalanco <- function(input, output, session) {
-
+  
   ####### ABA BALANCO #######
   output$textoPasta <- renderText("Escolha a pasta do caso:")
   pastaCaso <- ""
@@ -16,7 +16,7 @@ serverBalanco <- function(input, output, session) {
   output$textoBaseSQLite <- renderText("Escolha a base SQLite ou crie nova:")
   baseSQLite <- ""
   pastaBD <- ""
-
+  
   # dados do balanco
   codTucurui <- 275 # codigo da usina Tucurui
   cotaLimiteTucurui <- 62 # cota limite de Tucurui em metros
@@ -56,13 +56,13 @@ serverBalanco <- function(input, output, session) {
     )
     output$pastaBDModal <- renderText(pastaBD)
   })
-
+  
   # monitora botao de pesquisa de pasta dentro da janela de criar pasta (2)
   observeEvent(input$btnProcurarPastaBD, {
     pastaBD <<- choose.dir(caption = "Escolha a pasta do banco de dados") # importante <<- para passar valor para variavel global
     output$pastaBDModal <- renderText(pastaBD)
   })
-
+  
   # monitora botao de criar base sqlite da janela (3)
   observeEvent(input$btnCriaBaseSQLiteModal, {
     if (pastaBD == "") {
@@ -118,7 +118,7 @@ serverBalanco <- function(input, output, session) {
     
     sistemasNaoModulamPonta <- strsplit(input$sistemasNaoModulamPonta, ",") %>% unlist() %>% as.numeric()
     sistemasNaoModulamMedia <- strsplit(input$sistemasNaoModulamMedia, ",") %>% unlist() %>% as.numeric()
-    validaModulacao <- length(intersect(sistemasNaoModulamPonta, sistemasNaoModulamMedia))
+    validaModulacao <- length(dplyr::intersect(sistemasNaoModulamPonta, sistemasNaoModulamMedia))
     
     shiny::validate(
       need(input$numeroCaso, "Caso sem n\u00FAmero"),
@@ -133,13 +133,13 @@ serverBalanco <- function(input, output, session) {
       # need(input$sistemasNaoModulamMedia, "Defina os sistemas que não modulam na média")
     )
     
-    tic()
+    tictoc::tic()
     
     # mensagem de tipo de simulacao
     # verifica se o usuario escolheu efetuar a leitura de dados, caso seja uma rodada com opcao epe
     if (as.logical(input$leituraDados)) {
       # pega dados gerais do NEWAVE
-      df.dadosGerais <- leituraDadosGerais(pastaCaso)
+      df.dadosGerais <- leitorrmpe::leituraDadosGerais(pastaCaso)
       if (df.dadosGerais$tipoSimulacao == 1) {
         mensagemLeitura <- "Lendo dados de simulação com séries sintéticas e gravando no banco de dados..."
       } else if (df.dadosGerais$tipoSimulacao == 2){
@@ -205,7 +205,7 @@ serverBalanco <- function(input, output, session) {
                                            as.double(input$distribuicaoDeficit)/100)
         
         # se o balanço foi calculado, gera saidas na BD e em excel
-        df.dadosGerais <- leituraDadosGerais(pastaCaso)
+        df.dadosGerais <- leitorrmpe::leituraDadosGerais(pastaCaso)
         mensagemSaidas <- gravacaoSaidasAnalises(baseSQLite, as.integer(input$tipoCaso), as.integer(input$numeroCaso), as.integer(input$codModelo), df.dadosGerais)
         
       } else {
@@ -213,11 +213,11 @@ serverBalanco <- function(input, output, session) {
       }
     })
     # exibe tempo de execucao
-    tempoExecucao <- toc(quiet = T)
+    tempoExecucao <- tictoc::toc(quiet = T)
     tempoExecucao <- round(tempoExecucao$toc - tempoExecucao$tic, 0) %>% as.numeric()
     tempoExecucao <- paste0("Executado em: ", tempoExecucao %/% 3600, " h. ",
                             (tempoExecucao - (tempoExecucao %/% 3600 * 3600)) %/% 60, " min. ", tempoExecucao %% 60, " seg.")
-
+    
     return({paste(mensagemBancoDados, mensagemDisponibilidade, mensagem, tempoExecucao, sep = "<br>")})
   })
   output$selecao <- renderText({
@@ -252,91 +252,91 @@ serverBalanco <- function(input, output, session) {
   )
   # monitora botao para exibir graficos
   grafico <- eventReactive(input$btnGrafico, 
-                                {
-                                  shiny::validate(
-                                    need(input$anoInicioGrafico, HTML("Favor determinar o início do horizonte para o gráfico!")),
-                                    need(input$anoFimGrafico, HTML("Favor determinar o fim do horizonte para o gráfico!")),
-                                    need(input$casoGrafico != -1, HTML("Favor selecionar um caso para o gráfico!"))
-                                  )
-                                  show_modal_spinner()
-                                  chaveGrafico <- c(input$casoGrafico %>% str_split(";") %>% unlist() %>% as.numeric())
-                                  # CvaR
-                                  if(as.numeric(input$tipoGrafico) %in% c(1, 2, 3)){
-                                    grafico <- graficoCVAR(baseSQLiteGrafico, 
-                                                           chaveGrafico[1], 
-                                                           chaveGrafico[2], 
-                                                           chaveGrafico[3], 
-                                                           as.numeric(input$anoInicioGrafico), 
-                                                           as.numeric(input$anoFimGrafico),
-                                                           as.numeric(input$tipoGrafico))
-                                    
-                                  # Risco 
-                                  } else if (as.numeric(input$tipoGrafico) == 4) {
-                                    grafico <- graficoRiscoDeficit(baseSQLiteGrafico, 
+                           {
+                             shiny::validate(
+                               need(input$anoInicioGrafico, HTML("Favor determinar o início do horizonte para o gráfico!")),
+                               need(input$anoFimGrafico, HTML("Favor determinar o fim do horizonte para o gráfico!")),
+                               need(input$casoGrafico != -1, HTML("Favor selecionar um caso para o gráfico!"))
+                             )
+                             show_modal_spinner()
+                             chaveGrafico <- c(input$casoGrafico %>% str_split(";") %>% unlist() %>% as.numeric())
+                             # CvaR
+                             if(as.numeric(input$tipoGrafico) %in% c(1, 2, 3)){
+                               grafico <- graficoCVAR(baseSQLiteGrafico, 
+                                                      chaveGrafico[1], 
+                                                      chaveGrafico[2], 
+                                                      chaveGrafico[3], 
+                                                      as.numeric(input$anoInicioGrafico), 
+                                                      as.numeric(input$anoFimGrafico),
+                                                      as.numeric(input$tipoGrafico))
+                               
+                               # Risco 
+                             } else if (as.numeric(input$tipoGrafico) == 4) {
+                               grafico <- graficoRiscoDeficit(baseSQLiteGrafico, 
+                                                              chaveGrafico[1], 
+                                                              chaveGrafico[2], 
+                                                              chaveGrafico[3], 
+                                                              as.numeric(input$anoInicioGrafico), 
+                                                              as.numeric(input$anoFimGrafico))
+                               
+                               # VaR
+                             } else if (as.numeric(input$tipoGrafico) %in% c(5, 6, 7)){
+                               grafico <- graficoVAR(baseSQLiteGrafico, 
+                                                     chaveGrafico[1], 
+                                                     chaveGrafico[2], 
+                                                     chaveGrafico[3], 
+                                                     as.numeric(input$anoInicioGrafico), 
+                                                     as.numeric(input$anoFimGrafico),
+                                                     as.numeric(input$tipoGrafico))
+                               
+                               # LOLP    
+                             } else if (as.numeric(input$tipoGrafico) == 8){
+                               grafico <- graficoRiscoDeficitAnual(baseSQLiteGrafico, 
                                                                    chaveGrafico[1], 
                                                                    chaveGrafico[2], 
                                                                    chaveGrafico[3], 
                                                                    as.numeric(input$anoInicioGrafico), 
                                                                    as.numeric(input$anoFimGrafico))
-                                    
-                                  # VaR
-                                  } else if (as.numeric(input$tipoGrafico) %in% c(5, 6, 7)){
-                                    grafico <- graficoVAR(baseSQLiteGrafico, 
-                                                          chaveGrafico[1], 
-                                                          chaveGrafico[2], 
-                                                          chaveGrafico[3], 
-                                                          as.numeric(input$anoInicioGrafico), 
-                                                          as.numeric(input$anoFimGrafico),
-                                                          as.numeric(input$tipoGrafico))
-                                    
-                                  # LOLP    
-                                  } else if (as.numeric(input$tipoGrafico) == 8){
-                                    grafico <- graficoRiscoDeficitAnual(baseSQLiteGrafico, 
-                                                                        chaveGrafico[1], 
-                                                                        chaveGrafico[2], 
-                                                                        chaveGrafico[3], 
-                                                                        as.numeric(input$anoInicioGrafico), 
-                                                                        as.numeric(input$anoFimGrafico))
-                                    
-                                  # CVaR Mensal Subsistema
-                                  } else if(as.numeric(input$tipoGrafico) == 9){
-                                    grafico <- graficoCVARSubsistema(baseSQLiteGrafico, 
-                                                                     chaveGrafico[1], 
-                                                                     chaveGrafico[2], 
-                                                                     chaveGrafico[3], 
-                                                                     as.numeric(input$anoInicioGrafico), 
-                                                                     as.numeric(input$anoFimGrafico))
-                                    
-                                  # Graficos com criterios de GF    
-                                  } else if(as.numeric(input$tipoGrafico) %in% c(10, 11, 12)){
-                                    grafico <- graficosGF(baseSQLiteGrafico, 
-                                                          chaveGrafico[1], 
-                                                          chaveGrafico[2], 
-                                                          chaveGrafico[3], 
-                                                          as.numeric(input$tipoGrafico))
-                                  # Requisitos de potencia  
-                                  } else if(as.numeric(input$tipoGrafico) == 13){
-                                    grafico <- graficoRequisitosPot(baseSQLiteGrafico, 
-                                                                    chaveGrafico[1], 
-                                                                    chaveGrafico[2], 
-                                                                    chaveGrafico[3], 
-                                                                    as.numeric(input$anoInicioGrafico), 
-                                                                    as.numeric(input$anoFimGrafico))
-                                  # Requisitos de potencia quadrimestral
-                                  } else if(as.numeric(input$tipoGrafico) == 14){
-                                    grafico <- graficoRequisitosPotQuad(baseSQLiteGrafico, 
-                                                                        chaveGrafico[1], 
-                                                                        chaveGrafico[2], 
-                                                                        chaveGrafico[3], 
-                                                                        as.numeric(input$anoInicioGrafico), 
-                                                                        as.numeric(input$anoFimGrafico))
-                                  }
-                                  
-                                  remove_modal_spinner()
-                                  return(grafico)
-                                })
+                               
+                               # CVaR Mensal Subsistema
+                             } else if(as.numeric(input$tipoGrafico) == 9){
+                               grafico <- graficoCVARSubsistema(baseSQLiteGrafico, 
+                                                                chaveGrafico[1], 
+                                                                chaveGrafico[2], 
+                                                                chaveGrafico[3], 
+                                                                as.numeric(input$anoInicioGrafico), 
+                                                                as.numeric(input$anoFimGrafico))
+                               
+                               # Graficos com criterios de GF    
+                             } else if(as.numeric(input$tipoGrafico) %in% c(10, 11, 12)){
+                               grafico <- graficosGF(baseSQLiteGrafico, 
+                                                     chaveGrafico[1], 
+                                                     chaveGrafico[2], 
+                                                     chaveGrafico[3], 
+                                                     as.numeric(input$tipoGrafico))
+                               # Requisitos de potencia  
+                             } else if(as.numeric(input$tipoGrafico) == 13){
+                               grafico <- graficoRequisitosPot(baseSQLiteGrafico, 
+                                                               chaveGrafico[1], 
+                                                               chaveGrafico[2], 
+                                                               chaveGrafico[3], 
+                                                               as.numeric(input$anoInicioGrafico), 
+                                                               as.numeric(input$anoFimGrafico))
+                               # Requisitos de potencia quadrimestral
+                             } else if(as.numeric(input$tipoGrafico) == 14){
+                               grafico <- graficoRequisitosPotQuad(baseSQLiteGrafico, 
+                                                                   chaveGrafico[1], 
+                                                                   chaveGrafico[2], 
+                                                                   chaveGrafico[3], 
+                                                                   as.numeric(input$anoInicioGrafico), 
+                                                                   as.numeric(input$anoFimGrafico))
+                             }
+                             
+                             remove_modal_spinner()
+                             return(grafico)
+                           })
   
   # output$graficosCVar <- renderPlot(grafico(), height = 600, width = 1000)
-  output$graficoBalanco <- renderPlotly(grafico())
-
+  output$graficoBalanco <- plotly::renderPlotly(grafico())
+  
 }

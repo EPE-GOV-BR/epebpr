@@ -35,68 +35,71 @@ gravacaoDadosMaquinasHidroBDBP <- function(pastaCaso, conexao, tipoCaso, numeroC
   
   # executa query para apagar da tabela BPO_A04_MAQUINAS_UHE os dados referentes a um possivel mesmo caso rodado anteriormente, 
   # de forma a evitar duplicacao dos dados
-  dbExecute(conexao, paste0("DELETE FROM BPO_A04_MAQUINAS_UHE
+  DBI::dbExecute(conexao, paste0("DELETE FROM BPO_A04_MAQUINAS_UHE
                               WHERE A01_TP_CASO = ", tipoCaso, 
-                            " AND A01_NR_CASO = ", numeroCaso, 
-                            " AND A01_CD_MODELO = ", codModelo))
+                                 " AND A01_NR_CASO = ", numeroCaso, 
+                                 " AND A01_CD_MODELO = ", codModelo))
   
   # executa as funcoes de leitura do pacote leitorrcepel para o carregamento dos dados das usinas hidreletricas
-  lt.dadosUsinasHidro <- leituraDadosUsinasHidro(pastaCaso) 
-  df.dadosConfiguracao <- lt.dadosUsinasHidro$df.dadosConfiguracao %>% select(-nomeUsina)
+  lt.dadosUsinasHidro <- leitorrmpe::leituraDadosUsinasHidro(pastaCaso) 
+  df.dadosConfiguracao <- lt.dadosUsinasHidro$df.dadosConfiguracao %>% 
+    dplyr::select(-nomeUsina)
   
-  df.configuracaoHidro <- leituraConfiguracaoHidro(pastaCaso) %>% 
-    select(codUsina, nomeUsina, codREE, idUsinaExistente, idModificacaoUsina)
+  df.configuracaoHidro <- leitorrmpe::leituraConfiguracaoHidro(pastaCaso) %>% 
+    dplyr::select(codUsina, nomeUsina, codREE, idUsinaExistente, idModificacaoUsina)
   
-  lt.alteracaoDadosUsinasHidro <- leituraAlteracaoDadosUsinasHidro(pastaCaso)
-  df.alteracaoConjunto <- lt.alteracaoDadosUsinasHidro$df.alteracaoConjunto %>% rename(potenciaUnitaria = potenciaEfetiva)
+  lt.alteracaoDadosUsinasHidro <- leitorrmpe::leituraAlteracaoDadosUsinasHidro(pastaCaso)
+  df.alteracaoConjunto <- lt.alteracaoDadosUsinasHidro$df.alteracaoConjunto %>% 
+    dplyr::rename(potenciaUnitaria = potenciaEfetiva)
   
-  lt.dadosExpansaoHidro <- leituraDadosExpansaoUsinasHidro(pastaCaso)
-  df.dadosExpansaoHidroTempo <- lt.dadosExpansaoHidro$df.dadosExpansaoHidroTempo %>% select(-nomeUsina)
+  lt.dadosExpansaoHidro <- leitorrmpe::leituraDadosExpansaoUsinasHidro(pastaCaso)
+  df.dadosExpansaoHidroTempo <- lt.dadosExpansaoHidro$df.dadosExpansaoHidroTempo %>% 
+    dplyr::select(-nomeUsina)
   
-  df.dadosGerais <- leituraDadosGerais(pastaCaso)
+  df.dadosGerais <- leitorrmpe::leituraDadosGerais(pastaCaso)
   
   # define o dataframe com as informacoes das maquinas por conjunto de cada hidreletrica
   # as informacoes sao definidas apenas para o inicio do horizonte de simulacao
-  df.MaqUHE <- inner_join(df.dadosConfiguracao, df.configuracaoHidro, by = c("codUsina")) %>% 
-    filter((!str_detect(nomeUsina, "FIC ") & !str_detect(nomeUsina, "FICT"))) %>% 
-    select(codUsina,idUsinaExistente,idModificacaoUsina,conjunto,numeroMaquinas,potenciaUnitaria,quedaEfetiva) %>% 
-    mutate(aux = 1) %>% inner_join(mutate(definePeriodo(pastaCaso), aux = 1), by = c("aux")) %>% 
-    left_join(df.alteracaoConjunto, by = c("codUsina","conjunto","anoMes")) %>% 
-    left_join(df.dadosExpansaoHidroTempo, by = c("codUsina","conjunto","anoMes")) %>% 
-    mutate(numeroMaquinasFinal = ifelse((idUsinaExistente=="NC"), 
-                                         0, 
-                                         ifelse(!is.na(numeroMaquinas.y) & idModificacaoUsina==1 & is.na(numeroMaquinas), 
-                                                numeroMaquinas.y, 
-                                                ifelse((idUsinaExistente=="EE" | idUsinaExistente=="NE"), 
-                                                       ifelse(!is.na(numeroMaquinas), 
-                                                              numeroMaquinas, 
-                                                              0),
-                                                       numeroMaquinas.x)))) %>% 
-    mutate(potenciaUnitariaFinal = ifelse((idUsinaExistente=="NC"), 
-                                        0, 
-                                        ifelse(!is.na(potenciaUnitaria.y) & idModificacaoUsina==1 & is.na(potenciaUnitaria), 
-                                               potenciaUnitaria.y, 
-                                               ifelse((idUsinaExistente=="EE" | idUsinaExistente=="NE"), 
-                                                      ifelse(!is.na(potenciaUnitaria), 
-                                                             potenciaUnitaria, 
-                                                             potenciaUnitaria.x),
-                                               potenciaUnitaria.x)))) %>% 
-    filter(anoMes ==df.dadosGerais$anoInicio*100+df.dadosGerais$mesInicio) %>% 
-    mutate(potenciaUnitariaFinal=ifelse(numeroMaquinasFinal==0,0,potenciaUnitariaFinal)) %>% 
-    filter(!(numeroMaquinasFinal == 0 & conjunto != 1)) %>% 
-    mutate(tipoCaso = tipoCaso, numeroCaso = numeroCaso, codModelo = codModelo) %>% 
+  df.MaqUHE <- dplyr::inner_join(df.dadosConfiguracao, df.configuracaoHidro, by = c("codUsina")) %>% 
+    dplyr::filter((!stringr::str_detect(nomeUsina, "FIC ") & !stringr::str_detect(nomeUsina, "FICT"))) %>% 
+    dplyr::select(codUsina,idUsinaExistente,idModificacaoUsina,conjunto,numeroMaquinas,potenciaUnitaria,quedaEfetiva) %>% 
+    dplyr::mutate(aux = 1) %>% dplyr::inner_join(dplyr::mutate(leitorrmpe::definePeriodo(pastaCaso), aux = 1), by = c("aux")) %>% 
+    dplyr::left_join(df.alteracaoConjunto, by = c("codUsina","conjunto","anoMes")) %>% 
+    dplyr::left_join(df.dadosExpansaoHidroTempo, by = c("codUsina","conjunto","anoMes")) %>% 
+    dplyr::mutate(numeroMaquinasFinal = ifelse((idUsinaExistente=="NC"), 
+                                               0, 
+                                               ifelse(!is.na(numeroMaquinas.y) & idModificacaoUsina==1 & is.na(numeroMaquinas), 
+                                                      numeroMaquinas.y, 
+                                                      ifelse((idUsinaExistente=="EE" | idUsinaExistente=="NE"), 
+                                                             ifelse(!is.na(numeroMaquinas), 
+                                                                    numeroMaquinas, 
+                                                                    0),
+                                                             numeroMaquinas.x)))) %>% 
+    dplyr::mutate(potenciaUnitariaFinal = ifelse((idUsinaExistente=="NC"), 
+                                                 0, 
+                                                 ifelse(!is.na(potenciaUnitaria.y) & idModificacaoUsina==1 & is.na(potenciaUnitaria), 
+                                                        potenciaUnitaria.y, 
+                                                        ifelse((idUsinaExistente=="EE" | idUsinaExistente=="NE"), 
+                                                               ifelse(!is.na(potenciaUnitaria), 
+                                                                      potenciaUnitaria, 
+                                                                      potenciaUnitaria.x),
+                                                               potenciaUnitaria.x)))) %>% 
+    dplyr::filter(anoMes ==df.dadosGerais$anoInicio*100+df.dadosGerais$mesInicio) %>% 
+    dplyr::mutate(potenciaUnitariaFinal=ifelse(numeroMaquinasFinal==0,0,potenciaUnitariaFinal)) %>% 
+    dplyr::filter(!(numeroMaquinasFinal == 0 & conjunto != 1)) %>% 
+    dplyr::mutate(tipoCaso = tipoCaso, numeroCaso = numeroCaso, codModelo = codModelo) %>% 
     # renomeia os campos do data frame para compatibilizacao com a tabela do BDBP
-    select(A01_TP_CASO = tipoCaso,
-           A01_NR_CASO = numeroCaso,
-           A01_CD_MODELO = codModelo,
-           A03_CD_USINA = codUsina,
-           A04_NR_CONJUNTO = conjunto,
-           A04_NR_MAQUINAS = numeroMaquinasFinal,
-           A04_VL_POTENCIA = potenciaUnitariaFinal,
-           A04_VL_ALTURA_REFERENCIA = quedaEfetiva)
-
+    dplyr::select(A01_TP_CASO = tipoCaso,
+                  A01_NR_CASO = numeroCaso,
+                  A01_CD_MODELO = codModelo,
+                  A03_CD_USINA = codUsina,
+                  A04_NR_CONJUNTO = conjunto,
+                  A04_NR_MAQUINAS = numeroMaquinasFinal,
+                  A04_VL_POTENCIA = potenciaUnitariaFinal,
+                  A04_VL_ALTURA_REFERENCIA = quedaEfetiva)
+  
   # executa query para gravar os dados referentes aos conjuntos e maquinas das usinas hidreletricas na tabela BPO_A04_MAQUINAS_UHE do BDBP
-  dbWriteTable(conexao, "BPO_A04_MAQUINAS_UHE", df.MaqUHE, append = TRUE)
+  DBI::dbWriteTable(conexao, "BPO_A04_MAQUINAS_UHE", df.MaqUHE, append = TRUE)
   
   mensagem <- "tabela BPO_A04_MAQUINAS_UHE gravada com sucesso!"
   

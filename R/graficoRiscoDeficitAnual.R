@@ -16,7 +16,7 @@
 graficoRiscoDeficitAnual <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, inicioHorizonteGrafico, fimHorizonteGrafico, 
                                      tituloGrafico = paste0("Risco de Déficit (LOLP) - Caso ", numeroCaso)) {
   
-  conexao <- dbConnect(RSQLite::SQLite(), baseSQLite)
+  conexao <- DBI::dbConnect(RSQLite::SQLite(), baseSQLite)
   # query no banco
   query <- paste0("SELECT 
                     A28_NR_ANO,
@@ -27,21 +27,21 @@ graficoRiscoDeficitAnual <- function(baseSQLite, tipoCaso, numeroCaso, codModelo
                     A01_NR_CASO = ", numeroCaso," AND
                     A01_CD_MODELO = ", codModelo, ";")
   
-  tib.resultados <- dbGetQuery(conexao, query) %>% as_tibble()
-  dbDisconnect(conexao)
+  tib.resultados <- DBI::dbGetQuery(conexao, query) %>% tidyr::as_tibble()
+  DBI::dbDisconnect(conexao)
   
   # cria coluna de data anoMes, mes e ano e filtra o horizonte para exibicao no grafico
   tib.resultados <- tib.resultados %>% 
-    filter(between(A28_NR_ANO, inicioHorizonteGrafico, fimHorizonteGrafico))
+    dplyr::filter(dplyr::between(A28_NR_ANO, inicioHorizonteGrafico, fimHorizonteGrafico))
   
   # exibe grafico de risco
-  graficoRisco <- plot_ly(data = tib.resultados, x = ~A28_NR_ANO, y = ~A28_VL_LOLP, name = "", type = "bar", showlegend = F,
-                          textposition = 'outside', texttemplate = "<b>%{y:.1%}</b>",
-                          # <extra></extra> remove o trece do hover
-                          hovertemplate = "<b>Risco de Déficit</b>: %{y:.1%}<br><b>Ano</b>: %{x}<extra></extra>") %>%
-    add_trace(tib.resultados, x = ~A28_NR_ANO, y = 0.05, type = 'scatter', mode = 'lines', color = I("red"),
-              hovertemplate = "<b>Limite de critério de suprimento: %{y:.0%}<extra></extra>") %>%
-    layout( 
+  graficoRisco <- plotly::plot_ly(data = tib.resultados, x = ~A28_NR_ANO, y = ~A28_VL_LOLP, name = "", type = "bar", showlegend = F,
+                                  textposition = 'outside', texttemplate = "<b>%{y:.1%}</b>",
+                                  # <extra></extra> remove o trece do hover
+                                  hovertemplate = "<b>Risco de Déficit</b>: %{y:.1%}<br><b>Ano</b>: %{x}<extra></extra>") %>%
+    plotly::add_trace(tib.resultados, x = ~A28_NR_ANO, y = 0.05, type = 'scatter', mode = 'lines', color = I("red"),
+                      hovertemplate = "<b>Limite de critério de suprimento: %{y:.0%}<extra></extra>") %>%
+    plotly::layout( 
       title = paste0("<b>", tituloGrafico, "</b>"),
       yaxis = list( 
         title = "<b>Risco de Déficit</b>", 

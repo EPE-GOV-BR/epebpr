@@ -13,5 +13,5 @@ leituraTabelaDadosCasos(baseSQLite)
 \code{df.dadosCaso} data frame com dados dos casos (BPO_A01_CASOS_ANALISE)
 }
 \description{
-Faz a leitura da tabela com dados dos casos (BPO_A01_CASOS_ANALISE) e monta select input para interface grafica
+Faz a leitura da tabela com dados dos casos (BPO_A01_CASOS_ANALISE) e monta dplyr::select input para interface grafica
 }

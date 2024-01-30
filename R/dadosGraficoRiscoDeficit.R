@@ -14,9 +14,9 @@
 #'
 #' @export
 dadosGraficoRiscoDeficit <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, inicioHorizonteGrafico, fimHorizonteGrafico, 
-                                tituloGrafico = paste0("Risco de Déficit - Caso ", numeroCaso)) {
+                                     tituloGrafico = paste0("Risco de Déficit - Caso ", numeroCaso)) {
   
-  conexao <- dbConnect(RSQLite::SQLite(), baseSQLite)
+  conexao <- DBI::dbConnect(RSQLite::SQLite(), baseSQLite)
   # query no banco para buscar defict por serie para calculo do risco
   query <- paste0("SELECT 
                     A16.A09_NR_SERIE,
@@ -32,7 +32,7 @@ dadosGraficoRiscoDeficit <- function(baseSQLite, tipoCaso, numeroCaso, codModelo
                       BPO_A01_CASOS_ANALISE
                     ) AS A01
                    WHERE 
-                    A16.A16_TP_GERACAO = 'DEFICIT' AND
+                    A16.A16_TP_GERACAO = 'DEFICIT_R' AND
                     A16.A01_TP_CASO = ", tipoCaso," AND
                     A16.A01_NR_CASO = ", numeroCaso," AND
                     A16.A01_CD_MODELO = ", codModelo, " AND
@@ -43,27 +43,29 @@ dadosGraficoRiscoDeficit <- function(baseSQLite, tipoCaso, numeroCaso, codModelo
                     A16.A09_NR_SERIE,
                     A16.A09_NR_MES;")
   
-  tib.resultados <- dbGetQuery(conexao, query) %>% as_tibble()
-  dbDisconnect(conexao)
+  tib.resultados <- DBI::dbGetQuery(conexao, query) %>% 
+    tidyr::as_tibble()
+  
+  DBI::dbDisconnect(conexao)
   
   # cria coluna de data anoMes, mes e ano e filtra o horizonte para exibicao no grafico
   tib.resultados <- tib.resultados %>% 
-    mutate(anoMes = as.character(A09_NR_MES) %>% as.yearmon("%Y%m") %>% zoo::as.Date(),
-           mes = A09_NR_MES %% 100, ano = A09_NR_MES %/% 100) %>% 
-    filter(between(ano, inicioHorizonteGrafico, fimHorizonteGrafico))
+    dplyr::mutate(anoMes = as.character(A09_NR_MES) %>% zoo::as.yearmon("%Y%m") %>% zoo::as.Date(),
+                  mes = A09_NR_MES %% 100, ano = A09_NR_MES %/% 100) %>% 
+    dplyr::filter(dplyr::between(ano, inicioHorizonteGrafico, fimHorizonteGrafico))
   
   # calcula o risco mensal para os meses com defict
   tib.resultadosMes <- tib.resultados %>% 
-    mutate(DEFICIT = ifelse(DEFICIT > 0, 1,0)) %>% 
-    group_by(ano, mes, anoMes) %>% 
-    reframe(riscoMensal = sum(DEFICIT)/n())
-
+    dplyr::mutate(DEFICIT = ifelse(DEFICIT > 0, 1,0)) %>% 
+    dplyr::group_by(ano, mes, anoMes) %>% 
+    dplyr::reframe(riscoMensal = sum(DEFICIT)/dplyr::n())
+  
   # calcula o risco de defict anual
   tib.resultadosAno <- tib.resultados %>% 
-    mutate(DEFICIT = ifelse(DEFICIT > 0, 1,0)) %>%
-    group_by(ano) %>% 
-    reframe(riscoAnual = sum(DEFICIT)/n())
+    dplyr::mutate(DEFICIT = ifelse(DEFICIT > 0, 1,0)) %>%
+    dplyr::group_by(ano) %>% 
+    dplyr::reframe(riscoAnual = sum(DEFICIT)/dplyr::n())
   
   # efetua join entre as tibbles de mes e ano para se ter o risco anual na tibble mensal
-  tib.resultadosRisco <- inner_join(tib.resultadosMes, tib.resultadosAno, by = "ano")
+  tib.resultadosRisco <- dplyr::inner_join(tib.resultadosMes, tib.resultadosAno, by = "ano")
 }

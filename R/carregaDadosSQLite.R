@@ -41,9 +41,9 @@ carregaDadosSQLite <- function(baseSQLite,
   incProgress(3/100, detail = "Leitura de Dados Gerais")
   
   # pega dados gerais do NEWAVE
-  df.dadosGerais <- leituraDadosGerais(pastaCaso)
+  df.dadosGerais <- leitorrmpe::leituraDadosGerais(pastaCaso)
   # pega dados de configuracao hidro
-  df.configuracaoHidro <- leituraConfiguracaoHidro(pastaCaso)
+  df.configuracaoHidro <- leitorrmpe::leituraConfiguracaoHidro(pastaCaso)
   
   # define inicio e fim de caso
   inicioCaso <- df.dadosGerais$anoInicio * 100 + df.dadosGerais$mesInicio
@@ -55,14 +55,16 @@ carregaDadosSQLite <- function(baseSQLite,
   } else if (df.dadosGerais$tipoSimulacao == 2) {
     # veririfica se todas as series do confhd possuem o mesmo tamanho
     seriesHidro <- df.configuracaoHidro %>%
-      mutate(seriesHidro = fimHistorico - inicioHistorico + 1) %>%
-      summarise(media = mean(seriesHidro), minimo = min(seriesHidro), maximo = max(seriesHidro))
+      dplyr::mutate(seriesHidro = fimHistorico - inicioHistorico + 1) %>%
+      dplyr::summarise(media = mean(seriesHidro), minimo = min(seriesHidro), maximo = max(seriesHidro))
     if (seriesHidro$media != seriesHidro$minimo | seriesHidro$media != seriesHidro$maximo | seriesHidro$minimo != seriesHidro$maximo) {
       stop("Séries hidro não possuem mesmo horizonte cadastrado no arquivo confhd!")
     }
-    fimHistorico <- df.configuracaoHidro %>% pull(fimHistorico) %>% max()
+    fimHistorico <- df.configuracaoHidro %>% dplyr::pull(fimHistorico) %>% max()
     # resgata o valor de inicio de varredura da serie historica para contabilizar quantidade de series
-    inicioSimulacaoHistorico <- leituraSeriesHistoricasSimulacaoFinal(pastaCaso) %>% extract2("df.varredura") %>% pull(anoInicio)
+    inicioSimulacaoHistorico <- leitorrmpe::leituraSeriesHistoricasSimulacaoFinal(pastaCaso) %>% 
+      magrittr::extract2("df.varredura") %>% 
+      dplyr::pull(anoInicio)
     seriesHidro <- fimHistorico - inicioSimulacaoHistorico + 1
   } else {
     stop("Simulação final após convergência PDDE do NEWAVE deve ser com séries sintéticas ou históricas!")
@@ -79,14 +81,14 @@ carregaDadosSQLite <- function(baseSQLite,
     if (!file.exists(arquivoInfoMDI)) {
       stop(paste0("arquivo ", arquivoInfoMDI, " com dados gerais do MDI não encontrado!"))
     }
-    df.infoMDI <- read_delim(stri_enc_toutf8(arquivoInfoMDI), 
-                             locale = locale(encoding = "latin1"),
-                             delim = ";", 
-                             col_types = "cc",
-                             trim_ws = TRUE)
+    df.infoMDI <- readr::read_delim(stringi::stri_enc_toutf8(arquivoInfoMDI), 
+                                    locale = readr::locale(encoding = "latin1"),
+                                    delim = ";", 
+                                    col_types = "cc",
+                                    trim_ws = TRUE)
     
-    anoMesInicioMDI <- df.infoMDI %>% filter(variavel == "inicioHorizonteEstudo") %>% pull(valor) %>% as.integer()
-    anoMesFimMDI <- df.infoMDI %>% filter(variavel == "fimHorizonteEstudo") %>% pull(valor) %>% as.integer()
+    anoMesInicioMDI <- df.infoMDI %>% dplyr::filter(variavel == "inicioHorizonteEstudo") %>% dplyr::pull(valor) %>% as.integer()
+    anoMesFimMDI <- df.infoMDI %>% dplyr::filter(variavel == "fimHorizonteEstudo") %>% dplyr::pull(valor) %>% as.integer()
     
   } else {
     anoMesInicioMDI <- NA
@@ -95,23 +97,23 @@ carregaDadosSQLite <- function(baseSQLite,
   
   # barra de progresso
   incProgress(4/100, detail = "Gravando no Banco de Dados")
-
+  
   # inicio do processo de gravacao das tabelas BPO_A01_CASOS_ANALISE, BPO_A02_SUBSISTEMAS, BPO_A02_REES e BPO_A19_FATOR_PONTA_OFR
   # abre conexao
-  conexao <- dbConnect(RSQLite::SQLite(), baseSQLite)
+  conexao <- DBI::dbConnect(RSQLite::SQLite(), baseSQLite)
   
   # abre transacao com o banco de dados para gravar somente se tudo der certo
-  dbExecute(conexao, "BEGIN TRANSACTION;")
+  DBI::dbExecute(conexao, "BEGIN TRANSACTION;")
   
   # BPO_A01_CASOS_ANALISE
   # limpa a tabela de uma eventual rodada anterior
   query <- paste0("SELECT COUNT(*) AS TOTAL FROM BPO_A01_CASOS_ANALISE WHERE A01_TP_CASO = ", tipoCaso, " AND A01_NR_CASO = ", numeroCaso,
                   " AND A01_CD_MODELO = ", codModelo)
-  apagar <- dbGetQuery(conexao, query) %>% pull()
+  apagar <- DBI::dbGetQuery(conexao, query) %>% dplyr::pull()
   if (apagar > 0) {
     query <- paste0("DELETE FROM BPO_A01_CASOS_ANALISE WHERE A01_TP_CASO = ", tipoCaso, " AND A01_NR_CASO = ", numeroCaso,
                     " AND A01_CD_MODELO = ", codModelo)
-    dbExecute(conexao, query)
+    DBI::dbExecute(conexao, query)
   }
   
   df.casosAnalise <- data.frame(A01_TP_CASO = tipoCaso,
@@ -128,41 +130,41 @@ carregaDadosSQLite <- function(baseSQLite,
                                 A01_NR_MES_INICIO_MDI = anoMesInicioMDI,
                                 A01_NR_MES_FIM_MDI = anoMesFimMDI)
   # salva BPO_A01_CASOS_ANALISE
-  dbWriteTable(conexao, "BPO_A01_CASOS_ANALISE", df.casosAnalise, append = T)
+  DBI::dbWriteTable(conexao, "BPO_A01_CASOS_ANALISE", df.casosAnalise, append = T)
   
   # BPO_A02_SUBSISTEMAS
   # limpa a tabela de uma eventual rodada anterior
   query <- paste0("SELECT COUNT(*) AS TOTAL FROM BPO_A02_SUBSISTEMAS WHERE A01_TP_CASO = ", tipoCaso, " AND A01_NR_CASO = ", numeroCaso,
                   " AND A01_CD_MODELO = ", codModelo)
-  apagar <- dbGetQuery(conexao, query) %>% pull()
+  apagar <- DBI::dbGetQuery(conexao, query) %>% dplyr::pull()
   if (apagar > 0) {
     query <- paste0("DELETE FROM BPO_A02_SUBSISTEMAS WHERE A01_TP_CASO = ", tipoCaso, " AND A01_NR_CASO = ", numeroCaso,
                     " AND A01_CD_MODELO = ", codModelo)
-    dbExecute(conexao, query)
+    DBI::dbExecute(conexao, query)
   }
   
-  df.sistema <- leituraDeficitSistema(pastaCaso) %>% filter(patamar %in% c(1, NA)) %>% 
-    select(A02_NR_SUBSISTEMA = codSubsistema,
-           A02_TX_DESCRICAO_SUBSISTEMA = nomeSubsistema,
-           A02_TP_FICTICIO = tipoFicticio,
-           A02_VL_CUSTO_DEFICIT = custoDefict) %>% 
-    mutate(A01_TP_CASO = tipoCaso, A01_NR_CASO = numeroCaso, A01_CD_MODELO = codModelo)
+  df.sistema <- leitorrmpe::leituraDeficitSistema(pastaCaso) %>% dplyr::filter(patamar %in% c(1, NA)) %>% 
+    dplyr::select(A02_NR_SUBSISTEMA = codSubsistema,
+                  A02_TX_DESCRICAO_SUBSISTEMA = nomeSubsistema,
+                  A02_TP_FICTICIO = tipoFicticio,
+                  A02_VL_CUSTO_DEFICIT = custoDefict) %>% 
+    dplyr::mutate(A01_TP_CASO = tipoCaso, A01_NR_CASO = numeroCaso, A01_CD_MODELO = codModelo)
   
   # salva BPO_A02_SUBSISTEMAS
-  dbWriteTable(conexao, "BPO_A02_SUBSISTEMAS", df.sistema, append = T)
+  DBI::dbWriteTable(conexao, "BPO_A02_SUBSISTEMAS", df.sistema, append = T)
   
   # BPO_A02_REES
   # limpa a tabela de uma eventual rodada anterior
   query <- paste0("SELECT COUNT(*) AS TOTAL FROM BPO_A02_REES WHERE A01_TP_CASO = ", tipoCaso, " AND A01_NR_CASO = ", numeroCaso,
                   " AND A01_CD_MODELO = ", codModelo)
-  apagar <- dbGetQuery(conexao, query) %>% pull()
+  apagar <- DBI::dbGetQuery(conexao, query) %>% dplyr::pull()
   if (apagar > 0) {
     query <- paste0("DELETE FROM BPO_A02_REES WHERE A01_TP_CASO = ", tipoCaso, " AND A01_NR_CASO = ", numeroCaso,
                     " AND A01_CD_MODELO = ", codModelo)
-    dbExecute(conexao, query)
+    DBI::dbExecute(conexao, query)
   }
   
-  df.ree <- leituraREE(pastaCaso)
+  df.ree <- leitorrmpe::leituraREE(pastaCaso)
   names(df.ree) <- c("A02_NR_REE", "A02_TX_DESCRICAO_REE", "A02_NR_SUBSISTEMA")
   df.ree$A01_TP_CASO <- tipoCaso
   df.ree$A01_NR_CASO <- numeroCaso
@@ -170,11 +172,11 @@ carregaDadosSQLite <- function(baseSQLite,
   df.ree$A02_TP_CALC_POTENCIA <- 1
   
   # define os valores do calculo de potencia passados pelo usuario
-  df.ree <- df.ree %>% mutate(A02_TP_CALC_POTENCIA = ifelse(A02_NR_REE %in% sistemasNaoModulamPonta, 2, A02_TP_CALC_POTENCIA))
-  df.ree <- df.ree %>% mutate(A02_TP_CALC_POTENCIA = ifelse(A02_NR_REE %in% sistemasNaoModulamMedia, 3, A02_TP_CALC_POTENCIA))
+  df.ree <- df.ree %>% dplyr::mutate(A02_TP_CALC_POTENCIA = ifelse(A02_NR_REE %in% sistemasNaoModulamPonta, 2, A02_TP_CALC_POTENCIA))
+  df.ree <- df.ree %>% dplyr::mutate(A02_TP_CALC_POTENCIA = ifelse(A02_NR_REE %in% sistemasNaoModulamMedia, 3, A02_TP_CALC_POTENCIA))
   
   # salva BPO_A02_REES
-  dbWriteTable(conexao, "BPO_A02_REES", df.ree, append = T)
+  DBI::dbWriteTable(conexao, "BPO_A02_REES", df.ree, append = T)
   
   # grava dados das usinas hidreletricas na tabela BPO_A03_DADOS_UHE 
   gravaDadosUsinasHidroBDBP(pastaCaso, conexao, tipoCaso, numeroCaso, codModelo)
@@ -214,9 +216,9 @@ carregaDadosSQLite <- function(baseSQLite,
   gravacaoDadosReservaBDBP(pastaCaso, conexao, tipoCaso, numeroCaso, codModelo, lt.dadosOutrasFontes$df.energiaOFR) 
   
   # efetua commit no banco de dados confirmando todas as gravacoes com sucesso
-  dbExecute(conexao, "COMMIT TRANSACTION;")
+  DBI::dbExecute(conexao, "COMMIT TRANSACTION;")
   # fecha conexao
-  dbDisconnect(conexao)
+  DBI::dbDisconnect(conexao)
   
   return("Leitura e gravação dos dados do NEWAVE efetuadas com sucesso!")
 }

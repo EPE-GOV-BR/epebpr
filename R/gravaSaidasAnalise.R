@@ -41,8 +41,8 @@ gravacaoSaidasAnalises <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
                                       df.dadosGerais$anoInicio, 
                                       (df.dadosGerais$anoInicio + df.dadosGerais$duracaoEstudo - 1),
                                       1) %>% 
-    mutate(ano = A09_NR_MES%/%100, mes = A09_NR_MES%%100, percentualCvar = str_sub(tamanhoCVAR, 7)) %>% 
-    select(ano, mes, percentualCvar, everything(), -tamanhoCVAR, -maxCVAR, -anoMes, -A09_NR_MES)
+    dplyr::mutate(ano = A09_NR_MES%/%100, mes = A09_NR_MES%%100, percentualCvar = stringr::str_sub(tamanhoCVAR, 7)) %>% 
+    dplyr::select(ano, mes, percentualCvar, tidyr::everything(), -tamanhoCVAR, -maxCVAR, -anoMes, -A09_NR_MES)
   
   # CVaR anual
   dadosCvarAnual <- dadosGraficoCVAR(baseSQLite, 
@@ -52,8 +52,8 @@ gravacaoSaidasAnalises <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
                                      df.dadosGerais$anoInicio, 
                                      (df.dadosGerais$anoInicio + df.dadosGerais$duracaoEstudo - 1),
                                      3) %>% 
-    mutate(percentualCvar = str_sub(tamanhoCVAR, 7)) %>% 
-    select(ano, percentualCvar, everything(), -tamanhoCVAR)
+    dplyr::mutate(percentualCvar = stringr::str_sub(tamanhoCVAR, 7)) %>% 
+    dplyr::select(ano, percentualCvar, tidyr::everything(), -tamanhoCVAR)
   
   # CVaR mensal subsistema
   dadosCvarMensalSubs <- dadosGraficoCVARSubsistema(baseSQLite, 
@@ -62,9 +62,9 @@ gravacaoSaidasAnalises <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
                                                     codModelo, 
                                                     df.dadosGerais$anoInicio, 
                                                     (df.dadosGerais$anoInicio + df.dadosGerais$duracaoEstudo - 1)) %>% 
-    mutate(ano = A09_NR_MES%/%100, mes = A09_NR_MES%%100) %>% 
-    rename(subsistema = A02_TX_DESCRICAO_SUBSISTEMA, cvar5 = cvar) %>% 
-    select(ano, mes, subsistema, cvar5, -A09_NR_MES)
+    dplyr::mutate(ano = A09_NR_MES%/%100, mes = A09_NR_MES%%100) %>% 
+    dplyr::rename(subsistema = A02_TX_DESCRICAO_SUBSISTEMA, cvar5 = cvar) %>% 
+    dplyr::select(ano, mes, subsistema, cvar5, -A09_NR_MES)
   
   # VaR mensal
   dadosVarMensal <- dadosGraficoVAR(baseSQLite, 
@@ -74,8 +74,8 @@ gravacaoSaidasAnalises <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
                                     df.dadosGerais$anoInicio, 
                                     (df.dadosGerais$anoInicio + df.dadosGerais$duracaoEstudo - 1),
                                     5) %>% 
-    mutate(ano = A09_NR_MES%/%100, mes = A09_NR_MES%%100, percentualVar = str_sub(tamanhoVAR, 6)) %>% 
-    select(ano, mes, percentualVar, everything(), -tamanhoVAR, -maxVAR, -anoMes, -A09_NR_MES)
+    dplyr::mutate(ano = A09_NR_MES%/%100, mes = A09_NR_MES%%100, percentualVar = stringr::str_sub(tamanhoVAR, 6)) %>% 
+    dplyr::select(ano, mes, percentualVar, tidyr::everything(), -tamanhoVAR, -maxVAR, -anoMes, -A09_NR_MES)
   
   # VaR anual
   dadosVarAnual <- dadosGraficoVAR(baseSQLite, 
@@ -85,8 +85,8 @@ gravacaoSaidasAnalises <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
                                    df.dadosGerais$anoInicio, 
                                    (df.dadosGerais$anoInicio + df.dadosGerais$duracaoEstudo - 1),
                                    1) %>% 
-    mutate(percentualVar = str_sub(tamanhoVAR, 6)) %>% 
-    select(ano, percentualVar, everything(), -tamanhoVAR)
+    dplyr::mutate(percentualVar = stringr::str_sub(tamanhoVAR, 6)) %>% 
+    dplyr::select(ano, percentualVar, tidyr::everything(), -tamanhoVAR)
   
   # Risco SIN
   dadosRisco <- dadosGraficoRiscoDeficit(baseSQLite, 
@@ -95,10 +95,14 @@ gravacaoSaidasAnalises <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
                                          codModelo, 
                                          df.dadosGerais$anoInicio, 
                                          (df.dadosGerais$anoInicio + df.dadosGerais$duracaoEstudo - 1))
-  dadosRiscoMensal <- dadosRisco %>% select(-anoMes, -riscoAnual)
+  dadosRiscoMensal <- dadosRisco %>% 
+    dplyr::select(-anoMes, -riscoAnual)
   
   # LOLP Anual
-  dadosRiscoAnual <- dadosRisco %>% ungroup() %>% select(ano, riscoAnual) %>% distinct()
+  dadosRiscoAnual <- dadosRisco %>% 
+    dplyr::ungroup() %>% 
+    dplyr::select(ano, riscoAnual) %>% 
+    dplyr::distinct()
   
   # Risco Subs
   dadosRiscoSubs <- dadosGraficoRiscoDeficitSubs(baseSQLite, 
@@ -107,10 +111,13 @@ gravacaoSaidasAnalises <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
                                                  codModelo, 
                                                  df.dadosGerais$anoInicio, 
                                                  (df.dadosGerais$anoInicio + df.dadosGerais$duracaoEstudo - 1))
-  dadosRiscoMensalSubs <- dadosRiscoSubs %>% select(-anoMes, -riscoAnual)
+  dadosRiscoMensalSubs <- dadosRiscoSubs %>% 
+    dplyr::select(-anoMes, -riscoAnual)
   
   # LOLP Anual Subs
-  dadosRiscoAnualSubs <- dadosRiscoSubs %>% select(subsistema, ano, riscoAnual) %>% distinct()
+  dadosRiscoAnualSubs <- dadosRiscoSubs %>% 
+    dplyr::select(subsistema, ano, riscoAnual) %>% 
+    dplyr::distinct()
   
   # Requisitos de Potencia
   dadosRequisitoPot <- dadosRequisitoPot(baseSQLite, 
@@ -119,8 +126,8 @@ gravacaoSaidasAnalises <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
                                          codModelo, 
                                          df.dadosGerais$anoInicio, 
                                          (df.dadosGerais$anoInicio + df.dadosGerais$duracaoEstudo - 1) )%>% 
-    mutate(mes = A09_NR_MES%%100) %>% 
-    select(ano, mes, everything(), -anoMes, -A09_NR_MES)
+    dplyr::mutate(mes = A09_NR_MES%%100) %>% 
+    dplyr::select(ano, mes, tidyr::everything(), -anoMes, -A09_NR_MES)
   
   # Requisitos de Potencia quadrimestral
   dadosRequisitoPotQuad <- dadosRequisitoPotQuad(baseSQLite, 
@@ -137,94 +144,94 @@ gravacaoSaidasAnalises <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
                                    codModelo)
   
   # grava todos os df em uma planilha excel
-  write_xlsx(list("CVaR Mensal" = dadosCvarMensal,
-                  "CVaR Anual" = dadosCvarAnual, 
-                  "CVaR Mensal Subs" = dadosCvarMensalSubs, 
-                  "VaR Mensal" = dadosVarMensal, 
-                  "VaR Anual" = dadosVarAnual, 
-                  "LOLP Mensal SIN" = dadosRiscoMensal,
-                  "LOLP Anual SIN" = dadosRiscoAnual,
-                  "LOLP Mensal Subs" = dadosRiscoMensalSubs,
-                  "LOLP Anual Subs" = dadosRiscoAnualSubs,
-                  "Requisito de Potência" = dadosRequisitoPot,
-                  "Requisito de Potência Quadrimestral" = dadosRequisitoPotQuad,
-                  "Distribuição do Déficit" = dadosDistDef[["distDef"]],
-                  "Variação do CVaR Mensal" = dadosDistDef[["distCvar"]],
-                  "Dist Déficit x CVaR Max" = dadosDistDef[["distDefxCvarMax"]]),
-             path = paste0(pastaSaidaExcel, "//resumoSaidasBP.xlsx"))
+  writexl::write_xlsx(list("CVaR Mensal" = dadosCvarMensal,
+                           "CVaR Anual" = dadosCvarAnual, 
+                           "CVaR Mensal Subs" = dadosCvarMensalSubs, 
+                           "VaR Mensal" = dadosVarMensal, 
+                           "VaR Anual" = dadosVarAnual, 
+                           "LOLP Mensal SIN" = dadosRiscoMensal,
+                           "LOLP Anual SIN" = dadosRiscoAnual,
+                           "LOLP Mensal Subs" = dadosRiscoMensalSubs,
+                           "LOLP Anual Subs" = dadosRiscoAnualSubs,
+                           "Requisito de Potência" = dadosRequisitoPot,
+                           "Requisito de Potência Quadrimestral" = dadosRequisitoPotQuad,
+                           "Distribuição do Déficit" = dadosDistDef[["distDef"]],
+                           "Variação do CVaR Mensal" = dadosDistDef[["distCvar"]],
+                           "Dist Déficit x CVaR Max" = dadosDistDef[["distDefxCvarMax"]]),
+                      path = paste0(pastaSaidaExcel, "//resumoSaidasBP.xlsx"))
   
   # abre conexao
-  conexao <- dbConnect(RSQLite::SQLite(), baseSQLite)
+  conexao <- DBI::dbConnect(RSQLite::SQLite(), baseSQLite)
   
   # modifica dfs para compatibilziar com a base
   
   dadosCvarMensalSQL <- dadosCvarMensal %>% 
-    mutate(A01_TP_CASO = tipoCaso,
-           A01_NR_CASO = numeroCaso,
-           A01_CD_MODELO = codModelo,
-           A22_NR_MES = ano*100 + mes) %>% 
-    rename(A22_TX_PERCENT_CVAR = percentualCvar, A22_VL_CVAR = cvar) %>% 
-    select(A01_TP_CASO, A01_NR_CASO, A01_CD_MODELO, A22_NR_MES, A22_TX_PERCENT_CVAR, A22_VL_CVAR)
+    dplyr::mutate(A01_TP_CASO = tipoCaso,
+                  A01_NR_CASO = numeroCaso,
+                  A01_CD_MODELO = codModelo,
+                  A22_NR_MES = ano*100 + mes) %>% 
+    dplyr::rename(A22_TX_PERCENT_CVAR = percentualCvar, A22_VL_CVAR = cvar) %>% 
+    dplyr::select(A01_TP_CASO, A01_NR_CASO, A01_CD_MODELO, A22_NR_MES, A22_TX_PERCENT_CVAR, A22_VL_CVAR)
   
   dadosCvarAnualSQL <- dadosCvarAnual %>% 
-    mutate(A01_TP_CASO = tipoCaso,
-           A01_NR_CASO = numeroCaso,
-           A01_CD_MODELO = codModelo) %>% 
-    rename(A23_NR_ANO = ano, A23_TX_PERCENT_CVAR = percentualCvar, A23_VL_CVAR = cvar) %>% 
-    select(A01_TP_CASO, A01_NR_CASO, A01_CD_MODELO, A23_NR_ANO, A23_TX_PERCENT_CVAR, A23_VL_CVAR)
+    dplyr::mutate(A01_TP_CASO = tipoCaso,
+                  A01_NR_CASO = numeroCaso,
+                  A01_CD_MODELO = codModelo) %>% 
+    dplyr::rename(A23_NR_ANO = ano, A23_TX_PERCENT_CVAR = percentualCvar, A23_VL_CVAR = cvar) %>% 
+    dplyr::select(A01_TP_CASO, A01_NR_CASO, A01_CD_MODELO, A23_NR_ANO, A23_TX_PERCENT_CVAR, A23_VL_CVAR)
   
   dadosCvarMensalSubsSQL <- dadosCvarMensalSubs %>% 
-    mutate(A01_TP_CASO = tipoCaso,
-           A01_NR_CASO = numeroCaso,
-           A01_CD_MODELO = codModelo,
-           A24_NR_MES = ano*100 + mes) %>% 
-    rename(A02_TX_DESCRICAO_SUBSISTEMA = subsistema, A24_VL_CVAR_5 = cvar5) %>% 
-    select(A01_TP_CASO, A01_NR_CASO, A01_CD_MODELO, A24_NR_MES, A02_TX_DESCRICAO_SUBSISTEMA, A24_VL_CVAR_5)
+    dplyr::mutate(A01_TP_CASO = tipoCaso,
+                  A01_NR_CASO = numeroCaso,
+                  A01_CD_MODELO = codModelo,
+                  A24_NR_MES = ano*100 + mes) %>% 
+    dplyr::rename(A02_TX_DESCRICAO_SUBSISTEMA = subsistema, A24_VL_CVAR_5 = cvar5) %>% 
+    dplyr::select(A01_TP_CASO, A01_NR_CASO, A01_CD_MODELO, A24_NR_MES, A02_TX_DESCRICAO_SUBSISTEMA, A24_VL_CVAR_5)
   
   dadosVarMensalSQL <- dadosVarMensal %>% 
-    mutate(A01_TP_CASO = tipoCaso,
-           A01_NR_CASO = numeroCaso,
-           A01_CD_MODELO = codModelo,
-           A25_NR_MES = ano*100 + mes) %>% 
-    rename(A25_TX_PERCENT_VAR = percentualVar, A25_VL_VAR = var) %>% 
-    select(A01_TP_CASO, A01_NR_CASO, A01_CD_MODELO, A25_NR_MES, A25_TX_PERCENT_VAR, A25_VL_VAR)
+    dplyr::mutate(A01_TP_CASO = tipoCaso,
+                  A01_NR_CASO = numeroCaso,
+                  A01_CD_MODELO = codModelo,
+                  A25_NR_MES = ano*100 + mes) %>% 
+    dplyr::rename(A25_TX_PERCENT_VAR = percentualVar, A25_VL_VAR = var) %>% 
+    dplyr::select(A01_TP_CASO, A01_NR_CASO, A01_CD_MODELO, A25_NR_MES, A25_TX_PERCENT_VAR, A25_VL_VAR)
   
   dadosVarAnualSQL <- dadosVarAnual %>% 
-    mutate(A01_TP_CASO = tipoCaso,
-           A01_NR_CASO = numeroCaso,
-           A01_CD_MODELO = codModelo) %>% 
-    rename(A26_NR_ANO = ano, A26_TX_PERCENT_VAR = percentualVar, A26_VL_VAR = var) %>% 
-    select(A01_TP_CASO, A01_NR_CASO, A01_CD_MODELO, A26_NR_ANO, A26_TX_PERCENT_VAR, A26_VL_VAR)
+    dplyr::mutate(A01_TP_CASO = tipoCaso,
+                  A01_NR_CASO = numeroCaso,
+                  A01_CD_MODELO = codModelo) %>% 
+    dplyr::rename(A26_NR_ANO = ano, A26_TX_PERCENT_VAR = percentualVar, A26_VL_VAR = var) %>% 
+    dplyr::select(A01_TP_CASO, A01_NR_CASO, A01_CD_MODELO, A26_NR_ANO, A26_TX_PERCENT_VAR, A26_VL_VAR)
   
   dadosRiscoMensalSQL <- dadosRiscoMensal %>% 
-    mutate(A01_TP_CASO = tipoCaso,
-           A01_NR_CASO = numeroCaso,
-           A01_CD_MODELO = codModelo,
-           A27_NR_MES = ano*100 + mes) %>% 
-    rename(A27_VL_LOLP = riscoMensal) %>% 
-    select(A01_TP_CASO, A01_NR_CASO, A01_CD_MODELO, A27_NR_MES, A27_VL_LOLP)
+    dplyr::mutate(A01_TP_CASO = tipoCaso,
+                  A01_NR_CASO = numeroCaso,
+                  A01_CD_MODELO = codModelo,
+                  A27_NR_MES = ano*100 + mes) %>% 
+    dplyr::rename(A27_VL_LOLP = riscoMensal) %>% 
+    dplyr::select(A01_TP_CASO, A01_NR_CASO, A01_CD_MODELO, A27_NR_MES, A27_VL_LOLP)
   
   dadosRiscoAnualSQL <- dadosRiscoAnual %>% 
-    mutate(A01_TP_CASO = tipoCaso,
-           A01_NR_CASO = numeroCaso,
-           A01_CD_MODELO = codModelo) %>% 
-    rename(A28_NR_ANO = ano, A28_VL_LOLP = riscoAnual) %>% 
-    select(A01_TP_CASO, A01_NR_CASO, A01_CD_MODELO, A28_NR_ANO, A28_VL_LOLP)
+    dplyr::mutate(A01_TP_CASO = tipoCaso,
+                  A01_NR_CASO = numeroCaso,
+                  A01_CD_MODELO = codModelo) %>% 
+    dplyr::rename(A28_NR_ANO = ano, A28_VL_LOLP = riscoAnual) %>% 
+    dplyr::select(A01_TP_CASO, A01_NR_CASO, A01_CD_MODELO, A28_NR_ANO, A28_VL_LOLP)
   
   dadosRequisitoPotSQL <- dadosRequisitoPot %>% 
-    mutate(A01_TP_CASO = tipoCaso,
-           A01_NR_CASO = numeroCaso,
-           A01_CD_MODELO = codModelo,
-           A29_NR_MES = ano*100 + mes) %>% 
-    rename(A29_VL_VIOLACAO_CRITERIO = violacaoCriterio, A29_VL_LIMITE_CRITERIO = var5) %>% 
-    select(A01_TP_CASO, A01_NR_CASO, A01_CD_MODELO, A29_NR_MES, A29_VL_VIOLACAO_CRITERIO, A29_VL_LIMITE_CRITERIO)
+    dplyr::mutate(A01_TP_CASO = tipoCaso,
+                  A01_NR_CASO = numeroCaso,
+                  A01_CD_MODELO = codModelo,
+                  A29_NR_MES = ano*100 + mes) %>% 
+    dplyr::rename(A29_VL_VIOLACAO_CRITERIO = violacaoCriterio, A29_VL_LIMITE_CRITERIO = var5) %>% 
+    dplyr::select(A01_TP_CASO, A01_NR_CASO, A01_CD_MODELO, A29_NR_MES, A29_VL_VIOLACAO_CRITERIO, A29_VL_LIMITE_CRITERIO)
   
   dadosRequisitoPotQuadSQL <- dadosRequisitoPotQuad %>% 
-    mutate(A01_TP_CASO = tipoCaso,
-           A01_NR_CASO = numeroCaso,
-           A01_CD_MODELO = codModelo) %>% 
-    rename(A30_NR_ANO = ano, A30_NR_QUADRIMESTRE = quad, A30_VL_REQUISITO = reqPot) %>% 
-    select(A01_TP_CASO, A01_NR_CASO, A01_CD_MODELO, A30_NR_ANO, A30_NR_QUADRIMESTRE, A30_VL_REQUISITO)
+    dplyr::mutate(A01_TP_CASO = tipoCaso,
+                  A01_NR_CASO = numeroCaso,
+                  A01_CD_MODELO = codModelo) %>% 
+    dplyr::rename(A30_NR_ANO = ano, A30_NR_QUADRIMESTRE = quad, A30_VL_REQUISITO = reqPot) %>% 
+    dplyr::select(A01_TP_CASO, A01_NR_CASO, A01_CD_MODELO, A30_NR_ANO, A30_NR_QUADRIMESTRE, A30_VL_REQUISITO)
   
   # limpa as tabelas de uma eventual rodada anterior
   query <- paste0("SELECT COUNT(*) AS TOTAL 
@@ -233,14 +240,16 @@ gravacaoSaidasAnalises <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
                    WHERE A01_TP_CASO = ", tipoCaso, 
                   " AND A01_NR_CASO = ", numeroCaso, 
                   " AND A01_CD_MODELO = ", codModelo)
-  apagar <- dbGetQuery(conexao, query) %>% pull()
+  
+  apagar <- DBI::dbGetQuery(conexao, query) %>% 
+    dplyr::pull()
   
   if (apagar > 0) {
     query <- paste0("DELETE FROM BPO_A22_CVAR_MENSAL_SIN 
                      WHERE A01_TP_CASO = ", tipoCaso, 
                     " AND A01_NR_CASO = ", numeroCaso, 
                     " AND A01_CD_MODELO = ", codModelo)
-    dbExecute(conexao, query)
+    DBI::dbExecute(conexao, query)
   }
   
   query <- paste0("SELECT COUNT(*) AS TOTAL 
@@ -249,14 +258,16 @@ gravacaoSaidasAnalises <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
                    WHERE A01_TP_CASO = ", tipoCaso, 
                   " AND A01_NR_CASO = ", numeroCaso, 
                   " AND A01_CD_MODELO = ", codModelo)
-  apagar <- dbGetQuery(conexao, query) %>% pull()
+  
+  apagar <- DBI::dbGetQuery(conexao, query) %>% 
+    dplyr::pull()
   
   if (apagar > 0) {
     query <- paste0("DELETE FROM BPO_A23_CVAR_ANUAL_SIN 
                      WHERE A01_TP_CASO = ", tipoCaso, 
                     " AND A01_NR_CASO = ", numeroCaso, 
                     " AND A01_CD_MODELO = ", codModelo)
-    dbExecute(conexao, query)
+    DBI::dbExecute(conexao, query)
   }
   
   query <- paste0("SELECT COUNT(*) AS TOTAL 
@@ -265,14 +276,16 @@ gravacaoSaidasAnalises <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
                    WHERE A01_TP_CASO = ", tipoCaso, 
                   " AND A01_NR_CASO = ", numeroCaso, 
                   " AND A01_CD_MODELO = ", codModelo)
-  apagar <- dbGetQuery(conexao, query) %>% pull()
+  
+  apagar <- DBI::dbGetQuery(conexao, query) %>% 
+    dplyr::pull()
   
   if (apagar > 0) {
     query <- paste0("DELETE FROM BPO_A24_CVAR_MENSAL_SUBS 
                      WHERE A01_TP_CASO = ", tipoCaso, 
                     " AND A01_NR_CASO = ", numeroCaso, 
                     " AND A01_CD_MODELO = ", codModelo)
-    dbExecute(conexao, query)
+    DBI::dbExecute(conexao, query)
   }
   
   query <- paste0("SELECT COUNT(*) AS TOTAL 
@@ -281,14 +294,16 @@ gravacaoSaidasAnalises <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
                    WHERE A01_TP_CASO = ", tipoCaso, 
                   " AND A01_NR_CASO = ", numeroCaso, 
                   " AND A01_CD_MODELO = ", codModelo)
-  apagar <- dbGetQuery(conexao, query) %>% pull()
+  
+  apagar <- DBI::dbGetQuery(conexao, query) %>% 
+    dplyr::pull()
   
   if (apagar > 0) {
     query <- paste0("DELETE FROM BPO_A25_VAR_MENSAL_SIN 
                      WHERE A01_TP_CASO = ", tipoCaso, 
                     " AND A01_NR_CASO = ", numeroCaso, 
                     " AND A01_CD_MODELO = ", codModelo)
-    dbExecute(conexao, query)
+    DBI::dbExecute(conexao, query)
   }
   
   query <- paste0("SELECT COUNT(*) AS TOTAL 
@@ -297,14 +312,16 @@ gravacaoSaidasAnalises <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
                    WHERE A01_TP_CASO = ", tipoCaso, 
                   " AND A01_NR_CASO = ", numeroCaso, 
                   " AND A01_CD_MODELO = ", codModelo)
-  apagar <- dbGetQuery(conexao, query) %>% pull()
+  
+  apagar <- DBI::dbGetQuery(conexao, query) %>% 
+    dplyr::pull()
   
   if (apagar > 0) {
     query <- paste0("DELETE FROM BPO_A26_VAR_ANUAL_SIN 
                      WHERE A01_TP_CASO = ", tipoCaso, 
                     " AND A01_NR_CASO = ", numeroCaso, 
                     " AND A01_CD_MODELO = ", codModelo)
-    dbExecute(conexao, query)
+    DBI::dbExecute(conexao, query)
   }
   
   query <- paste0("SELECT COUNT(*) AS TOTAL 
@@ -313,14 +330,16 @@ gravacaoSaidasAnalises <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
                    WHERE A01_TP_CASO = ", tipoCaso, 
                   " AND A01_NR_CASO = ", numeroCaso, 
                   " AND A01_CD_MODELO = ", codModelo)
-  apagar <- dbGetQuery(conexao, query) %>% pull()
+  
+  apagar <- DBI::dbGetQuery(conexao, query) %>% 
+    dplyr::pull()
   
   if (apagar > 0) {
     query <- paste0("DELETE FROM BPO_A27_LOLP_MENSAL 
                      WHERE A01_TP_CASO = ", tipoCaso, 
                     " AND A01_NR_CASO = ", numeroCaso, 
                     " AND A01_CD_MODELO = ", codModelo)
-    dbExecute(conexao, query)
+    DBI::dbExecute(conexao, query)
   }
   
   query <- paste0("SELECT COUNT(*) AS TOTAL 
@@ -329,14 +348,16 @@ gravacaoSaidasAnalises <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
                    WHERE A01_TP_CASO = ", tipoCaso, 
                   " AND A01_NR_CASO = ", numeroCaso, 
                   " AND A01_CD_MODELO = ", codModelo)
-  apagar <- dbGetQuery(conexao, query) %>% pull()
+  
+  apagar <- DBI::dbGetQuery(conexao, query) %>% 
+    dplyr::pull()
   
   if (apagar > 0) {
     query <- paste0("DELETE FROM BPO_A28_LOLP_ANUAL 
                      WHERE A01_TP_CASO = ", tipoCaso, 
                     " AND A01_NR_CASO = ", numeroCaso, 
                     " AND A01_CD_MODELO = ", codModelo)
-    dbExecute(conexao, query)
+    DBI::dbExecute(conexao, query)
   }
   
   query <- paste0("SELECT COUNT(*) AS TOTAL 
@@ -345,14 +366,16 @@ gravacaoSaidasAnalises <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
                    WHERE A01_TP_CASO = ", tipoCaso, 
                   " AND A01_NR_CASO = ", numeroCaso, 
                   " AND A01_CD_MODELO = ", codModelo)
-  apagar <- dbGetQuery(conexao, query) %>% pull()
+  
+  apagar <- DBI::dbGetQuery(conexao, query) %>% 
+    dplyr::pull()
   
   if (apagar > 0) {
     query <- paste0("DELETE FROM BPO_A29_REQUISITOS_POTENCIA 
                      WHERE A01_TP_CASO = ", tipoCaso, 
                     " AND A01_NR_CASO = ", numeroCaso, 
                     " AND A01_CD_MODELO = ", codModelo)
-    dbExecute(conexao, query)
+    DBI::dbExecute(conexao, query)
   }
   
   query <- paste0("SELECT COUNT(*) AS TOTAL 
@@ -361,26 +384,28 @@ gravacaoSaidasAnalises <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
                    WHERE A01_TP_CASO = ", tipoCaso, 
                   " AND A01_NR_CASO = ", numeroCaso, 
                   " AND A01_CD_MODELO = ", codModelo)
-  apagar <- dbGetQuery(conexao, query) %>% pull()
+  
+  apagar <- DBI::dbGetQuery(conexao, query) %>% 
+    dplyr::pull()
   
   if (apagar > 0) {
     query <- paste0("DELETE FROM BPO_A30_REQUISITOS_POTENCIA_QUAD 
                      WHERE A01_TP_CASO = ", tipoCaso, 
                     " AND A01_NR_CASO = ", numeroCaso, 
                     " AND A01_CD_MODELO = ", codModelo)
-    dbExecute(conexao, query)
+    DBI::dbExecute(conexao, query)
   }
   
   # salva no BDBP
-  dbWriteTable(conexao, "BPO_A22_CVAR_MENSAL_SIN", dadosCvarMensalSQL, append = T)
-  dbWriteTable(conexao, "BPO_A23_CVAR_ANUAL_SIN", dadosCvarAnualSQL, append = T)
-  dbWriteTable(conexao, "BPO_A24_CVAR_MENSAL_SUBS", dadosCvarMensalSubsSQL, append = T)
-  dbWriteTable(conexao, "BPO_A25_VAR_MENSAL_SIN", dadosVarMensalSQL, append = T)
-  dbWriteTable(conexao, "BPO_A26_VAR_ANUAL_SIN", dadosVarAnualSQL, append = T)
-  dbWriteTable(conexao, "BPO_A27_LOLP_MENSAL", dadosRiscoMensalSQL, append = T)
-  dbWriteTable(conexao, "BPO_A28_LOLP_ANUAL", dadosRiscoAnualSQL, append = T)
-  dbWriteTable(conexao, "BPO_A29_REQUISITOS_POTENCIA", dadosRequisitoPotSQL, append = T)
-  dbWriteTable(conexao, "BPO_A30_REQUISITOS_POTENCIA_QUAD", dadosRequisitoPotQuadSQL, append = T)
+  DBI::dbWriteTable(conexao, "BPO_A22_CVAR_MENSAL_SIN", dadosCvarMensalSQL, append = T)
+  DBI::dbWriteTable(conexao, "BPO_A23_CVAR_ANUAL_SIN", dadosCvarAnualSQL, append = T)
+  DBI::dbWriteTable(conexao, "BPO_A24_CVAR_MENSAL_SUBS", dadosCvarMensalSubsSQL, append = T)
+  DBI::dbWriteTable(conexao, "BPO_A25_VAR_MENSAL_SIN", dadosVarMensalSQL, append = T)
+  DBI::dbWriteTable(conexao, "BPO_A26_VAR_ANUAL_SIN", dadosVarAnualSQL, append = T)
+  DBI::dbWriteTable(conexao, "BPO_A27_LOLP_MENSAL", dadosRiscoMensalSQL, append = T)
+  DBI::dbWriteTable(conexao, "BPO_A28_LOLP_ANUAL", dadosRiscoAnualSQL, append = T)
+  DBI::dbWriteTable(conexao, "BPO_A29_REQUISITOS_POTENCIA", dadosRequisitoPotSQL, append = T)
+  DBI::dbWriteTable(conexao, "BPO_A30_REQUISITOS_POTENCIA_QUAD", dadosRequisitoPotQuadSQL, append = T)
   
   mensagem <- "saidas de analise gravadas com sucesso!"
   

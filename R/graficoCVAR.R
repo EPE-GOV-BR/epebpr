@@ -20,7 +20,7 @@ graficoCVAR <- function(baseSQLite, tipoCaso, numeroCaso, codModelo,
                         tituloGraficoCVARMes = paste0("Profundidade de Déficit - CVAR Mensal 5% - Caso ", numeroCaso),
                         tituloGraficoCVARAno = paste0("Profundidade de Déficit - CVAR Anual - Caso ", numeroCaso)) {
   
-  conexao <- dbConnect(RSQLite::SQLite(), baseSQLite)
+  conexao <- DBI::dbConnect(RSQLite::SQLite(), baseSQLite)
   
   if (tipoGrafico == 1) {
     # cvar mensal
@@ -35,37 +35,46 @@ graficoCVAR <- function(baseSQLite, tipoCaso, numeroCaso, codModelo,
                     A01_NR_CASO = ", numeroCaso," AND
                     A01_CD_MODELO = ", codModelo, ";")
     
-    tib.resultadosCvarMes <- dbGetQuery(conexao, squery) %>% as_tibble()
-    dbDisconnect(conexao)
+    tib.resultadosCvarMes <- DBI::dbGetQuery(conexao, squery) %>% 
+      tidyr::as_tibble()
+    
+    DBI::dbDisconnect(conexao)
     
     # cria coluna do tipo data a partir do campo anoMes e filtra o horizonte para exibicao no grafico
-    tib.resultadosCvarMes <- tib.resultadosCvarMes %>% mutate(anoMes = as.character(A22_NR_MES) %>% as.yearmon("%Y%m") %>% zoo::as.Date()) %>% 
-      filter(between(as.integer(format(anoMes, "%Y")), inicioHorizonteGrafico, fimHorizonteGrafico)) %>% 
-      filter(A22_TX_PERCENT_CVAR == "5%")
+    tib.resultadosCvarMes <- tib.resultadosCvarMes %>% 
+      dplyr::mutate(anoMes = as.character(A22_NR_MES) %>% zoo::as.yearmon("%Y%m") %>% zoo::as.Date()) %>% 
+      dplyr::filter(dplyr::between(as.integer(format(anoMes, "%Y")), inicioHorizonteGrafico, fimHorizonteGrafico)) %>% 
+      dplyr::filter(A22_TX_PERCENT_CVAR == "5%")
     
     # inclusao de maximo cvar por tipo para possibilitar a identificacao dos maximos no grafico
-    tib.resultadosCvarMesMax <- tib.resultadosCvarMes %>% group_by(A22_TX_PERCENT_CVAR) %>% summarise(maxCVAR = max(A22_VL_CVAR)) %>% ungroup()
-    tib.resultadosCvarMes <- inner_join(tib.resultadosCvarMes, tib.resultadosCvarMesMax, by = "A22_TX_PERCENT_CVAR")
+    tib.resultadosCvarMesMax <- tib.resultadosCvarMes %>% 
+      dplyr::group_by(A22_TX_PERCENT_CVAR) %>% 
+      dplyr::summarise(maxCVAR = max(A22_VL_CVAR)) %>% 
+      dplyr::ungroup()
+    
+    tib.resultadosCvarMes <- dplyr::inner_join(tib.resultadosCvarMes, tib.resultadosCvarMesMax, by = "A22_TX_PERCENT_CVAR")
     
     # cria vetor auxiliar com os marcadores que aparecerao no eixo de tempo no grafico
-    marcasEixoMes <- tib.resultadosCvarMes %>% filter(months(anoMes) %in% c("janeiro","julho")) %>% pull(anoMes) %>% c(., max(tib.resultadosCvarMes$anoMes))
+    marcasEixoMes <- tib.resultadosCvarMes %>% 
+      dplyr::filter(months(anoMes) %in% c("janeiro","julho")) %>% 
+      dplyr::pull(anoMes) %>% c(., max(tib.resultadosCvarMes$anoMes))
     
     # exibe grafico mensal de cvar separado por tipo de cvar
     tib.resultadosCvarMes <- tib.resultadosCvarMes %>% 
-      mutate(textoCVaR = ifelse(A22_VL_CVAR == maxCVAR, paste0(round(A22_VL_CVAR * 100, 1), "%"), ""))
+      dplyr::mutate(textoCVaR = ifelse(A22_VL_CVAR == maxCVAR, paste0(round(A22_VL_CVAR * 100, 1), "%"), ""))
     
     # cria sequencia de datas para desenhar a linha de limite de criterio de sup. tem um mes antes e um depois para atravessar todo o grafico
-    primeiroMes <- min(tib.resultadosCvarMes$anoMes) %>% as.yearmon()
-    ultimoMes <- max(tib.resultadosCvarMes$anoMes) %>% as.yearmon()
+    primeiroMes <- min(tib.resultadosCvarMes$anoMes) %>% zoo::as.yearmon()
+    ultimoMes <- max(tib.resultadosCvarMes$anoMes) %>% zoo::as.yearmon()
     mesesLinha <- seq(primeiroMes - 1/12, ultimoMes + 1/12, 1/12) %>% format("%Y-%m-%d")
     
-    graficoCVaR <- plot_ly(data = tib.resultadosCvarMes, x = ~anoMes, y = ~A22_VL_CVAR, name = "", type = "bar", showlegend = F,
-                           hovertemplate = "<b>Déficit % da Demanda</b>: %{y:.1%}<br><b>Mês</b>: %{x|%Y-%m}<extra></extra>") %>% 
-      add_trace(tib.resultadosCvarMes, x = ~anoMes, y = ~cvar, type = 'scatter',
-                mode = 'text', text = ~textoCVaR, textposition = 'top center', texttemplate = "<b>%{text}</b>") %>%
-      add_trace(tib.resultadosCvarMes, x = mesesLinha, y = 0.05, type = 'scatter', mode = 'lines', color = I("red"),
-                hovertemplate = "<b>Limite de critério de suprimento: %{y:.0%}<extra></extra>") %>% 
-      layout( 
+    graficoCVaR <- plotly::plot_ly(data = tib.resultadosCvarMes, x = ~anoMes, y = ~A22_VL_CVAR, name = "", type = "bar", showlegend = F,
+                                   hovertemplate = "<b>Déficit % da Demanda</b>: %{y:.1%}<br><b>Mês</b>: %{x|%Y-%m}<extra></extra>") %>% 
+      plotly::add_trace(tib.resultadosCvarMes, x = ~anoMes, y = ~cvar, type = 'scatter',
+                        mode = 'text', text = ~textoCVaR, textposition = 'top center', texttemplate = "<b>%{text}</b>") %>%
+      plotly::add_trace(tib.resultadosCvarMes, x = mesesLinha, y = 0.05, type = 'scatter', mode = 'lines', color = I("red"),
+                        hovertemplate = "<b>Limite de critério de suprimento: %{y:.0%}<extra></extra>") %>% 
+      plotly::layout( 
         title = paste0("<b>", tituloGraficoCVARMes, "</b>"),
         yaxis = list( 
           title = "<b>Déficit % da Demanda</b>", 
@@ -73,7 +82,7 @@ graficoCVAR <- function(baseSQLite, tipoCaso, numeroCaso, codModelo,
         ), 
         xaxis = list( 
           title = "<b>Mês</b>", 
-          ticktext = as.list(as.character(as.yearmon(marcasEixoMes))), 
+          ticktext = as.list(as.character(zoo::as.yearmon(marcasEixoMes))), 
           tickvals = as.list(marcasEixoMes)
         )
       )
@@ -92,22 +101,24 @@ graficoCVAR <- function(baseSQLite, tipoCaso, numeroCaso, codModelo,
                     A01_NR_CASO = ", numeroCaso," AND
                     A01_CD_MODELO = ", codModelo, ";")
     
-    tib.resultadosCvarAno <- dbGetQuery(conexao, squery) %>% as_tibble()
-    dbDisconnect(conexao)
+    tib.resultadosCvarAno <- DBI::dbGetQuery(conexao, squery) %>% 
+      tidyr::as_tibble()
+    
+    DBI::dbDisconnect(conexao)
     
     # filtra resultados por anos
-    tib.resultadosCvarAno <- tib.resultadosCvarAno %>% filter(between(A23_NR_ANO, inicioHorizonteGrafico, fimHorizonteGrafico)) %>% 
-      # faz um mutate para corrigir a ordem do grafico
-      mutate(A23_TX_PERCENT_CVAR = ifelse(A23_TX_PERCENT_CVAR == "1,5%", "1 1,5%",
-                                          ifelse(A23_TX_PERCENT_CVAR == "2,5%", "2 2,5%",
-                                                 ifelse(A23_TX_PERCENT_CVAR == "5%", "3 5%",
-                                                        ifelse(A23_TX_PERCENT_CVAR == "10%", "4 10%", "")))))
+    tib.resultadosCvarAno <- tib.resultadosCvarAno %>% dplyr::filter(dplyr::between(A23_NR_ANO, inicioHorizonteGrafico, fimHorizonteGrafico)) %>% 
+      # faz um dplyr::mutate para corrigir a ordem do grafico
+      dplyr::mutate(A23_TX_PERCENT_CVAR = ifelse(A23_TX_PERCENT_CVAR == "1,5%", "1 1,5%",
+                                                 ifelse(A23_TX_PERCENT_CVAR == "2,5%", "2 2,5%",
+                                                        ifelse(A23_TX_PERCENT_CVAR == "5%", "3 5%",
+                                                               ifelse(A23_TX_PERCENT_CVAR == "10%", "4 10%", "")))))
     
     # exibe grafico anual de cvar
-    graficoCVaR <- plot_ly(data = tib.resultadosCvarAno, x = ~A23_NR_ANO, y = ~A23_VL_CVAR, color = ~A23_TX_PERCENT_CVAR, 
-                           colors = "Set3", type = "bar",
-                           hovertemplate = "<b>Déficit % da Demanda</b>: %{y:.1%}<br><b>Ano</b>: %{x}") %>% 
-      layout( 
+    graficoCVaR <- plotly::plot_ly(data = tib.resultadosCvarAno, x = ~A23_NR_ANO, y = ~A23_VL_CVAR, color = ~A23_TX_PERCENT_CVAR, 
+                                   colors = "Set3", type = "bar",
+                                   hovertemplate = "<b>Déficit % da Demanda</b>: %{y:.1%}<br><b>Ano</b>: %{x}") %>% 
+      plotly::layout( 
         title = paste0("<b>", tituloGraficoCVARAno, "</b>"),
         legend = list(orientation = 'h', x = "0.3"),
         yaxis = list( 
@@ -116,10 +127,10 @@ graficoCVAR <- function(baseSQLite, tipoCaso, numeroCaso, codModelo,
         xaxis = list(
           title = "<b>Ano</b>",
           type = 'category')) %>% 
-      style(name = "CVaR 1.5%", traces = 1) %>% 
-      style(name = "CVaR 2.5%", traces = 2) %>% 
-      style(name = "CVaR 5%", traces = 3) %>% 
-      style(name = "CVaR 10%", traces = 4)
+      plotly::style(name = "CVaR 1.5%", traces = 1) %>% 
+      plotly::style(name = "CVaR 2.5%", traces = 2) %>% 
+      plotly::style(name = "CVaR 5%", traces = 3) %>% 
+      plotly::style(name = "CVaR 10%", traces = 4)
   }
   return(graficoCVaR)
 }
