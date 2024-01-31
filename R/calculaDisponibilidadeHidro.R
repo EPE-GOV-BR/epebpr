@@ -316,9 +316,9 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipo
                                                  by = c("A02_NR_REE", "A05_NR_MES" = "A06_NR_MES")) %>% 
         dplyr::mutate(A08_VL_VOLUME_OPERATIVO = (A05_VL_VOL_MAX - A05_VL_VOL_MIN) * A06_VL_PERC_ARMAZENAMENTO + A05_VL_VOL_MIN, 
                       # verifica o flag de vertimento, se verdadeiro soma o vertimento na variavel de GH
-                      A06_VL_GERACAO_HIDRAULICA = ifelse(flagVert,
-                                                         A06_VL_GERACAO_HIDRAULICA + A06_VL_SUBMOTORIZACAO + A06_VL_VERTIMENTO_TURBINAVEL,
-                                                         A06_VL_GERACAO_HIDRAULICA + A06_VL_SUBMOTORIZACAO)
+                      A06_VL_GERACAO_HIDRAULICA = dplyr::if_else(flagVert,
+                                                                 A06_VL_GERACAO_HIDRAULICA + A06_VL_SUBMOTORIZACAO + A06_VL_VERTIMENTO_TURBINAVEL,
+                                                                 A06_VL_GERACAO_HIDRAULICA + A06_VL_SUBMOTORIZACAO)
         )
       
       df.dadosCalculadosUHE <- dplyr::inner_join(df.dadosCalculadosUHE, df.dadosMaquinasUHE, by = "A03_CD_USINA") %>% 
