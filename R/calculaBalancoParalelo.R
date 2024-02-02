@@ -13,6 +13,7 @@
 #' @param balancoResumido variavel binaria para decidir se vai gravar somente o balanco resumido (\code{BPO_A16_BALANCO}) ou 
 #' tambem o por gerador (\code{BPO_A17_BALANCO_GERADOR}). Valor padrao T.
 #' @param distribuicaoDeficit variavel com valor (percentual) da demanda para ser o limite de disponibilidade do deficit distribuido. Valor padrao 0.05
+#' @param execShiny booleano que indica se a função está sendo executada em um contexto reativo, para atualização da barra de progresso
 #'
 #' @return \code{mensagem} vetor de caracteres com a mensagem de sucesso de gravacao dos resultados dos balancos 
 #' nas tabelas BPO_A16_BALANCO, BPO_A17_BALANCO_GERADOR e BPO_A20_BALANCO_SUBSISTEMA
@@ -25,9 +26,9 @@
 #' 
 #' @export
 calculaBalancoParalelo <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, cvuTransmissao, cvuHidro, 
-                                   cvuRenovaveis, cvuOutrasTermicas, balancoResumido = T, distribuicaoDeficit = 1) {
+                                   cvuRenovaveis, cvuOutrasTermicas, balancoResumido = T, distribuicaoDeficit = 1, execShiny = F) {
   # barra de progresso
-  incProgress(0.05, detail = "Caregando Dados")
+  if(execShiny){incProgress(0.05, detail = "Caregando Dados")}
   
   # abre conexao
   conexao <- DBI::dbConnect(RSQLite::SQLite(), baseSQLite)
@@ -240,7 +241,7 @@ calculaBalancoParalelo <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
     # for criado para nao estourar a alocacao de memoria e ao mesmo tempo nao compromenter desempenho na gravacao na base (gravacao em disco)
     for (andaJanela in 1:(quantidadeJanela - 1)) {
       # barra de progresso
-      incProgress((1/(quantidadeJanela - 1))*0.45, detail = paste(round(andaJanela*100/(quantidadeJanela - 1), 0),"%"))
+      if(execShiny){incProgress((1/(quantidadeJanela - 1))*0.45, detail = paste(round(andaJanela*100/(quantidadeJanela - 1), 0),"%"))}
       lt.resultado <- foreach::foreach(cenario = seq(janelaCenarios[andaJanela], (janelaCenarios[andaJanela + 1] - 1)),
                                        .combine = "subRBind",
                                        .packages = c("dplyr", "clpAPI", "DBI", "RSQLite"))  %dopar%  balancoPeriodoClp(df.demandasAnoMesSerie$anoMes[cenario],
@@ -271,7 +272,7 @@ calculaBalancoParalelo <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
   } else {
     for (andaJanela in 1:(quantidadeJanela - 1)) {
       # barra de progresso
-      incProgress((1/(quantidadeJanela - 1))*0.45, detail = paste(round(andaJanela*100/(quantidadeJanela - 1), 0),"%"))
+      if(execShiny){incProgress((1/(quantidadeJanela - 1))*0.45, detail = paste(round(andaJanela*100/(quantidadeJanela - 1), 0),"%"))}
       lt.resultado <- foreach::foreach(cenario = seq(janelaCenarios[andaJanela], (janelaCenarios[andaJanela + 1] - 1)),
                                        .combine = "subRBind",
                                        .packages = c("dplyr", "clpAPI", "DBI", "RSQLite")) %dopar% balancoPeriodoClp(df.demandasAnoMesSerie$anoMes[cenario],

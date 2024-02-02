@@ -18,6 +18,7 @@
 #' @param codTucurui codigo atribuido para a usina de Tucurui
 #' @param cotaLimiteTucurui valor da cota da usina de Tucurui [m]
 #' @param geracaoLimiteTucurui valor da geracao limite da usina de Tucurui
+#' @param execShiny booleano que indica se a função está sendo executada em um contexto reativo, para atualização da barra de progresso
 #'
 #'
 #' @return \code{mensagem} vetor de caracteres com a mensagem de sucesso de gravacao na base
@@ -36,9 +37,10 @@ carregaDadosSQLite <- function(baseSQLite,
                                sistemasNaoModulamMedia,
                                codTucurui, 
                                cotaLimiteTucurui, 
-                               geracaoLimiteTucurui) {
+                               geracaoLimiteTucurui,
+                               execShiny = FALSE) {
   # barra de progresso
-  incProgress(3/100, detail = "Leitura de Dados Gerais")
+  if(execShiny){incProgress(3/100, detail = "Leitura de Dados Gerais")}
   
   # pega dados gerais do NEWAVE
   df.dadosGerais <- leitorrmpe::leituraDadosGerais(pastaCaso)
@@ -71,7 +73,7 @@ carregaDadosSQLite <- function(baseSQLite,
   }
   
   # barra de progresso
-  incProgress(3/100, detail = "Leitura dos Dados do MDI")  
+  if(execShiny){incProgress(3/100, detail = "Leitura dos Dados do MDI")}
   
   # somente verifica arquivo do MDI para casos do PDE
   if (tipoCaso == 1) { 
@@ -96,7 +98,7 @@ carregaDadosSQLite <- function(baseSQLite,
   }
   
   # barra de progresso
-  incProgress(4/100, detail = "Gravando no Banco de Dados")
+  if(execShiny){incProgress(4/100, detail = "Gravando no Banco de Dados")}
   
   # inicio do processo de gravacao das tabelas BPO_A01_CASOS_ANALISE, BPO_A02_SUBSISTEMAS, BPO_A02_REES e BPO_A19_FATOR_PONTA_OFR
   # abre conexao

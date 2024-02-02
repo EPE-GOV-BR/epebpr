@@ -134,7 +134,7 @@ serverBalanco <- function(input, output, session) {
     )
     
     tictoc::tic()
-    
+    browser()
     # mensagem de tipo de simulacao
     # verifica se o usuario escolheu efetuar a leitura de dados, caso seja uma rodada com opcao epe
     if (as.logical(input$leituraDados)) {
@@ -168,7 +168,8 @@ serverBalanco <- function(input, output, session) {
                                                  sistemasNaoModulamMedia,
                                                  codTucurui,
                                                  cotaLimiteTucurui,
-                                                 potenciaLimiteTucurui)
+                                                 potenciaLimiteTucurui,
+                                                 TRUE)
       } else {
         mensagemBancoDados <- ""
       }
@@ -184,7 +185,8 @@ serverBalanco <- function(input, output, session) {
                                                                as.integer(input$numeroCaso),
                                                                as.integer(input$codModelo),
                                                                codTucurui,
-                                                               input$flagVert)
+                                                               input$flagVert,
+                                                               TRUE)
       } else {
         mensagemDisponibilidade <- ""
       }
@@ -202,7 +204,8 @@ serverBalanco <- function(input, output, session) {
                                            cvuRenovaveis,
                                            cvuOutrasTermicas,
                                            as.logical(input$balancoResumido),
-                                           as.double(input$distribuicaoDeficit)/100)
+                                           as.double(input$distribuicaoDeficit)/100,
+                                           TRUE)
         
         # se o balanço foi calculado, gera saidas na BD e em excel
         df.dadosGerais <- leitorrmpe::leituraDadosGerais(pastaCaso)
@@ -217,6 +220,36 @@ serverBalanco <- function(input, output, session) {
     tempoExecucao <- round(tempoExecucao$toc - tempoExecucao$tic, 0) %>% as.numeric()
     tempoExecucao <- paste0("Executado em: ", tempoExecucao %/% 3600, " h. ",
                             (tempoExecucao - (tempoExecucao %/% 3600 * 3600)) %/% 60, " min. ", tempoExecucao %% 60, " seg.")
+    
+    # salva para controle as opções de execução escolhidas
+    arqOpt <- paste0(pastaCaso, "/optExec_", stringr::str_remove(basename(baseSQLite), "\\.sqlite3"), ".txt")
+    # momento do inicio da execução
+    cat(paste0(# versão do pacote utilizada
+               "Versão do pacote epebpr: ", packageVersion("epebpr"), "\n",
+               # usuário
+               "Usuário: ", Sys.getenv("USERNAME"), "\n",
+               # pastas e arquivos selecionados
+               "Diretório NEWAVE: ", pastaCaso, "\n",
+               "Diretório NWLISTOP: ", pastaSaidas, "\n",
+               "Base de Dados: ", baseSQLite, "\n",
+               # opções de execução
+               "Tipo de Caso: ", ifelse(input$tipoCaso == 1, "PDE", ifelse(input$tipoCaso == 2, "PMO", ifelse(input$tipoCaso == 3, "GF", NA))), "\n",
+               "Modelo: ", ifelse(input$codModelo == 1, "NEWAVE", ifelse(input$codModelo == 2, "SUISHI", NA)), "\n",
+               "Demanda: ", ifelse(input$idDemanda == 1, "Determinística", ifelse(input$idDemanda == 2, "Líquida", NA)), "\n",
+               "Nº do caso: ", input$numeroCaso, "\n",
+               "Horas de Ponta: ", input$horasPonta, "\n",
+               "Distribuição Déficit [%]: ", input$distribuicaoDeficit, "\n",
+               "Descrição: ", input$descricao, "\n",
+               "REEs não modulam GHPonta: ", input$sistemasNaoModulamPonta, "\n",
+               "REEs não modulam GHMédia: ", input$sistemasNaoModulamMedia, "\n",
+               "Balanço Resumido: ", ifelse(input$balancoResumido, "Sim", "Não"), "\n",
+               "Dados: ", ifelse(input$leituraDados, "Sim", "Não"), "\n",
+               "Disp. Hidro: ", ifelse(input$disponibilidadeHidro, "Sim", "Não"), "\n",
+               "Balanço de Ponta: ", ifelse(input$execucaoBP, "Sim", "Não"), "\n",
+               "Vertimento para todas UHE: ", ifelse(input$flagVert, "Sim", "Não"), "\n",
+               "Término da execução: ", lubridate::now(), "\n",
+               "Tempo total de execução:", tempoExecucao
+    ), file = arqOpt)
     
     return({paste(mensagemBancoDados, mensagemDisponibilidade, mensagem, tempoExecucao, sep = "<br>")})
   })

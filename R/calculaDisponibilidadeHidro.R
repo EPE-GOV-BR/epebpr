@@ -11,11 +11,12 @@
 #' @param codModelo valor inteiro com o codigo do modelo. 1:NEWAVE; 2:SUISHI
 #' @param codTucurui codigo atribuido para a usina de Tucurui
 #' @param flagVert booleano que indica se considera ou nao o vertimento para todas as UHE
+#' @param execShiny booleano que indica se a função está sendo executada em um contexto reativo, para atualização da barra de progresso
 #'
 #' @return \code{mensagem} vetor de caracteres com a mensagem de sucesso de gravacao na base
 #'
 #' @export
-calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipoCaso, numeroCaso, codModelo, codTucurui, flagVert) {
+calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipoCaso, numeroCaso, codModelo, codTucurui, flagVert, execShiny = FALSE) {
   # SQLite
   conexaoSQLite <- DBI::dbConnect(RSQLite::SQLite(), baseSQLite)
   # fecha conexao com a base SQLite na saida da funcao, seja por erro ou normalmente
@@ -47,7 +48,7 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipo
   # faz calculos com base em dados do SUISHI (codModelo = 2) ou do NEWAVE (codModelo = 1)
   if (codModelo == 2) {
     # barra de progresso
-    incProgress(0.4, detail = "Disponibilidade Hidro pelo SUISHI")
+    if(execShiny){incProgress(0.4, detail = "Disponibilidade Hidro pelo SUISHI")}
     
     # descarta usinas com STATUS = 'NC' (fora do deck)
     sql <- paste0("SELECT 
@@ -169,7 +170,7 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipo
   } else {
     
     # barra de progresso
-    incProgress(3/100, detail = "Atualização de Submotorização")
+    if(execShiny){incProgress(3/100, detail = "Atualização de Submotorização")}
     
     # atualizacao de submotorizacao
     quantidadeExpansaoHidro <- df.dadosExpansaoHidro <- leitorrmpe::leituraDadosExpansaoUsinasHidro(pastaCaso) %>% 
@@ -201,7 +202,7 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipo
     # fim atualizacao de submotorizacao
     
     # barra de progresso
-    incProgress(3/100, detail = "REEs que utilizam a GHmédia")
+    if(execShiny){incProgress(3/100, detail = "REEs que utilizam a GHmédia")}
     
     # filtro dos ree com calculo tipo 1
     sql <- paste0("SELECT A02_NR_REE FROM BPO_A02_REES
@@ -280,7 +281,7 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipo
     df.potMaquinas<- DBI::dbGetQuery(conexaoSQLite, sql)
     
     # barra de progresso
-    incProgress(4/100, detail = "Excluindo outras execuç\u00F5s de BP para o mesmo caso")
+    if(execShiny){incProgress(4/100, detail = "Excluindo outras execuç\u00F5s de BP para o mesmo caso")}
     
     # limpa base BPO_A08_DADOS_CALCULADOS_UHE de outras execucoes para o mesmo caso
     DBI::dbExecute(conexaoSQLite, "PRAGMA locking_mode = EXCLUSIVE;")
@@ -309,17 +310,19 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipo
     
     for (andaJanela in 1:(quantidadeJanela - 1)) {
       # barra de progresso
-      incProgress((1/(quantidadeJanela - 1))*0.3, detail = paste(round(andaJanela*100/(quantidadeJanela - 1), 0),"%"))
+      if(execShiny){incProgress((1/(quantidadeJanela - 1))*0.3, detail = paste(round(andaJanela*100/(quantidadeJanela - 1), 0),"%"))}
       
       df.dadosCalculadosUHE <- dplyr::inner_join(df.dadosVigentesUHE, 
                                                  dplyr::filter(df.saidasHidro, dplyr::between(A06_NR_SERIE, janelaSeries[andaJanela], (janelaSeries[andaJanela + 1] - 1))), 
                                                  by = c("A02_NR_REE", "A05_NR_MES" = "A06_NR_MES")) %>% 
-        dplyr::mutate(A08_VL_VOLUME_OPERATIVO = (A05_VL_VOL_MAX - A05_VL_VOL_MIN) * A06_VL_PERC_ARMAZENAMENTO + A05_VL_VOL_MIN, 
+        dplyr::mutate(A08_VL_VOLUME_OPERATIVO = (A05_VL_VOL_MAX - A05_VL_VOL_MIN) * A06_VL_PERC_ARMAZENAMENTO + A05_VL_VOL_MIN,
+                      colunaFlagVert = flagVert,
                       # verifica o flag de vertimento, se verdadeiro soma o vertimento na variavel de GH
-                      A06_VL_GERACAO_HIDRAULICA = dplyr::if_else(flagVert,
-                                                                 A06_VL_GERACAO_HIDRAULICA + A06_VL_SUBMOTORIZACAO + A06_VL_VERTIMENTO_TURBINAVEL,
-                                                                 A06_VL_GERACAO_HIDRAULICA + A06_VL_SUBMOTORIZACAO)
-        )
+                      A06_VL_GERACAO_HIDRAULICA = ifelse(colunaFlagVert,
+                                                         A06_VL_GERACAO_HIDRAULICA + A06_VL_SUBMOTORIZACAO + A06_VL_VERTIMENTO_TURBINAVEL,
+                                                         A06_VL_GERACAO_HIDRAULICA + A06_VL_SUBMOTORIZACAO)
+        ) %>% 
+        dplyr::select(-colunaFlagVert)
       
       df.dadosCalculadosUHE <- dplyr::inner_join(df.dadosCalculadosUHE, df.dadosMaquinasUHE, by = "A03_CD_USINA") %>% 
         dplyr::mutate(VL_POT_EXP = round(A05_VL_POTENCIA - POT_TOTAL, 2))

@@ -158,7 +158,7 @@ gravacaoSaidasAnalises <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
                            "Distribuição do Déficit" = dadosDistDef[["distDef"]],
                            "Variação do CVaR Mensal" = dadosDistDef[["distCvar"]],
                            "Dist Déficit x CVaR Max" = dadosDistDef[["distDefxCvarMax"]]),
-                      path = paste0(pastaSaidaExcel, "//resumoSaidasBP.xlsx"))
+                      path = paste0(pastaSaidaExcel, "//resumoSaidasBP_", stringr::str_remove(basename(baseSQLite), "\\.sqlite3"), ".xlsx"))
   
   # abre conexao
   conexao <- DBI::dbConnect(RSQLite::SQLite(), baseSQLite)

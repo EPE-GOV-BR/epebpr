@@ -68,7 +68,7 @@ uiBalancoEPE <- fluidPage(
                                       label = "Demanda:",
                                       choices = c("Líquida" = 2,
                                                   "Determinística" = 1),
-                                      selected = 1)),
+                                      selected = 2)),
                  tags$br(),
                  
                  

@@ -18,7 +18,8 @@ carregaDadosSQLite(
   sistemasNaoModulamMedia,
   codTucurui,
   cotaLimiteTucurui,
-  geracaoLimiteTucurui
+  geracaoLimiteTucurui,
+  execShiny = FALSE
 )
 }
 \arguments{
@@ -49,6 +50,8 @@ carregaDadosSQLite(
 \item{cotaLimiteTucurui}{valor da cota da usina de Tucurui [m]}
 
 \item{geracaoLimiteTucurui}{valor da geracao limite da usina de Tucurui}
+
+\item{execShiny}{booleano que indica se a função está sendo executada em um contexto reativo, para atualização da barra de progresso}
 }
 \value{
 \code{mensagem} vetor de caracteres com a mensagem de sucesso de gravacao na base
