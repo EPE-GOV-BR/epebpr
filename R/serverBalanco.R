@@ -134,7 +134,7 @@ serverBalanco <- function(input, output, session) {
     )
     
     tictoc::tic()
-    browser()
+    
     # mensagem de tipo de simulacao
     # verifica se o usuario escolheu efetuar a leitura de dados, caso seja uma rodada com opcao epe
     if (as.logical(input$leituraDados)) {
