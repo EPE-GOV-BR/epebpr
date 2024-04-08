@@ -9,9 +9,5 @@
 #'
 #' @export
 aplicacaoBalanco <- function(execucao = "") {
-  if (execucao == "analisesepe") {
-    runApp(shinyAppDir(system.file("appBalancoEPE", package = "epebpr")), launch.browser = T)
-  } else {
-    runApp(shinyAppDir(system.file("appBalanco", package = "epebpr")), launch.browser = T)
-  }
+  runApp(shinyAppDir(system.file("appBalanco", package = "epebpr")), launch.browser = T)
 }

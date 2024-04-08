@@ -377,6 +377,35 @@ CREATE TABLE BPO_A14_DISPONIBILIDADE_UTE (
     )
 );
 
+-- Table: BPO_A14B_DISPONIBILIDADE_UTE_GNL
+DROP TABLE IF EXISTS BPO_A14B_DISPONIBILIDADE_UTE_GNL;
+
+CREATE TABLE BPO_A14B_DISPONIBILIDADE_UTE_GNL (
+    A01_TP_CASO                         INTEGER NOT NULL,
+    A01_NR_CASO                         INTEGER NOT NULL,
+    A01_CD_MODELO                       INTEGER NOT NULL,
+    A02_NR_SUBSISTEMA                   INTEGER NOT NULL,
+    A14_NR_MES                          INTEGER NOT NULL,
+    A14_NR_SERIE                        INTEGER NOT NULL,
+    A14_CD_USINA                        INTEGER NOT NULL,
+    A14_VL_POTENCIA                     REAL,
+    A14_VL_FATOR_CAPACIDADE             REAL,
+    A14_VL_PERC_TEIF                    REAL,
+    A14_VL_PERC_IP                      REAL,
+    A14_VL_INFLEXIBILIDADE              REAL,
+    A14_VL_DISPONIBILIDADE_MAXIMA_PONTA REAL,
+    A14_VL_CVU                          REAL,
+    PRIMARY KEY (
+        A01_TP_CASO,
+        A01_NR_CASO,
+        A01_CD_MODELO,
+        A02_NR_SUBSISTEMA,
+        A14_NR_MES,
+        A14_NR_SERIE,
+        A14_CD_USINA
+    )
+);
+
 
 -- Table: BPO_A15_AGRUPAMENTOS_INTERCAMBIO
 DROP TABLE IF EXISTS BPO_A15_AGRUPAMENTOS_INTERCAMBIO;

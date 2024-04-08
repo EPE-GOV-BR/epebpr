@@ -40,7 +40,7 @@ gravacaoDadosAgrupIntercambioBDBP <- function(pastaCaso, conexao, tipoCaso, nume
                                    " AND A01_NR_CASO = ", numeroCaso, 
                                    " AND A01_CD_MODELO = ", codModelo))
   
-  # executa as funcoes de leitura do pacote leitorrcepel para o carregamento dos dados dos agrupamentos de intercambio
+  # executa as funcoes de leitura do pacote leitorrmpe para o carregamento dos dados dos agrupamentos de intercambio
   # insere as variaveis associadas ao tipoCaso, numeroCaso e codModelo
   df.DadosAgrupIntercambio <- leitorrmpe::leituraAgrupamentoInterligacoes(pastaCaso) %>% 
     dplyr::mutate(tipoCaso = tipoCaso, numeroCaso = numeroCaso, codModelo = codModelo) %>% 

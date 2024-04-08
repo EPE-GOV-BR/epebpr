@@ -10,6 +10,7 @@
 #' @param conexao conexao com o banco de dados (classe SQLiteConnection)
 #' @param df.custoDefict data frame com custos de deficit
 #' @param df.geracaoTermicaTotal data frame com os dados das geracoes termicas
+#' @param df.geracaoTermicaGnl data frame com os dados das geracoes termicas com despacho antecipado GNL
 #' @param df.geracaoTransmissaoTotal data frame com os dados de transmissao
 #' @param df.geracaoRenovaveisTotal data frame com os dados de renovaveis
 #' @param df.limitesAgrupamentoLinhasTotal data frame com os dados de agrupamento de transmissao
@@ -35,7 +36,7 @@
 #' @examples
 #' \dontrun{
 #' balancoPeriodoClp(201901, 1, T, conexao, df.custoDefict, df.geracaoTermicaTotal,
-#' df.geracaoTransmissaoTotal, df.geracaoRenovaveisTotal,
+#' df.geracaoTermicaGnl, df.geracaoTransmissaoTotal, df.geracaoRenovaveisTotal,
 #' df.limitesAgrupamentoLinhasTotal, df.demanda, df.geracaoHidroTotal,
 #' df.agrupamentoLinhas, tipoCaso, numeroCaso, codModelo,
 #' df.subsistemas, cvuHidro, df.defictRealocado)}
@@ -47,6 +48,7 @@ balancoPeriodoClp <- function(periodo,
                               conexao,
                               df.custoDefict,
                               df.geracaoTermicaTotal,
+                              df.geracaoTermicaTotalGnl,
                               df.geracaoTransmissaoTotal,
                               df.geracaoRenovaveisTotal,
                               df.limitesAgrupamentoLinhasTotal,
@@ -79,6 +81,18 @@ balancoPeriodoClp <- function(periodo,
   # filtrando geracao termica
   df.geracaoTermica <- df.geracaoTermicaTotal %>% 
     dplyr::filter(anoMes == periodo) %>%
+    dplyr::select(tipoUsina, codUsina, subsistema, transmissao, inflexibilidade, disponibilidade, cvu)
+  
+  # filtrando geracao termica GNL para o mes especifico
+  # critica de existencia de dados
+  if(nrow(df.geracaoTermicaGnl %>% dplyr::filter(anoMes == periodo, serieGnl == idSerieHidro)) == 0) {
+    DBI::dbDisconnect(conexao)
+    stop(paste0("Não há geração térmica GNL (BPO_A14B_DISPONIBILIDADE_UTE_GNL) para o período de ", periodo, " e série ", idSerieHidro))
+    
+  }
+  # filtrando geracao termica GNL
+  df.geracaoTermicaGnl <- df.geracaoTermicaGnl %>% 
+    dplyr::filter(anoMes == periodo, serieGnl == idSerieHidro) %>%
     dplyr::select(tipoUsina, codUsina, subsistema, transmissao, inflexibilidade, disponibilidade, cvu)
   
   # filtrando limites das linhas de transmissao para o mes especifico
@@ -133,7 +147,7 @@ balancoPeriodoClp <- function(periodo,
     dplyr::select(tipoUsina, codUsina, subsistema, transmissao, inflexibilidade, disponibilidade, cvu)
   
   # geracao total
-  df.geracao <- rbind(df.geracaoHidro, df.geracaoRenovaveis, df.geracaoTermica, df.geracaoTransmissao, df.custoDefict, df.defictRealocado)
+  df.geracao <- rbind(df.geracaoHidro, df.geracaoRenovaveis, df.geracaoTermica, df.geracaoTermicaGnl, df.geracaoTransmissao, df.custoDefict, df.defictRealocado)
   
   # corrige pequenas distorcoes
   df.geracao <- df.geracao %>% 
@@ -389,7 +403,7 @@ balancoPeriodoClp <- function(periodo,
     dplyr::pull(subsistema)
   
   idSubsistemasReais <- df.subsistemas %>% 
-    dplyr::mutate(linha = row_number()) %>% 
+    dplyr::mutate(linha = dplyr::row_number()) %>% 
     dplyr::filter(tipoSistema == 0) %>% 
     dplyr::pull(linha)
   

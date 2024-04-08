@@ -208,7 +208,7 @@ carregaDadosSQLite <- function(baseSQLite,
   }
   
   # grava dados das usinas termeletricas ao longo do horizonte de simulacao do NEWAVE na tabela BPO_A14_DISPONIBILIDADE_UTE
-  gravacaoDadosTermeletricasBDBP(pastaCaso, conexao, tipoCaso, numeroCaso, codModelo)
+  gravacaoDadosTermeletricasBDBP(pastaCaso, pastaSaidas, conexao, tipoCaso, numeroCaso, codModelo)
   
   # grava dados de disponilidade das outras fontes renovaveis do NEWAVE na tabela BPO_A13_DISPONIBILIDADE_OFR do BDBP. 
   # alem disso, grava as tabelas de apoio BPO_A18_TIPOS_OFR e BPO_A19_FATOR_PONTA_OFR

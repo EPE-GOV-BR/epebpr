@@ -40,7 +40,7 @@ gravacaoDadosIntercambioBDBP <- function(pastaCaso, conexao, tipoCaso, numeroCas
                                  " AND A01_NR_CASO = ", numeroCaso, 
                                  " AND A01_CD_MODELO = ", codModelo))
   
-  # executa as funcoes de leitura do pacote leitorrcepel para o carregamento dos dados dos limites e profundidade do patamar de intercambio
+  # executa as funcoes de leitura do pacote leitorrmpe para o carregamento dos dados dos limites e profundidade do patamar de intercambio
   # insere as variaveis associadas ao tipoCaso, numeroCaso e codModelo
   # define o limite de intercambio para o patamar de ponta (limiteInterligacao * profundidadeIntercambio)
   df.DadosIntercambio <- dplyr::inner_join(leitorrmpe::leituraLimiteInterligacoes(pastaCaso), 

@@ -43,10 +43,9 @@ uiBalanco <- fluidPage(
                  tags$div(style="display:inline-block; width:140px",
                           selectInput(inputId = "tipoCaso",
                                       label = "Tipo de Caso:",
-                                      choices = c("PDE" = 1 #,
-                                                  #"PMO" = 2,
-                                                  #"Garantia Fisica" = 3
-                                      ),
+                                      choices = c("PDE" = 1,
+                                                  "PMO" = 2,
+                                                  "Garantia Fisica" = 3),
                                       selected = 1)),
                  # Espaco entre inputs
                  tags$div(style="display:inline-block; width:7px"),
@@ -55,8 +54,8 @@ uiBalanco <- fluidPage(
                  tags$div(style="display:inline-block; width:100px",
                           selectInput(inputId = "codModelo",
                                       label = "Modelo:",
-                                      choices = c("NEWAVE" = 1 #,
-                                                  #"SUISHI" = 2
+                                      choices = c("NEWAVE" = 1,
+                                                  "SUISHI" = 2
                                       ),
                                       selected = 1)),
                  
@@ -100,6 +99,7 @@ uiBalanco <- fluidPage(
                                        min = 0,
                                        max = 100,
                                        value = 100)),
+                 
                  tags$br(),
                  
                  # Entrada de texto para a descricao do caso
@@ -168,29 +168,34 @@ uiBalanco <- fluidPage(
                               label = NULL,
                               icon = icon("calculator"),
                               width = 77),
+                 tags$br(),
                  tags$div(style = "display:inline-block; width:10px"),
                  tags$div(style="display:inline-block;",
                           checkboxInput(inputId = "balancoResumido",
                                         value = T,
-                                        label = HTML("Balanço resumido"))),
-                 # cria os inputs de escolha dos passos do bp mas os deixa escondidos nessa versao de uso externo para nao causar confusao
-                 conditionalPanel(condition = "input.tipoCaso == 100",
-                                  tags$div(style = "display:inline-block; width:5px"),
-                                  tags$div(style="display:inline-block;",
-                                           checkboxInput(inputId = "leituraDados",
-                                                         value = T,
-                                                         label = HTML("Dados"))),
-                                  tags$div(style = "display:inline-block; width:5px"),
-                                  tags$div(style="display:inline-block;",
-                                           checkboxInput(inputId = "disponibilidadeHidro",
-                                                         value = T,
-                                                         label = HTML("Disp. Hidro"))),
-                                  tags$div(style = "display:inline-block; width:5px"),
-                                  tags$div(style="display:inline-block;",
-                                           checkboxInput(inputId = "execucaoBP",
-                                                         value = T,
-                                                         label = HTML("BP")))
-                 )
+                                        label = HTML("Resumido"))),
+                 tags$div(style = "display:inline-block; width:5px"),
+                 tags$div(style="display:inline-block;",
+                          checkboxInput(inputId = "leituraDados",
+                                        value = T,
+                                        label = HTML("Dados"))),
+                 tags$div(style = "display:inline-block; width:5px"),
+                 tags$div(style="display:inline-block;",
+                          checkboxInput(inputId = "disponibilidadeHidro",
+                                        value = T,
+                                        label = HTML("Disp. Hidro"))),
+                 tags$div(style = "display:inline-block; width:5px"),
+                 tags$div(style="display:inline-block;",
+                          checkboxInput(inputId = "execucaoBP",
+                                        value = T,
+                                        label = HTML("BP"))),
+                 tags$br(),
+                 tags$div(style = "display:inline-block; width:5px"),
+                 tags$div(style="display:inline-block;",
+                          checkboxInput(inputId = "flagVert",
+                                        value = F,
+                                        label = HTML("Considerar Vertimento para todas UHE")))
+                 
                ),
                
                # Output:
@@ -249,9 +254,19 @@ uiBalanco <- fluidPage(
                                              tags$br(),
                                              # Input dos casos na base
                                              selectInput(inputId = "tipoGrafico",
-                                                         label = HTML("Tipo do Gráfico de CVaR:"),
-                                                         choices = c("CVaR Mensal" = 1, 
-                                                                     "LOLP Anual" = 8),
+                                                         label = HTML("Tipo de Gráfico:"),
+                                                         choices = c("CVaR Mensal" = 1,
+                                                                     "CVaR Mensal Subsistema" = 9,
+                                                                     "CVaR Anual" = 3, 
+                                                                     "Risco (LOLP) Mensal" = 4,
+                                                                     "Risco (LOLP) Anual" = 8,
+                                                                     "VaR Mensal" = 6,
+                                                                     "VaR Anual" = 7,
+                                                                     "Requisitos de Potência" = 13,
+                                                                     "Requisitos de Potência - Quadrimestral" = 14,
+                                                                     "CVaR Mensal GF" = 10,
+                                                                     "VaR Mensal GF" = 11,
+                                                                     "VaR Anual GF" = 12),
                                                          selected = -2),
                                              
                                              # Botao para exibir grafico

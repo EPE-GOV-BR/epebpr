@@ -40,7 +40,7 @@ gravacaoDadosHidroVigenteBDBP <- function(pastaCaso, conexao, tipoCaso, numeroCa
                                  " AND A01_NR_CASO = ", numeroCaso, 
                                  " AND A01_CD_MODELO = ", codModelo))
   
-  # executa as funcoes de leitutra do pacote leitorrcepel para o carregamento dos dados das termeletricas
+  # executa as funcoes de leitutra do pacote leitorrmpe para o carregamento dos dados das termeletricas
   # insere as variaveis associadas ao tipoCaso, numeroCaso e codModelo
   
   df.consolidadoUHE <- leitorrmpe::consolidaHidreletricasnoHorizonte(pastaCaso) %>% 

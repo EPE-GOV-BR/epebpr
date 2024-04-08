@@ -40,7 +40,7 @@ gravacaoDadosLimitesAgrupIntercambioBDBP <- function(pastaCaso, conexao, tipoCas
                                    " AND A01_NR_CASO = ", numeroCaso, 
                                    " AND A01_CD_MODELO = ", codModelo))
   
-  # executa as funcoes de leitura do pacote leitorrcepel para o carregamento dos dados dos limites dos agrupamentos de intercambios do patamar de ponta (1)
+  # executa as funcoes de leitura do pacote leitorrmpe para o carregamento dos dados dos limites dos agrupamentos de intercambios do patamar de ponta (1)
   # insere as variaveis associadas ao tipoCaso, numeroCaso e codModelo
   df.LimitesAgrInt <- dplyr::filter(leitorrmpe::leituraLimiteAgrupamentoInterligacoes(pastaCaso), patamar == 1) %>% 
     dplyr::mutate(tipoCaso = tipoCaso, numeroCaso = numeroCaso, codModelo = codModelo) %>% 

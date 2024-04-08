@@ -40,7 +40,7 @@ gravacaoDadosMaquinasHidroBDBP <- function(pastaCaso, conexao, tipoCaso, numeroC
                                  " AND A01_NR_CASO = ", numeroCaso, 
                                  " AND A01_CD_MODELO = ", codModelo))
   
-  # executa as funcoes de leitura do pacote leitorrcepel para o carregamento dos dados das usinas hidreletricas
+  # executa as funcoes de leitura do pacote leitorrmpe para o carregamento dos dados das usinas hidreletricas
   lt.dadosUsinasHidro <- leitorrmpe::leituraDadosUsinasHidro(pastaCaso) 
   df.dadosConfiguracao <- lt.dadosUsinasHidro$df.dadosConfiguracao %>% 
     dplyr::select(-nomeUsina)

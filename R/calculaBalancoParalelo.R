@@ -115,6 +115,13 @@ calculaBalancoParalelo <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
   df.geracaoTermicaTotal <- DBI::dbGetQuery(conexao, query)
   df.geracaoTermicaTotal$cvu[df.geracaoTermicaTotal$cvu <= 0] <- cvuOutrasTermicas # atribui CVU para termicas com CVU zero
   
+  # geracao termica GNL
+  query <- paste0("SELECT A14_NR_MES AS anoMes, A14_NR_SERIE AS serieGnl, 'TERMICA' AS tipoUsina, A14_CD_USINA AS codUsina, A02_NR_SUBSISTEMA AS subsistema, ",
+                  "0 AS transmissao, A14_VL_INFLEXIBILIDADE AS inflexibilidade, A14_VL_DISPONIBILIDADE_MAXIMA_PONTA AS disponibilidade, A14_VL_CVU as cvu ",
+                  "FROM BPO_A14B_DISPONIBILIDADE_UTE_GNL WHERE A01_TP_CASO = ", tipoCaso, " AND A01_NR_CASO = ", numeroCaso, 
+                  " AND A01_CD_MODELO = ", codModelo, " ORDER BY A14_NR_MES, A14_NR_SERIE, A02_NR_SUBSISTEMA, A14_CD_USINA")
+  df.geracaoTermicaGnl <- DBI::dbGetQuery(conexao, query)
+  
   # geracao outras renovaveis
   query <- paste0("SELECT A13_NR_MES AS anoMes, 'RENOVAVEIS' AS tipoUsina, A02_NR_SUBSISTEMA AS codUsina, A02_NR_SUBSISTEMA AS subsistema, ", 
                   "0 AS transmissao, SUM(A13_VL_DISPONIBILIDADE_MAXIMA_PONTA) AS inflexibilidade, ",
@@ -249,7 +256,8 @@ calculaBalancoParalelo <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
                                                                                                                        balancoResumido, 
                                                                                                                        conexao,
                                                                                                                        df.custoDefict,
-                                                                                                                       df.geracaoTermicaTotal, 
+                                                                                                                       df.geracaoTermicaTotal,
+                                                                                                                       df.geracaoTermicaGnl,
                                                                                                                        df.geracaoTransmissaoTotal, 
                                                                                                                        df.geracaoRenovaveisTotal, 
                                                                                                                        df.limitesAgrupamentoLinhasTotal,

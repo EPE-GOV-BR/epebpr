@@ -48,7 +48,7 @@ gravacaoDadosDemandaBDBP <- function(pastaCaso, conexao, tipoCaso, numeroCaso, c
   # se for demanda deterministica, faz a leitura com o leitorrmpe
   # se for demanda liquida, faz a leitura do arquivo de detalhes da carga liquida
   if(tipoDemanda == 1){
-    # executa as funcoes de leitura do pacote leitorrcepel para o carregamento dos dados da demanda de ponta (patamar = 1)
+    # executa as funcoes de leitura do pacote leitorrmpe para o carregamento dos dados da demanda de ponta (patamar = 1)
     # insere as variaveis associadas ao tipoCaso, numeroCaso e codModelo
     # define a demanda para o patamar de ponta (demandaPonta = energiaMercado * profundidadeCarga)
     df.mercado <- leitorrmpe::leituraMercadoEnergia(pastaCaso)
