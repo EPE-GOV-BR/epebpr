@@ -16,6 +16,7 @@ carregaDadosSQLite(
   idDemandaLiquida,
   sistemasNaoModulamPonta,
   sistemasNaoModulamMedia,
+  sistemasModulamTabela,
   codTucurui,
   cotaLimiteTucurui,
   geracaoLimiteTucurui,
@@ -44,6 +45,8 @@ carregaDadosSQLite(
 \item{sistemasNaoModulamPonta}{vetor numerico com codigos dos sitemas que nao modulam na ponta}
 
 \item{sistemasNaoModulamMedia}{vetor numerico com codigos dos sitemas que nao modulam na media}
+
+\item{sistemasModulamTabela}{vetor numerico com codigos dos sitemas que modulam conforme tabela}
 
 \item{codTucurui}{codigo atribuido para a usina de Tucurui}
 

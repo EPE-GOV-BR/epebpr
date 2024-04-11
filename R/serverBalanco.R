@@ -118,7 +118,10 @@ serverBalanco <- function(input, output, session) {
     
     sistemasNaoModulamPonta <- strsplit(input$sistemasNaoModulamPonta, ",") %>% unlist() %>% as.numeric()
     sistemasNaoModulamMedia <- strsplit(input$sistemasNaoModulamMedia, ",") %>% unlist() %>% as.numeric()
-    validaModulacao <- length(dplyr::intersect(sistemasNaoModulamPonta, sistemasNaoModulamMedia))
+    sistemasModulamTabela <- strsplit(input$sistemasModulamTabela, ",") %>% unlist() %>% as.numeric()
+    validaModulacao <- length(dplyr::intersect(sistemasNaoModulamPonta, sistemasNaoModulamMedia)) +
+      length(dplyr::intersect(sistemasNaoModulamPonta, sistemasModulamTabela)) +
+      length(dplyr::intersect(sistemasNaoModulamMedia, sistemasModulamTabela))
     
     shiny::validate(
       need(input$numeroCaso, "Caso sem n\u00FAmero"),
@@ -128,9 +131,7 @@ serverBalanco <- function(input, output, session) {
       need(pastaSaidas != "", "Defina a pasta com as saídas do caso (nwlistop)"),
       need(baseSQLite != "", "Defina a base de dados SQLite"),
       need(input$distribuicaoDeficit, "Defina valor de limite do rateio do déficit (0-100%)"),
-      need(validaModulacao == 0, "Sistemas que não modulam na ponta devem ser diferentes dos que não modulam na média!")
-      # need(input$sistemasNaoModulamPonta, "Defina os sistemas que não modulam na ponta"),
-      # need(input$sistemasNaoModulamMedia, "Defina os sistemas que não modulam na média")
+      need(validaModulacao == 0, "Apenas um tipo de modulação de GH pode ser definido para cada REE")
     )
     
     tictoc::tic()
@@ -166,6 +167,7 @@ serverBalanco <- function(input, output, session) {
                                                  as.integer(input$idDemanda),
                                                  sistemasNaoModulamPonta,
                                                  sistemasNaoModulamMedia,
+                                                 sistemasModulamTabela,
                                                  codTucurui,
                                                  cotaLimiteTucurui,
                                                  potenciaLimiteTucurui,

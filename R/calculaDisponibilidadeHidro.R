@@ -170,7 +170,33 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipo
   } else {
     
     # barra de progresso
+    if(execShiny){incProgress(4/100, detail = "Excluindo outras execuções de BP para o mesmo caso")}
+    
+    ##### EXCLUSÃO DE DADOS DE EXECUÇÕES ANTERIORES #####
+    
+    # limpa base BPO_A08_DADOS_CALCULADOS_UHE de outras execucoes para o mesmo caso
+    DBI::dbExecute(conexaoSQLite, "PRAGMA locking_mode = EXCLUSIVE;")
+    DBI::dbExecute(conexaoSQLite, "PRAGMA journal_mode = TRUNCATE;")
+    sql <- paste0("DELETE FROM BPO_A08_DADOS_CALCULADOS_UHE
+                 WHERE
+                  A01_TP_CASO = ", tipoCaso, " AND
+                  A01_NR_CASO = ", numeroCaso, " AND
+                  A01_CD_MODELO = ", codModelo, ";")
+    DBI::dbExecute(conexaoSQLite, sql)
+    
+    # limpa BPO_A09_DISPONIBILIDADE_HIDRO_PONTA_SUBSISTEMA de outras execucoes para o mesmo caso
+    sql <- paste0("DELETE FROM BPO_A09_DISPONIBILIDADE_HIDRO_PONTA_SUBSISTEMA
+                 WHERE
+                  A01_TP_CASO = ", tipoCaso, " AND
+                  A01_NR_CASO = ", numeroCaso, " AND
+                  A01_CD_MODELO = ", codModelo, ";")
+    DBI::dbExecute(conexaoSQLite, sql)
+    DBI::dbExecute(conexaoSQLite, "PRAGMA locking_mode = NORMAL;")
+    
+    # barra de progresso
     if(execShiny){incProgress(3/100, detail = "Atualização de Submotorização")}
+    
+    ##### SUBMOTORIZAÇÃO #####
     
     # atualizacao de submotorizacao
     quantidadeExpansaoHidro <- df.dadosExpansaoHidro <- leitorrmpe::leituraDadosExpansaoUsinasHidro(pastaCaso) %>% 
@@ -201,19 +227,19 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipo
     }
     # fim atualizacao de submotorizacao
     
-    # barra de progresso
-    if(execShiny){incProgress(3/100, detail = "REEs que utilizam a GHmédia")}
+    ###### LEITURA DE DADOS ######
     
-    # filtro dos ree com calculo tipo 1
-    sql <- paste0("SELECT A02_NR_REE FROM BPO_A02_REES
-                 WHERE A02_TP_CALC_POTENCIA = 1 AND
-                  A01_TP_CASO = ", tipoCaso, " AND
+    # barra de progresso
+    if(execShiny){incProgress(3/100, detail = "Leitura de dados")}
+    
+    sql <- paste0("SELECT * FROM BPO_A02_REES
+                 WHERE A01_TP_CASO = ", tipoCaso, " AND
                   A01_NR_CASO = ", numeroCaso, " AND
                   A01_CD_MODELO = ", codModelo)
-    reeCalcPotencia1 <- DBI::dbGetQuery(conexaoSQLite, sql) %>% dplyr::pull(A02_NR_REE) %>% paste(collapse = ", ")
+    ree <- DBI::dbGetQuery(conexaoSQLite, sql)
     
     sql <- paste0("SELECT 
-                  A03_CD_USINA,
+                  A03_CD_USINA, A02_NR_REE,
                   A03_NR_PCV_0, A03_NR_PCV_1, A03_NR_PCV_2, A03_NR_PCV_3, A03_NR_PCV_4,
                   A03_VL_PERDA, A03_TP_PERDA, A03_VL_PRODUTIBILIDADE 
                  FROM BPO_A03_DADOS_UHE
@@ -221,8 +247,7 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipo
                   A03_TX_STATUS <> 'NC' AND
                   A01_TP_CASO = ", tipoCaso, " AND
                   A01_NR_CASO = ", numeroCaso, " AND
-                  A01_CD_MODELO = ", codModelo, " AND 
-                  A02_NR_REE IN (", reeCalcPotencia1, ")")
+                  A01_CD_MODELO = ", codModelo)
     df.dadosUHE <- DBI::dbGetQuery(conexaoSQLite, sql)
     
     sql <- paste0("SELECT A03_CD_USINA,
@@ -243,8 +268,7 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipo
                   A05_NR_MES BETWEEN ", df.dadosCaso$dataInicioCaso , " AND ", df.dadosCaso$dataFimCaso, " AND
                   A01_TP_CASO = ", tipoCaso, " AND
                   A01_NR_CASO = ", numeroCaso, " AND
-                  A01_CD_MODELO = ", codModelo, " AND 
-                  A02_NR_REE IN (", reeCalcPotencia1, ")")
+                  A01_CD_MODELO = ", codModelo)
     df.dadosVigentesUHE <- DBI::dbGetQuery(conexaoSQLite, sql)
     
     
@@ -254,8 +278,7 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipo
                 A06_NR_MES BETWEEN ", df.dadosCaso$dataInicioCaso , " AND ", df.dadosCaso$dataFimCaso, " AND
                 A01_TP_CASO = ", tipoCaso, " AND
                 A01_NR_CASO = ", numeroCaso, " AND
-                A01_CD_MODELO = ", codModelo, " AND 
-                A02_NR_REE IN (", reeCalcPotencia1, ")")
+                A01_CD_MODELO = ", codModelo)
     df.saidasHidro <- DBI::dbGetQuery(conexaoSQLite, sql)
     
     sql <- paste0("SELECT A.A01_TP_CASO,
@@ -280,27 +303,35 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipo
                   A.A01_CD_MODELO = ", codModelo, ";")
     df.potMaquinas<- DBI::dbGetQuery(conexaoSQLite, sql)
     
-    # barra de progresso
-    if(execShiny){incProgress(4/100, detail = "Excluindo outras execuç\u00F5s de BP para o mesmo caso")}
+    # filtra REEs com calculo tipo 1
+    reeTipo1 <- ree %>% 
+      dplyr::filter(A02_TP_CALC_POTENCIA == 1) %>% 
+      dplyr::pull(A02_NR_REE)
+    df.dadosUHETipo1 <- df.dadosUHE %>% 
+      dplyr::filter(A02_NR_REE %in% reeTipo1) %>% 
+      dplyr::select(-A02_NR_REE)
+    df.dadosVigentesUHETipo1 <- df.dadosVigentesUHE %>% 
+      dplyr::filter(A02_NR_REE %in% reeTipo1)
     
-    # limpa base BPO_A08_DADOS_CALCULADOS_UHE de outras execucoes para o mesmo caso
-    DBI::dbExecute(conexaoSQLite, "PRAGMA locking_mode = EXCLUSIVE;")
-    DBI::dbExecute(conexaoSQLite, "PRAGMA journal_mode = TRUNCATE;")
-    sql <- paste0("DELETE FROM BPO_A08_DADOS_CALCULADOS_UHE
-                 WHERE
-                  A01_TP_CASO = ", tipoCaso, " AND
-                  A01_NR_CASO = ", numeroCaso, " AND
-                  A01_CD_MODELO = ", codModelo, ";")
-    DBI::dbExecute(conexaoSQLite, sql)
+    # filtra REEs com calculo tipo 4
+    reeTipo4 <- ree %>% 
+      dplyr::filter(A02_TP_CALC_POTENCIA == 4) %>% 
+      dplyr::pull(A02_NR_REE)
+    df.dadosUHETipo4 <- df.dadosUHE %>% 
+      dplyr::filter(A02_NR_REE %in% reeTipo4)
+    UHEtipo4 <- unique(df.dadosUHETipo4$A03_CD_USINA)
+    df.dadosVigentesUHETipo4 <- df.dadosVigentesUHE %>% 
+      dplyr::filter(A02_NR_REE %in% reeTipo4)
     
-    # limpa BPO_A09_DISPONIBILIDADE_HIDRO_PONTA_SUBSISTEMA de outras execucoes para o mesmo caso
-    sql <- paste0("DELETE FROM BPO_A09_DISPONIBILIDADE_HIDRO_PONTA_SUBSISTEMA
-                 WHERE
-                  A01_TP_CASO = ", tipoCaso, " AND
-                  A01_NR_CASO = ", numeroCaso, " AND
-                  A01_CD_MODELO = ", codModelo, ";")
-    DBI::dbExecute(conexaoSQLite, sql)
-    DBI::dbExecute(conexaoSQLite, "PRAGMA locking_mode = NORMAL;")
+    df.tabelaModulacao <- readRDS("curvaModulacao.rds") %>% 
+      dplyr::group_by(codREE) %>% 
+      dplyr::reframe(funcao = list(approxfun(vazao, potencia, method="linear")))
+    
+    # verifica se os REE definidos estao na tabela
+    if (length(dplyr::setdiff(reeTipo4, unique(df.tabelaModulacao$codREE))) != 0) {
+      DBI::dbDisconnect(conexao)
+      stop("REE escolhido para modulação por tabela não possui dados definidos na tabela")
+    }
     
     # for criado para resolver problema de alocacao de memoria. orginalmente era um data frame unico com todos os dados, contudo,
     # trabalalhando com series sinteticas, acabava por exaurir a memoria.
@@ -309,11 +340,17 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipo
     quantidadeJanela <- length(janelaSeries)
     
     for (andaJanela in 1:(quantidadeJanela - 1)) {
+      
       # barra de progresso
       if(execShiny){incProgress((1/(quantidadeJanela - 1))*0.3, detail = paste(round(andaJanela*100/(quantidadeJanela - 1), 0),"%"))}
       
-      df.dadosCalculadosUHE <- dplyr::inner_join(df.dadosVigentesUHE, 
-                                                 dplyr::filter(df.saidasHidro, dplyr::between(A06_NR_SERIE, janelaSeries[andaJanela], (janelaSeries[andaJanela + 1] - 1))), 
+      ##### CÁLCULO DISPONIBILIDADE TIPO 1 ######
+      df.saidasHidroTipo1 <- df.saidasHidro %>% 
+        dplyr::filter(dplyr::between(A06_NR_SERIE, janelaSeries[andaJanela], (janelaSeries[andaJanela + 1] - 1)),
+                      A02_NR_REE %in% reeTipo1)
+      
+      df.dadosCalculadosUHE <- dplyr::inner_join(df.dadosVigentesUHETipo1, 
+                                                 df.saidasHidroTipo1, 
                                                  by = c("A02_NR_REE", "A05_NR_MES" = "A06_NR_MES")) %>% 
         dplyr::mutate(A08_VL_VOLUME_OPERATIVO = (A05_VL_VOL_MAX - A05_VL_VOL_MIN) * A06_VL_PERC_ARMAZENAMENTO + A05_VL_VOL_MIN,
                       colunaFlagVert = flagVert,
@@ -327,7 +364,7 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipo
       df.dadosCalculadosUHE <- dplyr::inner_join(df.dadosCalculadosUHE, df.dadosMaquinasUHE, by = "A03_CD_USINA") %>% 
         dplyr::mutate(VL_POT_EXP = round(A05_VL_POTENCIA - POT_TOTAL, 2))
       
-      df.dadosCalculadosUHE <- dplyr::inner_join(df.dadosCalculadosUHE, df.dadosUHE, by = "A03_CD_USINA") %>% 
+      df.dadosCalculadosUHE <- dplyr::inner_join(df.dadosCalculadosUHE, df.dadosUHETipo1, by = "A03_CD_USINA") %>% 
         dplyr::mutate(A01_TP_CASO = tipoCaso, A01_NR_CASO = numeroCaso, A01_CD_MODELO = codModelo) %>% 
         dplyr::select(A01_TP_CASO, A01_NR_CASO, A01_CD_MODELO, A03_CD_USINA, A08_NR_MES = A05_NR_MES, A08_NR_SERIE = A06_NR_SERIE, A02_NR_REE, 
                       A08_VL_VOLUME_OPERATIVO, A03_NR_PCV_0, A03_NR_PCV_1, A03_NR_PCV_2, A03_NR_PCV_3, A03_NR_PCV_4, 
@@ -495,6 +532,8 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipo
       # corrigindo nome das colunas para ficar igual a tabela BPO_A09_DISPONIBILIDADE_HIDRO_PONTA_SUBSISTEMA
       colnames(df.dadosCalculadosSsist)[5:6] <- c("A09_NR_MES", "A09_NR_SERIE")
       
+      ##### DISPONIBILIDADE TIPO 2 E 3 ######
+      
       sql <- paste0("SELECT
                   A01_CD_MODELO,
                   A01_TP_CASO,
@@ -517,9 +556,48 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipo
                   A01_CD_MODELO = ", codModelo, ";")
       df.dadosSsistNaoModulam <- DBI::dbGetQuery(conexaoSQLite, sql)
       
-      # concatena as REEs que modulam com as que nao modulam para gravar na base
-      df.dadosCalculadosSsist <- rbind(df.dadosCalculadosSsist,df.dadosSsistNaoModulam)
+      ##### CÁLCULO DISPONIBILIDADE TIPO 4 PELA TABELA ######
       
+      df.saidasHidroTipo4 <- df.saidasHidro %>% 
+        dplyr::filter(dplyr::between(A06_NR_SERIE, janelaSeries[andaJanela], (janelaSeries[andaJanela + 1] - 1)),
+                      A02_NR_REE %in% reeTipo4)
+      
+      df.prodREEModulaTabela <- dplyr::left_join(dplyr::filter(leitorrmpe::leituraAlteracaoDadosUsinasHidro(pastaCaso)[[1]], codUsina %in% UHEtipo4), 
+                                                 dplyr::filter(leitorrmpe::leituraDadosUsinasHidro(pastaCaso)[[1]], codUsina %in% UHEtipo4), 
+                                                 by = "codUsina") %>% 
+        dplyr::mutate(volumeMaximo = ifelse(is.na(volumeMaximo.y) | volumeMaximo.y >  volumeReferencia, volumeReferencia, volumeMaximo.y)) %>%
+        dplyr::mutate(nivelMontante = ifelse(is.na(nivelMontante),poliCotaVolumeA0 + volumeMaximo*poliCotaVolumeA1 + volumeMaximo^2*poliCotaVolumeA2 + volumeMaximo^3*poliCotaVolumeA3 + volumeMaximo^4*poliCotaVolumeA4,nivelMontante)) %>%
+        dplyr::mutate(canalFuga = ifelse(is.na(canalFuga),canalFugaMedio,canalFuga)) %>%
+        dplyr::mutate(perda = ifelse(tipoPerda==2,perda,(nivelMontante-canalFuga)*perda/100)) %>%
+        dplyr::mutate(produtibilidade = produtibilidade * (nivelMontante-canalFuga-perda)) %>%
+        dplyr::select(codUsina, anoMes, produtibilidade) %>% 
+        dplyr::left_join(dplyr::select(df.dadosVigentesUHETipo4, A02_NR_REE, A03_CD_USINA, A05_NR_MES, A05_VL_POTENCIA), 
+                         by = c("codUsina" = "A03_CD_USINA", "anoMes" = "A05_NR_MES")) %>% 
+        dplyr::group_by(A02_NR_REE, anoMes) %>% 
+        dplyr::reframe(produtibilidade = weighted.mean(produtibilidade, A05_VL_POTENCIA))
+      
+      df.dadosUHEModulamTabela <- dplyr::left_join(df.saidasHidroTipo4, df.prodREEModulaTabela,
+                                                   by = c("A02_NR_REE", "A06_NR_MES" = "anoMes")) %>% 
+        dplyr::mutate(flag = flagVert,
+                      vazao = dplyr::if_else(flag,
+                                             (A06_VL_GERACAO_HIDRAULICA + A06_VL_SUBMOTORIZACAO + A06_VL_VERTIMENTO_TURBINAVEL)/produtibilidade,
+                                             (A06_VL_GERACAO_HIDRAULICA + A06_VL_SUBMOTORIZACAO)/produtibilidade)) %>% 
+        dplyr::left_join(df.tabelaModulacao, by = c("A02_NR_REE" = "codREE")) %>% 
+        dplyr::mutate(A09_VL_DISPONIBILIDADE_MAXIMA_PONTA = funcao[[1]](vazao),
+                      A01_CD_MODELO = codModelo,
+                      A01_TP_CASO = tipoCaso,
+                      A01_NR_CASO = numeroCaso,
+                      A09_NR_MES = A06_NR_MES,
+                      A09_NR_SERIE = A06_NR_SERIE,
+                      A09_VL_GERACAO_HIDRO_MINIMA = 0,
+                      A09_VL_GERACAO_HIDRO_MINIMA_ORIGINAL = 0,
+                      A09_VL_POTENCIA_MAXIMA = 0) %>% 
+        dplyr::select(A01_CD_MODELO, A01_TP_CASO, A01_NR_CASO, A02_NR_REE, A09_NR_MES, 
+                      A09_NR_SERIE, A09_VL_GERACAO_HIDRO_MINIMA, A09_VL_GERACAO_HIDRO_MINIMA_ORIGINAL,
+                      A09_VL_DISPONIBILIDADE_MAXIMA_PONTA, A09_VL_POTENCIA_MAXIMA)
+      
+      # concatena as REEs que modulam com as que nao modulam e as que modulam por tabela para gravar na base
+      df.dadosCalculadosSsist <- rbind(df.dadosCalculadosSsist, df.dadosSsistNaoModulam, df.dadosUHEModulamTabela)
       
       # Para buscar o subsistema
       df.dadosCalculadosSsist <- dplyr::inner_join(df.dadosCalculadosSsist, df.ree,

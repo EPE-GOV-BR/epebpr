@@ -124,7 +124,17 @@ uiBalanco <- fluidPage(
                            tags$div(style="display:inline-block; width:150px",
                                     textInput(inputId = "sistemasNaoModulamMedia",
                                               label = HTML("GHMédia:"),
-                                              value = "6, 8, 13",
+                                              value = "6, 13",
+                                              placeholder = "sist1, sist2, etc."))),
+                 
+                 wellPanel(style = "padding: 5px;",
+                           tags$b(HTML("REEs Modulam Conforme Tabela")),
+                           tags$br(),
+                           # Entrada para sistemas que nao modulam na ponta
+                           tags$div(style="display:inline-block; width:150px",
+                                    textInput(inputId = "sistemasModulamTabela",
+                                              label = HTML("GHPonta:"),
+                                              value = "5, 8",
                                               placeholder = "sist1, sist2, etc."))),
                  
                  # Localiza base SQLite

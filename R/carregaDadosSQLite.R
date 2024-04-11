@@ -15,6 +15,7 @@
 #' @param idDemandaLiquida identificador de calculo com demanda liquida. [1]=Deterministica [2]=Liquida
 #' @param sistemasNaoModulamPonta vetor numerico com codigos dos sitemas que nao modulam na ponta
 #' @param sistemasNaoModulamMedia vetor numerico com codigos dos sitemas que nao modulam na media
+#' @param sistemasModulamTabela vetor numerico com codigos dos sitemas que modulam conforme tabela
 #' @param codTucurui codigo atribuido para a usina de Tucurui
 #' @param cotaLimiteTucurui valor da cota da usina de Tucurui [m]
 #' @param geracaoLimiteTucurui valor da geracao limite da usina de Tucurui
@@ -35,6 +36,7 @@ carregaDadosSQLite <- function(baseSQLite,
                                idDemandaLiquida, 
                                sistemasNaoModulamPonta, 
                                sistemasNaoModulamMedia,
+                               sistemasModulamTabela,
                                codTucurui, 
                                cotaLimiteTucurui, 
                                geracaoLimiteTucurui,
@@ -176,6 +178,7 @@ carregaDadosSQLite <- function(baseSQLite,
   # define os valores do calculo de potencia passados pelo usuario
   df.ree <- df.ree %>% dplyr::mutate(A02_TP_CALC_POTENCIA = ifelse(A02_NR_REE %in% sistemasNaoModulamPonta, 2, A02_TP_CALC_POTENCIA))
   df.ree <- df.ree %>% dplyr::mutate(A02_TP_CALC_POTENCIA = ifelse(A02_NR_REE %in% sistemasNaoModulamMedia, 3, A02_TP_CALC_POTENCIA))
+  df.ree <- df.ree %>% dplyr::mutate(A02_TP_CALC_POTENCIA = ifelse(A02_NR_REE %in% sistemasModulamTabela, 4, A02_TP_CALC_POTENCIA))
   
   # salva BPO_A02_REES
   DBI::dbWriteTable(conexao, "BPO_A02_REES", df.ree, append = T)

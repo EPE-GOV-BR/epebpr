@@ -6,6 +6,7 @@
 \usage{
 gravacaoDadosTermeletricasBDBP(
   pastaCaso,
+  pastaSaidas,
   conexao,
   tipoCaso,
   numeroCaso,
@@ -14,6 +15,8 @@ gravacaoDadosTermeletricasBDBP(
 }
 \arguments{
 \item{pastaCaso}{caracter com a localizacao dos arquivos NEWAVE.}
+
+\item{pastaSaidas}{localizacao dos arquivos de saida do modulo NWLISTOP}
 
 \item{conexao}{caracter com a conexao com o Banco de Dados do Balanco de Potencia.}
 
@@ -32,6 +35,6 @@ Os dados sao gravados na tabela BPO_A14_DISPONIBILIDADE_UTE do BDBP.
 }
 \examples{
 \dontrun{
-gravacaoDadosTermeletricasBDBP("C:/PDE2027_Caso080", conexao, 1, 80, 1)}
+gravacaoDadosTermeletricasBDBP("C:/PDE2027_Caso080", "C:/PDE2027_Caso080/nwlistop", conexao, 1, 80, 1)}
 
 }
