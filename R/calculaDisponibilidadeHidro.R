@@ -583,7 +583,8 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipo
                                              (A06_VL_GERACAO_HIDRAULICA + A06_VL_SUBMOTORIZACAO + A06_VL_VERTIMENTO_TURBINAVEL)/produtibilidade,
                                              (A06_VL_GERACAO_HIDRAULICA + A06_VL_SUBMOTORIZACAO)/produtibilidade)) %>% 
         dplyr::left_join(df.tabelaModulacao, by = c("A02_NR_REE" = "codREE")) %>% 
-        dplyr::mutate(A09_VL_DISPONIBILIDADE_MAXIMA_PONTA = funcao[[1]](vazao),
+        dplyr::rowwise() %>% 
+        dplyr::mutate(A09_VL_DISPONIBILIDADE_MAXIMA_PONTA = funcao(vazao),
                       A01_CD_MODELO = codModelo,
                       A01_TP_CASO = tipoCaso,
                       A01_NR_CASO = numeroCaso,
