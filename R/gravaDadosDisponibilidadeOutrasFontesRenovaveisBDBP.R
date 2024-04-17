@@ -50,9 +50,11 @@ gravacaoDadosDisponibilidadeOutrasFontesBDBP <- function(pastaCaso, conexao, tip
   if (missing(anoMesFimMDI)) {
     stop("favor indicar a data do fim do caso simulado")
   } 
-  
+
   ## verifica se o caso é do tipo carga liquida ou bruta e faz o processamento de acordo com o caso
   if(tipoDemanda == 1){
+  ###### DETERMINISTICO #####  
+  
     ## leitura da planilha GeraPeq
     planilhaPequenas <- list.files(path = pastaCaso, pattern = "^GeraPeq")
     if (length(planilhaPequenas) != 1) {
@@ -178,7 +180,7 @@ gravacaoDadosDisponibilidadeOutrasFontesBDBP <- function(pastaCaso, conexao, tip
              " na aba SazonalidadeIndicativas. Uma solução é remover os acentos dos nomes das colunas.")
       }
       
-      colnames(df.sazonalidadeIndicativas) <- iconv(colnames(df.sazonalidadeIndicativas), from = codificacao, to = "ASCII//TRANSLIT")
+      colnames(df.sazonalidadeIndicativas) <- iconv(colnames(df.sazonalidadeIndicativas), from = "UTF-8", to = "ASCII//TRANSLIT")
       
       arquivoExpansao <- list.files(path = pastaCaso, pattern = "saidaExpansao.txt")
       
@@ -329,8 +331,8 @@ gravacaoDadosDisponibilidadeOutrasFontesBDBP <- function(pastaCaso, conexao, tip
     return(list(mensagem = mensagem, df.energiaOFR = df.energiaOFR))
     
   }else{
+  ######## CARGA LIQUIDA ########  
     
-    ## caso seja carga líquida
     ## leitura da planilha de detalhes da carga liquida maxima
     detalhesCargaLiqMax <- list.files(path = pastaCaso, pattern = "^detalhesCargaLiquida")
     if (length(detalhesCargaLiqMax) != 1) {
@@ -390,7 +392,6 @@ gravacaoDadosDisponibilidadeOutrasFontesBDBP <- function(pastaCaso, conexao, tip
     DBI::dbWriteTable(conexao, "BPO_A18_TIPOS_OFR", df.tipoContribuicaoPonta, append = T)
     
     # BPO_A19_FATOR_PONTA_OFR
-    # limpa a tabela de uma eventual rodada anterior e não escreve nada pois não é utilizada em casos de carga líquida
     query <- paste0("SELECT COUNT(*) AS TOTAL FROM BPO_A19_FATOR_PONTA_OFR WHERE A01_TP_CASO = ", tipoCaso, " AND A01_NR_CASO = ", numeroCaso,
                     " AND A01_CD_MODELO = ", codModelo)
     apagar <- DBI::dbGetQuery(conexao, query) %>% dplyr::pull()
@@ -400,13 +401,21 @@ gravacaoDadosDisponibilidadeOutrasFontesBDBP <- function(pastaCaso, conexao, tip
       DBI::dbExecute(conexao, query)
     }
     
+    df.fatorPontaOFR <- readxl::read_xlsx(arquivoDadosOFR, sheet = "FatorPonta") %>% 
+      dplyr::mutate(A01_TP_CASO = tipoCaso, A01_NR_CASO = numeroCaso, A01_CD_MODELO = codModelo)
+    
+    # salva BPO_A19_FATOR_PONTA_OFR
+    DBI::dbWriteTable(conexao, "BPO_A19_FATOR_PONTA_OFR", df.fatorPontaOFR, append = T)
+    
+    ##### CONTRIBUIÇÃO DAS EXISTENTES É PELA PLaNILHA DE DETALHES CARGA LIQUIDA
+    
     # define data frame com os dados de energia das usinas nao simuladas, para cada periodo do horizonte de simulacao
-    df.energiaOFR <- df.detalhesCLiqMax %>% 
+    df.energiaOFREx <- df.detalhesCLiqMax %>% 
       dplyr::select(sistema = codSubsistema, 
                     ano, 
                     mes, 
                     EOL = geracaoEol, 
-                    SOL = geracaoUfv, 
+                    UFV = geracaoUfv, 
                     GD_UFV = geracaoGD,
                     GD_Demais = outrasGD,
                     PCH,
@@ -414,14 +423,14 @@ gravacaoDadosDisponibilidadeOutrasFontesBDBP <- function(pastaCaso, conexao, tip
       dplyr::mutate(anoMes = ano*100 + mes,
                     MGD = GD_UFV + GD_Demais) %>% 
       dplyr::select(-ano, -mes, -GD_UFV, -GD_Demais) %>% 
-      tidyr::pivot_longer(cols = c("EOL", "SOL", "PCH", "BIO", "MGD"), names_to = "TIPO", values_to = "Energia") %>% 
+      tidyr::pivot_longer(cols = c("EOL", "UFV", "PCH", "BIO", "MGD"), names_to = "TIPO", values_to = "Energia") %>% 
       dplyr::select(sistema, TIPO, tidyr::everything())
     
     # define data frame com a disponibilidade de ponta das usinas nao simuladas, 
     # para cada periodo do horizonte de simulacao
     # para o caso da carga liquida corresponde à contribuição das renovaveis no momento da 
     # carga liquida maxima do SIN para cada periodo
-    df.disponibilidadeOFR <- df.energiaOFR %>% 
+    df.disponibilidadeOFREx <- df.energiaOFREx %>% 
       dplyr::inner_join(df.tipoContribuicaoPonta, by = c("TIPO" = "A18_TX_DESCRICAO")) %>%
       dplyr::group_by(sistema, anoMes, A18_CD_TIPO_FONTE) %>% 
       dplyr::reframe(disponibilidade = sum(Energia)) %>% 
@@ -434,6 +443,153 @@ gravacaoDadosDisponibilidadeOutrasFontesBDBP <- function(pastaCaso, conexao, tip
                     A13_NR_MES = anoMes, 
                     A13_CD_TIPO_FONTE = A18_CD_TIPO_FONTE,
                     A13_VL_DISPONIBILIDADE_MAXIMA_PONTA = disponibilidade)
+    
+    df.energiaOFR <- df.energiaOFREx
+    df.disponibilidadeOFR <- df.disponibilidadeOFREx
+    
+    ##### CONTRIBUIÇÃO DAS INDICATIVAS
+    # processa informacoes das indicativas para incluir no arquivo de renovaveis se for PDE
+    if (tipoCaso == 1) {
+      # tabela com de/para dos nomes das indicativas
+      df.relacaoIndicativas <- readxl::read_xlsx(path = arquivoDadosOFR, sheet = "RelacaoIndicativas",  
+                                                 col_types = c("text", "text", "text", "numeric" ))
+      
+      # tabela com as sazonalidades das indicativas
+      df.sazonalidadeIndicativas <- readxl::read_xlsx(path = arquivoDadosOFR, sheet = "SazonalidadeIndicativas",  
+                                                      col_types = c("text", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric",
+                                                                    "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric"))
+      
+      # trata nome de colunas com acentos
+      codificacao <- Encoding(colnames(df.sazonalidadeIndicativas)) %>% .[. != "unknown"] %>% unique()
+      
+      if (length(codificacao) != 1) {
+        DBI::dbDisconnect(conexao)
+        stop("Problema de codificação (UTF-8) na Planilha ", arquivoDadosOFR,  
+             " na aba SazonalidadeIndicativas. Uma solução é remover os acentos dos nomes das colunas.")
+      }
+      
+      colnames(df.sazonalidadeIndicativas) <- iconv(colnames(df.sazonalidadeIndicativas), from = "UTF-8", to = "ASCII//TRANSLIT")
+      
+      arquivoExpansao <- list.files(path = pastaCaso, pattern = "saidaExpansao.txt")
+      
+      if (length(arquivoExpansao) != 1) {
+        DBI::dbDisconnect(conexao)
+        stop("Arquivo texto saidaExpansao não encontrado ou multiplos arquivos com nome saidaExpansao em ", pastaCaso)
+      }
+      
+      # le arquivo com as expansoes do MDI - trata ";" no fim para nao ter avisos
+      df.expansao <- readr::read_delim(stringi::stri_enc_toutf8(paste(pastaCaso, arquivoExpansao, sep = "/")), 
+                                       delim = ";", 
+                                       col_names = T, 
+                                       local = readr::locale(encoding = "latin1"),
+                                       show_col_types = FALSE) %>% 
+        dplyr::select(1:(ncol(.) -1)) %>% 
+        dplyr::select(df.relacaoIndicativas$NomeFonteMDI) # filtra somente as indicativas (as fontes estao em colunas)
+      
+      # cria vetor com todos os meses no horizonte do MDI e adiciona na df.expansao
+      quantidadeMesesHorizonte <- ((anoMesFimMDI %/% 100) * 12 + anoMesFimMDI %% 100) - 
+        ((anoMesInicioMDI %/% 100) * 12 + anoMesInicioMDI %% 100)
+      
+      horizonte <- ((zoo::as.yearmon(as.character(anoMesInicioMDI), "%Y%m")) + seq(0, (quantidadeMesesHorizonte/12), (1/12))) %>% 
+        format("%Y%m") %>% 
+        as.integer()
+      
+      df.expansao <- df.expansao %>% 
+        dplyr::mutate("Data entrada" = horizonte) %>% 
+        dplyr::select("Data entrada", tidyr::everything())
+      
+      # calcula os deltas da expansao (incremento por mes)
+      df.expansao <- df.expansao %>% 
+        dplyr::mutate_at(dplyr::vars(-dplyr::matches("Data entrada")), ~(. - dplyr::lag(.))) %>% 
+        dplyr::filter_at(dplyr::vars(-dplyr::matches("Data entrada")), dplyr::any_vars(. != 0)) %>% 
+        tidyr::pivot_longer(!`Data entrada`, names_to = "NomeFonteMDI", values_to = "POT (MW)") %>% 
+        dplyr::filter(`POT (MW)` != 0)
+      
+      df.expansao <- dplyr::inner_join(df.expansao, df.relacaoIndicativas, by = "NomeFonteMDI") %>% 
+        dplyr::select(-NomeFonteMDI)
+      
+      df.expansao <- dplyr::inner_join(df.expansao, df.sazonalidadeIndicativas, by = c("NomeFonte", "Subsistema")) %>% 
+        dplyr::select(TIPO = TipoFonte, sistema = Subsistema, "Data entrada", `POT (MW)`, `FCMedio (%)`, tidyr::everything()) %>% 
+        # converte os fatores das renovaveis em energia
+        dplyr::mutate_at(dplyr::vars(dplyr::matches("FSAZ")), ~(. * `POT (MW)` * `FCMedio (%)`)) %>% dplyr::select(-`FCMedio (%)`, -NomeFonte) %>% 
+        dplyr::mutate(`Data entrada` = paste(stringr::str_sub(`Data entrada`, 1, 4), stringr::str_sub(`Data entrada`, 5, 6), "01", sep = "-"))
+      
+      df.dadosOFR <- df.expansao %>% 
+        dplyr::mutate(dataRef = as.integer(substr(as.character(`Data entrada`), 0, 4))*100 + as.integer(substr(as.character(`Data entrada`), 6, 7)), aux = 1) %>% 
+        dplyr::select(-c("Data entrada"))
+      
+      # define data frame com todos os periodos do horizonte de simulacao, no formato anoMes (AAAAMM)
+      df.periodo <- leitorrmpe::definePeriodo(pastaCaso) %>% 
+        dplyr::select(anoMes) %>% 
+        dplyr::mutate(aux = 1)
+      
+      # define data frame com os dados de profundidade do patamar de ponta (patamar == 1) das usinas nao simuladas
+      df.profundidadeOFR <- leitorrmpe::leituraDadosPatamarUsinasNaoSimuladas(pastaCaso) %>% 
+        dplyr::filter(patamar == 1)
+      
+      # define data frame com os dados de capacidade instalada das usinas nao simuladas, para cada periodo do horizonte de simulacao
+      df.capacidadeOFR <- df.dadosOFR %>% 
+        dplyr::group_by(sistema, TIPO, dataRef) %>% 
+        dplyr::summarise(POT = sum(`POT (MW)`), .groups = "drop") %>% 
+        dplyr::mutate(aux = 1) %>% 
+        dplyr::inner_join(df.periodo, by = "aux") %>% 
+        dplyr::select(-aux) %>% 
+        dplyr::mutate(valpot = ifelse((anoMes >= dataRef), "sim", "nao")) %>% 
+        dplyr::filter(valpot != "nao") %>% 
+        dplyr::select(-valpot, -dataRef) %>% 
+        dplyr::group_by(sistema, TIPO, anoMes) %>% 
+        dplyr::summarise(Potencia = sum(POT), .groups = "drop")
+      
+      # define data frame com os dados de energia das usinas nao simuladas, para cada periodo do horizonte de simulacao
+      df.energiaOFRInd <- df.dadosOFR %>% 
+        dplyr::select(-aux, -`POT (MW)`) %>% 
+        dplyr::group_by(sistema, TIPO, dataRef) %>% 
+        dplyr::summarise(dplyr::across(tidyr::everything(), sum), .groups = "drop") %>% 
+        dplyr::mutate(aux = 1) %>% 
+        dplyr::inner_join(df.periodo, by = "aux") %>% 
+        dplyr::select(-aux) %>% 
+        dplyr::mutate(valpot = ifelse((anoMes >= dataRef),"sim", "nao")) %>% 
+        dplyr::filter(valpot != "nao") %>% 
+        dplyr::select(-valpot, -dataRef) %>% 
+        dplyr::group_by(sistema, TIPO, anoMes) %>% 
+        dplyr::summarise(dplyr::across(tidyr::everything(), sum), .groups = "drop") %>% 
+        tidyr::pivot_longer(-c(sistema, TIPO, anoMes), names_to = "sazonalidade", values_to = "Energia") %>% 
+        dplyr::filter(stringr::str_sub(anoMes, 5, 6) == stringr::str_sub(sazonalidade, 5, 6)) %>% 
+        dplyr::select(-sazonalidade)
+      
+      # define data frame com o calculo final da disponibilidade de ponta das usinas nao simuladas, 
+      # para cada periodo do horizonte de simulacao
+      # avalia o tipo de contribuicao da ponta atribuido para cada a OFR: 
+      # se (A18_TP_CONTRIBUICAO_PONTA == 2), a disponibilidade sera igual a Energia x profundidadeUNS
+      # caso contrario, a disponibilidade sera igual a Potencia Instalada x Fator de contribuicao (definido na tabela BPO_A19_FATOR_PONTA_OFR)
+      df.disponibilidadeOFRInd <- dplyr::inner_join(df.capacidadeOFR, df.energiaOFRInd, by = c("sistema", "TIPO", "anoMes")) %>% 
+        dplyr::inner_join(df.tipoContribuicaoPonta, by = c("TIPO" = "A18_TX_DESCRICAO")) %>% 
+        dplyr::left_join(df.profundidadeOFR, by = c("sistema" = "codSubsistema", "A18_CD_TIPO_FONTE" = "codBlocoUNS", "anoMes" = "anoMes")) %>% 
+        dplyr::mutate(mes = as.integer(substr(as.character(anoMes), 5, 6))) %>% 
+        dplyr::left_join(df.fatorPontaOFR, by = c("sistema" = "A02_NR_SUBSISTEMA", "A18_CD_TIPO_FONTE" = "A18_CD_TIPO_FONTE", "mes" = "A19_NR_MES")) %>% 
+        dplyr::mutate(disponibilidade = ifelse(A18_TP_CONTRIBUICAO_PONTA == 2, 
+                                               Energia * ifelse(is.na(patamar), 
+                                                                1, 
+                                                                profundidadeUNS), 
+                                               Potencia * A19_VL_FATOR)) %>% 
+        dplyr::mutate(A01_TP_CASO = tipoCaso, A01_NR_CASO = numeroCaso, A01_CD_MODELO = codModelo) %>% 
+        # renomeia os campos do data frame para compatibilizacao com a tabela do BDBP
+        dplyr::select(A01_TP_CASO, 
+                      A01_NR_CASO, 
+                      A01_CD_MODELO, 
+                      A02_NR_SUBSISTEMA = sistema, 
+                      A13_NR_MES = anoMes, 
+                      A13_CD_TIPO_FONTE = A18_CD_TIPO_FONTE,
+                      A13_VL_DISPONIBILIDADE_MAXIMA_PONTA = disponibilidade)
+      
+      if(nrow(df.energiaOFRInd) > 0){df.energiaOFR <- rbind(df.energiaOFR, df.energiaOFRInd) %>% 
+        dplyr::group_by(dplyr::across(c(-Energia))) %>% 
+        dplyr::reframe(Energia = sum(Energia))}
+      if(nrow(df.disponibilidadeOFRInd) > 0){df.disponibilidadeOFR <- rbind(df.disponibilidadeOFR, df.disponibilidadeOFRInd) %>% 
+        dplyr::group_by(dplyr::across(c(-A13_VL_DISPONIBILIDADE_MAXIMA_PONTA))) %>% 
+        dplyr::reframe(A13_VL_DISPONIBILIDADE_MAXIMA_PONTA = sum(A13_VL_DISPONIBILIDADE_MAXIMA_PONTA))}
+      
+    }
     
     # executa query para apagar da tabela BPO_A13_DISPONIBILIDADE_OFR os dados referentes a um possivel mesmo caso rodado anteriormente, 
     # de forma a evitar duplicacao dos dados
