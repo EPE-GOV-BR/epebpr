@@ -67,7 +67,7 @@
 					<img src = "../imagens/cb_demanda.png" height = 70px />
 				</td>
 				<td>
-					Nesta caixa de seleção, o usuário deve escolher o tipo de demanda que será usada no cálculo do balanço de potência. As opç&otilde;es são: (i) Determinística, com a demanda sendo simulada no balanço como um &lsquo;único valor a cada mês do horizonte de simulação, e (ii) Líquida, onde, o balanço será calculado para uma distribuição de valores de demanda líquida que é formada pela demanda bruta menos as geraç&otilde;es das fontes não controláveis.	
+					Nesta caixa de seleção, o usuário deve escolher o tipo de demanda que será usada no cálculo do balanço de potência. As opções são: (i) Determinística, com a demanda sendo simulada no balanço como um &lsquo;único valor a cada mês do horizonte de simulação, e (ii) Líquida, onde, o balanço será calculado para um caso base NEWAVE construído utilizando a metodologia de carga líquida da EPE.	
 				</td>
 			</tr>
 		</table>
@@ -137,7 +137,7 @@
 					<img src = "../imagens/tbs_ree_nao_modulam_media.png" height = 70px />
 				</td>
 				<td>
-					Nesta caixa de texto,o usuário deve definir somente os códigos dos REEs (Reservatórios Equivalentes de Energia), existentes no arquivo ree.dat do NEWAVE, que terão como disponibilidade de potência a geração hidráulica média mensal, para cada uma das series hidrológicas simuladas. Esses códigos devem ser informados separados por vírgulas. Exemplo: 6, 8, 13
+					Nesta caixa de texto,o usuário deve definir somente os códigos dos REEs (Reservatórios Equivalentes de Energia), existentes no arquivo ree.dat do NEWAVE, que terão como disponibilidade de potência a geração hidráulica média mensal, para cada uma das series hidrológicas simuladas. Esses códigos devem ser informados separados por vírgulas. Exemplo: 6, 13
 				</td>
 			</tr>
 		</table>
@@ -151,7 +151,21 @@
 					<img src = "../imagens/tbs_ree_nao_modulam_ponta.png" height = 70px />
 				</td>
 				<td>
-					Nesta caixa de texto, o usuário deve definir somente os códigos dos REEs, existentes no arquivo ree.dat do NEWAVE, que terão como disponibilidade de potência a geração hidráulica do patamar de ponta, para cada uma das series hidrológicas simuladas. Esses códigos devem ser informados separados por vírgulas. Exemplo: 6, 8, 13
+					Nesta caixa de texto, o usuário deve definir somente os códigos dos REEs, existentes no arquivo ree.dat do NEWAVE, que terão como disponibilidade de potência a geração hidráulica do patamar de ponta, para cada uma das series hidrológicas simuladas. Esses códigos devem ser informados separados por vírgulas. Exemplo: 6, 13
+				</td>
+			</tr>
+		</table>
+	</div>
+	<br>
+		<h2>Definir os reservatórios equivalentes modulam por tabela</h2>
+	<div class="boxed">
+		<table>
+			<tr>
+				<td width = 370px>
+					<img src = "../imagens/tb_modula_tabela.png" height = 70px />
+				</td>
+				<td>
+					Nesta caixa de texto, o usuário deve definir somente os códigos dos REEs, existentes no arquivo ree.dat do NEWAVE, que terão como disponibilidade de potência a geração hidráulica definida por tabela, de acordo com a vazão calculada. Esses códigos devem ser informados separados por vírgulas. Exemplo: 5, 8
 				</td>
 			</tr>
 		</table>
@@ -165,7 +179,7 @@
 					<img src = "../imagens/btn_pesquisar_base.png" height = 70px />
 				</td>
 				<td>
-					Ao pressionar o botão indicado, o usuário poderá selecionar a base SQLite onde serão gravadas as informaç&otilde;es da simulação do balanço de potência. Caso não exista uma base, ela pode ser criada pelo procedimento abaixo.
+					Ao pressionar o botão indicado, o usuário poderá selecionar a base SQLite onde serão gravadas as informações da simulação do balanço de potência. Caso não exista uma base, ela pode ser criada pelo procedimento abaixo.
 				</td>
 			</tr>
 		</table>
@@ -179,7 +193,7 @@
 					<img src = "../imagens/btn_criar_base.png" height = 70px />
 				</td>
 				<td>
-					Ao pressionar o botão indicado, a janela mostrada abaixo será aberta para o usuário, onde serão solicitadas a escolha do local e a identificação da base SQLite onde serão gravadas as informaç&otilde;es do balanço de potência.<br>
+					Ao pressionar o botão indicado, a janela mostrada abaixo será aberta para o usuário, onde serão solicitadas a escolha do local e a identificação da base SQLite onde serão gravadas as informações do balanço de potência.<br>
 					<img src = "../imagens/janela_nova_base.png" height = 200px />
 				</td>
 			</tr>
@@ -194,8 +208,9 @@
 					<img src = "../imagens/btn_pasta_caso.png" height = 65px />
 				</td>
 				<td>
-					Ao pressionar o botão indicado, o usuário poderá selecionar a pasta onde estão os arquivos do caso (deck) que serão usados para o cáculo do balanço de potência.
-					Nota: Em caso de rodada com o modelo NEWAVE com deck de PDE, também deve constar nessa pasta os seguintes arquivos: (i) Saidaexpansao.txt (arquivo de saída do Modelo MDI), que contém o detalhamento por fonte da expansão indicativa das usinas não simuladas pelo NEWAVE; (ii) Planilha GeraPeq contendo os dados de usinas não simuladas existentes para o PMO utilizado como referência no deck do PDE; (iii) Arquivo de saída relat, referente ao deck do PDE, e (iv) Planilha dadosOFR contendo as contribuiç&otilde;es de potência das usinas não simuladas.
+					Ao pressionar o botão indicado, o usuário poderá selecionar a pasta onde estão os arquivos do caso (deck) que serão usados para o cáculo do balanço de potência.<br>
+				<br>
+					Nota: Em caso de rodada com o modelo NEWAVE com deck de PDE, também deve constar nessa pasta os seguintes arquivos: (i) saidaExpansao.txt (arquivo de saída do Modelo MDI), que contém o detalhamento por fonte da expansão indicativa das usinas não simuladas pelo NEWAVE; (ii) Planilha GeraPeq ou detalhesCargaLiquida contendo os dados de usinas não simuladas existentes; (iii) Arquivo de saída relat, referente ao deck do PDE, e (iv) Planilha dadosOFR contendo as contribuições de potência das usinas não simuladas.
 				</td>
 			</tr>
 		</table>
@@ -209,22 +224,33 @@
 					<img src = "../imagens/btn_pasta_caso_saidas.png" height = 65px />
 				</td>
 				<td>
-					Ao pressionar o botão indicado, o usuário poderá selecionar a pasta onde estão os arquivos nwlistop de saída do caso com todos os REEs do deck. Os arquivos necessários são: geração hidráulica (ghtot), energia armazenada final (%) em relação à máxima (earmfp) e vertimento turbinável fio d’água (vertturb).
+					Ao pressionar o botão indicado, o usuário poderá selecionar a pasta onde estão os arquivos nwlistop de saída do caso com todos os REEs do deck. Os arquivos necessários são: geração hidráulica (ghtot), energia armazenada final (%) em relação à máxima (earmfp), vertimento turbinável fio d’água (vertturb) e geração termelétrica por classe e total por subsistema (gtert).<br>
+					<br>
 					Nota: O número de séries destes arquivos de saída deve ser compatível com o tipo de simulação informado no arquivo dger, contido no deck de entrada.
 				</td>
 			</tr>
 		</table>
 	</div>
 	<br>
-	<h2>Calcular o balanço de ponta</h2>
+	<h2>Calcular o balanço de ponta e opções de execução</h2>
 	<div class="boxed">
 		<table>
 			<tr>
 				<td width = 370px>
-					<img src = "../imagens/btn_calcula_balanco.png" height = 65px />
+					<img src = "../imagens/btn_calcula_balanco.png" height = 120px />
 				</td>
 				<td>
-					Ao pressionar o botão indicado, o usuário irá executar o cálculo do balanço de ponta. Caso a caixa de seleção esteja marcada, serão gravadas somente as informaç&otilde;es por REE. Se estiver desmarcada, as informaç&otilde;es de despacho detalhado por usina também serão gravadas e o tempo de processamento será maior, assim como o tamanho da base de dados. Por padrão, consta marcada a opção &ldquo;Balanço resumido&rdquo;.
+					Ao pressionar o botão indicado, o usuário irá executar o cálculo do balanço de ponta. A execução completa é composta por três etapas distintas:
+				<ol>
+				  <br>
+			    <li>Leitura e gravação dos dados de entrada na base de dados</li>
+			    <li>Cálculo da disponibilidade hidráulica</li>
+			    <li>Cálculo do balanço de ponta</li>
+					Caso a caixa de seleção "Resumido" esteja marcada, serão gravadas somente as informações por REE. Se estiver desmarcada, as informações de despacho detalhado por usina também serão gravadas e o tempo de processamento será maior, assim como o tamanho da base de dados. Por padrão, consta marcada a opção &ldquo;Balanço resumido&rdquo;.<br>
+					<br>
+					Cada etapa do processo pode ser realizada individualmente, desde que os dados necessários estejam disponíveis na base indicada. A execução da etapa de cálculo da disponibilidade hidráulica necessita da etapa de dados concluída e a etapa de execução do BP necessita da etapa de dados e de disponibilidade hidráulica concluídas.<br>
+					<br>
+          A caixa de seleção "Considerar Vertimento para todas UHE" altera o cálculo da disponibilidade hidráulica (etapa 15.4 da página de informações), somando à geração hidráulica do REE a parcela de vertimento turbinável (vertturb).
 				</td>
 			</tr>
 		</table>
@@ -240,7 +266,7 @@
 					<img src = "../imagens/btn_pesquisar_base_grafico.png" height = 70px />
 				</td>
 				<td>
-					Ao pressionar o botão indicado, o usuário poderá selecionar uma base SQLite com informaç&otilde;es da simulação de balanços de potência para, posteriormente, exibir alguns indicadores de forma gráfica.
+					Ao pressionar o botão indicado, o usuário poderá selecionar uma base SQLite com informações da simulação de balanços de potência para, posteriormente, exibir alguns indicadores de forma gráfica.
 				</td>
 			</tr>
 		</table>
@@ -282,7 +308,7 @@
 					<img src = "../imagens/cb_tipo_grafico.png" height = 65px />
 				</td>
 				<td>
-					Nesta caixa de seleção o usuário deve informar o tipo de gráfico de avaliação dos critérios de suprimento: CVaR Mensal ou LOLP anual.
+					Nesta caixa de seleção o usuário deve informar o tipo de gráfico de avaliação dos critérios de suprimento.
 				</td>
 			</tr>
 		</table>
