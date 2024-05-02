@@ -83,14 +83,14 @@ gravacaoDadosTermeletricasBDBP <- function(pastaCaso, pastaSaidas, conexao, tipo
   
   # leitura dos arquivos gtert - geracao termeletrica
   gterm <- leitorrmpe::leituraGeracaoTermicaClassesTotal(pastaSaidas)
-  
+
   # selecao dos cenarios de geracao termeletrica das usinas GNL no NEWAVE
   # se a geracao for maior que zero, tem disponibilidade, senao disponibilidade fica zerada
   df.consolidadoUTEGnl <- gterm %>% 
     dplyr::filter(codUsina %in% uteGnl) %>% 
     dplyr::group_by(codUsina, anoMes, serie) %>% 
     dplyr::reframe(geracao_mes = sum(geracao)) %>% 
-    dplyr::left_join(df.consolidadoUTEGnl, by = c("codUsina" = "A14_CD_USINA", "anoMes" = "A14_NR_MES")) %>% 
+    dplyr::inner_join(df.consolidadoUTEGnl, by = c("codUsina" = "A14_CD_USINA", "anoMes" = "A14_NR_MES")) %>% 
     dplyr::mutate(A14_VL_DISPONIBILIDADE_MAXIMA_PONTA = dplyr::if_else(geracao_mes > 0, A14_VL_DISPONIBILIDADE_MAXIMA_PONTA, 0),
                   A14_VL_INFLEXIBILIDADE = dplyr::if_else(geracao_mes > 0, A14_VL_INFLEXIBILIDADE, 0)) %>% 
     dplyr::select(-geracao_mes) %>% 
