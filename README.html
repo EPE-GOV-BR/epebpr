@@ -365,17 +365,17 @@ a compatibilidade com a análise energética previamente efetuada.</p>
 programação R e sua interface foi desenvolvida com Shiny, que é um
 pacote R que facilita a criação de aplicações web diretamente do R e
 utiliza CSS, widgets, html e ações JavaScript para maior flexibilidade.
-A ferramenta também usa o pacote clpAPI, que é uma Interface R para a
-API em C do COIN-OR Clp.</p>
+A ferramenta também usa o pacote highs, que é uma Interface R para o <a href="https://highs.dev/">HiGHS - high performance software for linear
+optimization</a>.</p>
 <div id="dependências" class="section level3">
 <h3>Dependências</h3>
 <p>Os seguintes pacotes do CRAN são necessários para a execução do
 BP:</p>
-<pre class="r"><code>install.packages(shiny, shinythemes, shinybusy, readr, readxl, writexl, dplyr,  stringr, stringi, tidyr, clpAPI, DBI, RSQLite, tictoc, plotly, zoo, scales, parallel, foreach, doParallel, numbers, magrittr)</code></pre>
+<pre class="r"><code>install.packages(shiny, shinythemes, shinybusy, readr, readxl, writexl, dplyr,  stringr, stringi, tidyr, highs, DBI, RSQLite, tictoc, plotly, zoo, scales, parallel, foreach, doParallel, numbers, magrittr)</code></pre>
 <p>Além disso, é necessária a instalação do pacote
 <code>leitorrmpe</code>, também desenvolvido pela EPE, para a leitura de
 arquivos dos modelos de planejanemto energético do CEPEL. Ele pode ser
-baixado através deste <a href="https://www.epe.gov.br/pt/publicacoes-dados-abertos/publicacoes/leitor-dos-arquivos-de-entrada-e-saida-dos-modelos-do-planejamento-energetico-do-cepel">link</a>.</p>
+baixado através deste <a href="https://github.com/EPE-GOV-BR/leitorrmpe">link</a>.</p>
 </div>
 <div id="excutando-o-bp" class="section level3">
 <h3>Excutando o BP</h3>

@@ -179,15 +179,11 @@ balancoPeriodoClp <- function(periodo,
   }
   
   # Balanco
-  # cria modelo para ser resolvido no solver do Coin-or Linear Programming
+  # cria modelo para ser resolvido no solver HIGHS
   # min c'x
   # onde: 
   # limiteInferiorLinha <= Ax <= limiteSuperiorLinha
   # limiteInferiorColuna <= x <= limiteSuperiorColuna
-  lpBalanco <- clpAPI::initProbCLP()
-  
-  # define sentido da otimizacao (minimizacao = 1, maximizacao = -1)
-  clpAPI::setObjDirCLP(lpBalanco, 1)
   
   # define restricoes
   # sinais das variaveis - as variaveis podem ser geradores ou linhas de transmissao. 
@@ -204,7 +200,6 @@ balancoPeriodoClp <- function(periodo,
   # define os limites superior e inferior de cada linha de restricao para demanda. Como e uma igualdade, os limites superior e inferior sao iguais
   ubDemanda <- dplyr::left_join(df.subsistemas, df.demandaLiquida, by = "subsistema") %>% 
     dplyr::mutate(demanda = ifelse(is.na(demanda), 0, demanda)) %>% dplyr::pull(demanda)
-  # ifelse(is.na(demanda), 0, demanda * (1 + df.casosAnalise$reserva))
   lbDemanda <- ubDemanda
   
   # tranmissao (geradores virtuais)
@@ -238,131 +233,55 @@ balancoPeriodoClp <- function(periodo,
   lbAgrupamento <- rep(0, length(ubAgrupamento))
   
   # junta todas as retricoes e cria o problema a ser resolvido
-  matrizRestricoes <- rbind(matrizRestricoesDemanda, matrizRestricoesTransmissao, matrizRestricoesAgrupamento) %>% t()
-  nlinhas <- ncol(matrizRestricoes)
-  # vetor indicando a posicao i da matriz de restricoes A(i,j). No Clp a primeira posicao recebe o valor 0
-  ia <- which(matrizRestricoes != 0, arr.ind = T) %>% .[order(.[,1]),] %>% .[,2] - 1
-  # vetor indicando a posicao j da matriz de restricoes A(i,j). Como a matriz A possui muitos 0, ela e passada para o Clp como um vetor sem os valores 0.
-  # logo esse vetor ja indica a posicao de cada inicio de coluna nesse vetor linha sem 0 e O ultimo valor deve ser o tamanho do vetor linha
-  ja <- which(matrizRestricoes != 0, arr.ind = T) %>% .[order(.[,1]),] %>% .[,1] %>% table() %>% as.vector() %>% cumsum() %>% c(0, .)
-  # vetor linha contendo os valores diferente de 0 da matriz de restricao A
-  ra <- matrizRestricoes %>% t() %>% as.vector()  %>% .[which(. != 0)]
-  # limites superiores das linhas da matriz de restricao A
-  rub <- c(ubDemanda, ubTransmissao, ubAgrupamento)
-  # limites inferiores das linhas da matriz de restricao A
-  rlb <- c(lbDemanda, lbTransmissao, lbAgrupamento)
+  matrizRestricoes <- rbind(matrizRestricoesDemanda, matrizRestricoesTransmissao, matrizRestricoesAgrupamento)
   
-  # exemplo para entender o Clp
-  # Minimize ou maximize Z = x1 + 2x5 - x8
-  # 
-  # Sujeito a:
-  #  2.5 <=   3x1 +  x2         -  2x4 - x5               -    x8
-  #                 2x2 + 1.1x3                                   <=  2.1
-  #                          x3              +  x6                ==  4.0
-  #  1.8 <=                      2.8x4             -1.2x7         <=  5.0
-  #  3.0 <= 5.6x1                      + x5               + 1.9x8 <= 15.0
-  # 
-  # onde:
-  #  2.5 <= x1
-  #    0 <= x2 <= 4.1
-  #    0 <= x3
-  #    0 <= x4
-  #  0.5 <= x5 <= 4.0
-  #    0 <= x6
-  #    0 <= x7
-  #    0 <= x8 <= 4.3
-  #
-  # funcao objetivo
-  # obj <- c(1, 0, 0, 0, 2, 0, 0, -1)
-  #
-  # limites superior e inferior das linhas
-  # rlower <- c(2.5, -1000, 4, 1.8, 3)
-  # rupper <- c(1000, 2.1, 4, 5, 15)
-  #
-  # limites superior e inferior das colunas
-  # clower <- c(2.5, 0, 0, 0, 0.5, 0, 0, 0)
-  # cupper <- c(1000, 4.1, 1, 1, 4, 1000, 1000, 4.3)
-  #
-  # matriz de restricoes
-  # ia <- c(0, 4, 0, 1, 1, 2, 0, 3, 0, 4, 2, 3, 0, 4)
-  # ja <- c(0, 2, 4, 6, 8, 10, 11, 12, 14)
-  # ra <- c(3.0, 5.6, 1.0, 2.0, 1.1, 1.0, -2.0, 2.8,-1.0, 1.0, 1.0, -1.2, -1.0, 1.9)
+  # resolve o modelo linear usando o highs
+  solucao <- highs::highs_solve(L = df.geracao$cvu, 
+                                lower = df.geracao$inflexibilidade, 
+                                upper = df.geracao$disponibilidade, 
+                                A = matrizRestricoes, 
+                                lhs = rlb, 
+                                rhs = rub)
   
-  clpAPI::loadProblemCLP(lp = lpBalanco, 
-                         ncols = nrow(df.geracao), 
-                         nrows = nlinhas, 
-                         ia = ia, 
-                         ja = ja, 
-                         ra = ra,
-                         lb = df.geracao$inflexibilidade, # define limite inferior das variaveis
-                         ub = df.geracao$disponibilidade, # define limite superior das variaveis
-                         obj_coef = df.geracao$cvu, # funcao objetivo
-                         rlb = rlb, 
-                         rub = rub)
-  
-  # resolve o modelo linear
-  solucao <- clpAPI::solveInitialCLP(lpBalanco)
-  # critica
-  if(solucao != 0) {
+  # critica caso problema seja inviável
+  if(solucao[["primal_solution"]] != 7) {
     DBI::dbDisconnect(conexao)
-    stop(paste0("Não foi encontrada solução viável (", clpAPI::status_codeCLP(solucao),") para execução de ", 
+    stop(paste0("Não foi encontrada solução viável (", solucao[["status_message"]],") para execução de ", 
                 periodo, ", série hidro ", idSerieHidro))
   }
+  
   # solucao primal das variaveis
-  primalBalanco <- clpAPI::getColPrimCLP(lpBalanco)
+  primalBalanco <- solucao[["primal_solution"]]
   
   # solucao dual das restricoes
-  dualBalanco <- clpAPI::getRowDualCLP(lpBalanco)
+  dualBalanco <- solucao[["solver_msg"]][["row_dual"]]
   
-  # libera o problema da memoria
-  clpAPI::delProbCLP(lpBalanco)
   # Fim Balanco
   
   
   # Balanco sem limite de transmissao
-  # cria modelo para ser resolvido no solver Coin-or Linear Programming
-  lpBalancoSemTransmissao <- clpAPI::initProbCLP()
-  
-  # define sentido da otimizacao (minimizacao = 1)
-  clpAPI::setObjDirCLP(lpBalancoSemTransmissao, 1)
   
   # junta todas as retricoes definidas no balanco e cria o problema sem limites de transmissao a ser resolvido
-  matrizRestricoes <- rbind(matrizRestricoesDemanda, matrizRestricoesTransmissao) %>% t()
-  nlinhas <- ncol(matrizRestricoes)
-  ia <- which(matrizRestricoes != 0, arr.ind = T) %>% .[order(.[,1]),] %>% .[,2] - 1
-  ja <- which(matrizRestricoes != 0, arr.ind = T) %>% .[order(.[,1]),] %>% .[,1] %>% table() %>% as.vector() %>% cumsum() %>% c(0, .)
-  ra <- matrizRestricoes %>% t() %>% as.vector()  %>% .[which(. != 0)]
-  rub <- c(ubDemanda, ubTransmissao)
-  rlb <- c(lbDemanda, lbTransmissao)
-  
-  clpAPI::loadProblemCLP(lp = lpBalancoSemTransmissao, 
-                         ncols = nrow(df.geracaoSemTransmissao), 
-                         nrows = nlinhas, 
-                         ia = ia, 
-                         ja = ja, 
-                         ra = ra,
-                         lb = df.geracaoSemTransmissao$inflexibilidade, # define limite inferior das variaveis
-                         ub = df.geracaoSemTransmissao$disponibilidade, # define limite superior das variaveis
-                         obj_coef = df.geracaoSemTransmissao$cvu, # funcao objetivo
-                         rlb = rlb, 
-                         rub = rub)
+  matrizRestricoes <- rbind(matrizRestricoesDemanda, matrizRestricoesTransmissao)
   
   # resolve o modelo linear
-  solucao <- clpAPI::solveInitialCLP(lpBalancoSemTransmissao)
+  solucao <- highs::highs_solve(L = df.geracao$cvu, 
+                                lower = df.geracao$inflexibilidade, 
+                                upper = df.geracao$disponibilidade, 
+                                A = matrizRestricoes, 
+                                lhs = rlb, 
+                                rhs = rub)
   
-  # critica
-  if(solucao != 0) {
+  # critica caso problema seja inviável
+  if(solucao[["primal_solution"]] != 7) {
     DBI::dbDisconnect(conexao)
-    stop(paste0("Não foi encontrada solução viável (", 
-                clpAPI::status_codeCLP(solucao),") para execução com transmissão ilimitada de ", 
+    stop(paste0("Não foi encontrada solução viável (", solucao[["status_message"]],") para execução com transmissão ilimitada de ", 
                 periodo, ", série hidro ", idSerieHidro))
   }
   
   # solucao primal das variaveis
-  primalBalancoTransmissao <- clpAPI::getColPrimCLP(lpBalancoSemTransmissao)
+  primalBalanco <- solucao[["primal_solution"]]
   
-  # libera o problema da memoria
-  clpAPI::delProbCLP(lpBalancoSemTransmissao)
   # Fim Balanco sem limite de transmissao
   
   # gera resultado

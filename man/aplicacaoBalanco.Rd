@@ -4,10 +4,7 @@
 \alias{aplicacaoBalanco}
 \title{Aplicacao web do Balanco de Potencia}
 \usage{
-aplicacaoBalanco(execucao = "")
-}
-\arguments{
-\item{execucao}{define se vai exibir o bp padrao ou versao de analise da EPE}
+aplicacaoBalanco()
 }
 \description{
 Executa a aplicacao web do Balanco de Potencia
