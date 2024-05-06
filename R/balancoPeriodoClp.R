@@ -234,6 +234,10 @@ balancoPeriodoClp <- function(periodo,
   
   # junta todas as retricoes e cria o problema a ser resolvido
   matrizRestricoes <- rbind(matrizRestricoesDemanda, matrizRestricoesTransmissao, matrizRestricoesAgrupamento)
+  # limites superiores das linhas da matriz de restricao
+  rub <- c(ubDemanda, ubTransmissao, ubAgrupamento)
+  # limites inferiores das linhas da matriz de restricao
+  rlb <- c(lbDemanda, lbTransmissao, lbAgrupamento)
   
   # resolve o modelo linear usando o highs
   solucao <- highs::highs_solve(L = df.geracao$cvu, 
@@ -263,6 +267,10 @@ balancoPeriodoClp <- function(periodo,
   
   # junta todas as retricoes definidas no balanco e cria o problema sem limites de transmissao a ser resolvido
   matrizRestricoes <- rbind(matrizRestricoesDemanda, matrizRestricoesTransmissao)
+  # limites superiores das linhas da matriz de restricao
+  rub <- c(ubDemanda, ubTransmissao)
+  # limites inferiores das linhas da matriz de restricao
+  rlb <- c(lbDemanda, lbTransmissao)
   
   # resolve o modelo linear
   solucao <- highs::highs_solve(L = df.geracao$cvu, 
