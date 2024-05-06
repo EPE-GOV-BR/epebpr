@@ -557,48 +557,51 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipo
       df.dadosSsistNaoModulam <- DBI::dbGetQuery(conexaoSQLite, sql)
       
       ##### CÁLCULO DISPONIBILIDADE TIPO 4 PELA TABELA ######
-      
-      df.saidasHidroTipo4 <- df.saidasHidro %>% 
-        dplyr::filter(dplyr::between(A06_NR_SERIE, janelaSeries[andaJanela], (janelaSeries[andaJanela + 1] - 1)),
-                      A02_NR_REE %in% reeTipo4)
-      
-      df.prodREEModulaTabela <- dplyr::left_join(dplyr::filter(leitorrmpe::leituraAlteracaoDadosUsinasHidro(pastaCaso)[[1]], codUsina %in% UHEtipo4), 
-                                                 dplyr::filter(leitorrmpe::leituraDadosUsinasHidro(pastaCaso)[[1]], codUsina %in% UHEtipo4), 
-                                                 by = "codUsina") %>% 
-        dplyr::mutate(volumeMaximo = ifelse(is.na(volumeMaximo.y) | volumeMaximo.y >  volumeReferencia, volumeReferencia, volumeMaximo.y)) %>%
-        dplyr::mutate(nivelMontante = ifelse(is.na(nivelMontante),poliCotaVolumeA0 + volumeMaximo*poliCotaVolumeA1 + volumeMaximo^2*poliCotaVolumeA2 + volumeMaximo^3*poliCotaVolumeA3 + volumeMaximo^4*poliCotaVolumeA4,nivelMontante)) %>%
-        dplyr::mutate(canalFuga = ifelse(is.na(canalFuga),canalFugaMedio,canalFuga)) %>%
-        dplyr::mutate(perda = ifelse(tipoPerda==2,perda,(nivelMontante-canalFuga)*perda/100)) %>%
-        dplyr::mutate(produtibilidade = produtibilidade * (nivelMontante-canalFuga-perda)) %>%
-        dplyr::select(codUsina, anoMes, produtibilidade) %>% 
-        dplyr::left_join(dplyr::select(df.dadosVigentesUHETipo4, A02_NR_REE, A03_CD_USINA, A05_NR_MES, A05_VL_POTENCIA), 
-                         by = c("codUsina" = "A03_CD_USINA", "anoMes" = "A05_NR_MES")) %>% 
-        dplyr::group_by(A02_NR_REE, anoMes) %>% 
-        dplyr::reframe(produtibilidade = weighted.mean(produtibilidade, A05_VL_POTENCIA))
-      
-      df.dadosUHEModulamTabela <- dplyr::left_join(df.saidasHidroTipo4, df.prodREEModulaTabela,
-                                                   by = c("A02_NR_REE", "A06_NR_MES" = "anoMes")) %>% 
-        dplyr::mutate(flag = flagVert,
-                      vazao = dplyr::if_else(flag,
-                                             (A06_VL_GERACAO_HIDRAULICA + A06_VL_SUBMOTORIZACAO + A06_VL_VERTIMENTO_TURBINAVEL)/produtibilidade,
-                                             (A06_VL_GERACAO_HIDRAULICA + A06_VL_SUBMOTORIZACAO)/produtibilidade)) %>% 
-        dplyr::left_join(df.tabelaModulacao, by = c("A02_NR_REE" = "codREE")) %>% 
-        dplyr::rowwise() %>% 
-        dplyr::mutate(A09_VL_DISPONIBILIDADE_MAXIMA_PONTA = funcao(vazao),
-                      A01_CD_MODELO = codModelo,
-                      A01_TP_CASO = tipoCaso,
-                      A01_NR_CASO = numeroCaso,
-                      A09_NR_MES = A06_NR_MES,
-                      A09_NR_SERIE = A06_NR_SERIE,
-                      A09_VL_GERACAO_HIDRO_MINIMA = 0,
-                      A09_VL_GERACAO_HIDRO_MINIMA_ORIGINAL = 0,
-                      A09_VL_POTENCIA_MAXIMA = 0) %>% 
-        dplyr::select(A01_CD_MODELO, A01_TP_CASO, A01_NR_CASO, A02_NR_REE, A09_NR_MES, 
-                      A09_NR_SERIE, A09_VL_GERACAO_HIDRO_MINIMA, A09_VL_GERACAO_HIDRO_MINIMA_ORIGINAL,
-                      A09_VL_DISPONIBILIDADE_MAXIMA_PONTA, A09_VL_POTENCIA_MAXIMA)
-      
-      # concatena as REEs que modulam com as que nao modulam e as que modulam por tabela para gravar na base
-      df.dadosCalculadosSsist <- rbind(df.dadosCalculadosSsist, df.dadosSsistNaoModulam, df.dadosUHEModulamTabela)
+      if(length(reeTipo4) > 0){
+        df.saidasHidroTipo4 <- df.saidasHidro %>% 
+          dplyr::filter(dplyr::between(A06_NR_SERIE, janelaSeries[andaJanela], (janelaSeries[andaJanela + 1] - 1)),
+                        A02_NR_REE %in% reeTipo4)
+        
+        df.prodREEModulaTabela <- dplyr::left_join(dplyr::filter(leitorrmpe::leituraAlteracaoDadosUsinasHidro(pastaCaso)[[1]], codUsina %in% UHEtipo4), 
+                                                   dplyr::filter(leitorrmpe::leituraDadosUsinasHidro(pastaCaso)[[1]], codUsina %in% UHEtipo4), 
+                                                   by = "codUsina") %>% 
+          dplyr::mutate(volumeMaximo = ifelse(is.na(volumeMaximo.y) | volumeMaximo.y >  volumeReferencia, volumeReferencia, volumeMaximo.y)) %>%
+          dplyr::mutate(nivelMontante = ifelse(is.na(nivelMontante),poliCotaVolumeA0 + volumeMaximo*poliCotaVolumeA1 + volumeMaximo^2*poliCotaVolumeA2 + volumeMaximo^3*poliCotaVolumeA3 + volumeMaximo^4*poliCotaVolumeA4,nivelMontante)) %>%
+          dplyr::mutate(canalFuga = ifelse(is.na(canalFuga),canalFugaMedio,canalFuga)) %>%
+          dplyr::mutate(perda = ifelse(tipoPerda==2,perda,(nivelMontante-canalFuga)*perda/100)) %>%
+          dplyr::mutate(produtibilidade = produtibilidade * (nivelMontante-canalFuga-perda)) %>%
+          dplyr::select(codUsina, anoMes, produtibilidade) %>% 
+          dplyr::left_join(dplyr::select(df.dadosVigentesUHETipo4, A02_NR_REE, A03_CD_USINA, A05_NR_MES, A05_VL_POTENCIA), 
+                           by = c("codUsina" = "A03_CD_USINA", "anoMes" = "A05_NR_MES")) %>% 
+          dplyr::group_by(A02_NR_REE, anoMes) %>% 
+          dplyr::reframe(produtibilidade = weighted.mean(produtibilidade, A05_VL_POTENCIA))
+        
+        df.dadosUHEModulamTabela <- dplyr::left_join(df.saidasHidroTipo4, df.prodREEModulaTabela,
+                                                     by = c("A02_NR_REE", "A06_NR_MES" = "anoMes")) %>% 
+          dplyr::mutate(flag = flagVert,
+                        vazao = dplyr::if_else(flag,
+                                               (A06_VL_GERACAO_HIDRAULICA + A06_VL_SUBMOTORIZACAO + A06_VL_VERTIMENTO_TURBINAVEL)/produtibilidade,
+                                               (A06_VL_GERACAO_HIDRAULICA + A06_VL_SUBMOTORIZACAO)/produtibilidade)) %>% 
+          dplyr::left_join(df.tabelaModulacao, by = c("A02_NR_REE" = "codREE")) %>% 
+          dplyr::rowwise() %>% 
+          dplyr::mutate(A09_VL_DISPONIBILIDADE_MAXIMA_PONTA = funcao(vazao),
+                        A01_CD_MODELO = codModelo,
+                        A01_TP_CASO = tipoCaso,
+                        A01_NR_CASO = numeroCaso,
+                        A09_NR_MES = A06_NR_MES,
+                        A09_NR_SERIE = A06_NR_SERIE,
+                        A09_VL_GERACAO_HIDRO_MINIMA = 0,
+                        A09_VL_GERACAO_HIDRO_MINIMA_ORIGINAL = 0,
+                        A09_VL_POTENCIA_MAXIMA = 0) %>% 
+          dplyr::select(A01_CD_MODELO, A01_TP_CASO, A01_NR_CASO, A02_NR_REE, A09_NR_MES, 
+                        A09_NR_SERIE, A09_VL_GERACAO_HIDRO_MINIMA, A09_VL_GERACAO_HIDRO_MINIMA_ORIGINAL,
+                        A09_VL_DISPONIBILIDADE_MAXIMA_PONTA, A09_VL_POTENCIA_MAXIMA)
+        
+        # concatena as REEs que modulam com as que nao modulam e as que modulam por tabela para gravar na base
+        df.dadosCalculadosSsist <- rbind(df.dadosCalculadosSsist, df.dadosSsistNaoModulam, df.dadosUHEModulamTabela)
+      }else{
+        df.dadosCalculadosSsist <- rbind(df.dadosCalculadosSsist, df.dadosSsistNaoModulam)
+      }
       
       # Para buscar o subsistema
       df.dadosCalculadosSsist <- dplyr::inner_join(df.dadosCalculadosSsist, df.ree,

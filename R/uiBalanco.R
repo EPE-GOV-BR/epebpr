@@ -37,7 +37,7 @@ uiBalanco <- fluidPage(
     # Painel principal do balanco
     tabPanel(HTML("Balanço de Potência"),
              sidebarLayout(
-               sidebarPanel(#width = 5,
+               sidebarPanel(width = 3,
                  # Selecao do tipo de caso
                  # div para colocar inputs na mesma linha
                  tags$div(style="display:inline-block; width:140px",
@@ -169,21 +169,10 @@ uiBalanco <- fluidPage(
                               label = NULL,
                               icon = icon("search"),
                               width = 77),
-                 
-                 # Action button
-                 tags$div(style = "height:8px"),
-                 HTML("Calcula Balanço de Potência"),
-                 tags$div(style = "height:3px"),
-                 actionButton(inputId = "btnBalanco",
-                              label = NULL,
-                              icon = icon("calculator"),
-                              width = 77),
                  tags$br(),
-                 tags$div(style = "display:inline-block; width:10px"),
-                 tags$div(style="display:inline-block;",
-                          checkboxInput(inputId = "balancoResumido",
-                                        value = T,
-                                        label = HTML("Resumido"))),
+                 tags$br(),
+                 HTML("Etapas de execução:"),
+                 tags$br(),
                  tags$div(style = "display:inline-block; width:5px"),
                  tags$div(style="display:inline-block;",
                           checkboxInput(inputId = "leituraDados",
@@ -200,11 +189,32 @@ uiBalanco <- fluidPage(
                                         value = T,
                                         label = HTML("BP"))),
                  tags$br(),
-                 tags$div(style = "display:inline-block; width:5px"),
-                 tags$div(style="display:inline-block;",
-                          checkboxInput(inputId = "flagVert",
-                                        value = F,
-                                        label = HTML("Considerar Vertimento para todas UHE")))
+                 conditionalPanel(condition = "input.execucaoBP == 1 || input.disponibilidadeHidro == 1",
+                                  HTML("Opções adicionais:")
+                 ),
+                 conditionalPanel(condition = "input.execucaoBP == 1",
+                                  tags$div(style = "display:inline-block; width:5px"),
+                                  tags$div(style="display:inline-block;",
+                                           checkboxInput(inputId = "balancoResumido",
+                                                         value = T,
+                                                         label = HTML("BP Resumido")))
+                 ),
+                 conditionalPanel(condition = "input.disponibilidadeHidro == 1",
+                                  tags$div(style = "display:inline-block; width:5px"),
+                                  tags$div(style="display:inline-block;",
+                                           checkboxInput(inputId = "flagVert",
+                                                         value = F,
+                                                         label = HTML("Considerar Vertimento para todas UHE")))
+                 ),
+
+                 # Action button
+                 tags$div(style = "height:8px"),
+                 HTML("Calcula Balanço de Potência"),
+                 tags$div(style = "height:3px"),
+                 actionButton(inputId = "btnBalanco",
+                              label = NULL,
+                              icon = icon("calculator"),
+                              width = 77)
                  
                ),
                
