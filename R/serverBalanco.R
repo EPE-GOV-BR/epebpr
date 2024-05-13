@@ -59,7 +59,11 @@ serverBalanco <- function(input, output, session) {
   
   # monitora botao de pesquisa de pasta dentro da janela de criar pasta (2)
   observeEvent(input$btnProcurarPastaBD, {
-    pastaBD <<- choose.dir(caption = "Escolha a pasta do banco de dados") # importante <<- para passar valor para variavel global
+    if (Sys.info()["sysname"] == "Windows") {
+      pastaBD <<- choose.dir(caption = "Escolha a pasta do banco de dados")
+    } else {
+      pastaBD <<- file.choose() %>% dirname()
+    }
     output$pastaBDModal <- renderText(pastaBD)
   })
   
@@ -71,7 +75,7 @@ serverBalanco <- function(input, output, session) {
       updateTextInput(session, "nomeBD", placeholder = "Favor selecionar um nome!")
     } else{
       mensagemModal <- criaBDBalanco(pastaBD, input$nomeBD)
-      baseSQLite <<- paste0(pastaBD, "\\", input$nomeBD, ".sqlite3")
+      baseSQLite <<- paste0(pastaBD, "/", input$nomeBD, ".sqlite3")
       removeModal()
       showModal(
         modalDialog(
@@ -88,22 +92,34 @@ serverBalanco <- function(input, output, session) {
   
   # monitora botao de selecao de base existente
   observeEvent(input$btnBaseSQLite, {
-    baseSQLite <<- choose.files(caption = "Escolha a base SQLite",
-                                filters = matrix(c("SQLite", "*.db;*.sqlite;*.sqlite3"), ncol = 2))
+    if (Sys.info()["sysname"] == "Windows") {
+      baseSQLite <<- choose.files(caption = "Escolha a base SQLite",
+                                  filters = matrix(c("SQLite", "*.db;*.sqlite;*.sqlite3"), ncol = 2))
+    } else {
+      baseSQLite <<- file.choose()
+    }
     output$baseSQLite <- renderText(baseSQLite)
     output$textoBaseSQLite <- renderText("Base selecionada:")
   })
   
   # monitora o botao de selecao da pasta do caso
   observeEvent(input$btnPasta, {
-    pastaCaso <<- choose.dir(caption = "Escolha a pasta do caso")
+    if (Sys.info()["sysname"] == "Windows") {
+      pastaCaso <<- choose.dir(caption = "Escolha a pasta do caso")
+    } else {
+      pastaCaso <<- file.choose() %>% dirname()
+    }
     output$pasta <- renderText(pastaCaso)
     output$textoPasta <- renderText("Pasta do caso:")
   })
   
   # monitora o botao de selecao da pasta de saidas do caso (nwlistop)
   observeEvent(input$btnPastaSaidas, {
-    pastaSaidas <<- choose.dir(caption = "Escolha a pasta com as saídas do caso (nwlistop)")
+    if (Sys.info()["sysname"] == "Windows") {
+      pastaSaidas <<- choose.dir(caption = "Escolha a pasta com as saídas do caso (nwlistop)")
+    } else {
+      pastaSaidas <<- file.choose() %>% dirname()
+    }
     output$pastaSaidas <- renderText(pastaSaidas)
     output$textoPastaSaidas <- renderText("Pasta com as saídas do caso (nwlistop):")
   })
@@ -244,6 +260,7 @@ serverBalanco <- function(input, output, session) {
                "Descrição: ", input$descricao, "\n",
                "REEs não modulam GHPonta: ", input$sistemasNaoModulamPonta, "\n",
                "REEs não modulam GHMédia: ", input$sistemasNaoModulamMedia, "\n",
+               "REEs modulam por tabela: ", input$sistemasModulamTabela, "\n",
                "Balanço Resumido: ", ifelse(input$balancoResumido, "Sim", "Não"), "\n",
                "Dados: ", ifelse(input$leituraDados, "Sim", "Não"), "\n",
                "Disp. Hidro: ", ifelse(input$disponibilidadeHidro, "Sim", "Não"), "\n",
@@ -267,9 +284,12 @@ serverBalanco <- function(input, output, session) {
   # monitora botao de selecao de base existente
   observeEvent(input$btnBaseSQLiteGrafico, 
                withLogErrors({
-                 # importante <<- para passar valor para variavel global
-                 baseSQLiteGrafico <<- choose.files(caption = "Escolha a base SQLite",
-                                                    filters = matrix(c("SQLite", "*.db;*.sqlite;*.sqlite3"), ncol = 2))
+                 if (Sys.info()["sysname"] == "Windows") {
+                   baseSQLiteGrafico <<- choose.files(caption = "Escolha a base SQLite",
+                                                      filters = matrix(c("SQLite", "*.db;*.sqlite;*.sqlite3"), ncol = 2))
+                 } else {
+                   baseSQLiteGrafico <<- file.choose()
+                 }
                  if(!identical(baseSQLiteGrafico, character(0))){
                    output$baseSQLiteGrafico <- renderText(baseSQLiteGrafico)
                    output$textoBaseSQLiteGrafico <- renderText("Base selecionada:")

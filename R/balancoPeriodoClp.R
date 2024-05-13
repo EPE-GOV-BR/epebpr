@@ -248,7 +248,7 @@ balancoPeriodoClp <- function(periodo,
                                 rhs = rub)
   
   # critica caso problema seja inviável
-  if(solucao[["primal_solution"]] != 7) {
+  if(solucao[["status"]] != 7 && solucao[["status"]] != 15) {
     DBI::dbDisconnect(conexao)
     stop(paste0("Não foi encontrada solução viável (", solucao[["status_message"]],") para execução de ", 
                 periodo, ", série hidro ", idSerieHidro))
@@ -281,14 +281,14 @@ balancoPeriodoClp <- function(periodo,
                                 rhs = rub)
   
   # critica caso problema seja inviável
-  if(solucao[["primal_solution"]] != 7) {
+  if(solucao[["status"]] != 7 && solucao[["status"]] != 15) {
     DBI::dbDisconnect(conexao)
     stop(paste0("Não foi encontrada solução viável (", solucao[["status_message"]],") para execução com transmissão ilimitada de ", 
                 periodo, ", série hidro ", idSerieHidro))
   }
   
   # solucao primal das variaveis
-  primalBalanco <- solucao[["primal_solution"]]
+  primalBalancoTransmissao <- solucao[["primal_solution"]]
   
   # Fim Balanco sem limite de transmissao
   
