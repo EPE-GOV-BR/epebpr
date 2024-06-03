@@ -557,6 +557,19 @@ gravacaoDadosDisponibilidadeOutrasFontesBDBP <- function(pastaCaso, conexao, tip
         dplyr::filter(stringr::str_sub(anoMes, 5, 6) == stringr::str_sub(sazonalidade, 5, 6)) %>% 
         dplyr::select(-sazonalidade)
       
+      # verifica se todas as fontes definidas como tipo 1 tem dados na aba FatorPonta
+      df.verificaFator <- dplyr::inner_join(df.capacidadeOFR, df.energiaOFRInd, by = c("sistema", "TIPO", "anoMes")) %>% 
+        dplyr::inner_join(df.tipoContribuicaoPonta, by = c("TIPO" = "A18_TX_DESCRICAO")) %>% 
+        dplyr::mutate(mes = as.integer(substr(as.character(anoMes), 5, 6))) %>% 
+        dplyr::left_join(df.fatorPontaOFR, by = c("sistema" = "A02_NR_SUBSISTEMA", "A18_CD_TIPO_FONTE" = "A18_CD_TIPO_FONTE", "mes" = "A19_NR_MES")) %>% 
+        dplyr::filter(A18_TP_CONTRIBUICAO_PONTA == 1, is.na(A19_VL_FATOR)) %>% 
+        dplyr::distinct(A18_CD_TIPO_FONTE, sistema)
+      
+      if (length(df.verificaFator) > 0) {
+        DBI::dbDisconnect(conexao)
+        stop("Não foram definidos fatores de contribuição de ponta (planilha dadosOFR, aba FatorPonta) para as seguintes fontes:\n", sprintf("A18_CD_TIPO_FONTE %s A02_NR_SUBSISTEMA %s\n", df.verificaFator$A18_CD_TIPO_FONTE, df.verificaFator$sistema))
+      }
+      
       # define data frame com o calculo final da disponibilidade de ponta das usinas nao simuladas, 
       # para cada periodo do horizonte de simulacao
       # avalia o tipo de contribuicao da ponta atribuido para cada a OFR: 
