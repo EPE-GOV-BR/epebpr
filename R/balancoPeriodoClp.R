@@ -83,13 +83,6 @@ balancoPeriodoClp <- function(periodo,
     dplyr::filter(anoMes == periodo) %>%
     dplyr::select(tipoUsina, codUsina, subsistema, transmissao, inflexibilidade, disponibilidade, cvu)
   
-  # filtrando geracao termica GNL para o mes especifico
-  # critica de existencia de dados
-  if(nrow(df.geracaoTermicaGnl %>% dplyr::filter(anoMes == periodo, serieGnl == idSerieHidro)) == 0) {
-    DBI::dbDisconnect(conexao)
-    stop(paste0("Não há geração térmica GNL (BPO_A14B_DISPONIBILIDADE_UTE_GNL) para o período de ", periodo, " e série ", idSerieHidro))
-    
-  }
   # filtrando geracao termica GNL
   df.geracaoTermicaGnl <- df.geracaoTermicaGnl %>% 
     dplyr::filter(anoMes == periodo, serieGnl == idSerieHidro) %>%
