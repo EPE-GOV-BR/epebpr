@@ -21,7 +21,7 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipo
   conexaoSQLite <- DBI::dbConnect(RSQLite::SQLite(), baseSQLite)
   # fecha conexao com a base SQLite na saida da funcao, seja por erro ou normalmente
   on.exit(DBI::dbDisconnect(conexaoSQLite))
-  
+
   # pega dados da tabela de dados do caso
   sql <- paste0("SELECT A01_NR_MES_INICIO as dataInicioCaso,
                   A01_NR_MES_FIM as dataFimCaso,
@@ -340,7 +340,7 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipo
     quantidadeJanela <- length(janelaSeries)
     
     for (andaJanela in 1:(quantidadeJanela - 1)) {
-      
+
       # barra de progresso
       if(execShiny){incProgress((1/(quantidadeJanela - 1))*0.3, detail = paste(round(andaJanela*100/(quantidadeJanela - 1), 0),"%"))}
       
@@ -562,11 +562,11 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipo
           dplyr::filter(dplyr::between(A06_NR_SERIE, janelaSeries[andaJanela], (janelaSeries[andaJanela + 1] - 1)),
                         A02_NR_REE %in% reeTipo4)
         
-        df.prodREEModulaTabela <- dplyr::left_join(dplyr::filter(leitorrmpe::leituraAlteracaoDadosUsinasHidro(pastaCaso)[[1]], codUsina %in% UHEtipo4), 
-                                                   dplyr::filter(leitorrmpe::leituraDadosUsinasHidro(pastaCaso)[[1]], codUsina %in% UHEtipo4), 
-                                                   by = "codUsina") %>% 
+        df.prodREEModulaTabela <- dplyr::full_join(dplyr::filter(leitorrmpe::leituraAlteracaoDadosUsinasHidro(pastaCaso)[[1]], codUsina %in% UHEtipo4), 
+                                                   dplyr::filter(leitorrmpe::leituraDadosUsinasHidro(pastaCaso)[[1]] %>% tidyr::crossing(anoMes = unique(df.saidasHidroTipo4$A06_NR_MES)), codUsina %in% UHEtipo4), 
+                                                   by = c("codUsina", "anoMes")) %>% 
           dplyr::mutate(volumeMaximo = ifelse(is.na(volumeMaximo.y) | volumeMaximo.y >  volumeReferencia, volumeReferencia, volumeMaximo.y)) %>%
-          dplyr::mutate(nivelMontante = ifelse(is.na(nivelMontante),poliCotaVolumeA0 + volumeMaximo*poliCotaVolumeA1 + volumeMaximo^2*poliCotaVolumeA2 + volumeMaximo^3*poliCotaVolumeA3 + volumeMaximo^4*poliCotaVolumeA4,nivelMontante)) %>%
+          dplyr::mutate(nivelMontante = ifelse(is.na(nivelMontante), poliCotaVolumeA0 + volumeMaximo*poliCotaVolumeA1 + volumeMaximo^2*poliCotaVolumeA2 + volumeMaximo^3*poliCotaVolumeA3 + volumeMaximo^4*poliCotaVolumeA4,nivelMontante)) %>%
           dplyr::mutate(canalFuga = ifelse(is.na(canalFuga),canalFugaMedio,canalFuga)) %>%
           dplyr::mutate(perda = ifelse(tipoPerda==2,perda,(nivelMontante-canalFuga)*perda/100)) %>%
           dplyr::mutate(produtibilidade = produtibilidade * (nivelMontante-canalFuga-perda)) %>%

@@ -565,7 +565,7 @@ gravacaoDadosDisponibilidadeOutrasFontesBDBP <- function(pastaCaso, conexao, tip
         dplyr::filter(A18_TP_CONTRIBUICAO_PONTA == 1, is.na(A19_VL_FATOR)) %>% 
         dplyr::distinct(A18_CD_TIPO_FONTE, sistema)
       
-      if (length(df.verificaFator) > 0) {
+      if (nrow(df.verificaFator) > 0) {
         DBI::dbDisconnect(conexao)
         stop("Não foram definidos fatores de contribuição de ponta (planilha dadosOFR, aba FatorPonta) para as seguintes fontes:\n", sprintf("A18_CD_TIPO_FONTE %s A02_NR_SUBSISTEMA %s\n", df.verificaFator$A18_CD_TIPO_FONTE, df.verificaFator$sistema))
       }
