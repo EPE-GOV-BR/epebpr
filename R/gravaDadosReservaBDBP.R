@@ -3,7 +3,7 @@
 #' Faz a gravacao dos dados de de reserva operativa no banco de dados do Balanco de Potencia (BDBP).
 #' Os dados sao gravados na tabela BPO_A21_RESERVA do BDBP. Consulta as tabelas BPO_A13_DISPONIBILIDADE_OFR e BPO_A10_DEMANDA.
 #'
-#' @param pastaCaso caracter com a localizacao dos arquivos NEWAVE.
+#' @param pastaCaso caracter com a localizacao dos arquivos NEWAVE e auxliares do BP.
 #' @param conexao caracter com a conexao com o Banco de Dados do Balanco de Potencia.
 #' @param tipoCaso caracter com o tipo de caso simulado. [1]=PDE [2]=PMO [3]=GF.
 #' @param numeroCaso caracter com o numero do caso, definido pelo usuario.
@@ -19,7 +19,7 @@
 #' @export
 gravacaoDadosReservaBDBP <- function(pastaCaso, conexao, tipoCaso, numeroCaso, codModelo, df.energiaOFR) {
   if (missing(pastaCaso)) {
-    stop("favor indicar a pasta com os arquivos do NEWAVE")
+    stop("favor indicar a pasta com os arquivos do BP")
   }
   if (missing(conexao)) {
     stop("favor indicar a conexão com o banco de dados")

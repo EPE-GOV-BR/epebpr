@@ -14,7 +14,7 @@ gravacaoDadosTermeletricasBDBP(
 )
 }
 \arguments{
-\item{pastaCaso}{caracter com a localizacao dos arquivos NEWAVE.}
+\item{pastaCaso}{caracter com a localizacao dos arquivos NEWAVE e auxliares do BP.}
 
 \item{pastaSaidas}{localizacao dos arquivos de saida do modulo NWLISTOP}
 

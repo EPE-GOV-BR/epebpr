@@ -17,7 +17,7 @@ gravacaoDadosDisponibilidadeOutrasFontesBDBP(
 )
 }
 \arguments{
-\item{pastaCaso}{caracter com a localizacao dos arquivos NEWAVE.}
+\item{pastaCaso}{caracter com a localizacao dos arquivos NEWAVE e auxliares do BP.}
 
 \item{conexao}{caracter com a conexao com o Banco de Dados do Balanco de Potencia.}
 
@@ -47,6 +47,6 @@ Os dados sao gravados na tabela BPO_A13_DISPONIBILIDADE_OFR do BDBP. Alem disso,
 }
 \examples{
 \dontrun{
-gravacaoDadosDisponibilidadeOutrasFontesBDBP("C:/PDE2027_Caso080", conexao, 1, 80, 1, 201901, 203312)}
+gravacaoDadosDisponibilidadeOutrasFontesBDBP("C:/PDE2027_Caso080", conexao, 1, 80, 1, 1, 201901, 203312)}
 
 }

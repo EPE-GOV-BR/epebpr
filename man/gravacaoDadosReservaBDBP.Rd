@@ -14,7 +14,7 @@ gravacaoDadosReservaBDBP(
 )
 }
 \arguments{
-\item{pastaCaso}{caracter com a localizacao dos arquivos NEWAVE.}
+\item{pastaCaso}{caracter com a localizacao dos arquivos NEWAVE e auxliares do BP.}
 
 \item{conexao}{caracter com a conexao com o Banco de Dados do Balanco de Potencia.}
 

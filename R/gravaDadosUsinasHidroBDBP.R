@@ -18,7 +18,7 @@
 #' @export
 gravaDadosUsinasHidroBDBP <- function(pasta, conexao, tipoCaso, numeroCaso, codModelo) {
   if (missing(pasta)) {
-    stop("favor indicar a pasta com os arquivos do NEWAVE")
+    stop("favor indicar a pasta com os arquivos do BP")
   }
   if (missing(conexao)) {
     stop("favor indicar a conexão com o banco de dados")

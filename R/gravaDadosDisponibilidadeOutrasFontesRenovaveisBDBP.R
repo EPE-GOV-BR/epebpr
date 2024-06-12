@@ -3,7 +3,7 @@
 #' Faz a gravacao dos dados de disponibilidade das outras fontes renovaveis do NEWAVE no banco de dados do Balanco de Potencia (BDBP)
 #' Os dados sao gravados na tabela BPO_A13_DISPONIBILIDADE_OFR do BDBP. Alem disso, grava as tabelas de apoio BPO_A18_TIPOS_OFR e BPO_A19_FATOR_PONTA_OFR
 #'
-#' @param pastaCaso caracter com a localizacao dos arquivos NEWAVE.
+#' @param pastaCaso caracter com a localizacao dos arquivos NEWAVE e auxliares do BP.
 #' @param conexao caracter com a conexao com o Banco de Dados do Balanco de Potencia.
 #' @param tipoCaso caracter com o tipo de caso simulado. [1]=PDE [2]=PMO [3]=GF.
 #' @param numeroCaso caracter com o numero do caso, definido pelo usuario.
@@ -11,7 +11,6 @@
 #' @param codModelo caracter com a definicao do modelo utilizado. [1]=Newave [2]=Suishi.
 #' @param anoMesInicioMDI caracter com o ano e mes do inicio da simulacao do MDI.
 #' @param anoMesFimMDI caracter com o ano e mes do final da simulacao do MDI.
-#' @param tipoDemanda caracter com a definicao do tipo de demanda do caso. [1]=Deterministica [2]=Liquida
 #'
 #' @return \code{lista} 
 #' \itemize{
@@ -22,12 +21,12 @@
 #' 
 #' @examples
 #' \dontrun{
-#' gravacaoDadosDisponibilidadeOutrasFontesBDBP("C:/PDE2027_Caso080", conexao, 1, 80, 1, 201901, 203312)}
+#' gravacaoDadosDisponibilidadeOutrasFontesBDBP("C:/PDE2027_Caso080", conexao, 1, 80, 1, 1, 201901, 203312)}
 #'
 #' @export
 gravacaoDadosDisponibilidadeOutrasFontesBDBP <- function(pastaCaso, conexao, tipoCaso, numeroCaso, tipoDemanda, codModelo, anoMesInicioMDI, anoMesFimMDI) {
   if (missing(pastaCaso)) {
-    stop("favor indicar a pasta com os arquivos do NEWAVE")
+    stop("favor indicar a pasta com os arquivos do BP")
   }
   if (missing(conexao)) {
     stop("favor indicar a conexão com o banco de dados")

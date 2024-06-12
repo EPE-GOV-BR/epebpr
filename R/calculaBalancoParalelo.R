@@ -118,7 +118,7 @@ calculaBalancoParalelo <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
   # geracao termica GNL
   query <- paste0("SELECT A14_NR_MES AS anoMes, A14_NR_SERIE AS serieGnl, 'TERMICA' AS tipoUsina, A14_CD_USINA AS codUsina, A02_NR_SUBSISTEMA AS subsistema, ",
                   "0 AS transmissao, A14_VL_INFLEXIBILIDADE AS inflexibilidade, A14_VL_DISPONIBILIDADE_MAXIMA_PONTA AS disponibilidade, A14_VL_CVU as cvu ",
-                  "FROM BPO_A14B_DISPONIBILIDADE_UTE_GNL WHERE A01_TP_CASO = ", tipoCaso, " AND A01_NR_CASO = ", numeroCaso, 
+                  "FROM BPO_A31_DISPONIBILIDADE_UTE_GNL WHERE A01_TP_CASO = ", tipoCaso, " AND A01_NR_CASO = ", numeroCaso, 
                   " AND A01_CD_MODELO = ", codModelo, " ORDER BY A14_NR_MES, A14_NR_SERIE, A02_NR_SUBSISTEMA, A14_CD_USINA")
   df.geracaoTermicaGnl <- DBI::dbGetQuery(conexao, query)
   
@@ -130,6 +130,18 @@ calculaBalancoParalelo <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
                   " AND A01_CD_MODELO = ", codModelo, " GROUP BY A13_NR_MES, A02_NR_SUBSISTEMA")
   df.geracaoRenovaveisTotal <- DBI::dbGetQuery(conexao, query)
   df.geracaoRenovaveisTotal$cvu <- cvuRenovaveis
+  
+  # geracao fontes de armazenamento
+  query <- paste0("SELECT A32_NR_MES AS anoMes, 'ARMAZENAMENTO' AS tipoUsina, A02_NR_SUBSISTEMA AS codUsina, A02_NR_SUBSISTEMA AS subsistema, ", 
+                  "0 AS transmissao, A32_VL_DISPONIBILIDADE_PONTA AS inflexibilidade, ",
+                  "A32_VL_DISPONIBILIDADE_PONTA AS disponibilidade, 0 as cvu ",
+                  "FROM BPO_A32_DISPONIBILIDADE_ARMAZENAMENTO WHERE A01_TP_CASO = ", tipoCaso, " AND A01_NR_CASO = ", numeroCaso, 
+                  " AND A01_CD_MODELO = ", codModelo)
+  df.geracaoArmazenamentoTotal <- DBI::dbGetQuery(conexao, query)
+  # considera o CVU das tecnologias de armazenamento igual ao cvuHidro
+  if(nrow(df.geracaoArmazenamentoTotal) > 0){
+    df.geracaoArmazenamentoTotal$cvu <- cvuHidro
+  }
   
   # modela limites de transmissao como geradores
   query <- paste0("SELECT A11_NR_MES AS anoMes, 'TRANSMISSAO' AS tipoUsina, A11_NR_SUBSISTEMA_ORIGEM AS codUsina, A11_NR_SUBSISTEMA_ORIGEM AS subsistema, ",
@@ -259,7 +271,8 @@ calculaBalancoParalelo <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
                                                                                                                        df.geracaoTermicaTotal,
                                                                                                                        df.geracaoTermicaGnl,
                                                                                                                        df.geracaoTransmissaoTotal, 
-                                                                                                                       df.geracaoRenovaveisTotal, 
+                                                                                                                       df.geracaoRenovaveisTotal,
+                                                                                                                       df.geracaoArmazenamentoTotal,
                                                                                                                        df.limitesAgrupamentoLinhasTotal,
                                                                                                                        df.demanda,
                                                                                                                        df.geracaoHidroTotal,
@@ -291,7 +304,8 @@ calculaBalancoParalelo <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
                                                                                                                      df.geracaoTermicaTotal,
                                                                                                                      df.geracaoTermicaGnl,
                                                                                                                      df.geracaoTransmissaoTotal, 
-                                                                                                                     df.geracaoRenovaveisTotal, 
+                                                                                                                     df.geracaoRenovaveisTotal,
+                                                                                                                     df.geracaoArmazenamentoTotal,
                                                                                                                      df.limitesAgrupamentoLinhasTotal,
                                                                                                                      df.demanda,
                                                                                                                      df.geracaoHidroTotal,
