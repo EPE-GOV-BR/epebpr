@@ -324,8 +324,13 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipo
       dplyr::filter(A02_NR_REE %in% reeTipo4)
     
     df.tabelaModulacao <- readRDS("curvaModulacao.rds") %>% 
-      dplyr::group_by(codREE) %>% 
+      dplyr::group_by(codREE, codUsina) %>% 
       dplyr::reframe(funcao = list(approxfun(vazao, potencia, method="linear")))
+    
+    lt.hidrogramaBM <- readRDS("hidrogramaBM.rds")
+    
+    df.hidrograma <- lt.hidrogramaBM[["hidrogramas"]] %>% 
+      dplyr::filter(tipo == tipoCaso)
     
     # verifica se os REE definidos estao na tabela
     if (length(dplyr::setdiff(reeTipo4, unique(df.tabelaModulacao$codREE))) != 0) {
@@ -340,7 +345,7 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipo
     quantidadeJanela <- length(janelaSeries)
     df.dadosCalculadosUHETipo4 <- NULL #tabela nova a ser criada com dados por usinas dos ree que modulam por tabela
     for (andaJanela in 1:(quantidadeJanela - 1)) {
-
+      
       # barra de progresso
       if(execShiny){incProgress((1/(quantidadeJanela - 1))*0.3, detail = paste(round(andaJanela*100/(quantidadeJanela - 1), 0),"%"))}
       
@@ -557,219 +562,73 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipo
       df.dadosSsistNaoModulam <- DBI::dbGetQuery(conexaoSQLite, sql)
       
       ##### CÁLCULO DISPONIBILIDADE TIPO 4 PELA TABELA ######
+      browser()
       if(length(reeTipo4) > 0){
-        df.saidasHidroTipo4 <- 
-          df.saidasHidro %>% 
-          dplyr::filter(
-            dplyr::between(A06_NR_SERIE, janelaSeries[andaJanela], (janelaSeries[andaJanela + 1] - 1)),
-            A02_NR_REE %in% reeTipo4
-          )
+        df.saidasHidroTipo4 <- df.saidasHidro %>% 
+          dplyr::filter(dplyr::between(A06_NR_SERIE, janelaSeries[andaJanela], (janelaSeries[andaJanela + 1] - 1)), A02_NR_REE %in% reeTipo4)
         
-        # df.prodREEModulaTabela <- 
-        #   dplyr::full_join(
-        #     dplyr::filter(leitorrmpe::leituraAlteracaoDadosUsinasHidro(pastaCaso)[[1]], codUsina %in% UHEtipo4), 
-        #     dplyr::filter(leitorrmpe::leituraDadosUsinasHidro(pastaCaso)[[1]] %>% tidyr::crossing(anoMes = unique(df.saidasHidroTipo4$A06_NR_MES)), codUsina %in% UHEtipo4), 
-        #     by = c("codUsina", "anoMes")
-        #   ) %>% 
-        #   dplyr::mutate(volumeMaximo = ifelse(is.na(volumeMaximo.y) | volumeMaximo.y >  volumeReferencia, volumeReferencia, volumeMaximo.y)) %>%
-        #   dplyr::mutate(nivelMontante = ifelse(is.na(nivelMontante), poliCotaVolumeA0 + volumeMaximo*poliCotaVolumeA1 + volumeMaximo^2*poliCotaVolumeA2 + volumeMaximo^3*poliCotaVolumeA3 + volumeMaximo^4*poliCotaVolumeA4,nivelMontante)) %>%
-        #   dplyr::mutate(canalFuga = ifelse(is.na(canalFuga),canalFugaMedio,canalFuga)) %>%
-        #   dplyr::mutate(perda = ifelse(tipoPerda==2,perda,(nivelMontante-canalFuga)*perda/100)) %>%
-        #   dplyr::mutate(produtibilidade = produtibilidade * (nivelMontante-canalFuga-perda)) %>%
-        #   dplyr::select(codUsina, anoMes, produtibilidade) %>% 
-        #   dplyr::left_join(dplyr::select(df.dadosVigentesUHETipo4, A02_NR_REE, A03_CD_USINA, A05_NR_MES, A05_VL_POTENCIA), 
-        #                    by = c("codUsina" = "A03_CD_USINA", "anoMes" = "A05_NR_MES")) %>% 
-        #   dplyr::group_by(A02_NR_REE, anoMes) %>% 
-        #   dplyr::reframe(produtibilidade = weighted.mean(produtibilidade, A05_VL_POTENCIA))
-        
-        #ALTERACAO DAVI COMECA AQUI
-      # browser()
-      
-        df.mapeamento.desvio <-
-          base::data.frame(
-            grupo = rep(1,2),
-            codUsina = c(314,288)#mudar de PME e PMO
-          ) 
-        
-        df.desvio <-#hidrogramas
-          base::data.frame(
-            tipo_de_caso = 1,
-            mes = 1:12,
-            vazao_desv = c(1100.,1600.,4000.,8000.,4000.,2000.,1200.,900.,750.,700.,800.,900.)
-          ) %>% 
-          base::rbind(
-            base::data.frame(
-              tipo_de_caso = 2,
-              mes = 1:12,
-              vazao_desv = c(1100.,1600.,3250,6000,2900,1600,1100,900.,750.,700.,800.,900.)
-            )
-          ) %>% 
-          tidyr::crossing(
-            dplyr::distinct(df.saidasHidroTipo4 %>% dplyr::mutate(ano = A06_NR_MES %/% 1e2) %>% dplyr::select(ano))
-          ) %>% 
-          dplyr::mutate(
-            anoMes = ano * 1e2 + mes,
-            grupo = 1,
-            codUsinaHidrograma = 314
-          ) %>% 
-          dplyr::select(-c(ano,mes)) %>% #talvez transformar isso num arquivo de entrada
-          dplyr::filter(tipo_de_caso == tipoCaso) %>% 
-          dplyr::select(-c(tipo_de_caso))
-        
-        
-        df.tabelaModulacao <-
-          df.tabelaModulacao %>% 
-          dplyr::mutate(
-            codUsina = 
-              dplyr::case_when(
-                codREE == 5 ~ 66,
-                codREE == 8 ~ 288,
-                T ~ NA
-              )
-          ) 
-        
-        usinas.tabelaModulacao <-
-          df.tabelaModulacao %>% .[["codUsina"]]
-        
-        # df.prodREEModulaTabela <- 
-        #   dplyr::full_join(
-        #     dplyr::filter(leitorrmpe::leituraAlteracaoDadosUsinasHidro(pastaCaso)[[1]], codUsina %in% UHEtipo4), 
-        #     dplyr::filter(leitorrmpe::leituraDadosUsinasHidro(pastaCaso)[[1]] %>% tidyr::crossing(anoMes = unique(df.saidasHidroTipo4$A06_NR_MES)), codUsina %in% UHEtipo4), 
-        #     by = c("codUsina", "anoMes")
-        #   ) %>% 
-        #   dplyr::mutate(volumeMaximo = ifelse(is.na(volumeMaximo.y) | volumeMaximo.y >  volumeReferencia, volumeReferencia, volumeMaximo.y)) %>%
-        #   dplyr::mutate(nivelMontante = ifelse(is.na(nivelMontante), poliCotaVolumeA0 + volumeMaximo*poliCotaVolumeA1 + volumeMaximo^2*poliCotaVolumeA2 + volumeMaximo^3*poliCotaVolumeA3 + volumeMaximo^4*poliCotaVolumeA4,nivelMontante)) %>%
-        #   dplyr::mutate(canalFuga = ifelse(is.na(canalFuga),canalFugaMedio,canalFuga)) %>%
-        #   dplyr::mutate(perda = ifelse(tipoPerda==2,perda,(nivelMontante-canalFuga)*perda/100)) %>%
-        #   dplyr::mutate(produtibilidade = produtibilidade * (nivelMontante-canalFuga-perda)) %>%
-        #   dplyr::select(codUsina, anoMes, produtibilidade) %>% 
-        #   dplyr::left_join(
-        #     dplyr::select(df.dadosVigentesUHETipo4, A02_NR_REE, A03_CD_USINA, A05_NR_MES, A05_VL_POTENCIA), #usar dadosCalculados e VL_POTENCIA_MAX_MODULADA
-        #     by = c("codUsina" = "A03_CD_USINA", "anoMes" = "A05_NR_MES")
-        #   ) %>% 
-        #   dplyr::group_by(A02_NR_REE, anoMes) %>%
-        #   dplyr::mutate(proporcao = A05_VL_POTENCIA/sum(A05_VL_POTENCIA))
-        
-        df.prodREEModulaTabela <- 
-          dplyr::full_join(
-            leitorrmpe::leituraAlteracaoDadosUsinasHidro(pastaCaso)[[1]],
-            leitorrmpe::leituraDadosUsinasHidro(pastaCaso)[[1]] %>%
-                             tidyr::crossing(anoMes = unique(df.saidasHidroTipo4$A06_NR_MES)) %>% 
-                             dplyr::select(codUsina,anoMes,
-                                           poliCotaVolumeA0,poliCotaVolumeA1,poliCotaVolumeA2,poliCotaVolumeA3,poliCotaVolumeA4,
-                                           volumeMaximo,volumeReferencia,canalFugaMedio,tipoPerda,perda,
-                                           tipoTurbina,TEIF,IP,produtibilidade) %>%
-                             dplyr::mutate(volumeReferencia = base::ifelse(volumeReferencia<volumeMaximo,volumeMaximo,volumeReferencia)) %>%
-                             dplyr::select(-volumeMaximo) %>%  
-                             dplyr::mutate(kturb = base::ifelse(tipoTurbina==2,1.2,1.5)),
-            by=c("codUsina"="codUsina","anoMes" = "anoMes")
-          ) %>% 
-          dplyr::left_join(leitorrmpe::leituraConfiguracaoHidro(pastaCaso)%>%
-                             dplyr::select(codREE,codUsina),
-                           by=c("codUsina" = "codUsina")) %>% 
-          dplyr::mutate(volumeMaximo = base::ifelse(is.na(volumeMaximo) | volumeMaximo >  volumeReferencia ,volumeReferencia,volumeMaximo)) %>%
-          dplyr::mutate(nivelMontante = base::ifelse(is.na(nivelMontante),
-                                                     poliCotaVolumeA0 + volumeMaximo*poliCotaVolumeA1 + volumeMaximo^2*poliCotaVolumeA2 + volumeMaximo^3*poliCotaVolumeA3+ volumeMaximo^4*poliCotaVolumeA4,nivelMontante)) %>%
-          dplyr::mutate(canalFuga = base::ifelse(is.na(canalFuga),canalFugaMedio,canalFuga)) %>%
-          dplyr::mutate(perda = base::ifelse(tipoPerda==2,perda,(nivelMontante-canalFuga)*perda/100)) %>%
-          dplyr::mutate(Hliq = nivelMontante-canalFuga-perda) %>% 
-          dplyr::left_join(leitorrmpe::leituraDadosUsinasHidro(pastaCaso)[[3]],
-                           by=c("codUsina"="codUsina"),
-                           relationship = "many-to-many") %>%
-          dplyr::mutate(
-            potConj = numeroMaquinas * base::ifelse(Hliq>=quedaEfetiva,potenciaUnitaria,potenciaUnitaria*(Hliq/quedaEfetiva)^kturb),
-            produtibilidade = produtibilidade * (nivelMontante-canalFuga-perda)
-          ) %>%
+        # calculo da pordutibilidade das usinas dos REE tipo 4
+        df.prodREEModulaTabela <- dplyr::full_join(leitorrmpe::leituraAlteracaoDadosUsinasHidro(pastaCaso)[[1]],
+                                                   leitorrmpe::leituraDadosUsinasHidro(pastaCaso)[[1]] %>%
+                                                     tidyr::crossing(anoMes = unique(df.saidasHidroTipo4$A06_NR_MES)) %>% 
+                                                     dplyr::select(codUsina, anoMes, poliCotaVolumeA0, poliCotaVolumeA1, poliCotaVolumeA2, poliCotaVolumeA3, poliCotaVolumeA4, volumeMaximo, volumeReferencia, canalFugaMedio, tipoPerda, perda, tipoTurbina, TEIF, IP, produtibilidade) %>%
+                                                     dplyr::mutate(volumeReferencia = ifelse(volumeReferencia < volumeMaximo, volumeMaximo, volumeReferencia)) %>%
+                                                     dplyr::select(-volumeMaximo) %>%  
+                                                     dplyr::mutate(kturb = ifelse(tipoTurbina == 2, 1.2, 1.5)),
+                                                   by=c("codUsina" ,"anoMes")) %>% 
+          dplyr::left_join(leitorrmpe::leituraConfiguracaoHidro(pastaCaso) %>% dplyr::select(codREE,codUsina), by=c("codUsina")) %>% 
+          dplyr::mutate(volumeMaximo = ifelse(is.na(volumeMaximo) | volumeMaximo >  volumeReferencia ,volumeReferencia,volumeMaximo)) %>%
+          dplyr::mutate(nivelMontante = ifelse(is.na(nivelMontante),
+                                               poliCotaVolumeA0 + volumeMaximo*poliCotaVolumeA1 + volumeMaximo^2*poliCotaVolumeA2 + volumeMaximo^3*poliCotaVolumeA3+ volumeMaximo^4*poliCotaVolumeA4,
+                                               nivelMontante)) %>%
+          dplyr::mutate(canalFuga = ifelse(is.na(canalFuga), canalFugaMedio, canalFuga)) %>%
+          dplyr::mutate(perda = ifelse(tipoPerda==2, perda, (nivelMontante - canalFuga)*perda/100)) %>%
+          dplyr::mutate(Hliq = nivelMontante-canalFuga - perda) %>% 
+          dplyr::left_join(leitorrmpe::leituraDadosUsinasHidro(pastaCaso)[[3]], by = c("codUsina"), relationship = "many-to-many") %>%
+          dplyr::mutate(potConj = numeroMaquinas * ifelse(Hliq>=quedaEfetiva,potenciaUnitaria,potenciaUnitaria*(Hliq/quedaEfetiva)^kturb),
+                        produtibilidade = produtibilidade * (nivelMontante-canalFuga-perda)) %>%
           dplyr::filter(codUsina %in% UHEtipo4,anoMes %in% unique(df.saidasHidroTipo4$A06_NR_MES)) %>%
-          dplyr::group_by(codREE,codUsina,anoMes,produtibilidade,TEIF,IP) %>%
-          dplyr::summarize(
-            GHmax = base::sum(potConj)
-          ) %>%
+          dplyr::group_by(codREE, codUsina, anoMes, produtibilidade, TEIF, IP) %>%
+          dplyr::summarize(GHmax = sum(potConj)) %>%
           dplyr::ungroup() %>%
           dplyr::mutate(GHmax=GHmax * ( 1-TEIF/100) * (1-IP/100)) %>%
-          dplyr::select(codREE,codUsina,anoMes,GHmax,produtibilidade) %>%
+          dplyr::select(codREE, codUsina, anoMes, GHmax, produtibilidade) %>%
           dplyr::group_by(codREE, anoMes) %>%
-          dplyr::mutate(proporcao = GHmax/sum(GHmax)) 
+          dplyr::mutate(proporcao = GHmax/sum(GHmax))
         
-        
-        df.dadosUHEModulamTabela.usina <- 
-          dplyr::left_join(
-            df.saidasHidroTipo4, 
-            df.prodREEModulaTabela,
-            by = c("A02_NR_REE" = "codREE", "A06_NR_MES" = "anoMes")
-          ) %>% 
-          dplyr::left_join(
-            df.mapeamento.desvio,
-            by = c("codUsina")
-          ) %>% 
-          dplyr::left_join(
-            df.desvio,
-            by = c("A06_NR_MES" = "anoMes","grupo" = "grupo","codUsina" = "codUsinaHidrograma")
-          ) %>% 
-          dplyr::mutate(
-            flag = flagVert,
-            ghtot_ree = 
-              dplyr::if_else(
-                flag,
-                (A06_VL_GERACAO_HIDRAULICA + A06_VL_SUBMOTORIZACAO + A06_VL_VERTIMENTO_TURBINAVEL),
-                (A06_VL_GERACAO_HIDRAULICA + A06_VL_SUBMOTORIZACAO)
-              ),
-            gh = ghtot_ree * proporcao,
-            flagHidrograma = 
-              dplyr::case_when(
-                !is.na(grupo) & !is.na(vazao_desv) ~ 1,
-                !is.na(grupo) & is.na(vazao_desv) ~ 0,
-                T ~ NA
-              )
-            # vazao = gh/produtibilidade 
-          ) %>% 
-          # dplyr::filter(codUsina %in% usinas.tabelaModulacao) %>% 
-          dplyr::left_join(df.tabelaModulacao %>% dplyr::select(-codUsina), by = c("A02_NR_REE" = "codREE")) %>% #quando faço o join pelo codusina ele não funciona
-          dplyr::group_by(A02_NR_REE,A06_NR_MES,A06_NR_SERIE,grupo) %>% 
-          dplyr::mutate(
-            proporcao_hidrograma = (GHmax  * flagHidrograma)/sum(GHmax  * flagHidrograma),
-            proporcao_impactada = (GHmax  * (1-flagHidrograma))/sum(GHmax  * (1-flagHidrograma)),
-            gh_hidrograma = pmin(produtibilidade * vazao_desv,GHmax),
-            gh_impactada = 
-              dplyr::case_when(
-                flagHidrograma == 0 ~ pmin(GHmax,pmax(0,sum(gh) - sum(gh_hidrograma,na.rm = T))) * proporcao_impactada,
-                T ~ NA
-              ),
-            gh_hidrograma_corrigido = 
-              dplyr::case_when(
-                flagHidrograma == 1 ~ 
-                  pmin(gh_hidrograma, sum(gh) * proporcao_hidrograma)
-                   + pmax(0,(sum(gh) - sum(gh_impactada,na.rm = T) - sum(gh_hidrograma,na.rm = T))) * proporcao_hidrograma,
-                T ~ NA
-              ),
-            gh_corrigido = 
-              dplyr::coalesce(gh_hidrograma_corrigido,gh_impactada,gh),
-            vazao = gh_corrigido/produtibilidade
-          ) %>% 
+        df.dadosUHEModulamTabela.usina <- dplyr::left_join(df.saidasHidroTipo4, df.prodREEModulaTabela, by = c("A02_NR_REE" = "codREE", "A06_NR_MES" = "anoMes")) %>% 
+          dplyr::left_join(lt.hidrogramaBM[["usinas"]], by = c("codUsina")) %>% 
+          dplyr::mutate(mes = A06_NR_MES%%100) %>% 
+          dplyr::left_join(df.hidrograma, by = c("mes", "grupo", "codUsina" = "codUsinaHidrograma")) %>% 
+          dplyr::select(-mes) %>% 
+          dplyr::mutate(flag = flagVert,
+                        ghtot_ree = ifelse(flag,
+                                           A06_VL_GERACAO_HIDRAULICA + A06_VL_SUBMOTORIZACAO + A06_VL_VERTIMENTO_TURBINAVEL,
+                                           A06_VL_GERACAO_HIDRAULICA + A06_VL_SUBMOTORIZACAO),
+                        gh = ghtot_ree * proporcao,
+                        flagHidrograma = ifelse(!is.na(grupo) & !is.na(vazao), 1, ifelse(!is.na(grupo) & is.na(vazao), 0, NA))) %>% 
+          dplyr::left_join(df.tabelaModulacao %>% dplyr::select(-codUsina), by = c("A02_NR_REE" = "codREE")) %>%
+          dplyr::group_by(A02_NR_REE, A06_NR_MES, A06_NR_SERIE, grupo) %>% 
+          dplyr::mutate(proporcao_hidrograma = (GHmax  * flagHidrograma)/sum(GHmax  * flagHidrograma),
+                        proporcao_impactada = (GHmax  * (1-flagHidrograma))/sum(GHmax  * (1-flagHidrograma)),
+                        gh_hidrograma = pmin(produtibilidade * vazao, GHmax),
+                        gh_impactada = ifelse(flagHidrograma == 0,
+                                              pmin(GHmax,pmax(0,sum(gh) - sum(gh_hidrograma,na.rm = T))) * proporcao_impactada,
+                                              NA),
+                        gh_hidrograma_corrigido = ifelse(flagHidrograma == 1,
+                                                         pmin(gh_hidrograma, sum(gh) * proporcao_hidrograma) + pmax(0,(sum(gh) - sum(gh_impactada,na.rm = T) - sum(gh_hidrograma,na.rm = T))) * proporcao_hidrograma,
+                                                         NA),
+                        gh_corrigido = dplyr::coalesce(gh_hidrograma_corrigido,gh_impactada,gh),
+                        vazao = gh_corrigido/produtibilidade) %>% 
           dplyr::ungroup() %>% 
           dplyr::rowwise() %>% 
-          dplyr::mutate(
-            pdisph = 
-              dplyr::case_when(
-                codUsina %in% usinas.tabelaModulacao ~ funcao(vazao),
-                T ~ gh_corrigido
-              )
-          ) #dados por usina 
-          
-          # df.dadosUHEModulamTabela %>%
-          #   dplyr::group_by(A02_NR_REE,A06_NR_SERIE,A06_NR_MES) %>%
-          #   dplyr::summarise(
-          #       sum(gh),
-          #       sum(gh_corrigido),
-          #       delta = round(sum(gh) - sum(gh_corrigido))
-          #     ) %>%
-          #   dplyr::ungroup() %>%
-          #   dplyr::filter(delta != 0)
-          
-        df.dadosUHEModulamTabela <-
-          df.dadosUHEModulamTabela.usina %>% 
+          dplyr::mutate(pdisph = ifelse(codUsina %in% unique(df.tabelaModulacao$codUsina),
+                                        funcao(vazao),
+                                        gh_corrigido))
+        
+        df.dadosUHEModulamTabela <- df.dadosUHEModulamTabela.usina %>% 
           dplyr::group_by(A02_NR_REE,A06_NR_SERIE,A06_NR_MES) %>% #dados por REE
-          dplyr::summarise(pdisph = sum(pdisph)) %>% 
+          dplyr::reframe(pdisph = sum(pdisph)) %>% 
           dplyr::ungroup() %>% 
           dplyr::mutate(A09_VL_DISPONIBILIDADE_MAXIMA_PONTA = pdisph,
                         A01_CD_MODELO = codModelo,
@@ -783,11 +642,9 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipo
           dplyr::select(A01_CD_MODELO, A01_TP_CASO, A01_NR_CASO, A02_NR_REE, A09_NR_MES,
                         A09_NR_SERIE, A09_VL_GERACAO_HIDRO_MINIMA, A09_VL_GERACAO_HIDRO_MINIMA_ORIGINAL,
                         A09_VL_DISPONIBILIDADE_MAXIMA_PONTA, A09_VL_POTENCIA_MAXIMA)
-
+        
         #concatena as usinas dos REEs que têm usinas que modulam segundo a curva
         df.dadosCalculadosUHETipo4<- rbind(df.dadosCalculadosUHETipo4, df.dadosUHEModulamTabela.usina)
-        
-        #ALTERACAO DAVI TERMINA AQUI
         
         # concatena as REEs que modulam com as que nao modulam e as que modulam por tabela para gravar na base
         df.dadosCalculadosSsist <- rbind(df.dadosCalculadosSsist, df.dadosSsistNaoModulam, df.dadosUHEModulamTabela)
@@ -822,21 +679,21 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipo
       
     }
     
-     writexl::write_xlsx(
-            list(
-              dados = 
-                df.dadosCalculadosUHETipo4 %>% 
-                dplyr::select(
-                  A02_NR_REE,A06_NR_SERIE,A06_NR_MES,grupo,codUsina,
-                  GHmax ,proporcao,
-                  ghtot_ree,gh,
-                  vazao_desv,produtibilidade,gh_hidrograma,
-                  flagHidrograma,proporcao_hidrograma,proporcao_impactada,
-                  gh_impactada,gh_hidrograma_corrigido,
-                  gh_corrigido,vazao,pdisph
-                )
-            ),
-            path = file.path(pastaSaidas,"REE_modulacaoTabelaPdisp.xlsx",fsep = "\\"))
+    writexl::write_xlsx(
+      list(
+        dados = 
+          df.dadosCalculadosUHETipo4 %>% 
+          dplyr::select(
+            A02_NR_REE,A06_NR_SERIE,A06_NR_MES,grupo,codUsina,
+            GHmax ,proporcao,
+            ghtot_ree,gh,
+            vazao,produtibilidade,gh_hidrograma,
+            flagHidrograma,proporcao_hidrograma,proporcao_impactada,
+            gh_impactada,gh_hidrograma_corrigido,
+            gh_corrigido,vazao,pdisph
+          )
+      ),
+      path = file.path(pastaSaidas,"REE_modulacaoTabelaPdisp.xlsx",fsep = "\\"))
   }
   
   return("Disponibilidade hidro processada com sucesso!")
