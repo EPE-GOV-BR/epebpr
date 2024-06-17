@@ -476,14 +476,23 @@ gravacaoDadosDisponibilidadeOutrasFontesBDBP <- function(pastaCaso, conexao, tip
         stop("Arquivo texto saidaExpansao não encontrado ou multiplos arquivos com nome saidaExpansao em ", pastaCaso)
       }
       
-      # le arquivo com as expansoes do MDI - trata ";" no fim para nao ter avisos
-      df.expansao <- readr::read_delim(stringi::stri_enc_toutf8(paste(pastaCaso, arquivoExpansao, sep = "/")), 
-                                       delim = ";", 
-                                       col_names = T, 
-                                       local = readr::locale(encoding = "latin1"),
-                                       show_col_types = FALSE) %>% 
-        dplyr::select(1:(ncol(.) -1)) %>% 
-        dplyr::select(df.relacaoIndicativas$NomeFonteMDI) # filtra somente as indicativas (as fontes estao em colunas)
+      # le arquivo com as expansoes do MDI - trata ";" no fim para nao ter avisos e verifica encoding para ler corretamente
+      if("UTF-8" %in% readr::guess_encoding(paste(pastaCaso, arquivoExpansao, sep = "/"))$encoding){
+        df.expansao <- readr::read_delim(paste(pastaCaso, arquivoExpansao, sep = "/"), 
+                                         delim = ";", 
+                                         col_names = T,
+                                         show_col_types = FALSE) %>% 
+          dplyr::select(1:(ncol(.) -1)) %>% 
+          dplyr::select(df.relacaoIndicativas$NomeFonteMDI) # filtra somente as indicativas (as fontes estao em colunas)
+      }else{
+        df.expansao <- readr::read_delim(stringi::stri_enc_toutf8(paste(pastaCaso, arquivoExpansao, sep = "/")), 
+                                         delim = ";", 
+                                         col_names = T, 
+                                         local = readr::locale(encoding = "latin1"),
+                                         show_col_types = FALSE) %>% 
+          dplyr::select(1:(ncol(.) -1)) %>% 
+          dplyr::select(df.relacaoIndicativas$NomeFonteMDI) # filtra somente as indicativas (as fontes estao em colunas)
+      }
       
       # cria vetor com todos os meses no horizonte do MDI e adiciona na df.expansao
       quantidadeMesesHorizonte <- ((anoMesFimMDI %/% 100) * 12 + anoMesFimMDI %% 100) - 
