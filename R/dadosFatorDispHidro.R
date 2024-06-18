@@ -38,7 +38,7 @@ dadosFatorDispHidro <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, ini
     dplyr::reframe(UTE = sum(A14_VL_DISPONIBILIDADE_MAXIMA_PONTA))
   
   # leitura dos dados de pdisp das UTE GNL por cenario
-  dispTermGnl <- DBI::dbReadTable(conexao, name = 'BPO_A14B_DISPONIBILIDADE_UTE_GNL') %>%
+  dispTermGnl <- DBI::dbReadTable(conexao, name = 'BPO_A31_DISPONIBILIDADE_UTE_GNL') %>%
     dplyr::filter(A01_TP_CASO == tipoCaso, A01_NR_CASO == numeroCaso, A01_CD_MODELO == codModelo) %>% 
     dplyr::select(A14_NR_SERIE, A14_VL_DISPONIBILIDADE_MAXIMA_PONTA, ANO_MES = A14_NR_MES, A02_NR_SUBSISTEMA) %>% 
     dplyr::mutate(anoMes = as.character(ANO_MES) %>% zoo::as.yearmon("%Y%m") %>% zoo::as.Date()) %>% 

@@ -3,7 +3,7 @@
 #' Faz a gravacao dos dados dos limites dos agrupamento de intercambios ao longo do horizonte de simulacao do NEWAVE no banco de dados do Balanco de Potencia (BDBP)
 #' Os dados sao gravados na tabela BPO_A12_LIMITE_AGRUPAMENTOS_INTERCAMBIO do BDBP.
 #'
-#' @param pastaCaso caracter com a localizacao dos arquivos NEWAVE.
+#' @param pastaCaso caracter com a localizacao dos arquivos NEWAVE e auxliares do BP.
 #' @param conexao caracter com a conexao com o Banco de Dados do Balanco de Potencia.
 #' @param tipoCaso caracter com o tipo de caso simulado. [1]=PDE [2]=PMO [3]=GF.
 #' @param numeroCaso caracter com o numero do caso, definido pelo usuario.
@@ -18,7 +18,7 @@
 #' @export
 gravacaoDadosLimitesAgrupIntercambioBDBP <- function(pastaCaso, conexao, tipoCaso, numeroCaso, codModelo) {
   if (missing(pastaCaso)) {
-    stop("favor indicar a pasta com os arquivos do NEWAVE")
+    stop("favor indicar a pasta com os arquivos do BP")
   }
   if (missing(conexao)) {
     stop("favor indicar a conexão com o banco de dados")

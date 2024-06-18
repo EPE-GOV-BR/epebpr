@@ -3,7 +3,7 @@
 #' Faz a gravacao dos dados das usinas termeletricas ao longo do horizonte de simulacao do NEWAVE no banco de dados do Balanco de Potencia (BDBP)
 #' Os dados sao gravados na tabela BPO_A14_DISPONIBILIDADE_UTE do BDBP.
 #'
-#' @param pastaCaso caracter com a localizacao dos arquivos NEWAVE.
+#' @param pastaCaso caracter com a localizacao dos arquivos NEWAVE e auxliares do BP.
 #' @param pastaSaidas localizacao dos arquivos de saida do modulo NWLISTOP
 #' @param conexao caracter com a conexao com o Banco de Dados do Balanco de Potencia.
 #' @param tipoCaso caracter com o tipo de caso simulado. [1]=PDE [2]=PMO [3]=GF.
@@ -19,7 +19,7 @@
 #' @export
 gravacaoDadosTermeletricasBDBP <- function(pastaCaso, pastaSaidas, conexao, tipoCaso, numeroCaso, codModelo) {
   if (missing(pastaCaso)) {
-    stop("favor indicar a pasta com os arquivos do NEWAVE")
+    stop("favor indicar a pasta com os arquivos do BP")
   }
   if (missing(pastaSaidas)) {
     stop("favor indicar a pasta com os arquivos do NWLISTOP")
@@ -44,7 +44,7 @@ gravacaoDadosTermeletricasBDBP <- function(pastaCaso, pastaSaidas, conexao, tipo
                                  " AND A01_NR_CASO = ", numeroCaso, 
                                  " AND A01_CD_MODELO = ", codModelo))
   
-  DBI::dbExecute(conexao, paste0("DELETE FROM BPO_A14B_DISPONIBILIDADE_UTE_GNL
+  DBI::dbExecute(conexao, paste0("DELETE FROM BPO_A31_DISPONIBILIDADE_UTE_GNL
                               WHERE A01_TP_CASO = ", tipoCaso, 
                               " AND A01_NR_CASO = ", numeroCaso, 
                               " AND A01_CD_MODELO = ", codModelo))
@@ -96,10 +96,10 @@ gravacaoDadosTermeletricasBDBP <- function(pastaCaso, pastaSaidas, conexao, tipo
     dplyr::select(-geracao_mes) %>% 
     dplyr::rename(A14_CD_USINA = codUsina, A14_NR_MES = anoMes, A14_NR_SERIE = serie)
     
-  # executa query para gravar os dados das termeletricas na tabela BPO_A14B_DISPONIBILIDADE_UTE_GNL do BDBP
-  DBI::dbWriteTable(conexao, "BPO_A14B_DISPONIBILIDADE_UTE_GNL", df.consolidadoUTEGnl, append = TRUE)
+  # executa query para gravar os dados das termeletricas na tabela BPO_A31_DISPONIBILIDADE_UTE_GNL do BDBP
+  DBI::dbWriteTable(conexao, "BPO_A31_DISPONIBILIDADE_UTE_GNL", df.consolidadoUTEGnl, append = TRUE)
   
-  mensagem <- "tabelas BPO_A14_DISPONIBILIDADE_UTE e BPO_A14B_DISPONIBILIDADE_UTE_GNL gravadas com sucesso!"
+  mensagem <- "tabelas BPO_A14_DISPONIBILIDADE_UTE e BPO_A31_DISPONIBILIDADE_UTE_GNL gravadas com sucesso!"
   
   return(mensagem)
 }

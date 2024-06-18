@@ -14,6 +14,7 @@ balancoPeriodoClp(
   df.geracaoTermicaGnl,
   df.geracaoTransmissaoTotal,
   df.geracaoRenovaveisTotal,
+  df.geracaoArmazenamentoTotal,
   df.limitesAgrupamentoLinhasTotal,
   df.demanda,
   df.geracaoHidroTotal,
@@ -45,6 +46,8 @@ tambem o por gerador (\code{BPO_A17_BALANCO_GERADOR})}
 \item{df.geracaoTransmissaoTotal}{data frame com os dados de transmissao}
 
 \item{df.geracaoRenovaveisTotal}{data frame com os dados de renovaveis}
+
+\item{df.geracaoArmazenamentoTotal}{data frame com os dados de projetos de armazenamento}
 
 \item{df.limitesAgrupamentoLinhasTotal}{data frame com os dados de agrupamento de transmissao}
 
@@ -84,8 +87,8 @@ Funcao criada para poder executar processamento paralelo.
 \dontrun{
 balancoPeriodoClp(201901, 1, T, conexao, df.custoDefict, df.geracaoTermicaTotal,
 df.geracaoTermicaGnl, df.geracaoTransmissaoTotal, df.geracaoRenovaveisTotal,
-df.limitesAgrupamentoLinhasTotal, df.demanda, df.geracaoHidroTotal,
-df.agrupamentoLinhas, tipoCaso, numeroCaso, codModelo,
+df.geracaoArmazenamentoTotal, df.limitesAgrupamentoLinhasTotal, df.demanda,
+df.geracaoHidroTotal,df.agrupamentoLinhas, tipoCaso, numeroCaso, codModelo,
 df.subsistemas, cvuHidro, df.defictRealocado)}
 
 }
