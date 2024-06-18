@@ -747,5 +747,34 @@ CREATE TABLE BPO_A32_DISPONIBILIDADE_ARMAZENAMENTO (
     )
 );
 
+-- Table: BPO_A33_DADOS_CALCULADOS_UHE_REE_TABELA
+DROP TABLE IF EXISTS BPO_A33_DADOS_CALCULADOS_UHE_REE_TABELA;
+
+CREATE TABLE BPO_A33_DADOS_CALCULADOS_UHE_REE_TABELA (
+    A01_TP_CASO                          INTEGER NOT NULL,
+    A01_NR_CASO                          INTEGER NOT NULL,
+    A01_CD_MODELO                        INTEGER NOT NULL,
+    A02_NR_REE                           INTEGER NOT NULL,
+    A03_CD_USINA                         INTEGER NOT NULL,
+    A33_NR_MES                           INTEGER NOT NULL,
+    A33_NR_SERIE                         INTEGER NOT NULL,
+    A33_VL_GERACAO_HIDRO_REE             REAL,
+    A33_VL_PRODUTIBILIDADE               REAL,
+    A33_VL_PROPORCAO                     REAL,
+    A33_VL_VAZAO                         REAL,
+    A33_VL_GERACAO_HIDRO_CORRIGIDA       REAL,
+    A33_VL_POTENCIA_MAXIMA               REAL,
+    A33_VL_DISPONIBILIDADE_MAXIMA_PONTA  REAL,
+
+    PRIMARY KEY (
+        A01_TP_CASO,
+        A01_NR_CASO,
+        A01_CD_MODELO,
+        A03_CD_USINA,
+        A33_NR_MES,
+        A33_NR_SERIE
+    )
+);
+
 COMMIT TRANSACTION;
 PRAGMA foreign_keys = on;

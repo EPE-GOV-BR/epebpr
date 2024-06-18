@@ -623,27 +623,67 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipo
           dplyr::rowwise() %>% 
           dplyr::mutate(pdisph = ifelse(codUsina %in% unique(df.tabelaModulacao$codUsina),
                                         funcao(vazao),
-                                        gh_corrigido))
-        
+                                        gh_corrigido),
+                        A01_CD_MODELO = codModelo,
+                        A01_TP_CASO = tipoCaso,
+                        A01_NR_CASO = numeroCaso) %>% 
+          dplyr::rename(A33_NR_MES = A06_NR_MES,
+                        A33_NR_SERIE = A06_NR_SERIE,
+                        A03_CD_USINA = codUsina,
+                        A33_VL_GERACAO_HIDRO_REE = ghtot_ree,
+                        A33_VL_PRODUTIBILIDADE = produtibilidade,
+                        A33_VL_PROPORCAO = proporcao,
+                        A33_VL_VAZAO = vazao,
+                        A33_VL_GERACAO_HIDRO_CORRIGIDA = gh_corrigido,
+                        A33_VL_POTENCIA_MAXIMA = GHmax,
+                        A33_VL_DISPONIBILIDADE_MAXIMA_PONTA = pdisph) %>% 
+          dplyr::select(A01_CD_MODELO, 
+                        A01_TP_CASO, 
+                        A01_NR_CASO,
+                        A02_NR_REE,
+                        A33_NR_MES, 
+                        A33_NR_SERIE,
+                        A03_CD_USINA,
+                        A33_VL_GERACAO_HIDRO_REE,
+                        A33_VL_PRODUTIBILIDADE,
+                        A33_VL_PROPORCAO,
+                        A33_VL_VAZAO,
+                        A33_VL_GERACAO_HIDRO_CORRIGIDA,
+                        A33_VL_POTENCIA_MAXIMA,
+                        A33_VL_DISPONIBILIDADE_MAXIMA_PONTA)
+                        
         df.dadosUHEModulamTabela <- df.dadosUHEModulamTabelaUsina %>% 
-          dplyr::group_by(A02_NR_REE,A06_NR_SERIE,A06_NR_MES) %>% #dados por REE
-          dplyr::reframe(pdisph = sum(pdisph)) %>% 
+          dplyr::group_by(A02_NR_REE, A33_NR_SERIE, A33_NR_MES) %>% #dados por REE
+          dplyr::reframe(A33_VL_DISPONIBILIDADE_MAXIMA_PONTA = sum(A33_VL_DISPONIBILIDADE_MAXIMA_PONTA),
+                         A33_VL_POTENCIA_MAXIMA = sum(A33_VL_POTENCIA_MAXIMA)) %>% 
           dplyr::ungroup() %>% 
-          dplyr::mutate(A09_VL_DISPONIBILIDADE_MAXIMA_PONTA = pdisph,
+          dplyr::mutate(A09_VL_DISPONIBILIDADE_MAXIMA_PONTA = A33_VL_DISPONIBILIDADE_MAXIMA_PONTA,
                         A01_CD_MODELO = codModelo,
                         A01_TP_CASO = tipoCaso,
                         A01_NR_CASO = numeroCaso,
-                        A09_NR_MES = A06_NR_MES,
-                        A09_NR_SERIE = A06_NR_SERIE,
+                        A09_NR_MES = A33_NR_MES,
+                        A09_NR_SERIE = A33_NR_SERIE,
                         A09_VL_GERACAO_HIDRO_MINIMA = 0,
                         A09_VL_GERACAO_HIDRO_MINIMA_ORIGINAL = 0,
-                        A09_VL_POTENCIA_MAXIMA = 0) %>% 
-          dplyr::select(A01_CD_MODELO, A01_TP_CASO, A01_NR_CASO, A02_NR_REE, A09_NR_MES,
-                        A09_NR_SERIE, A09_VL_GERACAO_HIDRO_MINIMA, A09_VL_GERACAO_HIDRO_MINIMA_ORIGINAL,
-                        A09_VL_DISPONIBILIDADE_MAXIMA_PONTA, A09_VL_POTENCIA_MAXIMA)
+                        A09_VL_POTENCIA_MAXIMA = A33_VL_POTENCIA_MAXIMA) %>% 
+          dplyr::select(A01_CD_MODELO, 
+                        A01_TP_CASO, 
+                        A01_NR_CASO, 
+                        A02_NR_REE, 
+                        A09_NR_MES,
+                        A09_NR_SERIE, 
+                        A09_VL_GERACAO_HIDRO_MINIMA, 
+                        A09_VL_GERACAO_HIDRO_MINIMA_ORIGINAL,
+                        A09_VL_DISPONIBILIDADE_MAXIMA_PONTA, 
+                        A09_VL_POTENCIA_MAXIMA)
         
         #concatena as usinas dos REEs que têm usinas que modulam segundo a curva
-        df.dadosCalculadosUHETipo4<- rbind(df.dadosCalculadosUHETipo4, df.dadosUHEModulamTabelaUsina)
+        df.dadosCalculadosUHETipo4 <- rbind(df.dadosCalculadosUHETipo4, df.dadosUHEModulamTabelaUsina)
+        
+        # grava dados calculados na BPO_A33_DADOS_CALCULADOS_UHE_REE_TABELA
+        DBI::dbExecute(conexaoSQLite, "PRAGMA locking_mode = EXCLUSIVE;")
+        DBI::dbWriteTable(conexaoSQLite, "BPO_A33_DADOS_CALCULADOS_UHE_REE_TABELA", df.dadosCalculadosUHETipo4, append = T)
+        DBI::dbExecute(conexaoSQLite, "PRAGMA locking_mode = NORMAL;")
         
         # concatena as REEs que modulam com as que nao modulam e as que modulam por tabela para gravar na base
         df.dadosCalculadosSsist <- rbind(df.dadosCalculadosSsist, df.dadosSsistNaoModulam, df.dadosUHEModulamTabela)
