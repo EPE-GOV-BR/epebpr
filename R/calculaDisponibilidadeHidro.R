@@ -562,7 +562,6 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipo
       df.dadosSsistNaoModulam <- DBI::dbGetQuery(conexaoSQLite, sql)
       
       ##### CÁLCULO DISPONIBILIDADE TIPO 4 PELA TABELA ######
-      browser()
       if(length(reeTipo4) > 0){
         df.saidasHidroTipo4 <- df.saidasHidro %>% 
           dplyr::filter(dplyr::between(A06_NR_SERIE, janelaSeries[andaJanela], (janelaSeries[andaJanela + 1] - 1)), A02_NR_REE %in% reeTipo4)
@@ -585,18 +584,18 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipo
           dplyr::mutate(perda = ifelse(tipoPerda==2, perda, (nivelMontante - canalFuga)*perda/100)) %>%
           dplyr::mutate(Hliq = nivelMontante-canalFuga - perda) %>% 
           dplyr::left_join(leitorrmpe::leituraDadosUsinasHidro(pastaCaso)[[3]], by = c("codUsina"), relationship = "many-to-many") %>%
-          dplyr::mutate(potConj = numeroMaquinas * ifelse(Hliq>=quedaEfetiva,potenciaUnitaria,potenciaUnitaria*(Hliq/quedaEfetiva)^kturb),
-                        produtibilidade = produtibilidade * (nivelMontante-canalFuga-perda)) %>%
-          dplyr::filter(codUsina %in% UHEtipo4,anoMes %in% unique(df.saidasHidroTipo4$A06_NR_MES)) %>%
+          dplyr::mutate(potConj = numeroMaquinas * ifelse(Hliq >= quedaEfetiva, potenciaUnitaria, potenciaUnitaria*(Hliq/quedaEfetiva)^kturb),
+                        produtibilidade = produtibilidade * (nivelMontante - canalFuga-perda)) %>%
+          dplyr::filter(codUsina %in% UHEtipo4, anoMes %in% unique(df.saidasHidroTipo4$A06_NR_MES)) %>%
           dplyr::group_by(codREE, codUsina, anoMes, produtibilidade, TEIF, IP) %>%
           dplyr::summarize(GHmax = sum(potConj)) %>%
           dplyr::ungroup() %>%
-          dplyr::mutate(GHmax=GHmax * ( 1-TEIF/100) * (1-IP/100)) %>%
+          dplyr::mutate(GHmax=GHmax * (1 - TEIF/100) * (1 - IP/100)) %>%
           dplyr::select(codREE, codUsina, anoMes, GHmax, produtibilidade) %>%
           dplyr::group_by(codREE, anoMes) %>%
           dplyr::mutate(proporcao = GHmax/sum(GHmax))
         
-        df.dadosUHEModulamTabela.usina <- dplyr::left_join(df.saidasHidroTipo4, df.prodREEModulaTabela, by = c("A02_NR_REE" = "codREE", "A06_NR_MES" = "anoMes")) %>% 
+        df.dadosUHEModulamTabelaUsina <- dplyr::left_join(df.saidasHidroTipo4, df.prodREEModulaTabela, by = c("A02_NR_REE" = "codREE", "A06_NR_MES" = "anoMes")) %>% 
           dplyr::left_join(lt.hidrogramaBM[["usinas"]], by = c("codUsina")) %>% 
           dplyr::mutate(mes = A06_NR_MES%%100) %>% 
           dplyr::left_join(df.hidrograma, by = c("mes", "grupo", "codUsina" = "codUsinaHidrograma")) %>% 
@@ -610,15 +609,15 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipo
           dplyr::left_join(df.tabelaModulacao %>% dplyr::select(-codUsina), by = c("A02_NR_REE" = "codREE")) %>%
           dplyr::group_by(A02_NR_REE, A06_NR_MES, A06_NR_SERIE, grupo) %>% 
           dplyr::mutate(proporcao_hidrograma = (GHmax  * flagHidrograma)/sum(GHmax  * flagHidrograma),
-                        proporcao_impactada = (GHmax  * (1-flagHidrograma))/sum(GHmax  * (1-flagHidrograma)),
+                        proporcao_impactada = (GHmax  * (1 - flagHidrograma))/sum(GHmax  * (1 - flagHidrograma)),
                         gh_hidrograma = pmin(produtibilidade * vazao, GHmax),
                         gh_impactada = ifelse(flagHidrograma == 0,
-                                              pmin(GHmax,pmax(0,sum(gh) - sum(gh_hidrograma,na.rm = T))) * proporcao_impactada,
+                                              pmin(GHmax, pmax(0, sum(gh) - sum(gh_hidrograma, na.rm = T))) * proporcao_impactada,
                                               NA),
                         gh_hidrograma_corrigido = ifelse(flagHidrograma == 1,
                                                          pmin(gh_hidrograma, sum(gh) * proporcao_hidrograma) + pmax(0,(sum(gh) - sum(gh_impactada,na.rm = T) - sum(gh_hidrograma,na.rm = T))) * proporcao_hidrograma,
                                                          NA),
-                        gh_corrigido = dplyr::coalesce(gh_hidrograma_corrigido,gh_impactada,gh),
+                        gh_corrigido = dplyr::coalesce(gh_hidrograma_corrigido, gh_impactada, gh),
                         vazao = gh_corrigido/produtibilidade) %>% 
           dplyr::ungroup() %>% 
           dplyr::rowwise() %>% 
@@ -626,7 +625,7 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipo
                                         funcao(vazao),
                                         gh_corrigido))
         
-        df.dadosUHEModulamTabela <- df.dadosUHEModulamTabela.usina %>% 
+        df.dadosUHEModulamTabela <- df.dadosUHEModulamTabelaUsina %>% 
           dplyr::group_by(A02_NR_REE,A06_NR_SERIE,A06_NR_MES) %>% #dados por REE
           dplyr::reframe(pdisph = sum(pdisph)) %>% 
           dplyr::ungroup() %>% 
@@ -644,7 +643,7 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipo
                         A09_VL_DISPONIBILIDADE_MAXIMA_PONTA, A09_VL_POTENCIA_MAXIMA)
         
         #concatena as usinas dos REEs que têm usinas que modulam segundo a curva
-        df.dadosCalculadosUHETipo4<- rbind(df.dadosCalculadosUHETipo4, df.dadosUHEModulamTabela.usina)
+        df.dadosCalculadosUHETipo4<- rbind(df.dadosCalculadosUHETipo4, df.dadosUHEModulamTabelaUsina)
         
         # concatena as REEs que modulam com as que nao modulam e as que modulam por tabela para gravar na base
         df.dadosCalculadosSsist <- rbind(df.dadosCalculadosSsist, df.dadosSsistNaoModulam, df.dadosUHEModulamTabela)
@@ -653,8 +652,7 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipo
       }
       
       # Para buscar o subsistema
-      df.dadosCalculadosSsist <- dplyr::inner_join(df.dadosCalculadosSsist, df.ree,
-                                                   by = c("A02_NR_REE"))
+      df.dadosCalculadosSsist <- dplyr::inner_join(df.dadosCalculadosSsist, df.ree, by = c("A02_NR_REE"))
       
       # Nao precisa mais de REE e Descricao
       df.dadosCalculadosSsist <- df.dadosCalculadosSsist %>%
@@ -679,21 +677,21 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipo
       
     }
     
-    writexl::write_xlsx(
-      list(
-        dados = 
-          df.dadosCalculadosUHETipo4 %>% 
-          dplyr::select(
-            A02_NR_REE,A06_NR_SERIE,A06_NR_MES,grupo,codUsina,
-            GHmax ,proporcao,
-            ghtot_ree,gh,
-            vazao,produtibilidade,gh_hidrograma,
-            flagHidrograma,proporcao_hidrograma,proporcao_impactada,
-            gh_impactada,gh_hidrograma_corrigido,
-            gh_corrigido,vazao,pdisph
-          )
-      ),
-      path = file.path(pastaSaidas,"REE_modulacaoTabelaPdisp.xlsx",fsep = "\\"))
+    # writexl::write_xlsx(
+    #   list(
+    #     dados = 
+    #       df.dadosCalculadosUHETipo4 %>% 
+    #       dplyr::select(
+    #         A02_NR_REE,A06_NR_SERIE,A06_NR_MES,grupo,codUsina,
+    #         GHmax ,proporcao,
+    #         ghtot_ree,gh,
+    #         vazao,produtibilidade,gh_hidrograma,
+    #         flagHidrograma,proporcao_hidrograma,proporcao_impactada,
+    #         gh_impactada,gh_hidrograma_corrigido,
+    #         gh_corrigido,vazao,pdisph
+    #       )
+    #   ),
+    #   path = file.path(pastaSaidas,"REE_modulacaoTabelaPdisp.xlsx",fsep = "\\"))
   }
   
   return("Disponibilidade hidro processada com sucesso!")
