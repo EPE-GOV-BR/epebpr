@@ -594,7 +594,7 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipo
           dplyr::select(codREE, codUsina, anoMes, GHmax, produtibilidade) %>%
           dplyr::group_by(codREE, anoMes) %>%
           dplyr::mutate(proporcao = GHmax/sum(GHmax))
-        
+
         df.dadosUHEModulamTabelaUsina <- dplyr::left_join(df.saidasHidroTipo4, df.prodREEModulaTabela, by = c("A02_NR_REE" = "codREE", "A06_NR_MES" = "anoMes")) %>% 
           dplyr::left_join(lt.hidrogramaBM[["usinas"]], by = c("codUsina")) %>% 
           dplyr::mutate(mes = A06_NR_MES%%100) %>% 
@@ -677,12 +677,9 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipo
                         A09_VL_DISPONIBILIDADE_MAXIMA_PONTA, 
                         A09_VL_POTENCIA_MAXIMA)
         
-        #concatena as usinas dos REEs que têm usinas que modulam segundo a curva
-        df.dadosCalculadosUHETipo4 <- rbind(df.dadosCalculadosUHETipo4, df.dadosUHEModulamTabelaUsina)
-        
         # grava dados calculados na BPO_A33_DADOS_CALCULADOS_UHE_REE_TABELA
         DBI::dbExecute(conexaoSQLite, "PRAGMA locking_mode = EXCLUSIVE;")
-        DBI::dbWriteTable(conexaoSQLite, "BPO_A33_DADOS_CALCULADOS_UHE_REE_TABELA", df.dadosCalculadosUHETipo4, append = T)
+        DBI::dbWriteTable(conexaoSQLite, "BPO_A33_DADOS_CALCULADOS_UHE_REE_TABELA", df.dadosUHEModulamTabelaUsina, append = T)
         DBI::dbExecute(conexaoSQLite, "PRAGMA locking_mode = NORMAL;")
         
         # concatena as REEs que modulam com as que nao modulam e as que modulam por tabela para gravar na base
