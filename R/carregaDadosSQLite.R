@@ -230,5 +230,5 @@ carregaDadosSQLite <- function(baseSQLite,
   # fecha conexao
   DBI::dbDisconnect(conexao)
   
-  return("Leitura e gravação dos dados do NEWAVE efetuadas com sucesso!")
+  return("Leitura e gravação dos dados de entrada efetuadas com sucesso!")
 }

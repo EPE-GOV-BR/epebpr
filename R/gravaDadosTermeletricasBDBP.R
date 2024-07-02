@@ -91,10 +91,12 @@ gravacaoDadosTermeletricasBDBP <- function(pastaCaso, pastaSaidas, conexao, tipo
     dplyr::group_by(codUsina, anoMes, serie) %>% 
     dplyr::reframe(geracao_mes = sum(geracao)) %>% 
     dplyr::inner_join(df.consolidadoUTEGnl, by = c("codUsina" = "A14_CD_USINA", "anoMes" = "A14_NR_MES")) %>% 
-    dplyr::mutate(A14_VL_DISPONIBILIDADE_MAXIMA_PONTA = dplyr::if_else(geracao_mes > 0, A14_VL_DISPONIBILIDADE_MAXIMA_PONTA, 0),
-                  A14_VL_INFLEXIBILIDADE = dplyr::if_else(geracao_mes > 0, A14_VL_INFLEXIBILIDADE, 0)) %>% 
-    dplyr::select(-geracao_mes) %>% 
-    dplyr::rename(A14_CD_USINA = codUsina, A14_NR_MES = anoMes, A14_NR_SERIE = serie)
+    dplyr::mutate(A31_VL_DISPONIBILIDADE_MAXIMA_PONTA = dplyr::if_else(geracao_mes > 0, A14_VL_DISPONIBILIDADE_MAXIMA_PONTA, 0),
+                  A31_VL_INFLEXIBILIDADE = dplyr::if_else(geracao_mes > 0, A14_VL_INFLEXIBILIDADE, 0)) %>% 
+    dplyr::select(-geracao_mes, -A14_VL_DISPONIBILIDADE_MAXIMA_PONTA, -A14_VL_INFLEXIBILIDADE) %>% 
+    dplyr::rename(A31_CD_USINA = codUsina, A31_NR_MES = anoMes, A31_NR_SERIE = serie, A31_VL_POTENCIA = A14_VL_POTENCIA,
+                  A31_VL_FATOR_CAPACIDADE = A14_VL_FATOR_CAPACIDADE, A31_VL_PERC_TEIF = A14_VL_PERC_TEIF, A31_VL_PERC_IP = A14_VL_PERC_IP,
+                  A31_VL_CVU = A14_VL_CVU)
     
   # executa query para gravar os dados das termeletricas na tabela BPO_A31_DISPONIBILIDADE_UTE_GNL do BDBP
   DBI::dbWriteTable(conexao, "BPO_A31_DISPONIBILIDADE_UTE_GNL", df.consolidadoUTEGnl, append = TRUE)

@@ -51,6 +51,6 @@ Monta e resolve o problema linear de um balanco de potencia. Funcao criada para 
 }
 \examples{
 \dontrun{
-calculaBalancoParalelo("C:/PDE2027_Caso080/bp.slqlite3", 1, 80, 1, 1e-10, 2e-8, 1e-8, 0.1, F)}
+calculaBalancoParalelo("C:/PDE2027_Caso080/bp.slqlite3", 1, 80, 1, 2e-6, 3e-5, 1e-5, 0.1, T, 1, F)}
 
 }

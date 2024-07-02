@@ -1,0 +1,4 @@
+variavel; valor
+inicioHorizonteEstudo; 202401
+fimHorizonteEstudo; 202512
+periodosHorizonteEstudo; 24

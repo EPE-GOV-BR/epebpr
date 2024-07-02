@@ -1,0 +1,809 @@
+ P.CHAVE  MODIFICACOES E INDICES
+ XXXXXXXX XXXXXXXXXXXXXXXXXXXXX
+ USINA    1                                 CAMARGOS    
+ VAZMIN       34
+ VMAXT     1 2024  79.200 '%'
+ VMAXT     2 2024  91.100 '%'
+ VMAXT     3 2024 100.000 '%'
+ VMAXT    12 2024  73.200 '%'
+ VMAXT     1 2025  80.700 '%'
+ VMAXT     2 2025  91.100 '%'
+ VMAXT     3 2025  95.500 '%'
+ VMAXT     4 2025 100.000 '%'
+ VMAXT    12 2025  73.200 '%'
+ USINA    2                                 ITUTINGA    
+ VAZMIN       34
+ USINA    4                                 FUNIL-GRANDE
+ VAZMIN       70
+ USINA    6                                 FURNAS      
+ VAZMIN      131
+ VMAXT     1 2024  94.900 '%'
+ VMAXT     2 2024  96.500 '%'
+ VMAXT     3 2024  98.000 '%'
+ VMAXT     4 2024 100.000 '%'
+ VMAXT    11 2024  94.600 '%'
+ VMAXT    12 2024  91.900 '%'
+ VMAXT     1 2025  94.900 '%'
+ VMAXT     2 2025  97.200 '%'
+ VMAXT     3 2025  98.900 '%'
+ VMAXT     4 2025 100.000 '%'
+ VMAXT    11 2025  94.600 '%'
+ VMAXT    12 2025  91.900 '%'
+ USINA    7                                 M. DE MORAES
+ VAZMIN      149
+ VMINT     1 2024  13.230 '%'
+ VMAXT     1 2024  80.600 '%'
+ VMAXT     2 2024  86.600 '%'
+ VMAXT     3 2024  94.100 '%'
+ VMAXT     4 2024 100.000 '%'
+ VMAXT    11 2024  80.000 '%'
+ VMAXT     3 2025  91.600 '%'
+ VMAXT     4 2025 100.000 '%'
+ VMAXT    11 2025  80.000 '%'
+ USINA    8                                 ESTREITO    
+ VAZMIN      153
+ USINA    9                                 JAGUARA     
+ VAZMIN      168
+ USINA    10                                IGARAPAVA   
+ VAZMIN      172
+ USINA    11                                VOLTA GRANDE
+ VAZMIN      178
+ USINA    12                                P. COLOMBIA 
+ VAZMIN      189
+ USINA    14                                CACONDE     
+ VAZMINT   1 2024   32.00
+ VMAXT     1 2024  96.000 '%'
+ VMAXT     2 2024  98.000 '%'
+ VMAXT     3 2024 100.000 '%'
+ VMAXT    11 2024  96.000 '%'
+ VMAXT    12 2024  92.100 '%'
+ VMAXT     1 2025  94.100 '%'
+ VMAXT     2 2025  96.000 '%'
+ VMAXT     3 2025  98.000 '%'
+ VMAXT     4 2025 100.000 '%'
+ VMAXT    11 2025  96.000 '%'
+ VMAXT    12 2025  92.100 '%'
+ USINA    16                                A.S.OLIVEIRA
+ VAZMINT   1 2024   19.00
+ USINA    17                                MARIMBONDO  
+ VAZMINT   1 2024  312.00
+ VMAXT     1 2024  75.300 '%'
+ VMAXT     2 2024  79.600 '%'
+ VMAXT     3 2024  85.900 '%'
+ VMAXT     4 2024  91.000 '%'
+ VMAXT    11 2024  61.600 '%'
+ VMAXT    12 2024  51.800 '%'
+ VMAXT     1 2025  63.700 '%'
+ VMAXT     2 2025  72.700 '%'
+ VMAXT     3 2025  84.000 '%'
+ VMAXT     4 2025  91.000 '%'
+ VMAXT    11 2025  61.600 '%'
+ VMAXT    12 2025  51.800 '%'
+ USINA    18                                A. VERMELHA 
+ VMAXT     1 2024  68.000 '%'
+ VMAXT     2 2024  87.200 '%'
+ VMAXT     3 2024  94.300 '%'
+ VMAXT     4 2024 100.000 '%'
+ VMAXT    11 2024  58.700 '%'
+ VMAXT    12 2024  57.500 '%'
+ VMAXT     1 2025  68.900 '%'
+ VMAXT     2 2025  79.100 '%'
+ VMAXT     3 2025  92.000 '%'
+ VMAXT     4 2025 100.000 '%'
+ VMAXT    11 2025  58.700 '%'
+ VMAXT    12 2025  57.500 '%'
+ USINA    20                                BATALHA     
+ VAZMINT   1 2024   30.10
+ VAZMINT   5 2024   23.00
+ VAZMINT  11 2024   30.10
+ VAZMINT   5 2025   23.00
+ VAZMINT  11 2025   30.10
+ USINA    24                                EMBORCACAO  
+ VMAXT     1 2024  97.100 '%'
+ VMAXT     2 2024  97.800 '%'
+ VMAXT     3 2024  98.500 '%'
+ VMAXT     4 2024 100.000 '%'
+ VMAXT    11 2024  95.800 '%'
+ VMAXT    12 2024  95.300 '%'
+ VMAXT     1 2025  96.100 '%'
+ VMAXT     2 2025  98.000 '%'
+ VMAXT     3 2025  99.200 '%'
+ VMAXT     4 2025 100.000 '%'
+ VMAXT    11 2025  95.800 '%'
+ VMAXT    12 2025  95.300 '%'
+ USINA    25                                NOVA PONTE  
+ VAZMINT   1 2024   55.00
+ VAZMINT   5 2024   40.00
+ VAZMINT  11 2024   55.00
+ VAZMINT   5 2025   40.00
+ VAZMINT  11 2025   55.00
+ VMAXT     1 2024  97.600 '%'
+ VMAXT     2 2024  98.100 '%'
+ VMAXT     3 2024  98.700 '%'
+ VMAXT     4 2024 100.000 '%'
+ VMAXT    11 2024  96.600 '%'
+ VMAXT    12 2024  96.200 '%'
+ VMAXT     1 2025  96.800 '%'
+ VMAXT     2 2025  98.500 '%'
+ VMAXT     3 2025  99.400 '%'
+ VMAXT     4 2025 100.000 '%'
+ VMAXT    11 2025  96.600 '%'
+ VMAXT    12 2025  96.200 '%'
+ USINA    26                                MIRANDA     
+ VAZMINT   1 2024  135.00
+ VAZMINT   5 2024   42.00
+ VAZMINT  11 2024  135.00
+ VAZMINT   5 2025   42.00
+ VAZMINT  11 2025  135.00
+ USINA    27                                CAPIM BRANC1
+ VAZMIN       72
+ USINA    28                                CAPIM BRANC2
+ VAZMIN       72
+ USINA    29                                CORUMBA IV  
+ VAZMINT   1 2024   13.70
+ USINA    30                                CORUMBA I   
+ VAZMIN      120
+ USINA    31                                ITUMBIARA   
+ VAZMIN       70
+ VMAXT     1 2024  91.700 '%'
+ VMAXT     2 2024  94.900 '%'
+ VMAXT     3 2024  97.500 '%'
+ VMAXT     4 2024 100.000 '%'
+ VMAXT    11 2024  88.600 '%'
+ VMAXT    12 2024  82.400 '%'
+ VMAXT     1 2025  89.300 '%'
+ VMAXT     2 2025  93.300 '%'
+ VMAXT     3 2025  97.400 '%'
+ VMAXT     4 2025 100.000 '%'
+ VMAXT    11 2025  88.600 '%'
+ VMAXT    12 2025  82.400 '%'
+ USINA    32                                CACH.DOURADA
+ VAZMIN       20
+ USINA    33                                SAO SIMAO   
+ VAZMIN      450
+ VMAXT     1 2024  65.200 '%'
+ VMAXT     2 2024  86.000 '%'
+ VMAXT     3 2024  93.800 '%'
+ VMAXT     4 2024 100.000 '%'
+ VMAXT    11 2024  51.300 '%'
+ VMAXT     1 2025  54.400 '%'
+ VMAXT     2 2025  76.200 '%'
+ VMAXT     3 2025  91.200 '%'
+ VMAXT     4 2025 100.000 '%'
+ VMAXT    11 2025  51.300 '%'
+ USINA    47                                A.A. LAYDNER
+ VAZMINT   1 2024  147.00
+ VMAXT     1 2024  88.400 '%'
+ VMAXT     2 2024  94.200 '%'
+ VMAXT     3 2024 100.000 '%'
+ VMAXT     4 2024  97.800 '%'
+ VMAXT     5 2024  87.700 '%'
+ VMAXT     6 2024  90.500 '%'
+ VMAXT     7 2024  97.300 '%'
+ VMAXT     8 2024  98.200 '%'
+ VMAXT     9 2024  88.900 '%'
+ VMAXT    10 2024 100.000 '%'
+ VMAXT    11 2024  97.900 '%'
+ VMAXT    12 2024  88.200 '%'
+ VMAXT     1 2025  88.400 '%'
+ VMAXT     2 2025  94.200 '%'
+ VMAXT     3 2025 100.000 '%'
+ VMAXT     4 2025  97.800 '%'
+ VMAXT     5 2025  86.100 '%'
+ VMAXT     6 2025  90.500 '%'
+ VMAXT     7 2025  97.300 '%'
+ VMAXT     8 2025  98.200 '%'
+ VMAXT     9 2025  88.900 '%'
+ VMAXT    10 2025 100.000 '%'
+ VMAXT    11 2025  97.900 '%'
+ VMAXT    12 2025  88.200 '%'
+ USINA    49                                CHAVANTES   
+ VAZMINT   1 2024   85.00
+ VMAXT     1 2024  74.000 '%'
+ VMAXT     2 2024  94.200 '%'
+ VMAXT     3 2024 100.000 '%'
+ VMAXT     4 2024  97.700 '%'
+ VMAXT     5 2024  87.800 '%'
+ VMAXT     6 2024  90.500 '%'
+ VMAXT     7 2024  97.300 '%'
+ VMAXT     8 2024  98.200 '%'
+ VMAXT     9 2024  88.900 '%'
+ VMAXT    10 2024 100.000 '%'
+ VMAXT    11 2024  97.900 '%'
+ VMAXT    12 2024  87.800 '%'
+ VMAXT     1 2025  83.600 '%'
+ VMAXT     2 2025  94.200 '%'
+ VMAXT     3 2025 100.000 '%'
+ VMAXT     4 2025  97.700 '%'
+ VMAXT     5 2025  87.500 '%'
+ VMAXT     6 2025  90.500 '%'
+ VMAXT     7 2025  97.300 '%'
+ VMAXT     8 2025  98.200 '%'
+ VMAXT     9 2025  88.900 '%'
+ VMAXT    10 2025 100.000 '%'
+ VMAXT    11 2025  97.900 '%'
+ VMAXT    12 2025  87.800 '%'
+ USINA    50                                L.N. GARCEZ
+ VAZMINT   1 2024  127.00
+ USINA    51                                CANOAS II   
+ VAZMIN      130
+ USINA    52                                CANOAS I
+ VAZMIN      137
+ USINA    37                                BARRA BONITA
+ VMINT     1 2024  48.290 '%'
+ VMAXT     1 2024  92.200 '%'
+ VMAXT     2 2024  94.200 '%'
+ VMAXT     3 2024  97.100 '%'
+ VMAXT     4 2024  98.400 '%'
+ VMAXT     5 2024  98.800 '%'
+ VMAXT     6 2024 100.000 '%'
+ VMAXT    11 2024  85.900 '%'
+ VMAXT    12 2024  48.290 '%'
+ VMAXT     1 2025  79.400 '%'
+ VMAXT     2 2025  84.000 '%'
+ VMAXT     3 2025  90.300 '%'
+ VMAXT     4 2025  95.300 '%'
+ VMAXT     5 2025  95.500 '%'
+ VMAXT     6 2025 100.000 '%'
+ VMAXT    11 2025  85.900 '%'
+ VMAXT    12 2025  48.290 '%'
+ USINA    40                                PROMISSAO   
+ VAZMIN      160
+ VMINT     1 2024  28.950 '%'
+ VMAXT     1 2024  55.400 '%'
+ VMAXT     2 2024  58.400 '%'
+ VMAXT     3 2024  95.400 '%'
+ VMAXT     4 2024 100.000 '%'
+ VMAXT    11 2024  74.000 '%'
+ VMAXT    12 2024  67.600 '%'
+ VMAXT     1 2025  75.900 '%'
+ VMAXT     2 2025  83.900 '%'
+ VMAXT     3 2025  93.800 '%'
+ VMAXT     4 2025 100.000 '%'
+ VMAXT    11 2025  74.000 '%'
+ VMAXT    12 2025  67.600 '%'
+ USINA    43                                TRES IRMAOS
+ VMINT     1 2024  45.570 '%'
+ VMAXT     1 2024  65.860 '%'
+ VMAXT     3 2024  88.440 '%'
+ VMAXT     4 2024 100.000 '%'
+ VMAXT    11 2024  61.760 '%'
+ VMAXT     2 2025  64.960 '%'
+ VMAXT     3 2025  86.530 '%'
+ VMAXT     4 2025 100.000 '%'
+ VMAXT    11 2025  61.760 '%'
+ USINA    117                               GUARAPIRANGA
+ VMAXT     1 2024  77.120 '%'
+ VMAXT     2 2024  85.720 '%'
+ VMAXT     3 2024  85.850 '%'
+ VMAXT     4 2024  92.760 '%'
+ VMAXT     7 2024  95.390 '%'
+ VMAXT    11 2024  94.560 '%'
+ VMAXT    12 2024  89.020 '%'
+ VMAXT     1 2025  77.120 '%'
+ VMAXT     2 2025  85.720 '%'
+ VMAXT     3 2025  85.850 '%'
+ VMAXT     4 2025  92.760 '%'
+ VMAXT     7 2025  95.390 '%'
+ VMAXT    11 2025  94.560 '%'
+ VMAXT    12 2025  89.020 '%'
+ USINA    118                               BILLINGS    
+ VAZMIN        6
+ VMAXT     1 2024  80.990 '%'
+ VMAXT     2 2024  84.300 '%'
+ VMAXT     3 2024  87.150 '%'
+ VMAXT     4 2024  88.850 '%'
+ VMAXT     5 2024  89.960 '%'
+ VMAXT     6 2024  90.260 '%'
+ VMAXT     7 2024  91.670 '%'
+ VMAXT     8 2024  92.280 '%'
+ VMAXT     9 2024  91.370 '%'
+ VMAXT    10 2024  89.450 '%'
+ VMAXT    11 2024  87.950 '%'
+ VMAXT    12 2024  87.050 '%'
+ VMAXT     1 2025  80.990 '%'
+ VMAXT     2 2025  84.300 '%'
+ VMAXT     3 2025  87.150 '%'
+ VMAXT     4 2025  88.850 '%'
+ VMAXT     5 2025  89.960 '%'
+ VMAXT     6 2025  90.260 '%'
+ VMAXT     7 2025  91.670 '%'
+ VMAXT     8 2025  92.280 '%'
+ VMAXT     9 2025  91.370 '%'
+ VMAXT    10 2025  89.450 '%'
+ VMAXT    11 2025  87.950 '%'
+ VMAXT    12 2025  87.050 '%'
+ USINA    119                               HENRY BORDEN
+ VAZMIN        6
+ USINA    120                               JAGUARI
+ VAZMIN        4
+ VMINT     1 2024  50.000 '%'
+ VMINT     3 2024  20.000 '%'
+ USINA    121                               PARAIBUNA   
+ VAZMIN       10
+ VMINT     1 2024  40.000 '%'
+ VMINT     3 2024   5.000 '%'
+ USINA    122                               SANTA BRANCA
+ VAZMINT   1 2024   30.00
+ VMINT     1 2024  40.000 '%'
+ VMINT     3 2024  10.000 '%'
+ VMAXT     1 2024  86.800 '%'
+ VMAXT     3 2024  92.100 '%'
+ VMAXT     4 2024 100.000 '%'
+ VMAXT    11 2024  97.400 '%'
+ VMAXT    12 2024  86.800 '%'
+ VMAXT     3 2025  92.100 '%'
+ VMAXT     4 2025 100.000 '%'
+ VMAXT    10 2025  98.200 '%'
+ VMAXT    11 2025  97.400 '%'
+ VMAXT    12 2025  86.800 '%'
+ USINA    123                               FUNIL
+ VAZMIN       70
+ VMINT     1 2024  30.000 '%'
+ VMAXT     1 2024  57.100 '%'
+ VMAXT     3 2024  78.600 '%'
+ VMAXT     4 2024 100.000 '%'
+ VMAXT    11 2024  76.900 '%'
+ VMAXT    12 2024  57.100 '%'
+ VMAXT     3 2025  78.600 '%'
+ VMAXT     4 2025 100.000 '%'
+ VMAXT    10 2025  97.900 '%'
+ VMAXT    11 2025  76.900 '%'
+ VMAXT    12 2025  57.100 '%'
+ USINA    124                               LAJES       
+ VAZMINT   1 2024    5.50
+ VMINT     1 2024  17.890 '%'
+ VMAXT     1 2024  83.690 '%'
+ VMAXT     3 2024  91.570 '%'
+ VMAXT     4 2024 100.000 '%'
+ VMAXT     6 2024  96.680 '%'
+ VMAXT     7 2024  93.080 '%'
+ VMAXT     8 2024  89.830 '%'
+ VMAXT     9 2024  86.690 '%'
+ VMAXT    10 2024  83.690 '%'
+ VMAXT     3 2025  91.570 '%'
+ VMAXT     4 2025 100.000 '%'
+ VMAXT     6 2025  96.680 '%'
+ VMAXT     7 2025  93.080 '%'
+ VMAXT     8 2025  89.830 '%'
+ VMAXT     9 2025  86.690 '%'
+ VMAXT    10 2025  83.690 '%'
+ USINA    135                               P. ESTRELA  
+ VAZMIN       10
+ VMINT     1 2024  66.670 '%'
+ VMINT     5 2024   0.000 '%'
+ USINA    148                               IRAPE       
+ VAZMINT   1 2024   23.40
+ VMAXT     1 2024  90.000 '%'
+ VMAXT     2 2024  94.600 '%'
+ VMAXT     3 2024  98.400 '%'
+ VMAXT     4 2024 100.000 '%'
+ VMAXT    11 2024  85.400 '%'
+ VMAXT    12 2024  87.800 '%'
+ VMAXT     1 2025  90.000 '%'
+ VMAXT     2 2025  94.600 '%'
+ VMAXT     3 2025  98.400 '%'
+ VMAXT     4 2025 100.000 '%'
+ VMAXT    10 2025  84.300 '%'
+ VMAXT    11 2025  85.400 '%'
+ VMAXT    12 2025  87.800 '%'
+ USINA    155                               RETIRO BAIXO
+ VAZMINT   1 2024   27.67
+ USINA    156                               TRES MARIAS 
+ VAZMINT   1 2024  150.00
+ VMAXT     1 2024  85.500 '%'
+ VMAXT     2 2024  89.000 '%'
+ VMAXT     3 2024  96.100 '%'
+ VMAXT     4 2024 100.000 '%'
+ VMAXT    11 2024  87.600 '%'
+ VMAXT    12 2024  80.600 '%'
+ VMAXT     1 2025  85.500 '%'
+ VMAXT     2 2025  89.000 '%'
+ VMAXT     3 2025  96.100 '%'
+ VMAXT     4 2025 100.000 '%'
+ VMAXT    11 2025  87.600 '%'
+ VMAXT    12 2025  80.600 '%'
+ USINA    162                               QUEIMADO    
+ VAZMINT   1 2024    8.80
+ VAZMINT   5 2024   17.00
+ VAZMINT  11 2024    8.80
+ VAZMINT   5 2025   17.00
+ VAZMINT  11 2025    8.80
+ VMAXT     1 2024  87.100 '%'
+ VMAXT     2 2024  92.300 '%'
+ VMAXT     3 2024 100.000 '%'
+ VMAXT    11 2024  89.700 '%'
+ VMAXT    12 2024  82.000 '%'
+ VMAXT     1 2025  87.100 '%'
+ VMAXT     2 2025  92.300 '%'
+ VMAXT     3 2025 100.000 '%'
+ VMAXT    11 2025  89.700 '%'
+ VMAXT    12 2025  82.000 '%'
+ USINA    133                               P. PASSOS   
+ VAZMIN      120
+ USINA    144                               MASCARENHAS 
+ VAZMIN      210
+ USINA    285                               JIRAU
+ CMONT     1 2024   89.19
+ CMONT     2 2024   88.80
+ CMONT     3 2024   88.83
+ CMONT     4 2024   89.19
+ CMONT     5 2024   89.49
+ CMONT     6 2024   88.54
+ CMONT     7 2024   85.67
+ CMONT     8 2024   83.46
+ CMONT     9 2024   82.52
+ CMONT    10 2024   82.71
+ CMONT    11 2024   84.43
+ CMONT    12 2024   87.73
+ CMONT     1 2025   89.19
+ CMONT     2 2025   88.80
+ CMONT     3 2025   88.83
+ CMONT     4 2025   89.19
+ CMONT     5 2025   89.49
+ CMONT     6 2025   88.54
+ CMONT     7 2025   85.67
+ CMONT     8 2025   83.46
+ CMONT     9 2025   82.52
+ CMONT    10 2025   82.71
+ CMONT    11 2025   84.43
+ CMONT    12 2025   87.73
+ CFUGA     1 2024   73.69
+ CFUGA     2 2024   74.51
+ CFUGA     3 2024   75.40
+ CFUGA     4 2024   74.83
+ CFUGA     5 2024   74.01
+ CFUGA     6 2024   72.84
+ CFUGA     7 2024   71.82
+ CFUGA     8 2024   71.14
+ CFUGA     9 2024   70.74
+ CFUGA    10 2024   70.76
+ CFUGA    11 2024   71.27
+ CFUGA    12 2024   72.22
+ CFUGA     1 2025   73.69
+ CFUGA     2 2025   74.51
+ CFUGA     3 2025   75.40
+ CFUGA     4 2025   74.83
+ CFUGA     5 2025   74.01
+ CFUGA     6 2025   72.84
+ CFUGA     7 2025   71.82
+ CFUGA     8 2025   71.14
+ CFUGA     9 2025   70.74
+ CFUGA    10 2025   70.76
+ CFUGA    11 2025   71.27
+ CFUGA    12 2025   72.22
+ USINA    287                               STO ANTONIO
+ VAZMIN     3293
+ CMONT     1 2024   70.77
+ CMONT     2 2024   70.49
+ CMONT     3 2024   70.47
+ CMONT     4 2024   70.57
+ CMONT     5 2024   70.79
+ CMONT     6 2024   71.11
+ CMONT     7 2024   71.08
+ CMONT     8 2024   71.00
+ CMONT     9 2024   70.92
+ CMONT    10 2024   70.65
+ CMONT    11 2024   70.66
+ CMONT    12 2024   70.94
+ CMONT     1 2025   70.77
+ CMONT     2 2025   70.49
+ CMONT     3 2025   70.47
+ CMONT     4 2025   70.57
+ CMONT     5 2025   70.79
+ CMONT     6 2025   71.11
+ CMONT     7 2025   71.08
+ CMONT     8 2025   71.00
+ CMONT     9 2025   70.92
+ CMONT    10 2025   70.65
+ CMONT    11 2025   70.66
+ CMONT    12 2025   70.94
+ CFUGA     1 2024   56.15
+ CFUGA     2 2024   57.54
+ CFUGA     3 2024   59.22
+ CFUGA     4 2024   58.50
+ CFUGA     5 2024   56.35
+ CFUGA     6 2024   54.47
+ CFUGA     7 2024   51.35
+ CFUGA     8 2024   48.11
+ CFUGA     9 2024   46.60
+ CFUGA    10 2024   46.94
+ CFUGA    11 2024   49.17
+ CFUGA    12 2024   53.35
+ CFUGA     1 2025   56.15
+ CFUGA     2 2025   57.54
+ CFUGA     3 2025   59.22
+ CFUGA     4 2025   58.50
+ CFUGA     5 2025   56.35
+ CFUGA     6 2025   54.47
+ CFUGA     7 2025   51.35
+ CFUGA     8 2025   48.11
+ CFUGA     9 2025   46.60
+ CFUGA    10 2025   46.94
+ CFUGA    11 2025   49.17
+ CFUGA    12 2025   53.35
+ USINA    309                               JURUENA
+ COTAREA  0.64 0.00 0.00 0.00 0.00
+ USINA    227                               SINOP
+ VAZMIN      272
+ VMAXT     6 2024  71.760 '%'
+ VMAXT    11 2024 100.000 '%'
+ VMAXT     6 2025  71.760 '%'
+ VMAXT    11 2025 100.000 '%'
+ USINA    251                               SERRA MESA  
+ VAZMINT   1 2024  100.00
+ VAZMINT   6 2024  300.00
+ VAZMINT  12 2024  100.00
+ VAZMINT   6 2025  300.00
+ VAZMINT  12 2025  100.00
+ USINA    252                               CANA BRAVA  
+ VAZMINT   1 2024   90.00
+ USINA    253                               SAO SALVADOR
+ VAZMIN       90
+ USINA    257                               PEIXE ANGIC
+ VAZMINT   1 2024  360.00
+ USINA    261                               LAJEADO     
+ VAZMIN      255
+ USINA    278                               MANSO
+ VAZMINT   1 2024   95.00
+ USINA    283                               STA CLARA MG
+ VAZMIN       15
+ USINA    311                               CACU        
+ VAZMIN       30
+ USINA    312                               B. COQUEIROS
+ VAZMIN       30
+ USINA    34                                I. SOLTEIRA 
+ VAZMIN     1450
+ VOLMIN          15563.63 'h'
+ VMINT     1 2024  45.890 '%'
+ VMAXT     1 2024  66.030 '%'
+ VMAXT     3 2024  88.330 '%'
+ VMAXT     4 2024 100.000 '%'
+ VMAXT    11 2024  61.970 '%'
+ VMAXT     2 2025  65.140 '%'
+ VMAXT     3 2025  86.440 '%'
+ VMAXT     4 2025 100.000 '%'
+ VMAXT    11 2025  61.970 '%'
+ USINA    45                                JUPIA       
+ VAZMINT   1 2024 3300.00
+ USINA    46                                P. PRIMAVERA
+ VAZMINT   1 2024 4600.00
+ USINA    319                               FICT.MAUA   
+ VAZMIN       60
+ USINA    57                                MAUA        
+ VAZMIN       60
+ USINA    61                                CAPIVARA    
+ VAZMINT   1 2024  276.00
+ VMAXT     1 2024  83.400 '%'
+ VMAXT     2 2024 100.000 '%'
+ VMAXT    12 2024  83.400 '%'
+ VMAXT     1 2025  89.100 '%'
+ VMAXT     2 2025 100.000 '%'
+ VMAXT    12 2025  83.400 '%'
+ USINA    62                                TAQUARUCU   
+ VAZMIN      290
+ USINA    63                                ROSANA      
+ VAZMIN      326
+ USINA    73                                JORDAO      
+ VAZMIN       10
+ USINA    77                                SLT.SANTIAGO
+ VMAXT     5 2024  89.300 '%'
+ VMAXT     7 2024 100.000 '%'
+ VMAXT     5 2025  89.300 '%'
+ VMAXT     7 2025 100.000 '%'
+ USINA    78                                SALTO OSORIO
+ VAZMINT   1 2024  200.00
+ USINA    82                                SALTO CAXIAS
+ VAZMIN      200
+ USINA    83                                BAIXO IGUACU
+ VAZMINT   1 2024  256.25
+ USINA    88                                SAO ROQUE
+ VAZMINT   1 2024   13.70
+ USINA    91                                MACHADINHO  
+ VAZMINT   1 2024  300.00
+ VAZMINT   5 2024  120.00
+ VAZMINT  10 2024  300.00
+ VAZMINT   5 2025  120.00
+ VAZMINT  10 2025  300.00
+ USINA    92                                ITA         
+ VAZMINT   1 2024  150.00
+ USINA    103                               FOZ CHAPECO 
+ VAZMINT   1 2024  200.00
+ USINA    95                                QUEBRA QUEIX
+ VAZMINT   1 2024    0.50
+ USINA    111                               PASSO REAL
+ VMAXT     1 2024  88.700 '%'
+ USINA    114                               D. FRANCISCA
+ VAZMINT   1 2024   14.80
+ USINA    190                               B. ESPERANCA
+ VAZMIN      240
+ VMAXT     1 2024  63.900 '%'
+ VMAXT     3 2024  72.300 '%'
+ VMAXT     4 2024  85.900 '%'
+ VMAXT     5 2024 100.000 '%'
+ VMAXT    11 2024  69.100 '%'
+ VMAXT    12 2024  68.100 '%'
+ VMAXT     1 2025  63.900 '%'
+ VMAXT     3 2025  72.300 '%'
+ VMAXT     4 2025  85.900 '%'
+ VMAXT     5 2025 100.000 '%'
+ VMAXT    11 2025  69.100 '%'
+ VMAXT    12 2025  68.100 '%'
+ USINA    294                               FICT.QUEIMAD
+ VAZMINT   1 2024    8.80
+ VAZMINT   5 2024   17.00
+ VAZMINT  11 2024    8.80
+ VAZMINT   5 2025   17.00
+ VAZMINT  11 2025    8.80
+ VMAXT     1 2024  87.100 '%'
+ VMAXT     2 2024  92.300 '%'
+ VMAXT     3 2024 100.000 '%'
+ VMAXT    11 2024  89.700 '%'
+ VMAXT    12 2024  82.000 '%'
+ VMAXT     1 2025  87.100 '%'
+ VMAXT     2 2025  92.300 '%'
+ VMAXT     3 2025 100.000 '%'
+ VMAXT    11 2025  89.700 '%'
+ VMAXT    12 2025  82.000 '%'
+ USINA    298                               FICT.IRAPE  
+ VAZMINT   1 2024   23.40
+ VMAXT     1 2024  90.000 '%'
+ VMAXT     2 2024  94.600 '%'
+ VMAXT     3 2024  98.400 '%'
+ VMAXT     4 2024 100.000 '%'
+ VMAXT    11 2024  85.400 '%'
+ VMAXT    12 2024  87.800 '%'
+ VMAXT     1 2025  90.000 '%'
+ VMAXT     2 2025  94.600 '%'
+ VMAXT     3 2025  98.400 '%'
+ VMAXT     4 2025 100.000 '%'
+ VMAXT    10 2025  84.300 '%'
+ VMAXT    11 2025  85.400 '%'
+ VMAXT    12 2025  87.800 '%'
+ USINA    154                               ITAPEBI     
+ VAZMIN       38
+ USINA    308                               FICT.RETIRO 
+ VAZMINT   1 2024   27.67
+ USINA    295                               FICT.TRES MA
+ VAZMINT   1 2024  150.00
+ VMAXT     1 2024  85.500 '%'
+ VMAXT     2 2024  89.000 '%'
+ VMAXT     3 2024  96.100 '%'
+ VMAXT     4 2024 100.000 '%'
+ VMAXT    11 2024  87.600 '%'
+ VMAXT    12 2024  80.600 '%'
+ VMAXT     1 2025  85.500 '%'
+ VMAXT     2 2025  89.000 '%'
+ VMAXT     3 2025  96.100 '%'
+ VMAXT     4 2025 100.000 '%'
+ VMAXT    11 2025  87.600 '%'
+ VMAXT    12 2025  80.600 '%'
+ USINA    169                               SOBRADINHO
+ VAZMINT   1 2024  800.00
+ VMAXT     1 2024  78.100 '%'
+ VMAXT     2 2024  83.100 '%'
+ VMAXT     3 2024  92.200 '%'
+ VMAXT     4 2024  94.900 '%'
+ VMAXT     5 2024 100.000 '%'
+ VMAXT    11 2024  87.200 '%'
+ VMAXT    12 2024  77.700 '%'
+ VMAXT     1 2025  78.100 '%'
+ VMAXT     2 2025  83.100 '%'
+ VMAXT     3 2025  92.200 '%'
+ VMAXT     4 2025  94.900 '%'
+ VMAXT     5 2025 100.000 '%'
+ VMAXT    11 2025  87.200 '%'
+ VMAXT    12 2025  77.700 '%'
+ USINA    172                               ITAPARICA   
+ VAZMINT   1 2024  800.00
+ VMAXT     1 2024  54.900 '%'
+ VMAXT     2 2024  59.000 '%'
+ VMAXT     3 2024  64.200 '%'
+ VMAXT     4 2024  86.500 '%'
+ VMAXT     5 2024 100.000 '%'
+ VMAXT    11 2024  82.300 '%'
+ VMAXT    12 2024  54.900 '%'
+ VMAXT     2 2025  59.000 '%'
+ VMAXT     3 2025  64.200 '%'
+ VMAXT     4 2025  86.500 '%'
+ VMAXT     5 2025 100.000 '%'
+ VMAXT    11 2025  82.300 '%'
+ VMAXT    12 2025  54.900 '%'
+ USINA    176                               COMP PAF-MOX
+ VAZMINT   1 2024  800.00
+ USINA    178                               XINGO       
+ VAZMINT   1 2024  800.00
+ USINA    277                               BALBINA
+ VAZMINT   1 2024  390.00
+ VAZMINT   2 2024  300.00
+ VAZMINT  10 2024  390.00
+ VAZMINT   2 2025  300.00
+ VAZMINT  10 2025  390.00
+ USINA    288                               BELO MONTE
+ VAZMIN      300
+ CMONT     1 2024   96.90
+ CMONT     2 2024   96.87
+ CMONT     3 2024   96.91
+ CMONT     4 2024   96.89
+ CMONT     5 2024   96.76
+ CMONT     6 2024   96.82
+ CMONT     7 2024   96.98
+ CMONT     8 2024   97.00
+ CMONT     9 2024   96.44
+ CMONT    10 2024   95.32
+ CMONT    11 2024   96.01
+ CMONT    12 2024   96.78
+ CMONT     1 2025   96.90
+ CMONT     2 2025   96.87
+ CMONT     3 2025   96.91
+ CMONT     4 2025   96.89
+ CMONT     5 2025   96.76
+ CMONT     6 2025   96.82
+ CMONT     7 2025   96.98
+ CMONT     8 2025   97.00
+ CMONT     9 2025   96.44
+ CMONT    10 2025   95.32
+ CMONT    11 2025   96.01
+ CMONT    12 2025   96.78
+ USINA    291                               FICT.SERRA M
+ VAZMINT   1 2024  100.00
+ VAZMINT   6 2024  300.00
+ VAZMINT  12 2024  100.00
+ VAZMINT   6 2025  300.00
+ VAZMINT  12 2025  100.00
+ VOLMAX   55.000 '%'
+ USINA    292                               FICT.CANA BR
+ VAZMINT   1 2024   90.00
+ USINA    306                               FICT.SAO SAL
+ VAZMIN       90
+ USINA    303                               FICT.PEIXE A
+ VAZMINT   1 2024  360.00
+ USINA    302                               FICT.LAJEADO
+ VAZMIN      255
+ USINA    267                               ESTREITO TOC
+ VAZMIN      744
+ USINA    275                               TUCURUI     
+ VAZMIN     2000
+ NUMCNJ     3
+ NUMMAQ     2   1
+ NUMMAQ     11  2
+ NUMMAQ     10  3
+ CFUGA     1 2024    4.30
+ CFUGA     2 2024    4.00
+ CFUGA     3 2024   10.86
+ CFUGA     4 2024   11.49
+ CFUGA     5 2024    9.99
+ CFUGA     6 2024    6.87
+ CFUGA     7 2024    5.45
+ CFUGA     1 2025    7.34
+ CFUGA     2 2025    9.15
+ CFUGA     3 2025   10.86
+ CFUGA     4 2025   11.49
+ CFUGA     5 2025    9.99
+ CFUGA     6 2025    6.87
+ CFUGA     7 2025    5.45
+ USINA    314                               PIMENTAL
+ CMONT     1 2024   96.90
+ CMONT     2 2024   96.87
+ CMONT     3 2024   96.91
+ CMONT     4 2024   96.89
+ CMONT     5 2024   96.76
+ CMONT     6 2024   96.82
+ CMONT     7 2024   96.98
+ CMONT     8 2024   97.00
+ CMONT     9 2024   96.44
+ CMONT    10 2024   95.32
+ CMONT    11 2024   96.01
+ CMONT    12 2024   96.78
+ CMONT     1 2025   96.90
+ CMONT     2 2025   96.87
+ CMONT     3 2025   96.91
+ CMONT     4 2025   96.89
+ CMONT     5 2025   96.76
+ CMONT     6 2025   96.82
+ CMONT     7 2025   96.98
+ CMONT     8 2025   97.00
+ CMONT     9 2025   96.44
+ CMONT    10 2025   95.32
+ CMONT    11 2025   96.01
+ CMONT    12 2025   96.78

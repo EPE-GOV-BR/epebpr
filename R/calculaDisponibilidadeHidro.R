@@ -193,6 +193,15 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipo
     DBI::dbExecute(conexaoSQLite, sql)
     DBI::dbExecute(conexaoSQLite, "PRAGMA locking_mode = NORMAL;")
     
+    # limpa BPO_A33_DADOS_CALCULADOS_UHE_REE_TABELA de outras execucoes para o mesmo caso
+    sql <- paste0("DELETE FROM BPO_A33_DADOS_CALCULADOS_UHE_REE_TABELA
+                 WHERE
+                  A01_TP_CASO = ", tipoCaso, " AND
+                  A01_NR_CASO = ", numeroCaso, " AND
+                  A01_CD_MODELO = ", codModelo, ";")
+    DBI::dbExecute(conexaoSQLite, sql)
+    DBI::dbExecute(conexaoSQLite, "PRAGMA locking_mode = NORMAL;")
+    
     # barra de progresso
     if(execShiny){incProgress(3/100, detail = "Atualização de Submotorização")}
     
@@ -713,22 +722,6 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipo
       DBI::dbExecute(conexaoSQLite, "PRAGMA locking_mode = NORMAL;")
       
     }
-    
-    # writexl::write_xlsx(
-    #   list(
-    #     dados = 
-    #       df.dadosCalculadosUHETipo4 %>% 
-    #       dplyr::select(
-    #         A02_NR_REE,A06_NR_SERIE,A06_NR_MES,grupo,codUsina,
-    #         GHmax ,proporcao,
-    #         ghtot_ree,gh,
-    #         vazao,produtibilidade,gh_hidrograma,
-    #         flagHidrograma,proporcao_hidrograma,proporcao_impactada,
-    #         gh_impactada,gh_hidrograma_corrigido,
-    #         gh_corrigido,vazao,pdisph
-    #       )
-    #   ),
-    #   path = file.path(pastaSaidas,"REE_modulacaoTabelaPdisp.xlsx",fsep = "\\"))
   }
   
   return("Disponibilidade hidro processada com sucesso!")

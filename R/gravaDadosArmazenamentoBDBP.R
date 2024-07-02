@@ -43,7 +43,7 @@ gravacaoDadosArmazenamentoBDBP <- function(pastaCaso, conexao, tipoCaso, numeroC
   
   # executa query para apagar da tabela BPO_A32_DISPONIBILIDADE_ARMAZENAMENTO os dados referentes a um possivel mesmo caso rodado anteriormente, 
   # de forma a evitar duplicacao dos dados
-  DBI::dbSendQuery(conexao, paste0("DELETE FROM BPO_A32_DISPONIBILIDADE_ARMAZENAMENTO
+  DBI::dbExecute(conexao, paste0("DELETE FROM BPO_A32_DISPONIBILIDADE_ARMAZENAMENTO
                                 WHERE A01_TP_CASO = ", tipoCaso, 
                                 " AND A01_NR_CASO = ", numeroCaso, 
                                 " AND A01_CD_MODELO = ", codModelo))
@@ -79,7 +79,8 @@ gravacaoDadosArmazenamentoBDBP <- function(pastaCaso, conexao, tipoCaso, numeroC
                                    delim = ";", 
                                    col_names = T, 
                                    local = readr::locale(encoding = "latin1"),
-                                   show_col_types = FALSE) %>% 
+                                   show_col_types = FALSE,
+                                   name_repair = "unique_quiet") %>% 
     dplyr::select(1:(ncol(.) -1)) %>% 
     dplyr::select(df.contribuicaoArmazenamento$NomeFonteMDI) # filtra somente os projetos de armazenamento
   

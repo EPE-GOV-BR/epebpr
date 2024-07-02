@@ -35,10 +35,10 @@ gravacaoDadosLimitesAgrupIntercambioBDBP <- function(pastaCaso, conexao, tipoCas
   
   # executa query para apagar da tabela BPO_A12_LIMITE_AGRUPAMENTOS_INTERCAMBIO os dados referentes a um possivel mesmo caso rodado anteriormente, 
   # de forma a evitar duplicacao dos dados
-  DBI::dbSendQuery(conexao, paste0("DELETE FROM BPO_A12_LIMITE_AGRUPAMENTOS_INTERCAMBIO
+  DBI::dbExecute(conexao, paste0("DELETE FROM BPO_A12_LIMITE_AGRUPAMENTOS_INTERCAMBIO
                                 WHERE A01_TP_CASO = ", tipoCaso, 
-                                   " AND A01_NR_CASO = ", numeroCaso, 
-                                   " AND A01_CD_MODELO = ", codModelo))
+                                " AND A01_NR_CASO = ", numeroCaso, 
+                                " AND A01_CD_MODELO = ", codModelo))
   
   # executa as funcoes de leitura do pacote leitorrmpe para o carregamento dos dados dos limites dos agrupamentos de intercambios do patamar de ponta (1)
   # insere as variaveis associadas ao tipoCaso, numeroCaso e codModelo

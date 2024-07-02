@@ -1,0 +1,113 @@
+  NUM         NOME   SSIS     EX CLASSE      TEC UTE 
+ XXXX XXXXXXXXXXXX   XXXX     XX   XXXX      XXX XXXX
+    1      ANGRA 1      1     EX      1             n
+    4   ST.CRUZ 34      1     EE      4             n
+   12  CUIABA G CC      1     EE     12             n
+   13      ANGRA 2      1     EX     13             n
+   15     LINHARES      1     EE     15             n
+   21   MARANHAO V      4     EE     21             n
+   24  J.LACERDA C      2     EE     24             n
+   25  J.LACERDA B      2     EE     25             n
+   26 J.LACERDA A1      2     EE     26             n
+   27 J.LACERDA A2      2     EE     27             n
+   28     FIGUEIRA      2     EE     28             n
+   35   URUGUAIANA      2     EE     35             n
+   36  MARANHAO IV      4     EE     36             n
+   43   TERMOBAHIA      3     EE     43             n
+   44      ANGRA 3      1     NE     44             n
+   46  N.VENECIA 2      4     EE     46             n
+   47     TERMORIO      1     EE     47             n
+   48    ARAUCARIA      2     EE     48             n
+   49        VIANA      1     EE     49             n
+   50   PIRAT.12 G      1     EE     50             n
+   52  CAMPINA GDE      3     EE     52             n
+   53     GLOBAL I      3     EE     53             n
+   54 JUIZ DE FORA      1     EE     54             n
+   55    GLOBAL II      3     EE     55             n
+   57  MARACANAU I      3     EE     57             n
+   58   TERMOCEARA      3     EE     58             n
+   62   SEROPEDICA      1     EE     62             n
+   63      IBIRITE      1     EE     63             n
+   64       CANOAS      2     EE     64             n
+   67      TERMONE      3     EE     67             n
+   68  TRES LAGOAS      1     EE     68             n
+   69      TERMOPB      3     EE     69             n
+   70   GERAMAR II      4     EE     70             n
+   73    GERAMAR I      4     EE     73             n
+   83  VALE DO ACU      3     EE     83             n
+   86 ST.CRUZ NOVA      1     EE     86             n
+   90   TERMOMACAE      1     EE     90             n
+   96      TERMOPE      3     EE     96             n
+   97      CUBATAO      1     EE     97             n
+   98 PERNAMBU_III      3     EE     98             n
+  106 ERB CANDEIAS      3     EE    106             n
+  107    PAMPA SUL      2     EX    107             n
+  108     XAVANTES      1     EE    108             n
+  110 N.PIRATINING      1     EE    110             n
+  112      CURUMIM      3     EE    112             n
+  116  PARNAIBA IV      4     EE    116             n
+  137        GNA I      1     EE    137             n
+  140       MAUA 3      7     EE    140             n
+  144    PETROLINA      3     EE    144             n
+  146  STA VITORIA      1     EE    146             n
+  147 PROSPERIDADE      3     EE    147             n
+  149     SAO SEPE      2     EX    149             n
+  151     Potiguar      3     EE    151             n
+  152    TERMOCABO      3     EE    152             n
+  153         DAIA      1     EE    153             n
+  156   CANDIOTA 3      2     EE    156             n
+  161 Potiguar III      3     EE    161             n
+  162     PECEM II      3     NE    162             n
+  163  P. PECEM II      3     EE    163             n
+  167   P. PECEM I      3     EE    167             n
+  169     Cisframa      2     EE    169             n
+  170     SUAPE II      3     EE    170             n
+  171   NORTEFLU-1      1     EE    171             n
+  172   NORTEFLU-2      1     EE    172             n
+  173   NORTEFLU-3      1     EE    173             n
+  174   NORTEFLU-4      1     EE    174             n
+  176 PORTO ITAQUI      4     EE    176             n
+  182 PALMEIRAS GO      1     EE    182             n
+  183 DO ATLANTICO      1     EE    183             n
+  194    T.NORTE 2      6     EE    194             n
+  201    APARECIDA      7     EE    201             n
+  203     C. ROCHA      7     EE    203             n
+  204      JARAQUI      7     EE    204             n
+  205     MANAUARA      7     EE    205             n
+  207  PONTA NEGRA      7     EE    207             n
+  209     TAMBAQUI      7     EE    209             n
+  211  BAIXADA FLU      1     EE    211             n
+  212 MARANHAO III      4     EE    212             n
+  221      SYKUE I      3     EE    221             n
+  223 PROSPERI III      3     EE    223             n
+  224 P. SERGIPE I      3     EE    224             n
+  228  O. CANOAS 1      4     NE    228             n
+  229 Onca Pintada      1     EE    229             n
+  235 CAMACARI MII      3     NE    235             n
+  236  Marlim Azul      1     EE    236             n
+  238       GNA II      1     NE    238             n
+  239   PARNAIBA V      4     EE    239             n
+  240 NT BARCARENA      4     NE    240             n
+  241 PROSPERID II      3     EE    241             n
+  245   KARKEY 013      1     EE    245             n
+  246   KARKEY 019      1     EE    246             n
+  247 LINHARES PCS      1     EE    247             n
+  248 PAULINIA VER      1     EE    248             n
+  249     PORSUD I      1     EE    249             n
+  250    PORSUD II      1     EE    250             n
+  251   POVOACAO 1      1     EE    251             n
+  253      VIANA 1      1     EE    253             n
+  254  B. BONITA I      2     EE    254             n
+  262    AZULAO II      7     NC    262             n
+  263    AZULAO IV      7     NC    263             n
+  264     MANAUS I      7     NC    264             n
+  322   BBF BALIZA      7     NC    322             n
+  323       BONFIM      7     NC    323             n
+  324        CANTA      7     NC    324             n
+  325 HF S JOAQUIM      7     NE    325             n
+  326 JAGUATIRI II      7     NE    326             n
+  327 M.CRISTO SUC      7     NE    327             n
+  328  PALMAPLAN 2      7     NE    328             n
+  329   PAU RAINHA      7     NE    329             n
+  330    SANTA LUZ      7     NE    330             n
+  334    W. ARJONA      1     EE    334             n

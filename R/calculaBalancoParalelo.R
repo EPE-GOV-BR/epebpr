@@ -20,7 +20,7 @@
 #'
 #' @examples
 #' \dontrun{
-#' calculaBalancoParalelo("C:/PDE2027_Caso080/bp.slqlite3", 1, 80, 1, 1e-10, 2e-8, 1e-8, 0.1, F)}
+#' calculaBalancoParalelo("C:/PDE2027_Caso080/bp.slqlite3", 1, 80, 1, 2e-6, 3e-5, 1e-5, 0.1, T, 1, F)}
 #' 
 #' @importFrom foreach %dopar%
 #' 
@@ -116,10 +116,10 @@ calculaBalancoParalelo <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
   df.geracaoTermicaTotal$cvu[df.geracaoTermicaTotal$cvu <= 0] <- cvuOutrasTermicas # atribui CVU para termicas com CVU zero
   
   # geracao termica GNL
-  query <- paste0("SELECT A14_NR_MES AS anoMes, A14_NR_SERIE AS serieGnl, 'TERMICA' AS tipoUsina, A14_CD_USINA AS codUsina, A02_NR_SUBSISTEMA AS subsistema, ",
-                  "0 AS transmissao, A14_VL_INFLEXIBILIDADE AS inflexibilidade, A14_VL_DISPONIBILIDADE_MAXIMA_PONTA AS disponibilidade, A14_VL_CVU as cvu ",
+  query <- paste0("SELECT A31_NR_MES AS anoMes, A31_NR_SERIE AS serieGnl, 'TERMICA' AS tipoUsina, A31_CD_USINA AS codUsina, A02_NR_SUBSISTEMA AS subsistema, ",
+                  "0 AS transmissao, A31_VL_INFLEXIBILIDADE AS inflexibilidade, A31_VL_DISPONIBILIDADE_MAXIMA_PONTA AS disponibilidade, A31_VL_CVU as cvu ",
                   "FROM BPO_A31_DISPONIBILIDADE_UTE_GNL WHERE A01_TP_CASO = ", tipoCaso, " AND A01_NR_CASO = ", numeroCaso, 
-                  " AND A01_CD_MODELO = ", codModelo, " ORDER BY A14_NR_MES, A14_NR_SERIE, A02_NR_SUBSISTEMA, A14_CD_USINA")
+                  " AND A01_CD_MODELO = ", codModelo, " ORDER BY A31_NR_MES, A31_NR_SERIE, A02_NR_SUBSISTEMA, A31_CD_USINA")
   df.geracaoTermicaGnl <- DBI::dbGetQuery(conexao, query)
   
   # geracao outras renovaveis

@@ -193,7 +193,8 @@ gravacaoDadosDisponibilidadeOutrasFontesBDBP <- function(pastaCaso, conexao, tip
                                        delim = ";", 
                                        col_names = T, 
                                        local = readr::locale(encoding = "latin1"),
-                                       show_col_types = FALSE) %>% 
+                                       show_col_types = FALSE,
+                                       name_repair = "unique_quiet") %>% 
         dplyr::select(1:(ncol(.) -1)) %>% 
         dplyr::select(df.relacaoIndicativas$NomeFonteMDI) # filtra somente as indicativas (as fontes estao em colunas)
       
@@ -481,7 +482,8 @@ gravacaoDadosDisponibilidadeOutrasFontesBDBP <- function(pastaCaso, conexao, tip
         df.expansao <- readr::read_delim(paste(pastaCaso, arquivoExpansao, sep = "/"), 
                                          delim = ";", 
                                          col_names = T,
-                                         show_col_types = FALSE) %>% 
+                                         show_col_types = FALSE,
+                                         name_repair = "unique_quiet") %>% 
           dplyr::select(1:(ncol(.) -1)) %>% 
           dplyr::select(df.relacaoIndicativas$NomeFonteMDI) # filtra somente as indicativas (as fontes estao em colunas)
       }else{
@@ -489,7 +491,8 @@ gravacaoDadosDisponibilidadeOutrasFontesBDBP <- function(pastaCaso, conexao, tip
                                          delim = ";", 
                                          col_names = T, 
                                          local = readr::locale(encoding = "latin1"),
-                                         show_col_types = FALSE) %>% 
+                                         show_col_types = FALSE,
+                                         name_repair = "unique_quiet") %>% 
           dplyr::select(1:(ncol(.) -1)) %>% 
           dplyr::select(df.relacaoIndicativas$NomeFonteMDI) # filtra somente as indicativas (as fontes estao em colunas)
       }

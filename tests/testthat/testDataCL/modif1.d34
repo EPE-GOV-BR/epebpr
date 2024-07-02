@@ -1,0 +1,5061 @@
+ P.CHAVE  MODIFICACOES E INDICES
+XXXXXXXX XXXXXXXXXXXXXXXXXXXX
+ USINA     1                   CAMARGOS
+ VAZMINT   1 2024       79    
+ VAZMINT   2 2024       94    
+ VAZMINT   3 2024       85    
+ VAZMINT   4 2024       78    
+ VAZMINT   5 2024       68    
+ VAZMINT   6 2024       44    
+ VAZMINT   7 2024       45    
+ VAZMINT   8 2024       49    
+ VAZMINT   9 2024       46    
+ VAZMINT  10 2024       94    
+ VAZMINT  11 2024      153    
+ VAZMINT  12 2024       68    
+ VAZMINT   1 2025       79    
+ VAZMINT   2 2025       94    
+ VAZMINT   3 2025       85    
+ VAZMINT   4 2025       78    
+ VAZMINT   5 2025       68    
+ VAZMINT   6 2025       44    
+ VAZMINT   7 2025       45    
+ VAZMINT   8 2025       49    
+ VAZMINT   9 2025       46    
+ VAZMINT  10 2025       94    
+ VAZMINT  11 2025      153    
+ VAZMINT  12 2025       68    
+ VMAXT     1 2024     80.7 '%'
+ VMAXT     2 2024     91.1 '%'
+ VMAXT     3 2024     95.5 '%'
+ VMAXT     4 2024      100 '%'
+ VMAXT     5 2024      100 '%'
+ VMAXT     6 2024      100 '%'
+ VMAXT     7 2024      100 '%'
+ VMAXT     8 2024      100 '%'
+ VMAXT     9 2024      100 '%'
+ VMAXT    10 2024      100 '%'
+ VMAXT    11 2024      100 '%'
+ VMAXT    12 2024     73.2 '%'
+ VMAXT     1 2025     80.7 '%'
+ VMAXT     2 2025     91.1 '%'
+ VMAXT     3 2025     95.5 '%'
+ VMAXT     4 2025      100 '%'
+ VMAXT     5 2025      100 '%'
+ VMAXT     6 2025      100 '%'
+ VMAXT     7 2025      100 '%'
+ VMAXT     8 2025      100 '%'
+ VMAXT     9 2025      100 '%'
+ VMAXT    10 2025      100 '%'
+ VMAXT    11 2025      100 '%'
+ VMAXT    12 2025     73.2 '%'
+ USINA     2                   ITUTINGA
+ VAZMINT   1 2024       85    
+ VAZMINT   2 2024      104    
+ VAZMINT   3 2024       94    
+ VAZMINT   4 2024       87    
+ VAZMINT   5 2024       73    
+ VAZMINT   6 2024       53    
+ VAZMINT   7 2024       54    
+ VAZMINT   8 2024       57    
+ VAZMINT   9 2024       51    
+ VAZMINT  10 2024       94    
+ VAZMINT  11 2024      162    
+ VAZMINT  12 2024       74    
+ VAZMINT   1 2025       85    
+ VAZMINT   2 2025      104    
+ VAZMINT   3 2025       94    
+ VAZMINT   4 2025       87    
+ VAZMINT   5 2025       73    
+ VAZMINT   6 2025       53    
+ VAZMINT   7 2025       54    
+ VAZMINT   8 2025       57    
+ VAZMINT   9 2025       51    
+ VAZMINT  10 2025       94    
+ VAZMINT  11 2025      162    
+ VAZMINT  12 2025       74    
+ USINA     4                   FUNIL GRANDE
+ VAZMINT   1 2024      258    
+ VAZMINT   2 2024      288    
+ VAZMINT   3 2024      242    
+ VAZMINT   4 2024      153    
+ VAZMINT   5 2024      113    
+ VAZMINT   6 2024       94    
+ VAZMINT   7 2024       85    
+ VAZMINT   8 2024       98    
+ VAZMINT   9 2024       76    
+ VAZMINT  10 2024      167    
+ VAZMINT  11 2024      233    
+ VAZMINT  12 2024      275    
+ VAZMINT   1 2025      258    
+ VAZMINT   2 2025      288    
+ VAZMINT   3 2025      242    
+ VAZMINT   4 2025      153    
+ VAZMINT   5 2025      113    
+ VAZMINT   6 2025       94    
+ VAZMINT   7 2025       85    
+ VAZMINT   8 2025       98    
+ VAZMINT   9 2025       76    
+ VAZMINT  10 2025      167    
+ VAZMINT  11 2025      233    
+ VAZMINT  12 2025      275    
+ USINA     6                   FURNAS
+ VAZMINT   1 2024      174    
+ VAZMINT   2 2024      134    
+ VAZMINT   3 2024      135    
+ VAZMINT   4 2024      136    
+ VAZMINT   5 2024      133    
+ VAZMINT   6 2024      173    
+ VAZMINT   7 2024      171    
+ VAZMINT   8 2024      151    
+ VAZMINT   9 2024      192    
+ VAZMINT  10 2024      131    
+ VAZMINT  11 2024      151    
+ VAZMINT  12 2024      171    
+ VAZMINT   1 2025      174    
+ VAZMINT   2 2025      134    
+ VAZMINT   3 2025      135    
+ VAZMINT   4 2025      136    
+ VAZMINT   5 2025      133    
+ VAZMINT   6 2025      173    
+ VAZMINT   7 2025      171    
+ VAZMINT   8 2025      151    
+ VAZMINT   9 2025      192    
+ VAZMINT  10 2025      131    
+ VAZMINT  11 2025      151    
+ VAZMINT  12 2025      171    
+ VMAXT     1 2024     94.9 '%'
+ VMAXT     2 2024     97.2 '%'
+ VMAXT     3 2024     98.9 '%'
+ VMAXT     4 2024      100 '%'
+ VMAXT     5 2024      100 '%'
+ VMAXT     6 2024      100 '%'
+ VMAXT     7 2024      100 '%'
+ VMAXT     8 2024      100 '%'
+ VMAXT     9 2024      100 '%'
+ VMAXT    10 2024      100 '%'
+ VMAXT    11 2024     94.6 '%'
+ VMAXT    12 2024     91.9 '%'
+ VMAXT     1 2025     94.9 '%'
+ VMAXT     2 2025     97.2 '%'
+ VMAXT     3 2025     98.9 '%'
+ VMAXT     4 2025      100 '%'
+ VMAXT     5 2025      100 '%'
+ VMAXT     6 2025      100 '%'
+ VMAXT     7 2025      100 '%'
+ VMAXT     8 2025      100 '%'
+ VMAXT     9 2025      100 '%'
+ VMAXT    10 2025      100 '%'
+ VMAXT    11 2025     94.6 '%'
+ VMAXT    12 2025     91.9 '%'
+ USINA     7                   MASC. MORAES
+ VAZMINT   1 2024      288    
+ VAZMINT   2 2024      497    
+ VAZMINT   3 2024      278    
+ VAZMINT   4 2024      270    
+ VAZMINT   5 2024      263    
+ VAZMINT   6 2024      149    
+ VAZMINT   7 2024      275    
+ VAZMINT   8 2024      228    
+ VAZMINT   9 2024      155    
+ VAZMINT  10 2024      224    
+ VAZMINT  11 2024      218    
+ VAZMINT  12 2024      253    
+ VAZMINT   1 2025      288    
+ VAZMINT   2 2025      497    
+ VAZMINT   3 2025      278    
+ VAZMINT   4 2025      270    
+ VAZMINT   5 2025      263    
+ VAZMINT   6 2025      149    
+ VAZMINT   7 2025      275    
+ VAZMINT   8 2025      228    
+ VAZMINT   9 2025      155    
+ VAZMINT  10 2025      224    
+ VAZMINT  11 2025      218    
+ VAZMINT  12 2025      253    
+ VMAXT     1 2024       80 '%'
+ VMAXT     2 2024       80 '%'
+ VMAXT     3 2024     91.6 '%'
+ VMAXT     4 2024      100 '%'
+ VMAXT     5 2024      100 '%'
+ VMAXT     6 2024      100 '%'
+ VMAXT     7 2024      100 '%'
+ VMAXT     8 2024      100 '%'
+ VMAXT     9 2024      100 '%'
+ VMAXT    10 2024      100 '%'
+ VMAXT    11 2024       80 '%'
+ VMAXT    12 2024       80 '%'
+ VMAXT     1 2025       80 '%'
+ VMAXT     2 2025       80 '%'
+ VMAXT     3 2025     91.6 '%'
+ VMAXT     4 2025      100 '%'
+ VMAXT     5 2025      100 '%'
+ VMAXT     6 2025      100 '%'
+ VMAXT     7 2025      100 '%'
+ VMAXT     8 2025      100 '%'
+ VMAXT     9 2025      100 '%'
+ VMAXT    10 2025      100 '%'
+ VMAXT    11 2025       80 '%'
+ VMAXT    12 2025       80 '%'
+ VMINT     5 2024    13.23 '%'
+ VMINT     6 2024    13.23 '%'
+ VMINT     7 2024    13.23 '%'
+ VMINT     8 2024    13.23 '%'
+ VMINT     9 2024    13.23 '%'
+ VMINT    10 2024    13.23 '%'
+ VMINT    11 2024    13.23 '%'
+ VMINT    12 2024    13.23 '%'
+ VMINT     1 2025    13.23 '%'
+ VMINT     2 2025    13.23 '%'
+ VMINT     3 2025    13.23 '%'
+ VMINT     4 2025    13.23 '%'
+ VMINT     5 2025    13.23 '%'
+ VMINT     6 2025    13.23 '%'
+ VMINT     7 2025    13.23 '%'
+ VMINT     8 2025    13.23 '%'
+ VMINT     9 2025    13.23 '%'
+ VMINT    10 2025    13.23 '%'
+ VMINT    11 2025    13.23 '%'
+ VMINT    12 2025    13.23 '%'
+ USINA     8                   ESTREITO GDE
+ VAZMINT   1 2024      223    
+ VAZMINT   2 2024      222    
+ VAZMINT   3 2024      217    
+ VAZMINT   4 2024      250    
+ VAZMINT   5 2024      231    
+ VAZMINT   6 2024      190    
+ VAZMINT   7 2024      176    
+ VAZMINT   8 2024      199    
+ VAZMINT   9 2024      175    
+ VAZMINT  10 2024      198    
+ VAZMINT  11 2024      171    
+ VAZMINT  12 2024      198    
+ VAZMINT   1 2025      223    
+ VAZMINT   2 2025      222    
+ VAZMINT   3 2025      217    
+ VAZMINT   4 2025      250    
+ VAZMINT   5 2025      231    
+ VAZMINT   6 2025      190    
+ VAZMINT   7 2025      176    
+ VAZMINT   8 2025      199    
+ VAZMINT   9 2025      175    
+ VAZMINT  10 2025      198    
+ VAZMINT  11 2025      171    
+ VAZMINT  12 2025      198    
+ USINA     9                   JAGUARA
+ VAZMINT   1 2024      274    
+ VAZMINT   2 2024      240    
+ VAZMINT   3 2024      202    
+ VAZMINT   4 2024      227    
+ VAZMINT   5 2024      222    
+ VAZMINT   6 2024      207    
+ VAZMINT   7 2024      221    
+ VAZMINT   8 2024      213    
+ VAZMINT   9 2024      229    
+ VAZMINT  10 2024      459    
+ VAZMINT  11 2024      409    
+ VAZMINT  12 2024      273    
+ VAZMINT   1 2025      274    
+ VAZMINT   2 2025      240    
+ VAZMINT   3 2025      202    
+ VAZMINT   4 2025      227    
+ VAZMINT   5 2025      222    
+ VAZMINT   6 2025      207    
+ VAZMINT   7 2025      221    
+ VAZMINT   8 2025      213    
+ VAZMINT   9 2025      229    
+ VAZMINT  10 2025      459    
+ VAZMINT  11 2025      409    
+ VAZMINT  12 2025      273    
+ USINA     10                  IGARAPAVA
+ VAZMINT   1 2024      338    
+ VAZMINT   2 2024      325    
+ VAZMINT   3 2024      246    
+ VAZMINT   4 2024      271    
+ VAZMINT   5 2024      262    
+ VAZMINT   6 2024      220    
+ VAZMINT   7 2024      254    
+ VAZMINT   8 2024      288    
+ VAZMINT   9 2024      272    
+ VAZMINT  10 2024      389    
+ VAZMINT  11 2024      484    
+ VAZMINT  12 2024      405    
+ VAZMINT   1 2025      338    
+ VAZMINT   2 2025      325    
+ VAZMINT   3 2025      246    
+ VAZMINT   4 2025      271    
+ VAZMINT   5 2025      262    
+ VAZMINT   6 2025      220    
+ VAZMINT   7 2025      254    
+ VAZMINT   8 2025      288    
+ VAZMINT   9 2025      272    
+ VAZMINT  10 2025      389    
+ VAZMINT  11 2025      484    
+ VAZMINT  12 2025      405    
+ USINA     11                  VOLTA GRANDE
+ VAZMINT   1 2024      281    
+ VAZMINT   2 2024      292    
+ VAZMINT   3 2024      236    
+ VAZMINT   4 2024      206    
+ VAZMINT   5 2024      244    
+ VAZMINT   6 2024      230    
+ VAZMINT   7 2024      232    
+ VAZMINT   8 2024      243    
+ VAZMINT   9 2024      216    
+ VAZMINT  10 2024      236    
+ VAZMINT  11 2024      246    
+ VAZMINT  12 2024      372    
+ VAZMINT   1 2025      281    
+ VAZMINT   2 2025      292    
+ VAZMINT   3 2025      236    
+ VAZMINT   4 2025      206    
+ VAZMINT   5 2025      244    
+ VAZMINT   6 2025      230    
+ VAZMINT   7 2025      232    
+ VAZMINT   8 2025      243    
+ VAZMINT   9 2025      216    
+ VAZMINT  10 2025      236    
+ VAZMINT  11 2025      246    
+ VAZMINT  12 2025      372    
+ USINA     12                  P. COLOMBIA
+ VAZMINT   1 2024      361    
+ VAZMINT   2 2024      300    
+ VAZMINT   3 2024      196    
+ VAZMINT   4 2024      198    
+ VAZMINT   5 2024      190    
+ VAZMINT   6 2024      224    
+ VAZMINT   7 2024      241    
+ VAZMINT   8 2024      264    
+ VAZMINT   9 2024      195    
+ VAZMINT  10 2024      199    
+ VAZMINT  11 2024      243    
+ VAZMINT  12 2024      302    
+ VAZMINT   1 2025      361    
+ VAZMINT   2 2025      300    
+ VAZMINT   3 2025      196    
+ VAZMINT   4 2025      198    
+ VAZMINT   5 2025      190    
+ VAZMINT   6 2025      224    
+ VAZMINT   7 2025      241    
+ VAZMINT   8 2025      264    
+ VAZMINT   9 2025      195    
+ VAZMINT  10 2025      199    
+ VAZMINT  11 2025      243    
+ VAZMINT  12 2025      302    
+ USINA     14                  CACONDE
+ VAZMINT   1 2024       33    
+ VAZMINT   2 2024       33    
+ VAZMINT   3 2024       32    
+ VAZMINT   4 2024       32    
+ VAZMINT   5 2024       32    
+ VAZMINT   6 2024       33    
+ VAZMINT   7 2024       32    
+ VAZMINT   8 2024       32    
+ VAZMINT   9 2024       32    
+ VAZMINT  10 2024       32    
+ VAZMINT  11 2024       32    
+ VAZMINT  12 2024       32    
+ VAZMINT   1 2025       33    
+ VAZMINT   2 2025       33    
+ VAZMINT   3 2025       32    
+ VAZMINT   4 2025       32    
+ VAZMINT   5 2025       32    
+ VAZMINT   6 2025       33    
+ VAZMINT   7 2025       32    
+ VAZMINT   8 2025       32    
+ VAZMINT   9 2025       32    
+ VAZMINT  10 2025       32    
+ VAZMINT  11 2025       32    
+ VAZMINT  12 2025       32    
+ VMAXT     1 2024     94.1 '%'
+ VMAXT     2 2024       96 '%'
+ VMAXT     3 2024       98 '%'
+ VMAXT     4 2024      100 '%'
+ VMAXT     5 2024      100 '%'
+ VMAXT     6 2024      100 '%'
+ VMAXT     7 2024      100 '%'
+ VMAXT     8 2024      100 '%'
+ VMAXT     9 2024      100 '%'
+ VMAXT    10 2024      100 '%'
+ VMAXT    11 2024       96 '%'
+ VMAXT    12 2024     92.1 '%'
+ VMAXT     1 2025     94.1 '%'
+ VMAXT     2 2025       96 '%'
+ VMAXT     3 2025       98 '%'
+ VMAXT     4 2025      100 '%'
+ VMAXT     5 2025      100 '%'
+ VMAXT     6 2025      100 '%'
+ VMAXT     7 2025      100 '%'
+ VMAXT     8 2025      100 '%'
+ VMAXT     9 2025      100 '%'
+ VMAXT    10 2025      100 '%'
+ VMAXT    11 2025       96 '%'
+ VMAXT    12 2025     92.1 '%'
+ USINA     15                  EUCLID CUNHA
+ VAZMINT   1 2024       65    
+ VAZMINT   2 2024       61    
+ VAZMINT   3 2024       52    
+ VAZMINT   4 2024       43    
+ VAZMINT   5 2024       32    
+ VAZMINT   6 2024       43    
+ VAZMINT   7 2024       37    
+ VAZMINT   8 2024       29    
+ VAZMINT   9 2024       23    
+ VAZMINT  10 2024       38    
+ VAZMINT  11 2024       31    
+ VAZMINT  12 2024       57    
+ VAZMINT   1 2025       65    
+ VAZMINT   2 2025       61    
+ VAZMINT   3 2025       52    
+ VAZMINT   4 2025       43    
+ VAZMINT   5 2025       32    
+ VAZMINT   6 2025       43    
+ VAZMINT   7 2025       37    
+ VAZMINT   8 2025       29    
+ VAZMINT   9 2025       23    
+ VAZMINT  10 2025       38    
+ VAZMINT  11 2025       31    
+ VAZMINT  12 2025       57    
+ USINA     16                  A.S.OLIVEIRA
+ VAZMINT   1 2024       57    
+ VAZMINT   2 2024       55    
+ VAZMINT   3 2024       49    
+ VAZMINT   4 2024       40    
+ VAZMINT   5 2024       22    
+ VAZMINT   6 2024       41    
+ VAZMINT   7 2024       32    
+ VAZMINT   8 2024       28    
+ VAZMINT   9 2024       21    
+ VAZMINT  10 2024       40    
+ VAZMINT  11 2024       28    
+ VAZMINT  12 2024       54    
+ VAZMINT   1 2025       57    
+ VAZMINT   2 2025       55    
+ VAZMINT   3 2025       49    
+ VAZMINT   4 2025       40    
+ VAZMINT   5 2025       22    
+ VAZMINT   6 2025       41    
+ VAZMINT   7 2025       32    
+ VAZMINT   8 2025       28    
+ VAZMINT   9 2025       21    
+ VAZMINT  10 2025       40    
+ VAZMINT  11 2025       28    
+ VAZMINT  12 2025       54    
+ USINA     17                  MARIMBONDO
+ VAZMINT   1 2024      464    
+ VAZMINT   2 2024      585    
+ VAZMINT   3 2024      368    
+ VAZMINT   4 2024      354    
+ VAZMINT   5 2024      385    
+ VAZMINT   6 2024      312    
+ VAZMINT   7 2024      353    
+ VAZMINT   8 2024      436    
+ VAZMINT   9 2024      454    
+ VAZMINT  10 2024      409    
+ VAZMINT  11 2024      346    
+ VAZMINT  12 2024      374    
+ VAZMINT   1 2025      464    
+ VAZMINT   2 2025      585    
+ VAZMINT   3 2025      368    
+ VAZMINT   4 2025      354    
+ VAZMINT   5 2025      385    
+ VAZMINT   6 2025      312    
+ VAZMINT   7 2025      353    
+ VAZMINT   8 2025      436    
+ VAZMINT   9 2025      454    
+ VAZMINT  10 2025      409    
+ VAZMINT  11 2025      346    
+ VAZMINT  12 2025      374    
+ VMAXT     1 2024     63.7 '%'
+ VMAXT     2 2024     72.7 '%'
+ VMAXT     3 2024       84 '%'
+ VMAXT     4 2024       91 '%'
+ VMAXT     5 2024       91 '%'
+ VMAXT     6 2024       91 '%'
+ VMAXT     7 2024       91 '%'
+ VMAXT     8 2024       91 '%'
+ VMAXT     9 2024       91 '%'
+ VMAXT    10 2024       91 '%'
+ VMAXT    11 2024       61 '%'
+ VMAXT    12 2024     51.8 '%'
+ VMAXT     1 2025     63.7 '%'
+ VMAXT     2 2025     72.7 '%'
+ VMAXT     3 2025       84 '%'
+ VMAXT     4 2025       91 '%'
+ VMAXT     5 2025       91 '%'
+ VMAXT     6 2025       91 '%'
+ VMAXT     7 2025       91 '%'
+ VMAXT     8 2025       91 '%'
+ VMAXT     9 2025       91 '%'
+ VMAXT    10 2025       91 '%'
+ VMAXT    11 2025       61 '%'
+ VMAXT    12 2025     51.8 '%'
+ USINA     18                  A. VERMELHA
+ VAZMINT   1 2024      859    
+ VAZMINT   2 2024      748    
+ VAZMINT   3 2024      941    
+ VAZMINT   4 2024      859    
+ VAZMINT   5 2024      316    
+ VAZMINT   6 2024      924    
+ VAZMINT   7 2024      958    
+ VAZMINT   8 2024      967    
+ VAZMINT   9 2024      750    
+ VAZMINT  10 2024      786    
+ VAZMINT  11 2024      711    
+ VAZMINT  12 2024      812    
+ VAZMINT   1 2025      859    
+ VAZMINT   2 2025      748    
+ VAZMINT   3 2025      941    
+ VAZMINT   4 2025      859    
+ VAZMINT   5 2025      316    
+ VAZMINT   6 2025      924    
+ VAZMINT   7 2025      958    
+ VAZMINT   8 2025      967    
+ VAZMINT   9 2025      750    
+ VAZMINT  10 2025      786    
+ VAZMINT  11 2025      711    
+ VAZMINT  12 2025      812    
+ VMAXT     1 2024     68.9 '%'
+ VMAXT     2 2024     79.1 '%'
+ VMAXT     3 2024       92 '%'
+ VMAXT     4 2024      100 '%'
+ VMAXT     5 2024      100 '%'
+ VMAXT     6 2024      100 '%'
+ VMAXT     7 2024      100 '%'
+ VMAXT     8 2024      100 '%'
+ VMAXT     9 2024      100 '%'
+ VMAXT    10 2024      100 '%'
+ VMAXT    11 2024     58.7 '%'
+ VMAXT    12 2024     57.5 '%'
+ VMAXT     1 2025     68.9 '%'
+ VMAXT     2 2025     79.1 '%'
+ VMAXT     3 2025       92 '%'
+ VMAXT     4 2025      100 '%'
+ VMAXT     5 2025      100 '%'
+ VMAXT     6 2025      100 '%'
+ VMAXT     7 2025      100 '%'
+ VMAXT     8 2025      100 '%'
+ VMAXT     9 2025      100 '%'
+ VMAXT    10 2025      100 '%'
+ VMAXT    11 2025     58.7 '%'
+ VMAXT    12 2025     57.5 '%'
+ USINA     20                  BATALHA
+ VAZMINT   5 2024       50    
+ VAZMINT   6 2024       37    
+ VAZMINT   7 2024       76    
+ VAZMINT   8 2024       54    
+ VAZMINT   9 2024       35    
+ VAZMINT  10 2024       23    
+ VAZMINT  11 2024       35    
+ VAZMINT  12 2024       32    
+ VAZMINT   1 2025       45    
+ VAZMINT   2 2025       41    
+ VAZMINT   3 2025       61    
+ VAZMINT   4 2025       74    
+ VAZMINT   5 2025       50    
+ VAZMINT   6 2025       37    
+ VAZMINT   7 2025       76    
+ VAZMINT   8 2025       54    
+ VAZMINT   9 2025       35    
+ VAZMINT  10 2025       23    
+ VAZMINT  11 2025       35    
+ VAZMINT  12 2025       32    
+ USINA     21                  SERRA FACAO
+ VAZMINT   1 2024       91    
+ VAZMINT   2 2024       90    
+ VAZMINT   3 2024       89    
+ VAZMINT   4 2024       87    
+ VAZMINT   5 2024       86    
+ VAZMINT   6 2024        0    
+ VAZMINT   7 2024       36    
+ VAZMINT   8 2024      100    
+ VAZMINT   9 2024       78    
+ VAZMINT  10 2024      106    
+ VAZMINT  11 2024       99    
+ VAZMINT  12 2024       95    
+ VAZMINT   1 2025       91    
+ VAZMINT   2 2025       90    
+ VAZMINT   3 2025       89    
+ VAZMINT   4 2025       87    
+ VAZMINT   5 2025       86    
+ VAZMINT   6 2025        0    
+ VAZMINT   7 2025       36    
+ VAZMINT   8 2025      100    
+ VAZMINT   9 2025       78    
+ VAZMINT  10 2025      106    
+ VAZMINT  11 2025       99    
+ VAZMINT  12 2025       95    
+ USINA     24                  EMBORCACAO
+ VAZMINT   1 2024      162    
+ VAZMINT   2 2024      140    
+ VAZMINT   3 2024      139    
+ VAZMINT   4 2024      137    
+ VAZMINT   5 2024      140    
+ VAZMINT   6 2024      142    
+ VAZMINT   7 2024      137    
+ VAZMINT   8 2024      134    
+ VAZMINT   9 2024      156    
+ VAZMINT  10 2024      139    
+ VAZMINT  11 2024      155    
+ VAZMINT  12 2024      137    
+ VAZMINT   1 2025      162    
+ VAZMINT   2 2025      140    
+ VAZMINT   3 2025      139    
+ VAZMINT   4 2025      137    
+ VAZMINT   5 2025      140    
+ VAZMINT   6 2025      142    
+ VAZMINT   7 2025      137    
+ VAZMINT   8 2025      134    
+ VAZMINT   9 2025      156    
+ VAZMINT  10 2025      139    
+ VAZMINT  11 2025      155    
+ VAZMINT  12 2025      137    
+ VMAXT     1 2024     96.1 '%'
+ VMAXT     2 2024       98 '%'
+ VMAXT     3 2024     99.2 '%'
+ VMAXT     4 2024      100 '%'
+ VMAXT     5 2024      100 '%'
+ VMAXT     6 2024      100 '%'
+ VMAXT     7 2024      100 '%'
+ VMAXT     8 2024      100 '%'
+ VMAXT     9 2024      100 '%'
+ VMAXT    10 2024      100 '%'
+ VMAXT    11 2024     95.8 '%'
+ VMAXT    12 2024     95.3 '%'
+ VMAXT     1 2025     96.1 '%'
+ VMAXT     2 2025       98 '%'
+ VMAXT     3 2025     99.2 '%'
+ VMAXT     4 2025      100 '%'
+ VMAXT     5 2025      100 '%'
+ VMAXT     6 2025      100 '%'
+ VMAXT     7 2025      100 '%'
+ VMAXT     8 2025      100 '%'
+ VMAXT     9 2025      100 '%'
+ VMAXT    10 2025      100 '%'
+ VMAXT    11 2025     95.8 '%'
+ VMAXT    12 2025     95.3 '%'
+ USINA     25                  NOVA PONTE
+ VAZMINT   5 2024       39    
+ VAZMINT   6 2024       42    
+ VAZMINT   7 2024      136    
+ VAZMINT   8 2024      127    
+ VAZMINT   9 2024       52    
+ VAZMINT  10 2024       41    
+ VAZMINT  11 2024      144    
+ VAZMINT  12 2024      141    
+ VAZMINT   1 2025      129    
+ VAZMINT   2 2025      144    
+ VAZMINT   3 2025      144    
+ VAZMINT   4 2025      110    
+ VAZMINT   5 2025       39    
+ VAZMINT   6 2025       42    
+ VAZMINT   7 2025      136    
+ VAZMINT   8 2025      127    
+ VAZMINT   9 2025       52    
+ VAZMINT  10 2025       41    
+ VAZMINT  11 2025      144    
+ VAZMINT  12 2025      141    
+ VMAXT     5 2024      100 '%'
+ VMAXT     6 2024      100 '%'
+ VMAXT     7 2024      100 '%'
+ VMAXT     8 2024      100 '%'
+ VMAXT     9 2024      100 '%'
+ VMAXT    10 2024      100 '%'
+ VMAXT    11 2024     96.6 '%'
+ VMAXT    12 2024     96.2 '%'
+ VMAXT     1 2025     96.8 '%'
+ VMAXT     2 2025     98.5 '%'
+ VMAXT     3 2025     99.4 '%'
+ VMAXT     4 2025      100 '%'
+ VMAXT     5 2025      100 '%'
+ VMAXT     6 2025      100 '%'
+ VMAXT     7 2025      100 '%'
+ VMAXT     8 2025      100 '%'
+ VMAXT     9 2025      100 '%'
+ VMAXT    10 2025      100 '%'
+ VMAXT    11 2025     96.6 '%'
+ VMAXT    12 2025     96.2 '%'
+ USINA     26                  MIRANDA
+ VAZMINT   5 2024      131    
+ VAZMINT   6 2024      132    
+ VAZMINT   7 2024      133    
+ VAZMINT   8 2024      133    
+ VAZMINT   9 2024      133    
+ VAZMINT  10 2024      130    
+ VAZMINT  11 2024      135    
+ VAZMINT  12 2024      135    
+ VAZMINT   1 2025      207    
+ VAZMINT   2 2025      154    
+ VAZMINT   3 2025      135    
+ VAZMINT   4 2025      139    
+ VAZMINT   5 2025      131    
+ VAZMINT   6 2025      132    
+ VAZMINT   7 2025      133    
+ VAZMINT   8 2025      133    
+ VAZMINT   9 2025      133    
+ VAZMINT  10 2025      130    
+ VAZMINT  11 2025      135    
+ VAZMINT  12 2025      135    
+ USINA     27                  CAPIM BRANC1
+ VAZMINT   1 2024      213    
+ VAZMINT   2 2024      139    
+ VAZMINT   3 2024      142    
+ VAZMINT   4 2024      123    
+ VAZMINT   5 2024      132    
+ VAZMINT   6 2024       72    
+ VAZMINT   7 2024      130    
+ VAZMINT   8 2024      145    
+ VAZMINT   9 2024      123    
+ VAZMINT  10 2024      125    
+ VAZMINT  11 2024      126    
+ VAZMINT  12 2024      186    
+ VAZMINT   1 2025      213    
+ VAZMINT   2 2025      139    
+ VAZMINT   3 2025      142    
+ VAZMINT   4 2025      123    
+ VAZMINT   5 2025      132    
+ VAZMINT   6 2025       72    
+ VAZMINT   7 2025      130    
+ VAZMINT   8 2025      145    
+ VAZMINT   9 2025      123    
+ VAZMINT  10 2025      125    
+ VAZMINT  11 2025      126    
+ VAZMINT  12 2025      186    
+ USINA     28                  CAPIM BRANC2
+ VAZMINT   1 2024      246    
+ VAZMINT   2 2024      151    
+ VAZMINT   3 2024      142    
+ VAZMINT   4 2024      140    
+ VAZMINT   5 2024      149    
+ VAZMINT   6 2024       94    
+ VAZMINT   7 2024      136    
+ VAZMINT   8 2024      131    
+ VAZMINT   9 2024      132    
+ VAZMINT  10 2024      132    
+ VAZMINT  11 2024      147    
+ VAZMINT  12 2024      188    
+ VAZMINT   1 2025      246    
+ VAZMINT   2 2025      151    
+ VAZMINT   3 2025      142    
+ VAZMINT   4 2025      140    
+ VAZMINT   5 2025      149    
+ VAZMINT   6 2025       94    
+ VAZMINT   7 2025      136    
+ VAZMINT   8 2025      131    
+ VAZMINT   9 2025      132    
+ VAZMINT  10 2025      132    
+ VAZMINT  11 2025      147    
+ VAZMINT  12 2025      188    
+ USINA     29                  CORUMBA IV
+ VAZMINT   1 2024        0    
+ VAZMINT   2 2024        3    
+ VAZMINT   3 2024        0    
+ VAZMINT   4 2024        0    
+ VAZMINT   5 2024        0    
+ VAZMINT   6 2024        0    
+ VAZMINT   7 2024        9    
+ VAZMINT   8 2024        0    
+ VAZMINT   9 2024        0    
+ VAZMINT  10 2024       15    
+ VAZMINT  11 2024       24    
+ VAZMINT  12 2024        0    
+ VAZMINT   1 2025        0    
+ VAZMINT   2 2025        3    
+ VAZMINT   3 2025        0    
+ VAZMINT   4 2025        0    
+ VAZMINT   5 2025        0    
+ VAZMINT   6 2025        0    
+ VAZMINT   7 2025        9    
+ VAZMINT   8 2025        0    
+ VAZMINT   9 2025        0    
+ VAZMINT  10 2025       15    
+ VAZMINT  11 2025       24    
+ VAZMINT  12 2025        0    
+ USINA     30                  CORUMBA I
+ VAZMINT   1 2024      140    
+ VAZMINT   2 2024      130    
+ VAZMINT   3 2024      160    
+ VAZMINT   4 2024      153    
+ VAZMINT   5 2024      122    
+ VAZMINT   6 2024      127    
+ VAZMINT   7 2024      129    
+ VAZMINT   8 2024      133    
+ VAZMINT   9 2024      142    
+ VAZMINT  10 2024      148    
+ VAZMINT  11 2024      138    
+ VAZMINT  12 2024      173    
+ VAZMINT   1 2025      140    
+ VAZMINT   2 2025      130    
+ VAZMINT   3 2025      160    
+ VAZMINT   4 2025      153    
+ VAZMINT   5 2025      122    
+ VAZMINT   6 2025      127    
+ VAZMINT   7 2025      129    
+ VAZMINT   8 2025      133    
+ VAZMINT   9 2025      142    
+ VAZMINT  10 2025      148    
+ VAZMINT  11 2025      138    
+ VAZMINT  12 2025      173    
+ USINA     31                  ITUMBIARA
+ VAZMINT   1 2024      244    
+ VAZMINT   2 2024      357    
+ VAZMINT   3 2024      356    
+ VAZMINT   4 2024      322    
+ VAZMINT   5 2024      342    
+ VAZMINT   6 2024       70    
+ VAZMINT   7 2024       70    
+ VAZMINT   8 2024       79    
+ VAZMINT   9 2024       70    
+ VAZMINT  10 2024       70    
+ VAZMINT  11 2024       70    
+ VAZMINT  12 2024      114    
+ VAZMINT   1 2025      244    
+ VAZMINT   2 2025      357    
+ VAZMINT   3 2025      356    
+ VAZMINT   4 2025      322    
+ VAZMINT   5 2025      342    
+ VAZMINT   6 2025       70    
+ VAZMINT   7 2025       70    
+ VAZMINT   8 2025       79    
+ VAZMINT   9 2025       70    
+ VAZMINT  10 2025       70    
+ VAZMINT  11 2025       70    
+ VAZMINT  12 2025      114    
+ VMAXT     1 2024     89.3 '%'
+ VMAXT     2 2024     93.3 '%'
+ VMAXT     3 2024     97.4 '%'
+ VMAXT     4 2024      100 '%'
+ VMAXT     5 2024      100 '%'
+ VMAXT     6 2024      100 '%'
+ VMAXT     7 2024      100 '%'
+ VMAXT     8 2024      100 '%'
+ VMAXT     9 2024      100 '%'
+ VMAXT    10 2024      100 '%'
+ VMAXT    11 2024     88.6 '%'
+ VMAXT    12 2024     82.4 '%'
+ VMAXT     1 2025     89.3 '%'
+ VMAXT     2 2025     93.3 '%'
+ VMAXT     3 2025     97.4 '%'
+ VMAXT     4 2025      100 '%'
+ VMAXT     5 2025      100 '%'
+ VMAXT     6 2025      100 '%'
+ VMAXT     7 2025      100 '%'
+ VMAXT     8 2025      100 '%'
+ VMAXT     9 2025      100 '%'
+ VMAXT    10 2025      100 '%'
+ VMAXT    11 2025     88.6 '%'
+ VMAXT    12 2025     82.4 '%'
+ USINA     32                  CACH DOURADA
+ VAZMINT   1 2024      220    
+ VAZMINT   2 2024      246    
+ VAZMINT   3 2024      211    
+ VAZMINT   4 2024      211    
+ VAZMINT   5 2024      297    
+ VAZMINT   6 2024      205    
+ VAZMINT   7 2024      283    
+ VAZMINT   8 2024      245    
+ VAZMINT   9 2024      241    
+ VAZMINT  10 2024      152    
+ VAZMINT  11 2024      218    
+ VAZMINT  12 2024      227    
+ VAZMINT   1 2025      220    
+ VAZMINT   2 2025      246    
+ VAZMINT   3 2025      211    
+ VAZMINT   4 2025      211    
+ VAZMINT   5 2025      297    
+ VAZMINT   6 2025      205    
+ VAZMINT   7 2025      283    
+ VAZMINT   8 2025      245    
+ VAZMINT   9 2025      241    
+ VAZMINT  10 2025      152    
+ VAZMINT  11 2025      218    
+ VAZMINT  12 2025      227    
+ USINA     33                  SAO SIMAO
+ VAZMINT   1 2024     1018    
+ VAZMINT   2 2024     1014    
+ VAZMINT   3 2024      996    
+ VAZMINT   4 2024     1021    
+ VAZMINT   5 2024     1064    
+ VAZMINT   6 2024      946    
+ VAZMINT   7 2024      991    
+ VAZMINT   8 2024     1023    
+ VAZMINT   9 2024     1190    
+ VAZMINT  10 2024     1026    
+ VAZMINT  11 2024     1074    
+ VAZMINT  12 2024     1003    
+ VAZMINT   1 2025     1018    
+ VAZMINT   2 2025     1014    
+ VAZMINT   3 2025      996    
+ VAZMINT   4 2025     1021    
+ VAZMINT   5 2025     1064    
+ VAZMINT   6 2025      946    
+ VAZMINT   7 2025      991    
+ VAZMINT   8 2025     1023    
+ VAZMINT   9 2025     1190    
+ VAZMINT  10 2025     1026    
+ VAZMINT  11 2025     1074    
+ VAZMINT  12 2025     1003    
+ VMAXT     1 2024     54.4 '%'
+ VMAXT     2 2024     76.2 '%'
+ VMAXT     3 2024     91.2 '%'
+ VMAXT     4 2024      100 '%'
+ VMAXT     5 2024      100 '%'
+ VMAXT     6 2024      100 '%'
+ VMAXT     7 2024      100 '%'
+ VMAXT     8 2024      100 '%'
+ VMAXT     9 2024      100 '%'
+ VMAXT    10 2024      100 '%'
+ VMAXT    11 2024     51.3 '%'
+ VMAXT    12 2024     51.3 '%'
+ VMAXT     1 2025     54.4 '%'
+ VMAXT     2 2025     76.2 '%'
+ VMAXT     3 2025     91.2 '%'
+ VMAXT     4 2025      100 '%'
+ VMAXT     5 2025      100 '%'
+ VMAXT     6 2025      100 '%'
+ VMAXT     7 2025      100 '%'
+ VMAXT     8 2025      100 '%'
+ VMAXT     9 2025      100 '%'
+ VMAXT    10 2025      100 '%'
+ VMAXT    11 2025     51.3 '%'
+ VMAXT    12 2025     51.3 '%'
+ USINA     34                  _I. SOLTEIRA
+ VAZMINT   1 2024     2132    
+ VAZMINT   2 2024     2167    
+ VAZMINT   3 2024     2029    
+ VAZMINT   4 2024     1978    
+ VAZMINT   5 2024     2018    
+ VAZMINT   6 2024     1971    
+ VAZMINT   7 2024     2196    
+ VAZMINT   8 2024     2371    
+ VAZMINT   9 2024     2156    
+ VAZMINT  10 2024     1935    
+ VAZMINT  11 2024     2038    
+ VAZMINT  12 2024     2082    
+ VAZMINT   1 2025     2132    
+ VAZMINT   2 2025     2167    
+ VAZMINT   3 2025     2029    
+ VAZMINT   4 2025     1978    
+ VAZMINT   5 2025     2018    
+ VAZMINT   6 2025     1971    
+ VAZMINT   7 2025     2196    
+ VAZMINT   8 2025     2371    
+ VAZMINT   9 2025     2156    
+ VAZMINT  10 2025     1935    
+ VAZMINT  11 2025     2038    
+ VAZMINT  12 2025     2082    
+ VMAXT     1 2024    61.97 '%'
+ VMAXT     2 2024    65.14 '%'
+ VMAXT     3 2024    86.44 '%'
+ VMAXT     4 2024      100 '%'
+ VMAXT     5 2024      100 '%'
+ VMAXT     6 2024      100 '%'
+ VMAXT     7 2024      100 '%'
+ VMAXT     8 2024      100 '%'
+ VMAXT     9 2024      100 '%'
+ VMAXT    10 2024      100 '%'
+ VMAXT    11 2024    61.97 '%'
+ VMAXT    12 2024    61.97 '%'
+ VMAXT     1 2025    61.97 '%'
+ VMAXT     2 2025    65.14 '%'
+ VMAXT     3 2025    86.44 '%'
+ VMAXT     4 2025      100 '%'
+ VMAXT     5 2025      100 '%'
+ VMAXT     6 2025      100 '%'
+ VMAXT     7 2025      100 '%'
+ VMAXT     8 2025      100 '%'
+ VMAXT     9 2025      100 '%'
+ VMAXT    10 2025      100 '%'
+ VMAXT    11 2025    61.97 '%'
+ VMAXT    12 2025    61.97 '%'
+ VMINT     1 2024    57.15 '%'
+ VMINT     2 2024    57.15 '%'
+ VMINT     3 2024    57.15 '%'
+ VMINT     4 2024    57.15 '%'
+ VMINT     5 2024    45.89 '%'
+ VMINT     6 2024    45.89 '%'
+ VMINT     7 2024    45.89 '%'
+ VMINT     8 2024    45.89 '%'
+ VMINT     9 2024    45.89 '%'
+ VMINT    10 2024    45.89 '%'
+ VMINT    11 2024    45.89 '%'
+ VMINT    12 2024    45.89 '%'
+ VMINT     1 2025    45.89 '%'
+ VMINT     2 2025    45.89 '%'
+ VMINT     3 2025    45.89 '%'
+ VMINT     4 2025    45.89 '%'
+ VMINT     5 2025    45.89 '%'
+ VMINT     6 2025    45.89 '%'
+ VMINT     7 2025    45.89 '%'
+ VMINT     8 2025    45.89 '%'
+ VMINT     9 2025    45.89 '%'
+ VMINT    10 2025    45.89 '%'
+ VMINT    11 2025    45.89 '%'
+ VMINT    12 2025    45.89 '%'
+ USINA     37                  BARRA BONITA
+ VMAXT     5 2024     95.5 '%'
+ VMAXT     6 2024      100 '%'
+ VMAXT     7 2024      100 '%'
+ VMAXT     8 2024      100 '%'
+ VMAXT     9 2024      100 '%'
+ VMAXT    10 2024      100 '%'
+ VMAXT    11 2024     85.9 '%'
+ VMAXT    12 2024    48.29 '%'
+ VMAXT     1 2025     79.4 '%'
+ VMAXT     2 2025       84 '%'
+ VMAXT     3 2025     90.3 '%'
+ VMAXT     4 2025     95.3 '%'
+ VMAXT     5 2025     95.5 '%'
+ VMAXT     6 2025      100 '%'
+ VMAXT     7 2025      100 '%'
+ VMAXT     8 2025      100 '%'
+ VMAXT     9 2025      100 '%'
+ VMAXT    10 2025      100 '%'
+ VMAXT    11 2025     85.9 '%'
+ VMAXT    12 2025    48.29 '%'
+ VMINT     5 2024    48.29 '%'
+ VMINT     6 2024    48.29 '%'
+ VMINT     7 2024    48.29 '%'
+ VMINT     8 2024    48.29 '%'
+ VMINT     9 2024    48.29 '%'
+ VMINT    10 2024    48.29 '%'
+ VMINT    11 2024    48.29 '%'
+ VMINT    12 2024    48.29 '%'
+ VMINT     1 2025    48.29 '%'
+ VMINT     2 2025    48.29 '%'
+ VMINT     3 2025    48.29 '%'
+ VMINT     4 2025    48.29 '%'
+ VMINT     5 2025    48.29 '%'
+ VMINT     6 2025    48.29 '%'
+ VMINT     7 2025    48.29 '%'
+ VMINT     8 2025    48.29 '%'
+ VMINT     9 2025    48.29 '%'
+ VMINT    10 2025    48.29 '%'
+ VMINT    11 2025    48.29 '%'
+ VMINT    12 2025    48.29 '%'
+ USINA     38                  A.SOUZA LIMA
+ VAZMINT   1 2024      259    
+ VAZMINT   2 2024      193    
+ VAZMINT   3 2024      178    
+ VAZMINT   4 2024      103    
+ VAZMINT   5 2024      106    
+ VAZMINT   6 2024      186    
+ VAZMINT   7 2024      103    
+ VAZMINT   8 2024      168    
+ VAZMINT   9 2024      179    
+ VAZMINT  10 2024      339    
+ VAZMINT  11 2024      150    
+ VAZMINT  12 2024      220    
+ VAZMINT   1 2025      259    
+ VAZMINT   2 2025      193    
+ VAZMINT   3 2025      178    
+ VAZMINT   4 2025      103    
+ VAZMINT   5 2025      106    
+ VAZMINT   6 2025      186    
+ VAZMINT   7 2025      103    
+ VAZMINT   8 2025      168    
+ VAZMINT   9 2025      179    
+ VAZMINT  10 2025      339    
+ VAZMINT  11 2025      150    
+ VAZMINT  12 2025      220    
+ USINA     39                  IBITINGA
+ VAZMINT   1 2024      403    
+ VAZMINT   2 2024      213    
+ VAZMINT   3 2024      249    
+ VAZMINT   4 2024      169    
+ VAZMINT   5 2024      165    
+ VAZMINT   6 2024      171    
+ VAZMINT   7 2024      148    
+ VAZMINT   8 2024      142    
+ VAZMINT   9 2024      205    
+ VAZMINT  10 2024      496    
+ VAZMINT  11 2024      167    
+ VAZMINT  12 2024      313    
+ VAZMINT   1 2025      403    
+ VAZMINT   2 2025      213    
+ VAZMINT   3 2025      249    
+ VAZMINT   4 2025      169    
+ VAZMINT   5 2025      165    
+ VAZMINT   6 2025      171    
+ VAZMINT   7 2025      148    
+ VAZMINT   8 2025      142    
+ VAZMINT   9 2025      205    
+ VAZMINT  10 2025      496    
+ VAZMINT  11 2025      167    
+ VAZMINT  12 2025      313    
+ USINA     40                  PROMISSAO
+ VAZMINT   1 2024      177    
+ VAZMINT   2 2024      171    
+ VAZMINT   3 2024      169    
+ VAZMINT   4 2024      164    
+ VAZMINT   5 2024      167    
+ VAZMINT   6 2024      175    
+ VAZMINT   7 2024      167    
+ VAZMINT   8 2024      173    
+ VAZMINT   9 2024      178    
+ VAZMINT  10 2024      265    
+ VAZMINT  11 2024      177    
+ VAZMINT  12 2024      243    
+ VAZMINT   1 2025      177    
+ VAZMINT   2 2025      171    
+ VAZMINT   3 2025      169    
+ VAZMINT   4 2025      164    
+ VAZMINT   5 2025      167    
+ VAZMINT   6 2025      175    
+ VAZMINT   7 2025      167    
+ VAZMINT   8 2025      173    
+ VAZMINT   9 2025      178    
+ VAZMINT  10 2025      265    
+ VAZMINT  11 2025      177    
+ VAZMINT  12 2025      243    
+ VMAXT     1 2024     75.9 '%'
+ VMAXT     2 2024     83.9 '%'
+ VMAXT     3 2024     93.8 '%'
+ VMAXT     4 2024      100 '%'
+ VMAXT     5 2024      100 '%'
+ VMAXT     6 2024      100 '%'
+ VMAXT     7 2024      100 '%'
+ VMAXT     8 2024      100 '%'
+ VMAXT     9 2024      100 '%'
+ VMAXT    10 2024      100 '%'
+ VMAXT    11 2024       74 '%'
+ VMAXT    12 2024     67.6 '%'
+ VMAXT     1 2025     75.9 '%'
+ VMAXT     2 2025     83.9 '%'
+ VMAXT     3 2025     93.8 '%'
+ VMAXT     4 2025      100 '%'
+ VMAXT     5 2025      100 '%'
+ VMAXT     6 2025      100 '%'
+ VMAXT     7 2025      100 '%'
+ VMAXT     8 2025      100 '%'
+ VMAXT     9 2025      100 '%'
+ VMAXT    10 2025      100 '%'
+ VMAXT    11 2025       74 '%'
+ VMAXT    12 2025     67.6 '%'
+ VMINT     5 2024    28.95 '%'
+ VMINT     6 2024    28.95 '%'
+ VMINT     7 2024    28.95 '%'
+ VMINT     8 2024    28.95 '%'
+ VMINT     9 2024    28.95 '%'
+ VMINT    10 2024    28.95 '%'
+ VMINT    11 2024    28.95 '%'
+ VMINT    12 2024    28.95 '%'
+ VMINT     1 2025    28.95 '%'
+ VMINT     2 2025    28.95 '%'
+ VMINT     3 2025    28.95 '%'
+ VMINT     4 2025    28.95 '%'
+ VMINT     5 2025    28.95 '%'
+ VMINT     6 2025    28.95 '%'
+ VMINT     7 2025    28.95 '%'
+ VMINT     8 2025    28.95 '%'
+ VMINT     9 2025    28.95 '%'
+ VMINT    10 2025    28.95 '%'
+ VMINT    11 2025    28.95 '%'
+ VMINT    12 2025    28.95 '%'
+ USINA     42                  N.AVANHANDAV
+ VAZMINT   1 2024      193    
+ VAZMINT   2 2024      193    
+ VAZMINT   3 2024      168    
+ VAZMINT   4 2024      190    
+ VAZMINT   5 2024      138    
+ VAZMINT   6 2024      199    
+ VAZMINT   7 2024      200    
+ VAZMINT   8 2024      202    
+ VAZMINT   9 2024      201    
+ VAZMINT  10 2024      302    
+ VAZMINT  11 2024      206    
+ VAZMINT  12 2024      271    
+ VAZMINT   1 2025      193    
+ VAZMINT   2 2025      193    
+ VAZMINT   3 2025      168    
+ VAZMINT   4 2025      190    
+ VAZMINT   5 2025      138    
+ VAZMINT   6 2025      199    
+ VAZMINT   7 2025      200    
+ VAZMINT   8 2025      202    
+ VAZMINT   9 2025      201    
+ VAZMINT  10 2025      302    
+ VAZMINT  11 2025      206    
+ VAZMINT  12 2025      271    
+ USINA     43                  _TRES IRMAOS
+ VMAXT     5 2024      100 '%'
+ VMAXT     6 2024      100 '%'
+ VMAXT     7 2024      100 '%'
+ VMAXT     8 2024      100 '%'
+ VMAXT     9 2024      100 '%'
+ VMAXT    10 2024      100 '%'
+ VMAXT    11 2024    61.76 '%'
+ VMAXT    12 2024    61.76 '%'
+ VMAXT     1 2025    61.76 '%'
+ VMAXT     2 2025    64.96 '%'
+ VMAXT     3 2025    86.53 '%'
+ VMAXT     4 2025      100 '%'
+ VMAXT     5 2025      100 '%'
+ VMAXT     6 2025      100 '%'
+ VMAXT     7 2025      100 '%'
+ VMAXT     8 2025      100 '%'
+ VMAXT     9 2025      100 '%'
+ VMAXT    10 2025      100 '%'
+ VMAXT    11 2025    61.76 '%'
+ VMAXT    12 2025    61.76 '%'
+ VMINT     5 2024    45.57 '%'
+ VMINT     6 2024    45.57 '%'
+ VMINT     7 2024    45.57 '%'
+ VMINT     8 2024    45.57 '%'
+ VMINT     9 2024    45.57 '%'
+ VMINT    10 2024    45.57 '%'
+ VMINT    11 2024    45.57 '%'
+ VMINT    12 2024    45.57 '%'
+ VMINT     1 2025    45.57 '%'
+ VMINT     2 2025    45.57 '%'
+ VMINT     3 2025    45.57 '%'
+ VMINT     4 2025    45.57 '%'
+ VMINT     5 2025    45.57 '%'
+ VMINT     6 2025    45.57 '%'
+ VMINT     7 2025    45.57 '%'
+ VMINT     8 2025    45.57 '%'
+ VMINT     9 2025    45.57 '%'
+ VMINT    10 2025    45.57 '%'
+ VMINT    11 2025    45.57 '%'
+ VMINT    12 2025    45.57 '%'
+ USINA     45                  JUPIA
+ VAZMINT   1 2024     4081    
+ VAZMINT   2 2024     4056    
+ VAZMINT   3 2024     4000    
+ VAZMINT   4 2024     4000    
+ VAZMINT   5 2024     4000    
+ VAZMINT   6 2024     4132    
+ VAZMINT   7 2024     4000    
+ VAZMINT   8 2024     4133    
+ VAZMINT   9 2024     4000    
+ VAZMINT  10 2024     4000    
+ VAZMINT  11 2024     4247    
+ VAZMINT  12 2024     4085    
+ VAZMINT   1 2025     4081    
+ VAZMINT   2 2025     4056    
+ VAZMINT   3 2025     4000    
+ VAZMINT   4 2025     4000    
+ VAZMINT   5 2025     4000    
+ VAZMINT   6 2025     4132    
+ VAZMINT   7 2025     4000    
+ VAZMINT   8 2025     4133    
+ VAZMINT   9 2025     4000    
+ VAZMINT  10 2025     4000    
+ VAZMINT  11 2025     4247    
+ VAZMINT  12 2025     4085    
+ USINA     46                  P. PRIMAVERA
+ VAZMINT   1 2024     4898    
+ VAZMINT   2 2024     4764    
+ VAZMINT   3 2024     4600    
+ VAZMINT   4 2024     4600    
+ VAZMINT   5 2024     4600    
+ VAZMINT   6 2024     4734    
+ VAZMINT   7 2024     4600    
+ VAZMINT   8 2024     4843    
+ VAZMINT   9 2024     4600    
+ VAZMINT  10 2024     4825    
+ VAZMINT  11 2024     4924    
+ VAZMINT  12 2024     4767    
+ VAZMINT   1 2025     4898    
+ VAZMINT   2 2025     4764    
+ VAZMINT   3 2025     4600    
+ VAZMINT   4 2025     4600    
+ VAZMINT   5 2025     4600    
+ VAZMINT   6 2025     4734    
+ VAZMINT   7 2025     4600    
+ VAZMINT   8 2025     4843    
+ VAZMINT   9 2025     4600    
+ VAZMINT  10 2025     4825    
+ VAZMINT  11 2025     4924    
+ VAZMINT  12 2025     4767    
+ VMAXT     1 2024        0 '%'
+ VMAXT     2 2024        0 '%'
+ VMAXT     3 2024        0 '%'
+ VMAXT     4 2024        0 '%'
+ VMAXT     5 2024        0 '%'
+ VMAXT     6 2024        0 '%'
+ VMAXT     7 2024        0 '%'
+ VMAXT     8 2024        0 '%'
+ VMAXT     9 2024        0 '%'
+ VMAXT    10 2024        0 '%'
+ VMAXT    11 2024        0 '%'
+ VMAXT    12 2024        0 '%'
+ VMAXT     1 2025        0 '%'
+ VMAXT     2 2025        0 '%'
+ VMAXT     3 2025        0 '%'
+ VMAXT     4 2025        0 '%'
+ VMAXT     5 2025        0 '%'
+ VMAXT     6 2025        0 '%'
+ VMAXT     7 2025        0 '%'
+ VMAXT     8 2025        0 '%'
+ VMAXT     9 2025        0 '%'
+ VMAXT    10 2025        0 '%'
+ VMAXT    11 2025        0 '%'
+ VMAXT    12 2025        0 '%'
+ USINA     47                  A.A. LAYDNER
+ VAZMINT   1 2024      147    
+ VAZMINT   2 2024      147    
+ VAZMINT   3 2024      147    
+ VAZMINT   4 2024      147    
+ VAZMINT   5 2024      147    
+ VAZMINT   6 2024      147    
+ VAZMINT   7 2024      147    
+ VAZMINT   8 2024      147    
+ VAZMINT   9 2024      147    
+ VAZMINT  10 2024      147    
+ VAZMINT  11 2024      147    
+ VAZMINT  12 2024      147    
+ VAZMINT   1 2025      147    
+ VAZMINT   2 2025      147    
+ VAZMINT   3 2025      147    
+ VAZMINT   4 2025      147    
+ VAZMINT   5 2025      147    
+ VAZMINT   6 2025      147    
+ VAZMINT   7 2025      147    
+ VAZMINT   8 2025      147    
+ VAZMINT   9 2025      147    
+ VAZMINT  10 2025      147    
+ VAZMINT  11 2025      147    
+ VAZMINT  12 2025      147    
+ VMAXT     1 2024     88.4 '%'
+ VMAXT     2 2024     94.2 '%'
+ VMAXT     3 2024      100 '%'
+ VMAXT     4 2024     97.8 '%'
+ VMAXT     5 2024     96.1 '%'
+ VMAXT     6 2024     90.5 '%'
+ VMAXT     7 2024     97.3 '%'
+ VMAXT     8 2024     98.2 '%'
+ VMAXT     9 2024     88.9 '%'
+ VMAXT    10 2024      100 '%'
+ VMAXT    11 2024     97.9 '%'
+ VMAXT    12 2024     88.2 '%'
+ VMAXT     1 2025     88.4 '%'
+ VMAXT     2 2025     94.2 '%'
+ VMAXT     3 2025      100 '%'
+ VMAXT     4 2025     97.8 '%'
+ VMAXT     5 2025     96.1 '%'
+ VMAXT     6 2025     90.5 '%'
+ VMAXT     7 2025     97.3 '%'
+ VMAXT     8 2025     98.2 '%'
+ VMAXT     9 2025     88.9 '%'
+ VMAXT    10 2025      100 '%'
+ VMAXT    11 2025     97.9 '%'
+ VMAXT    12 2025     88.2 '%'
+ USINA     48                  PIRAJU
+ VAZMINT   1 2024       34    
+ VAZMINT   2 2024        0    
+ VAZMINT   3 2024        0    
+ VAZMINT   4 2024        0    
+ VAZMINT   5 2024        0    
+ VAZMINT   6 2024      128    
+ VAZMINT   7 2024       98    
+ VAZMINT   8 2024      117    
+ VAZMINT   9 2024      109    
+ VAZMINT  10 2024       25    
+ VAZMINT  11 2024       10    
+ VAZMINT  12 2024       27    
+ VAZMINT   1 2025       34    
+ VAZMINT   2 2025        0    
+ VAZMINT   3 2025        0    
+ VAZMINT   4 2025        0    
+ VAZMINT   5 2025        0    
+ VAZMINT   6 2025      128    
+ VAZMINT   7 2025       98    
+ VAZMINT   8 2025      117    
+ VAZMINT   9 2025      109    
+ VAZMINT  10 2025       25    
+ VAZMINT  11 2025       10    
+ VAZMINT  12 2025       27    
+ USINA     49                  CHAVANTES
+ VAZMINT   1 2024      114    
+ VAZMINT   2 2024       98    
+ VAZMINT   3 2024       98    
+ VAZMINT   4 2024       98    
+ VAZMINT   5 2024       98    
+ VAZMINT   6 2024      140    
+ VAZMINT   7 2024      141    
+ VAZMINT   8 2024      143    
+ VAZMINT   9 2024      105    
+ VAZMINT  10 2024      110    
+ VAZMINT  11 2024      104    
+ VAZMINT  12 2024       99    
+ VAZMINT   1 2025      114    
+ VAZMINT   2 2025       98    
+ VAZMINT   3 2025       98    
+ VAZMINT   4 2025       98    
+ VAZMINT   5 2025       98    
+ VAZMINT   6 2025      140    
+ VAZMINT   7 2025      141    
+ VAZMINT   8 2025      143    
+ VAZMINT   9 2025      105    
+ VAZMINT  10 2025      110    
+ VAZMINT  11 2025      104    
+ VAZMINT  12 2025       99    
+ VMAXT     1 2024     83.6 '%'
+ VMAXT     2 2024     94.2 '%'
+ VMAXT     3 2024      100 '%'
+ VMAXT     4 2024     97.7 '%'
+ VMAXT     5 2024     87.5 '%'
+ VMAXT     6 2024     90.5 '%'
+ VMAXT     7 2024     97.3 '%'
+ VMAXT     8 2024     98.2 '%'
+ VMAXT     9 2024     88.9 '%'
+ VMAXT    10 2024      100 '%'
+ VMAXT    11 2024     97.9 '%'
+ VMAXT    12 2024     87.8 '%'
+ VMAXT     1 2025     83.6 '%'
+ VMAXT     2 2025     94.2 '%'
+ VMAXT     3 2025      100 '%'
+ VMAXT     4 2025     97.7 '%'
+ VMAXT     5 2025     87.5 '%'
+ VMAXT     6 2025     90.5 '%'
+ VMAXT     7 2025     97.3 '%'
+ VMAXT     8 2025     98.2 '%'
+ VMAXT     9 2025     88.9 '%'
+ VMAXT    10 2025      100 '%'
+ VMAXT    11 2025     97.9 '%'
+ VMAXT    12 2025     87.8 '%'
+ USINA     50                  L. N. GARCEZ
+ VAZMINT   1 2024      171    
+ VAZMINT   2 2024      152    
+ VAZMINT   3 2024      140    
+ VAZMINT   4 2024      138    
+ VAZMINT   5 2024      134    
+ VAZMINT   6 2024      207    
+ VAZMINT   7 2024      190    
+ VAZMINT   8 2024      181    
+ VAZMINT   9 2024      136    
+ VAZMINT  10 2024      156    
+ VAZMINT  11 2024      144    
+ VAZMINT  12 2024      160    
+ VAZMINT   1 2025      171    
+ VAZMINT   2 2025      152    
+ VAZMINT   3 2025      140    
+ VAZMINT   4 2025      138    
+ VAZMINT   5 2025      134    
+ VAZMINT   6 2025      207    
+ VAZMINT   7 2025      190    
+ VAZMINT   8 2025      181    
+ VAZMINT   9 2025      136    
+ VAZMINT  10 2025      156    
+ VAZMINT  11 2025      144    
+ VAZMINT  12 2025      160    
+ USINA     51                  CANOAS II
+ VAZMINT   1 2024      223    
+ VAZMINT   2 2024      157    
+ VAZMINT   3 2024      149    
+ VAZMINT   4 2024      142    
+ VAZMINT   5 2024      141    
+ VAZMINT   6 2024      187    
+ VAZMINT   7 2024      194    
+ VAZMINT   8 2024      179    
+ VAZMINT   9 2024      133    
+ VAZMINT  10 2024      152    
+ VAZMINT  11 2024      147    
+ VAZMINT  12 2024      170    
+ VAZMINT   1 2025      223    
+ VAZMINT   2 2025      157    
+ VAZMINT   3 2025      149    
+ VAZMINT   4 2025      142    
+ VAZMINT   5 2025      141    
+ VAZMINT   6 2025      187    
+ VAZMINT   7 2025      194    
+ VAZMINT   8 2025      179    
+ VAZMINT   9 2025      133    
+ VAZMINT  10 2025      152    
+ VAZMINT  11 2025      147    
+ VAZMINT  12 2025      170    
+ USINA     52                  CANOAS I
+ VAZMINT   1 2024      142    
+ VAZMINT   2 2024      150    
+ VAZMINT   3 2024      160    
+ VAZMINT   4 2024      154    
+ VAZMINT   5 2024      140    
+ VAZMINT   6 2024      199    
+ VAZMINT   7 2024      200    
+ VAZMINT   8 2024      146    
+ VAZMINT   9 2024      139    
+ VAZMINT  10 2024      162    
+ VAZMINT  11 2024      145    
+ VAZMINT  12 2024      211    
+ VAZMINT   1 2025      142    
+ VAZMINT   2 2025      150    
+ VAZMINT   3 2025      160    
+ VAZMINT   4 2025      154    
+ VAZMINT   5 2025      140    
+ VAZMINT   6 2025      199    
+ VAZMINT   7 2025      200    
+ VAZMINT   8 2025      146    
+ VAZMINT   9 2025      139    
+ VAZMINT  10 2025      162    
+ VAZMINT  11 2025      145    
+ VAZMINT  12 2025      211    
+ USINA     57                  MAUA
+ VAZMINT   1 2024       88    
+ VAZMINT   2 2024       61    
+ VAZMINT   3 2024       60    
+ VAZMINT   4 2024       60    
+ VAZMINT   5 2024       60    
+ VAZMINT   6 2024       60    
+ VAZMINT   7 2024       60    
+ VAZMINT   8 2024       61    
+ VAZMINT   9 2024       62    
+ VAZMINT  10 2024       60    
+ VAZMINT  11 2024       60    
+ VAZMINT  12 2024       60    
+ VAZMINT   1 2025       88    
+ VAZMINT   2 2025       61    
+ VAZMINT   3 2025       60    
+ VAZMINT   4 2025       60    
+ VAZMINT   5 2025       60    
+ VAZMINT   6 2025       60    
+ VAZMINT   7 2025       60    
+ VAZMINT   8 2025       61    
+ VAZMINT   9 2025       62    
+ VAZMINT  10 2025       60    
+ VAZMINT  11 2025       60    
+ VAZMINT  12 2025       60    
+ USINA     61                  CAPIVARA
+ VAZMINT   1 2024      316    
+ VAZMINT   2 2024      288    
+ VAZMINT   3 2024      291    
+ VAZMINT   4 2024      286    
+ VAZMINT   5 2024      292    
+ VAZMINT   6 2024      276    
+ VAZMINT   7 2024      322    
+ VAZMINT   8 2024      276    
+ VAZMINT   9 2024      290    
+ VAZMINT  10 2024      295    
+ VAZMINT  11 2024      281    
+ VAZMINT  12 2024      284    
+ VAZMINT   1 2025      316    
+ VAZMINT   2 2025      288    
+ VAZMINT   3 2025      291    
+ VAZMINT   4 2025      286    
+ VAZMINT   5 2025      292    
+ VAZMINT   6 2025      276    
+ VAZMINT   7 2025      322    
+ VAZMINT   8 2025      276    
+ VAZMINT   9 2025      290    
+ VAZMINT  10 2025      295    
+ VAZMINT  11 2025      281    
+ VAZMINT  12 2025      284    
+ VMAXT     1 2024     89.1 '%'
+ VMAXT     2 2024      100 '%'
+ VMAXT     3 2024      100 '%'
+ VMAXT     4 2024      100 '%'
+ VMAXT     5 2024      100 '%'
+ VMAXT     6 2024      100 '%'
+ VMAXT     7 2024      100 '%'
+ VMAXT     8 2024      100 '%'
+ VMAXT     9 2024      100 '%'
+ VMAXT    10 2024      100 '%'
+ VMAXT    11 2024      100 '%'
+ VMAXT    12 2024     83.4 '%'
+ VMAXT     1 2025     89.1 '%'
+ VMAXT     2 2025      100 '%'
+ VMAXT     3 2025      100 '%'
+ VMAXT     4 2025      100 '%'
+ VMAXT     5 2025      100 '%'
+ VMAXT     6 2025      100 '%'
+ VMAXT     7 2025      100 '%'
+ VMAXT     8 2025      100 '%'
+ VMAXT     9 2025      100 '%'
+ VMAXT    10 2025      100 '%'
+ VMAXT    11 2025      100 '%'
+ VMAXT    12 2025     83.4 '%'
+ USINA     62                  TAQUARUCU
+ VAZMINT   1 2024      373    
+ VAZMINT   2 2024      366    
+ VAZMINT   3 2024      365    
+ VAZMINT   4 2024      368    
+ VAZMINT   5 2024      394    
+ VAZMINT   6 2024      426    
+ VAZMINT   7 2024      329    
+ VAZMINT   8 2024      414    
+ VAZMINT   9 2024      361    
+ VAZMINT  10 2024      379    
+ VAZMINT  11 2024      371    
+ VAZMINT  12 2024      373    
+ VAZMINT   1 2025      373    
+ VAZMINT   2 2025      366    
+ VAZMINT   3 2025      365    
+ VAZMINT   4 2025      368    
+ VAZMINT   5 2025      394    
+ VAZMINT   6 2025      426    
+ VAZMINT   7 2025      329    
+ VAZMINT   8 2025      414    
+ VAZMINT   9 2025      361    
+ VAZMINT  10 2025      379    
+ VAZMINT  11 2025      371    
+ VAZMINT  12 2025      373    
+ USINA     63                  ROSANA
+ VAZMINT   1 2024      589    
+ VAZMINT   2 2024      469    
+ VAZMINT   3 2024      445    
+ VAZMINT   4 2024      432    
+ VAZMINT   5 2024      487    
+ VAZMINT   6 2024      498    
+ VAZMINT   7 2024      326    
+ VAZMINT   8 2024      429    
+ VAZMINT   9 2024      446    
+ VAZMINT  10 2024      604    
+ VAZMINT  11 2024      415    
+ VAZMINT  12 2024      498    
+ VAZMINT   1 2025      589    
+ VAZMINT   2 2025      469    
+ VAZMINT   3 2025      445    
+ VAZMINT   4 2025      432    
+ VAZMINT   5 2025      487    
+ VAZMINT   6 2025      498    
+ VAZMINT   7 2025      326    
+ VAZMINT   8 2025      429    
+ VAZMINT   9 2025      446    
+ VAZMINT  10 2025      604    
+ VAZMINT  11 2025      415    
+ VAZMINT  12 2025      498    
+ USINA     66                  ITAIPU
+ VAZMIN   9000.0
+ USINA     71                  STA CLARA PR
+ VAZMINT   1 2024        2    
+ VAZMINT   2 2024        0    
+ VAZMINT   3 2024        0    
+ VAZMINT   4 2024        0    
+ VAZMINT   5 2024        0    
+ VAZMINT   6 2024        0    
+ VAZMINT   7 2024        0    
+ VAZMINT   8 2024        0    
+ VAZMINT   9 2024        0    
+ VAZMINT  10 2024        0    
+ VAZMINT  11 2024        3    
+ VAZMINT  12 2024        0    
+ VAZMINT   1 2025        2    
+ VAZMINT   2 2025        0    
+ VAZMINT   3 2025        0    
+ VAZMINT   4 2025        0    
+ VAZMINT   5 2025        0    
+ VAZMINT   6 2025        0    
+ VAZMINT   7 2025        0    
+ VAZMINT   8 2025        0    
+ VAZMINT   9 2025        0    
+ VAZMINT  10 2025        0    
+ VAZMINT  11 2025        3    
+ VAZMINT  12 2025        0    
+ USINA     72                  FUNDAO
+ VAZMINT   1 2024        1    
+ VAZMINT   2 2024        0    
+ VAZMINT   3 2024        0    
+ VAZMINT   4 2024        0    
+ VAZMINT   5 2024        0    
+ VAZMINT   6 2024        0    
+ VAZMINT   7 2024        0    
+ VAZMINT   8 2024        0    
+ VAZMINT   9 2024        0    
+ VAZMINT  10 2024        0    
+ VAZMINT  11 2024        3    
+ VAZMINT  12 2024        4    
+ VAZMINT   1 2025        1    
+ VAZMINT   2 2025        0    
+ VAZMINT   3 2025        0    
+ VAZMINT   4 2025        0    
+ VAZMINT   5 2025        0    
+ VAZMINT   6 2025        0    
+ VAZMINT   7 2025        0    
+ VAZMINT   8 2025        0    
+ VAZMINT   9 2025        0    
+ VAZMINT  10 2025        0    
+ VAZMINT  11 2025        3    
+ VAZMINT  12 2025        4    
+ USINA     73                  JORDAO
+ VAZMINT   1 2024       10    
+ VAZMINT   2 2024       10    
+ VAZMINT   3 2024       10    
+ VAZMINT   4 2024       10    
+ VAZMINT   5 2024       10    
+ VAZMINT   6 2024       10    
+ VAZMINT   7 2024       11    
+ VAZMINT   8 2024       10    
+ VAZMINT   9 2024       10    
+ VAZMINT  10 2024       10    
+ VAZMINT  11 2024       10    
+ VAZMINT  12 2024       10    
+ VAZMINT   1 2025       10    
+ VAZMINT   2 2025       10    
+ VAZMINT   3 2025       10    
+ VAZMINT   4 2025       10    
+ VAZMINT   5 2025       10    
+ VAZMINT   6 2025       10    
+ VAZMINT   7 2025       11    
+ VAZMINT   8 2025       10    
+ VAZMINT   9 2025       10    
+ VAZMINT  10 2025       10    
+ VAZMINT  11 2025       10    
+ VAZMINT  12 2025       10    
+ USINA     74                  G. B. MUNHOZ
+ VAZMINT   1 2024        0    
+ VAZMINT   2 2024        0    
+ VAZMINT   3 2024        0    
+ VAZMINT   4 2024        0    
+ VAZMINT   5 2024        0    
+ VAZMINT   6 2024        0    
+ VAZMINT   7 2024        0    
+ VAZMINT   8 2024        0    
+ VAZMINT   9 2024        0    
+ VAZMINT  10 2024        0    
+ VAZMINT  11 2024        0    
+ VAZMINT  12 2024        0    
+ VAZMINT   1 2025        0    
+ VAZMINT   2 2025        0    
+ VAZMINT   3 2025        0    
+ VAZMINT   4 2025        0    
+ VAZMINT   5 2025        0    
+ VAZMINT   6 2025        0    
+ VAZMINT   7 2025        0    
+ VAZMINT   8 2025        0    
+ VAZMINT   9 2025        0    
+ VAZMINT  10 2025        0    
+ VAZMINT  11 2025        0    
+ VAZMINT  12 2025        0    
+ USINA     76                  SEGREDO
+ VAZMINT   1 2024        0    
+ VAZMINT   2 2024        0    
+ VAZMINT   3 2024        0    
+ VAZMINT   4 2024        0    
+ VAZMINT   5 2024        1    
+ VAZMINT   6 2024        0    
+ VAZMINT   7 2024       58    
+ VAZMINT   8 2024        0    
+ VAZMINT   9 2024        0    
+ VAZMINT  10 2024        0    
+ VAZMINT  11 2024        0    
+ VAZMINT  12 2024        0    
+ VAZMINT   1 2025        0    
+ VAZMINT   2 2025        0    
+ VAZMINT   3 2025        0    
+ VAZMINT   4 2025        0    
+ VAZMINT   5 2025        1    
+ VAZMINT   6 2025        0    
+ VAZMINT   7 2025       58    
+ VAZMINT   8 2025        0    
+ VAZMINT   9 2025        0    
+ VAZMINT  10 2025        0    
+ VAZMINT  11 2025        0    
+ VAZMINT  12 2025        0    
+ USINA     77                  SLT.SANTIAGO
+ VAZMINT   1 2024        0    
+ VAZMINT   2 2024        4    
+ VAZMINT   3 2024        1    
+ VAZMINT   4 2024        0    
+ VAZMINT   5 2024        0    
+ VAZMINT   6 2024        0    
+ VAZMINT   7 2024        0    
+ VAZMINT   8 2024        0    
+ VAZMINT   9 2024        0    
+ VAZMINT  10 2024        0    
+ VAZMINT  11 2024        0    
+ VAZMINT  12 2024        0    
+ VAZMINT   1 2025        0    
+ VAZMINT   2 2025        4    
+ VAZMINT   3 2025        1    
+ VAZMINT   4 2025        0    
+ VAZMINT   5 2025        0    
+ VAZMINT   6 2025        0    
+ VAZMINT   7 2025        0    
+ VAZMINT   8 2025        0    
+ VAZMINT   9 2025        0    
+ VAZMINT  10 2025        0    
+ VAZMINT  11 2025        0    
+ VAZMINT  12 2025        0    
+ VMAXT     1 2024      100 '%'
+ VMAXT     2 2024      100 '%'
+ VMAXT     3 2024      100 '%'
+ VMAXT     4 2024      100 '%'
+ VMAXT     5 2024     89.3 '%'
+ VMAXT     6 2024     89.3 '%'
+ VMAXT     7 2024      100 '%'
+ VMAXT     8 2024      100 '%'
+ VMAXT     9 2024      100 '%'
+ VMAXT    10 2024      100 '%'
+ VMAXT    11 2024      100 '%'
+ VMAXT    12 2024      100 '%'
+ VMAXT     1 2025      100 '%'
+ VMAXT     2 2025      100 '%'
+ VMAXT     3 2025      100 '%'
+ VMAXT     4 2025      100 '%'
+ VMAXT     5 2025     89.3 '%'
+ VMAXT     6 2025     89.3 '%'
+ VMAXT     7 2025      100 '%'
+ VMAXT     8 2025      100 '%'
+ VMAXT     9 2025      100 '%'
+ VMAXT    10 2025      100 '%'
+ VMAXT    11 2025      100 '%'
+ VMAXT    12 2025      100 '%'
+ USINA     78                  SALTO OSORIO
+ VAZMINT   1 2024      206    
+ VAZMINT   2 2024      200    
+ VAZMINT   3 2024      200    
+ VAZMINT   4 2024      200    
+ VAZMINT   5 2024      200    
+ VAZMINT   6 2024      200    
+ VAZMINT   7 2024      200    
+ VAZMINT   8 2024      200    
+ VAZMINT   9 2024      200    
+ VAZMINT  10 2024      200    
+ VAZMINT  11 2024      200    
+ VAZMINT  12 2024      200    
+ VAZMINT   1 2025      206    
+ VAZMINT   2 2025      200    
+ VAZMINT   3 2025      200    
+ VAZMINT   4 2025      200    
+ VAZMINT   5 2025      200    
+ VAZMINT   6 2025      200    
+ VAZMINT   7 2025      200    
+ VAZMINT   8 2025      200    
+ VAZMINT   9 2025      200    
+ VAZMINT  10 2025      200    
+ VAZMINT  11 2025      200    
+ VAZMINT  12 2025      200    
+ USINA     82                  SALTO CAXIAS
+ VAZMINT   1 2024      200    
+ VAZMINT   2 2024      200    
+ VAZMINT   3 2024      200    
+ VAZMINT   4 2024      200    
+ VAZMINT   5 2024      200    
+ VAZMINT   6 2024      200    
+ VAZMINT   7 2024      200    
+ VAZMINT   8 2024      317    
+ VAZMINT   9 2024      240    
+ VAZMINT  10 2024      200    
+ VAZMINT  11 2024      200    
+ VAZMINT  12 2024      200    
+ VAZMINT   1 2025      200    
+ VAZMINT   2 2025      200    
+ VAZMINT   3 2025      200    
+ VAZMINT   4 2025      200    
+ VAZMINT   5 2025      200    
+ VAZMINT   6 2025      200    
+ VAZMINT   7 2025      200    
+ VAZMINT   8 2025      317    
+ VAZMINT   9 2025      240    
+ VAZMINT  10 2025      200    
+ VAZMINT  11 2025      200    
+ VAZMINT  12 2025      200    
+ USINA     83                  BAIXO IGUACU
+ VAZMINT   1 2024      350    
+ VAZMINT   2 2024      350    
+ VAZMINT   3 2024      350    
+ VAZMINT   4 2024      350    
+ VAZMINT   5 2024      350    
+ VAZMINT   6 2024      350    
+ VAZMINT   7 2024      350    
+ VAZMINT   8 2024      350    
+ VAZMINT   9 2024      350    
+ VAZMINT  10 2024      350    
+ VAZMINT  11 2024      350    
+ VAZMINT  12 2024      350    
+ VAZMINT   1 2025      350    
+ VAZMINT   2 2025      350    
+ VAZMINT   3 2025      350    
+ VAZMINT   4 2025      350    
+ VAZMINT   5 2025      350    
+ VAZMINT   6 2025      350    
+ VAZMINT   7 2025      350    
+ VAZMINT   8 2025      350    
+ VAZMINT   9 2025      350    
+ VAZMINT  10 2025      350    
+ VAZMINT  11 2025      350    
+ VAZMINT  12 2025      350    
+ USINA     86                  BARRA GRANDE
+ VAZMINT   1 2024       86    
+ VAZMINT   2 2024       87    
+ VAZMINT   3 2024       20    
+ VAZMINT   4 2024       16    
+ VAZMINT   5 2024       16    
+ VAZMINT   6 2024       16    
+ VAZMINT   7 2024       16    
+ VAZMINT   8 2024       16    
+ VAZMINT   9 2024       16    
+ VAZMINT  10 2024      100    
+ VAZMINT  11 2024       85    
+ VAZMINT  12 2024       84    
+ VAZMINT   1 2025       86    
+ VAZMINT   2 2025       87    
+ VAZMINT   3 2025       20    
+ VAZMINT   4 2025       16    
+ VAZMINT   5 2025       16    
+ VAZMINT   6 2025       16    
+ VAZMINT   7 2025       16    
+ VAZMINT   8 2025       16    
+ VAZMINT   9 2025       16    
+ VAZMINT  10 2025      100    
+ VAZMINT  11 2025       85    
+ VAZMINT  12 2025       84    
+ USINA     89                  GARIBALDI
+ VAZMINT   1 2024       81    
+ VAZMINT   2 2024       81    
+ VAZMINT   3 2024       81    
+ VAZMINT   4 2024       81    
+ VAZMINT   5 2024       81    
+ VAZMINT   6 2024       81    
+ VAZMINT   7 2024       81    
+ VAZMINT   8 2024       81    
+ VAZMINT   9 2024       81    
+ VAZMINT  10 2024       81    
+ VAZMINT  11 2024       81    
+ VAZMINT  12 2024       82    
+ VAZMINT   1 2025       81    
+ VAZMINT   2 2025       81    
+ VAZMINT   3 2025       81    
+ VAZMINT   4 2025       81    
+ VAZMINT   5 2025       81    
+ VAZMINT   6 2025       81    
+ VAZMINT   7 2025       81    
+ VAZMINT   8 2025       81    
+ VAZMINT   9 2025       81    
+ VAZMINT  10 2025       81    
+ VAZMINT  11 2025       81    
+ VAZMINT  12 2025       82    
+ USINA     90                  CAMPOS NOVOS
+ VAZMINT   1 2024        0    
+ VAZMINT   2 2024        0    
+ VAZMINT   3 2024        0    
+ VAZMINT   4 2024        0    
+ VAZMINT   5 2024        0    
+ VAZMINT   6 2024        5    
+ VAZMINT   7 2024        0    
+ VAZMINT   8 2024        0    
+ VAZMINT   9 2024        0    
+ VAZMINT  10 2024        0    
+ VAZMINT  11 2024        0    
+ VAZMINT  12 2024        0    
+ VAZMINT   1 2025        0    
+ VAZMINT   2 2025        0    
+ VAZMINT   3 2025        0    
+ VAZMINT   4 2025        0    
+ VAZMINT   5 2025        0    
+ VAZMINT   6 2025        5    
+ VAZMINT   7 2025        0    
+ VAZMINT   8 2025        0    
+ VAZMINT   9 2025        0    
+ VAZMINT  10 2025        0    
+ VAZMINT  11 2025        0    
+ VAZMINT  12 2025        0    
+ USINA     91                  MACHADINHO
+ VAZMINT   5 2024      120    
+ VAZMINT   6 2024      120    
+ VAZMINT   7 2024      313    
+ VAZMINT   8 2024      312    
+ VAZMINT   9 2024      293    
+ VAZMINT  10 2024      300    
+ VAZMINT  11 2024      300    
+ VAZMINT  12 2024      300    
+ VAZMINT   1 2025      300    
+ VAZMINT   2 2025      300    
+ VAZMINT   3 2025      300    
+ VAZMINT   4 2025      300    
+ VAZMINT   5 2025      120    
+ VAZMINT   6 2025      120    
+ VAZMINT   7 2025      313    
+ VAZMINT   8 2025      312    
+ VAZMINT   9 2025      293    
+ VAZMINT  10 2025      300    
+ VAZMINT  11 2025      300    
+ VAZMINT  12 2025      300    
+ USINA     92                  ITA
+ VAZMINT   1 2024      150    
+ VAZMINT   2 2024      150    
+ VAZMINT   3 2024      219    
+ VAZMINT   4 2024      150    
+ VAZMINT   5 2024      150    
+ VAZMINT   6 2024      150    
+ VAZMINT   7 2024      150    
+ VAZMINT   8 2024      150    
+ VAZMINT   9 2024      181    
+ VAZMINT  10 2024      183    
+ VAZMINT  11 2024      150    
+ VAZMINT  12 2024      150    
+ VAZMINT   1 2025      150    
+ VAZMINT   2 2025      150    
+ VAZMINT   3 2025      219    
+ VAZMINT   4 2025      150    
+ VAZMINT   5 2025      150    
+ VAZMINT   6 2025      150    
+ VAZMINT   7 2025      150    
+ VAZMINT   8 2025      150    
+ VAZMINT   9 2025      181    
+ VAZMINT  10 2025      183    
+ VAZMINT  11 2025      150    
+ VAZMINT  12 2025      150    
+ USINA     93                  PASSO FUNDO
+ VAZMINT   1 2024        0    
+ VAZMINT   2 2024        0    
+ VAZMINT   3 2024        0    
+ VAZMINT   4 2024        0    
+ VAZMINT   5 2024        0    
+ VAZMINT   6 2024        0    
+ VAZMINT   7 2024        0    
+ VAZMINT   8 2024        0    
+ VAZMINT   9 2024        2    
+ VAZMINT  10 2024        3    
+ VAZMINT  11 2024        0    
+ VAZMINT  12 2024        0    
+ VAZMINT   1 2025        0    
+ VAZMINT   2 2025        0    
+ VAZMINT   3 2025        0    
+ VAZMINT   4 2025        0    
+ VAZMINT   5 2025        0    
+ VAZMINT   6 2025        0    
+ VAZMINT   7 2025        0    
+ VAZMINT   8 2025        0    
+ VAZMINT   9 2025        2    
+ VAZMINT  10 2025        3    
+ VAZMINT  11 2025        0    
+ VAZMINT  12 2025        0    
+ USINA     94                  MONJOLINHO
+ VAZMINT   1 2024        0    
+ VAZMINT   2 2024        0    
+ VAZMINT   3 2024        0    
+ VAZMINT   4 2024        0    
+ VAZMINT   5 2024        0    
+ VAZMINT   6 2024        0    
+ VAZMINT   7 2024        4    
+ VAZMINT   8 2024        0    
+ VAZMINT   9 2024       30    
+ VAZMINT  10 2024       13    
+ VAZMINT  11 2024        0    
+ VAZMINT  12 2024       12    
+ VAZMINT   1 2025        0    
+ VAZMINT   2 2025        0    
+ VAZMINT   3 2025        0    
+ VAZMINT   4 2025        0    
+ VAZMINT   5 2025        0    
+ VAZMINT   6 2025        0    
+ VAZMINT   7 2025        4    
+ VAZMINT   8 2025        0    
+ VAZMINT   9 2025       30    
+ VAZMINT  10 2025       13    
+ VAZMINT  11 2025        0    
+ VAZMINT  12 2025       12    
+ USINA     95                  QUEBRA QUEIX
+ VAZMINT   1 2024       19    
+ VAZMINT   2 2024        1    
+ VAZMINT   3 2024        1    
+ VAZMINT   4 2024        1    
+ VAZMINT   5 2024        1    
+ VAZMINT   6 2024        7    
+ VAZMINT   7 2024        1    
+ VAZMINT   8 2024        1    
+ VAZMINT   9 2024        1    
+ VAZMINT  10 2024        1    
+ VAZMINT  11 2024        1    
+ VAZMINT  12 2024       82    
+ VAZMINT   1 2025       19    
+ VAZMINT   2 2025        1    
+ VAZMINT   3 2025        1    
+ VAZMINT   4 2025        1    
+ VAZMINT   5 2025        1    
+ VAZMINT   6 2025        7    
+ VAZMINT   7 2025        1    
+ VAZMINT   8 2025        1    
+ VAZMINT   9 2025        1    
+ VAZMINT  10 2025        1    
+ VAZMINT  11 2025        1    
+ VAZMINT  12 2025       82    
+ USINA     97                  CASTRO ALVES
+ VAZMINT   1 2024        1    
+ VAZMINT   2 2024        0    
+ VAZMINT   3 2024        0    
+ VAZMINT   4 2024        0    
+ VAZMINT   5 2024        0    
+ VAZMINT   6 2024        0    
+ VAZMINT   7 2024       33    
+ VAZMINT   8 2024        8    
+ VAZMINT   9 2024        0    
+ VAZMINT  10 2024        9    
+ VAZMINT  11 2024        0    
+ VAZMINT  12 2024        3    
+ VAZMINT   1 2025        1    
+ VAZMINT   2 2025        0    
+ VAZMINT   3 2025        0    
+ VAZMINT   4 2025        0    
+ VAZMINT   5 2025        0    
+ VAZMINT   6 2025        0    
+ VAZMINT   7 2025       33    
+ VAZMINT   8 2025        8    
+ VAZMINT   9 2025        0    
+ VAZMINT  10 2025        9    
+ VAZMINT  11 2025        0    
+ VAZMINT  12 2025        3    
+ USINA     98                  MONTE CLARO
+ VAZMINT   1 2024        9    
+ VAZMINT   2 2024        0    
+ VAZMINT   3 2024        0    
+ VAZMINT   4 2024        0    
+ VAZMINT   5 2024        0    
+ VAZMINT   6 2024        0    
+ VAZMINT   7 2024       74    
+ VAZMINT   8 2024       19    
+ VAZMINT   9 2024        4    
+ VAZMINT  10 2024       17    
+ VAZMINT  11 2024        0    
+ VAZMINT  12 2024        0    
+ VAZMINT   1 2025        9    
+ VAZMINT   2 2025        0    
+ VAZMINT   3 2025        0    
+ VAZMINT   4 2025        0    
+ VAZMINT   5 2025        0    
+ VAZMINT   6 2025        0    
+ VAZMINT   7 2025       74    
+ VAZMINT   8 2025       19    
+ VAZMINT   9 2025        4    
+ VAZMINT  10 2025       17    
+ VAZMINT  11 2025        0    
+ VAZMINT  12 2025        0    
+ USINA     99                  14 DE JULHO
+ VAZMINT   1 2024        1    
+ VAZMINT   2 2024        0    
+ VAZMINT   3 2024        0    
+ VAZMINT   4 2024        0    
+ VAZMINT   5 2024        0    
+ VAZMINT   6 2024        0    
+ VAZMINT   7 2024       68    
+ VAZMINT   8 2024       17    
+ VAZMINT   9 2024        0    
+ VAZMINT  10 2024       14    
+ VAZMINT  11 2024        1    
+ VAZMINT  12 2024        0    
+ VAZMINT   1 2025        1    
+ VAZMINT   2 2025        0    
+ VAZMINT   3 2025        0    
+ VAZMINT   4 2025        0    
+ VAZMINT   5 2025        0    
+ VAZMINT   6 2025        0    
+ VAZMINT   7 2025       68    
+ VAZMINT   8 2025       17    
+ VAZMINT   9 2025        0    
+ VAZMINT  10 2025       14    
+ VAZMINT  11 2025        1    
+ VAZMINT  12 2025        0    
+ USINA     101                 SAO JOSE
+ VAZMINT   1 2024       99    
+ VAZMINT   2 2024       53    
+ VAZMINT   3 2024       44    
+ VAZMINT   4 2024       44    
+ VAZMINT   5 2024       44    
+ VAZMINT   6 2024       72    
+ VAZMINT   7 2024      106    
+ VAZMINT   8 2024      119    
+ VAZMINT   9 2024       88    
+ VAZMINT  10 2024       73    
+ VAZMINT  11 2024       69    
+ VAZMINT  12 2024       83    
+ VAZMINT   1 2025       99    
+ VAZMINT   2 2025       53    
+ VAZMINT   3 2025       44    
+ VAZMINT   4 2025       44    
+ VAZMINT   5 2025       44    
+ VAZMINT   6 2025       72    
+ VAZMINT   7 2025      106    
+ VAZMINT   8 2025      119    
+ VAZMINT   9 2025       88    
+ VAZMINT  10 2025       73    
+ VAZMINT  11 2025       69    
+ VAZMINT  12 2025       83    
+ USINA     102                 PASSO S JOAO
+ VAZMINT   1 2024       50    
+ VAZMINT   2 2024       50    
+ VAZMINT   3 2024       50    
+ VAZMINT   4 2024       50    
+ VAZMINT   5 2024       50    
+ VAZMINT   6 2024       57    
+ VAZMINT   7 2024       60    
+ VAZMINT   8 2024       89    
+ VAZMINT   9 2024       54    
+ VAZMINT  10 2024       50    
+ VAZMINT  11 2024       50    
+ VAZMINT  12 2024       50    
+ VAZMINT   1 2025       50    
+ VAZMINT   2 2025       50    
+ VAZMINT   3 2025       50    
+ VAZMINT   4 2025       50    
+ VAZMINT   5 2025       50    
+ VAZMINT   6 2025       57    
+ VAZMINT   7 2025       60    
+ VAZMINT   8 2025       89    
+ VAZMINT   9 2025       54    
+ VAZMINT  10 2025       50    
+ VAZMINT  11 2025       50    
+ VAZMINT  12 2025       50    
+ USINA     103                 FOZ CHAPECO
+ VAZMINT   1 2024      200    
+ VAZMINT   2 2024      200    
+ VAZMINT   3 2024      200    
+ VAZMINT   4 2024      200    
+ VAZMINT   5 2024      200    
+ VAZMINT   6 2024      200    
+ VAZMINT   7 2024      200    
+ VAZMINT   8 2024      272    
+ VAZMINT   9 2024      323    
+ VAZMINT  10 2024      200    
+ VAZMINT  11 2024      200    
+ VAZMINT  12 2024      200    
+ VAZMINT   1 2025      200    
+ VAZMINT   2 2025      200    
+ VAZMINT   3 2025      200    
+ VAZMINT   4 2025      200    
+ VAZMINT   5 2025      200    
+ VAZMINT   6 2025      200    
+ VAZMINT   7 2025      200    
+ VAZMINT   8 2025      272    
+ VAZMINT   9 2025      323    
+ VAZMINT  10 2025      200    
+ VAZMINT  11 2025      200    
+ VAZMINT  12 2025      200    
+ USINA     110                 ERNESTINA
+ VAZMINT   1 2024       20    
+ VAZMINT   2 2024       30    
+ VAZMINT   3 2024       28    
+ VAZMINT   4 2024       28    
+ VAZMINT   5 2024       27    
+ VAZMINT   6 2024       27    
+ VAZMINT   7 2024       35    
+ VAZMINT   8 2024       34    
+ VAZMINT   9 2024       24    
+ VAZMINT  10 2024       30    
+ VAZMINT  11 2024       30    
+ VAZMINT  12 2024       52    
+ VAZMINT   1 2025       20    
+ VAZMINT   2 2025       30    
+ VAZMINT   3 2025       28    
+ VAZMINT   4 2025       28    
+ VAZMINT   5 2025       27    
+ VAZMINT   6 2025       27    
+ VAZMINT   7 2025       35    
+ VAZMINT   8 2025       34    
+ VAZMINT   9 2025       24    
+ VAZMINT  10 2025       30    
+ VAZMINT  11 2025       30    
+ VAZMINT  12 2025       52    
+ USINA     111                 PASSO REAL
+ VAZMINT   1 2024       18    
+ VAZMINT   2 2024      188    
+ VAZMINT   3 2024        0    
+ VAZMINT   4 2024        0    
+ VAZMINT   5 2024        0    
+ VAZMINT   6 2024        0    
+ VAZMINT   7 2024        4    
+ VAZMINT   8 2024       10    
+ VAZMINT   9 2024       65    
+ VAZMINT  10 2024       36    
+ VAZMINT  11 2024        0    
+ VAZMINT  12 2024        2    
+ VAZMINT   1 2025       18    
+ VAZMINT   2 2025      188    
+ VAZMINT   3 2025        0    
+ VAZMINT   4 2025        0    
+ VAZMINT   5 2025        0    
+ VAZMINT   6 2025        0    
+ VAZMINT   7 2025        4    
+ VAZMINT   8 2025       10    
+ VAZMINT   9 2025       65    
+ VAZMINT  10 2025       36    
+ VAZMINT  11 2025        0    
+ VAZMINT  12 2025        2    
+ USINA     112                 JACUI
+ VAZMINT   1 2024       26    
+ VAZMINT   2 2024      226    
+ VAZMINT   3 2024       22    
+ VAZMINT   4 2024       16    
+ VAZMINT   5 2024       25    
+ VAZMINT   6 2024       31    
+ VAZMINT   7 2024       30    
+ VAZMINT   8 2024       34    
+ VAZMINT   9 2024      148    
+ VAZMINT  10 2024       61    
+ VAZMINT  11 2024       15    
+ VAZMINT  12 2024       27    
+ VAZMINT   1 2025       26    
+ VAZMINT   2 2025      226    
+ VAZMINT   3 2025       22    
+ VAZMINT   4 2025       16    
+ VAZMINT   5 2025       25    
+ VAZMINT   6 2025       31    
+ VAZMINT   7 2025       30    
+ VAZMINT   8 2025       34    
+ VAZMINT   9 2025      148    
+ VAZMINT  10 2025       61    
+ VAZMINT  11 2025       15    
+ VAZMINT  12 2025       27    
+ USINA     113                 ITAUBA
+ VAZMINT   1 2024       33    
+ VAZMINT   2 2024       11    
+ VAZMINT   3 2024       22    
+ VAZMINT   4 2024       12    
+ VAZMINT   5 2024       21    
+ VAZMINT   6 2024       24    
+ VAZMINT   7 2024       32    
+ VAZMINT   8 2024       27    
+ VAZMINT   9 2024       29    
+ VAZMINT  10 2024       22    
+ VAZMINT  11 2024        7    
+ VAZMINT  12 2024       21    
+ VAZMINT   1 2025       33    
+ VAZMINT   2 2025       11    
+ VAZMINT   3 2025       22    
+ VAZMINT   4 2025       12    
+ VAZMINT   5 2025       21    
+ VAZMINT   6 2025       24    
+ VAZMINT   7 2025       32    
+ VAZMINT   8 2025       27    
+ VAZMINT   9 2025       29    
+ VAZMINT  10 2025       22    
+ VAZMINT  11 2025        7    
+ VAZMINT  12 2025       21    
+ USINA     114                 D. FRANCISCA
+ VAZMINT   1 2024      104    
+ VAZMINT   2 2024      115    
+ VAZMINT   3 2024      106    
+ VAZMINT   4 2024      104    
+ VAZMINT   5 2024       63    
+ VAZMINT   6 2024       17    
+ VAZMINT   7 2024      110    
+ VAZMINT   8 2024      166    
+ VAZMINT   9 2024      122    
+ VAZMINT  10 2024      132    
+ VAZMINT  11 2024      115    
+ VAZMINT  12 2024      105    
+ VAZMINT   1 2025      104    
+ VAZMINT   2 2025      115    
+ VAZMINT   3 2025      106    
+ VAZMINT   4 2025      104    
+ VAZMINT   5 2025       63    
+ VAZMINT   6 2025       17    
+ VAZMINT   7 2025      110    
+ VAZMINT   8 2025      166    
+ VAZMINT   9 2025      122    
+ VAZMINT  10 2025      132    
+ VAZMINT  11 2025      115    
+ VAZMINT  12 2025      105    
+ USINA     115                 G. P. SOUZA
+ VAZMINT   1 2024        3    
+ VAZMINT   2 2024        5    
+ VAZMINT   3 2024        3    
+ VAZMINT   4 2024        3    
+ VAZMINT   5 2024        3    
+ VAZMINT   6 2024        3    
+ VAZMINT   7 2024        3    
+ VAZMINT   8 2024        3    
+ VAZMINT   9 2024        3    
+ VAZMINT  10 2024        3    
+ VAZMINT  11 2024        3    
+ VAZMINT  12 2024        3    
+ VAZMINT   1 2025        3    
+ VAZMINT   2 2025        5    
+ VAZMINT   3 2025        3    
+ VAZMINT   4 2025        3    
+ VAZMINT   5 2025        3    
+ VAZMINT   6 2025        3    
+ VAZMINT   7 2025        3    
+ VAZMINT   8 2025        3    
+ VAZMINT   9 2025        3    
+ VAZMINT  10 2025        3    
+ VAZMINT  11 2025        3    
+ VAZMINT  12 2025        3    
+ USINA     117                 GUARAPIRANGA
+ VAZMINT   1 2024       15    
+ VAZMINT   2 2024       15    
+ VAZMINT   3 2024       15    
+ VAZMINT   4 2024       14    
+ VAZMINT   5 2024       14    
+ VAZMINT   6 2024       15    
+ VAZMINT   7 2024       14    
+ VAZMINT   8 2024       15    
+ VAZMINT   9 2024       15    
+ VAZMINT  10 2024       15    
+ VAZMINT  11 2024       15    
+ VAZMINT  12 2024       15    
+ VAZMINT   1 2025       15    
+ VAZMINT   2 2025       15    
+ VAZMINT   3 2025       15    
+ VAZMINT   4 2025       14    
+ VAZMINT   5 2025       14    
+ VAZMINT   6 2025       15    
+ VAZMINT   7 2025       14    
+ VAZMINT   8 2025       15    
+ VAZMINT   9 2025       15    
+ VAZMINT  10 2025       15    
+ VAZMINT  11 2025       15    
+ VAZMINT  12 2025       15    
+ VMAXT     1 2024    77.12 '%'
+ VMAXT     2 2024    85.72 '%'
+ VMAXT     3 2024    92.76 '%'
+ VMAXT     4 2024    92.76 '%'
+ VMAXT     5 2024    92.76 '%'
+ VMAXT     6 2024    92.76 '%'
+ VMAXT     7 2024    95.39 '%'
+ VMAXT     8 2024    95.39 '%'
+ VMAXT     9 2024    95.39 '%'
+ VMAXT    10 2024    95.39 '%'
+ VMAXT    11 2024    94.56 '%'
+ VMAXT    12 2024    89.02 '%'
+ VMAXT     1 2025    77.12 '%'
+ VMAXT     2 2025    85.72 '%'
+ VMAXT     3 2025    92.76 '%'
+ VMAXT     4 2025    92.76 '%'
+ VMAXT     5 2025    92.76 '%'
+ VMAXT     6 2025    92.76 '%'
+ VMAXT     7 2025    95.39 '%'
+ VMAXT     8 2025    95.39 '%'
+ VMAXT     9 2025    95.39 '%'
+ VMAXT    10 2025    95.39 '%'
+ VMAXT    11 2025    94.56 '%'
+ VMAXT    12 2025    89.02 '%'
+ USINA     118                 BILLINGS
+ VAZMINT   1 2024       19    
+ VAZMINT   2 2024       23    
+ VAZMINT   3 2024       16    
+ VAZMINT   4 2024       16    
+ VAZMINT   5 2024       14    
+ VAZMINT   6 2024       15    
+ VAZMINT   7 2024       21    
+ VAZMINT   8 2024       20    
+ VAZMINT   9 2024       60    
+ VAZMINT  10 2024       49    
+ VAZMINT  11 2024       13    
+ VAZMINT  12 2024       18    
+ VAZMINT   1 2025       19    
+ VAZMINT   2 2025       23    
+ VAZMINT   3 2025       16    
+ VAZMINT   4 2025       16    
+ VAZMINT   5 2025       14    
+ VAZMINT   6 2025       15    
+ VAZMINT   7 2025       21    
+ VAZMINT   8 2025       20    
+ VAZMINT   9 2025       60    
+ VAZMINT  10 2025       49    
+ VAZMINT  11 2025       13    
+ VAZMINT  12 2025       18    
+ VMAXT     1 2024    80.99 '%'
+ VMAXT     2 2024     84.3 '%'
+ VMAXT     3 2024    87.15 '%'
+ VMAXT     4 2024    88.85 '%'
+ VMAXT     5 2024    89.96 '%'
+ VMAXT     6 2024    90.26 '%'
+ VMAXT     7 2024    91.67 '%'
+ VMAXT     8 2024    92.28 '%'
+ VMAXT     9 2024    91.37 '%'
+ VMAXT    10 2024    89.45 '%'
+ VMAXT    11 2024    87.95 '%'
+ VMAXT    12 2024    87.05 '%'
+ VMAXT     1 2025    80.99 '%'
+ VMAXT     2 2025     84.3 '%'
+ VMAXT     3 2025    87.15 '%'
+ VMAXT     4 2025    88.85 '%'
+ VMAXT     5 2025    89.96 '%'
+ VMAXT     6 2025    90.26 '%'
+ VMAXT     7 2025    91.67 '%'
+ VMAXT     8 2025    92.28 '%'
+ VMAXT     9 2025    91.37 '%'
+ VMAXT    10 2025    89.45 '%'
+ VMAXT    11 2025    87.95 '%'
+ VMAXT    12 2025    87.05 '%'
+ USINA     119                 HENRY BORDEN
+ VAZMINT   1 2024        7    
+ VAZMINT   2 2024        9    
+ VAZMINT   3 2024        8    
+ VAZMINT   4 2024        6    
+ VAZMINT   5 2024        6    
+ VAZMINT   6 2024       10    
+ VAZMINT   7 2024        9    
+ VAZMINT   8 2024        8    
+ VAZMINT   9 2024        7    
+ VAZMINT  10 2024        9    
+ VAZMINT  11 2024        7    
+ VAZMINT  12 2024        9    
+ VAZMINT   1 2025        7    
+ VAZMINT   2 2025        9    
+ VAZMINT   3 2025        8    
+ VAZMINT   4 2025        6    
+ VAZMINT   5 2025        6    
+ VAZMINT   6 2025       10    
+ VAZMINT   7 2025        9    
+ VAZMINT   8 2025        8    
+ VAZMINT   9 2025        7    
+ VAZMINT  10 2025        9    
+ VAZMINT  11 2025        7    
+ VAZMINT  12 2025        9    
+ USINA     120                 JAGUARI
+ VAZMINT   1 2024        4    
+ VAZMINT   2 2024        4    
+ VAZMINT   3 2024        4    
+ VAZMINT   4 2024        4    
+ VAZMINT   5 2024       36    
+ VAZMINT   6 2024       48    
+ VAZMINT   7 2024       34    
+ VAZMINT   8 2024       33    
+ VAZMINT   9 2024        5    
+ VAZMINT  10 2024        4    
+ VAZMINT  11 2024       14    
+ VAZMINT  12 2024        4    
+ VAZMINT   1 2025        4    
+ VAZMINT   2 2025        4    
+ VAZMINT   3 2025        4    
+ VAZMINT   4 2025        4    
+ VAZMINT   5 2025       36    
+ VAZMINT   6 2025       48    
+ VAZMINT   7 2025       34    
+ VAZMINT   8 2025       33    
+ VAZMINT   9 2025        5    
+ VAZMINT  10 2025        4    
+ VAZMINT  11 2025       14    
+ VAZMINT  12 2025        4    
+ VMINT     5 2024       20 '%'
+ VMINT     6 2024       20 '%'
+ VMINT     7 2024       20 '%'
+ VMINT     8 2024       20 '%'
+ VMINT     9 2024       20 '%'
+ VMINT    10 2024       20 '%'
+ VMINT    11 2024       20 '%'
+ VMINT    12 2024       20 '%'
+ VMINT     1 2025       20 '%'
+ VMINT     2 2025       20 '%'
+ VMINT     3 2025       20 '%'
+ VMINT     4 2025       20 '%'
+ VMINT     5 2025       20 '%'
+ VMINT     6 2025       20 '%'
+ VMINT     7 2025       20 '%'
+ VMINT     8 2025       20 '%'
+ VMINT     9 2025       20 '%'
+ VMINT    10 2025       20 '%'
+ VMINT    11 2025       20 '%'
+ VMINT    12 2025       20 '%'
+ USINA     121                 PARAIBUNA/PA
+ VAZMINT   1 2024       26    
+ VAZMINT   2 2024       15    
+ VAZMINT   3 2024       23    
+ VAZMINT   4 2024       31    
+ VAZMINT   5 2024       83    
+ VAZMINT   6 2024      105    
+ VAZMINT   7 2024       85    
+ VAZMINT   8 2024       97    
+ VAZMINT   9 2024      110    
+ VAZMINT  10 2024      115    
+ VAZMINT  11 2024       83    
+ VAZMINT  12 2024       16    
+ VAZMINT   1 2025       26    
+ VAZMINT   2 2025       15    
+ VAZMINT   3 2025       23    
+ VAZMINT   4 2025       31    
+ VAZMINT   5 2025       83    
+ VAZMINT   6 2025      105    
+ VAZMINT   7 2025       85    
+ VAZMINT   8 2025       97    
+ VAZMINT   9 2025      110    
+ VAZMINT  10 2025      115    
+ VAZMINT  11 2025       83    
+ VAZMINT  12 2025       16    
+ VMINT     5 2024        5 '%'
+ VMINT     6 2024        5 '%'
+ VMINT     7 2024        5 '%'
+ VMINT     8 2024        5 '%'
+ VMINT     9 2024        5 '%'
+ VMINT    10 2024        5 '%'
+ VMINT    11 2024        5 '%'
+ VMINT    12 2024        5 '%'
+ VMINT     1 2025        5 '%'
+ VMINT     2 2025        5 '%'
+ VMINT     3 2025        5 '%'
+ VMINT     4 2025        5 '%'
+ VMINT     5 2025        5 '%'
+ VMINT     6 2025        5 '%'
+ VMINT     7 2025        5 '%'
+ VMINT     8 2025        5 '%'
+ VMINT     9 2025        5 '%'
+ VMINT    10 2025        5 '%'
+ VMINT    11 2025        5 '%'
+ VMINT    12 2025        5 '%'
+ USINA     122                 S.BRANCA PAR
+ VAZMINT   1 2024       37    
+ VAZMINT   2 2024       39    
+ VAZMINT   3 2024       34    
+ VAZMINT   4 2024       35    
+ VAZMINT   5 2024       68    
+ VAZMINT   6 2024      109    
+ VAZMINT   7 2024       93    
+ VAZMINT   8 2024      115    
+ VAZMINT   9 2024      134    
+ VAZMINT  10 2024      138    
+ VAZMINT  11 2024       96    
+ VAZMINT  12 2024       35    
+ VAZMINT   1 2025       37    
+ VAZMINT   2 2025       39    
+ VAZMINT   3 2025       34    
+ VAZMINT   4 2025       35    
+ VAZMINT   5 2025       68    
+ VAZMINT   6 2025      109    
+ VAZMINT   7 2025       93    
+ VAZMINT   8 2025      115    
+ VAZMINT   9 2025      134    
+ VAZMINT  10 2025      138    
+ VAZMINT  11 2025       96    
+ VAZMINT  12 2025       35    
+ VMAXT     1 2024     86.8 '%'
+ VMAXT     2 2024     86.8 '%'
+ VMAXT     3 2024     92.1 '%'
+ VMAXT     4 2024      100 '%'
+ VMAXT     5 2024      100 '%'
+ VMAXT     6 2024      100 '%'
+ VMAXT     7 2024      100 '%'
+ VMAXT     8 2024      100 '%'
+ VMAXT     9 2024      100 '%'
+ VMAXT    10 2024     98.2 '%'
+ VMAXT    11 2024     97.4 '%'
+ VMAXT    12 2024     86.8 '%'
+ VMAXT     1 2025     86.8 '%'
+ VMAXT     2 2025     86.8 '%'
+ VMAXT     3 2025     92.1 '%'
+ VMAXT     4 2025      100 '%'
+ VMAXT     5 2025      100 '%'
+ VMAXT     6 2025      100 '%'
+ VMAXT     7 2025      100 '%'
+ VMAXT     8 2025      100 '%'
+ VMAXT     9 2025      100 '%'
+ VMAXT    10 2025     98.2 '%'
+ VMAXT    11 2025     97.4 '%'
+ VMAXT    12 2025     86.8 '%'
+ VMINT     5 2024       10 '%'
+ VMINT     6 2024       10 '%'
+ VMINT     7 2024       10 '%'
+ VMINT     8 2024       10 '%'
+ VMINT     9 2024       10 '%'
+ VMINT    10 2024       10 '%'
+ VMINT    11 2024       10 '%'
+ VMINT    12 2024       10 '%'
+ VMINT     1 2025       10 '%'
+ VMINT     2 2025       10 '%'
+ VMINT     3 2025       10 '%'
+ VMINT     4 2025       10 '%'
+ VMINT     5 2025       10 '%'
+ VMINT     6 2025       10 '%'
+ VMINT     7 2025       10 '%'
+ VMINT     8 2025       10 '%'
+ VMINT     9 2025       10 '%'
+ VMINT    10 2025       10 '%'
+ VMINT    11 2025       10 '%'
+ VMINT    12 2025       10 '%'
+ USINA     123                 FUNIL PB SUL
+ VAZMINT   1 2024      158    
+ VAZMINT   2 2024      165    
+ VAZMINT   3 2024      159    
+ VAZMINT   4 2024      164    
+ VAZMINT   5 2024      181    
+ VAZMINT   6 2024      156    
+ VAZMINT   7 2024      172    
+ VAZMINT   8 2024      173    
+ VAZMINT   9 2024      177    
+ VAZMINT  10 2024      168    
+ VAZMINT  11 2024      159    
+ VAZMINT  12 2024      158    
+ VAZMINT   1 2025      158    
+ VAZMINT   2 2025      165    
+ VAZMINT   3 2025      159    
+ VAZMINT   4 2025      164    
+ VAZMINT   5 2025      181    
+ VAZMINT   6 2025      156    
+ VAZMINT   7 2025      172    
+ VAZMINT   8 2025      173    
+ VAZMINT   9 2025      177    
+ VAZMINT  10 2025      168    
+ VAZMINT  11 2025      159    
+ VAZMINT  12 2025      158    
+ VMAXT     1 2024     57.1 '%'
+ VMAXT     2 2024     57.1 '%'
+ VMAXT     3 2024     78.6 '%'
+ VMAXT     4 2024      100 '%'
+ VMAXT     5 2024      100 '%'
+ VMAXT     6 2024      100 '%'
+ VMAXT     7 2024      100 '%'
+ VMAXT     8 2024      100 '%'
+ VMAXT     9 2024      100 '%'
+ VMAXT    10 2024     97.9 '%'
+ VMAXT    11 2024     76.9 '%'
+ VMAXT    12 2024     57.1 '%'
+ VMAXT     1 2025     57.1 '%'
+ VMAXT     2 2025     57.1 '%'
+ VMAXT     3 2025     78.6 '%'
+ VMAXT     4 2025      100 '%'
+ VMAXT     5 2025      100 '%'
+ VMAXT     6 2025      100 '%'
+ VMAXT     7 2025      100 '%'
+ VMAXT     8 2025      100 '%'
+ VMAXT     9 2025      100 '%'
+ VMAXT    10 2025     97.9 '%'
+ VMAXT    11 2025     76.9 '%'
+ VMAXT    12 2025     57.1 '%'
+ VMINT     5 2024       30 '%'
+ VMINT     6 2024       30 '%'
+ VMINT     7 2024       30 '%'
+ VMINT     8 2024       30 '%'
+ VMINT     9 2024       30 '%'
+ VMINT    10 2024       30 '%'
+ VMINT    11 2024       30 '%'
+ VMINT    12 2024       30 '%'
+ VMINT     1 2025       30 '%'
+ VMINT     2 2025       30 '%'
+ VMINT     3 2025       30 '%'
+ VMINT     4 2025       30 '%'
+ VMINT     5 2025       30 '%'
+ VMINT     6 2025       30 '%'
+ VMINT     7 2025       30 '%'
+ VMINT     8 2025       30 '%'
+ VMINT     9 2025       30 '%'
+ VMINT    10 2025       30 '%'
+ VMINT    11 2025       30 '%'
+ VMINT    12 2025       30 '%'
+ USINA     124                 LAJES
+ VAZMINT   1 2024       15    
+ VAZMINT   2 2024       16    
+ VAZMINT   3 2024        9    
+ VAZMINT   4 2024        8    
+ VAZMINT   5 2024        7    
+ VAZMINT   6 2024       22    
+ VAZMINT   7 2024       18    
+ VAZMINT   8 2024       16    
+ VAZMINT   9 2024       17    
+ VAZMINT  10 2024       23    
+ VAZMINT  11 2024       10    
+ VAZMINT  12 2024       20    
+ VAZMINT   1 2025       15    
+ VAZMINT   2 2025       16    
+ VAZMINT   3 2025        9    
+ VAZMINT   4 2025        8    
+ VAZMINT   5 2025        7    
+ VAZMINT   6 2025       22    
+ VAZMINT   7 2025       18    
+ VAZMINT   8 2025       16    
+ VAZMINT   9 2025       17    
+ VAZMINT  10 2025       23    
+ VAZMINT  11 2025       10    
+ VAZMINT  12 2025       20    
+ VMAXT     1 2024    83.69 '%'
+ VMAXT     2 2024    83.69 '%'
+ VMAXT     3 2024    91.57 '%'
+ VMAXT     4 2024      100 '%'
+ VMAXT     5 2024      100 '%'
+ VMAXT     6 2024    96.68 '%'
+ VMAXT     7 2024    93.08 '%'
+ VMAXT     8 2024    89.83 '%'
+ VMAXT     9 2024    86.69 '%'
+ VMAXT    10 2024    83.69 '%'
+ VMAXT    11 2024    83.69 '%'
+ VMAXT    12 2024    83.69 '%'
+ VMAXT     1 2025    83.69 '%'
+ VMAXT     2 2025    83.69 '%'
+ VMAXT     3 2025    91.57 '%'
+ VMAXT     4 2025      100 '%'
+ VMAXT     5 2025      100 '%'
+ VMAXT     6 2025    96.68 '%'
+ VMAXT     7 2025    93.08 '%'
+ VMAXT     8 2025    89.83 '%'
+ VMAXT     9 2025    86.69 '%'
+ VMAXT    10 2025    83.69 '%'
+ VMAXT    11 2025    83.69 '%'
+ VMAXT    12 2025    83.69 '%'
+ VMINT     5 2024    17.89 '%'
+ VMINT     6 2024    17.89 '%'
+ VMINT     7 2024    17.89 '%'
+ VMINT     8 2024    17.89 '%'
+ VMINT     9 2024    17.89 '%'
+ VMINT    10 2024    17.89 '%'
+ VMINT    11 2024    17.89 '%'
+ VMINT    12 2024    17.89 '%'
+ VMINT     1 2025    17.89 '%'
+ VMINT     2 2025    17.89 '%'
+ VMINT     3 2025    17.89 '%'
+ VMINT     4 2025    17.89 '%'
+ VMINT     5 2025    17.89 '%'
+ VMINT     6 2025    17.89 '%'
+ VMINT     7 2025    17.89 '%'
+ VMINT     8 2025    17.89 '%'
+ VMINT     9 2025    17.89 '%'
+ VMINT    10 2025    17.89 '%'
+ VMINT    11 2025    17.89 '%'
+ VMINT    12 2025    17.89 '%'
+ USINA     126                 PICADA
+ VAZMINT   1 2024       22    
+ VAZMINT   2 2024       15    
+ VAZMINT   3 2024       23    
+ VAZMINT   4 2024       18    
+ VAZMINT   5 2024       15    
+ VAZMINT   6 2024       14    
+ VAZMINT   7 2024        9    
+ VAZMINT   8 2024        9    
+ VAZMINT   9 2024        8    
+ VAZMINT  10 2024        9    
+ VAZMINT  11 2024       17    
+ VAZMINT  12 2024       28    
+ VAZMINT   1 2025       22    
+ VAZMINT   2 2025       15    
+ VAZMINT   3 2025       23    
+ VAZMINT   4 2025       18    
+ VAZMINT   5 2025       15    
+ VAZMINT   6 2025       14    
+ VAZMINT   7 2025        9    
+ VAZMINT   8 2025        9    
+ VAZMINT   9 2025        8    
+ VAZMINT  10 2025        9    
+ VAZMINT  11 2025       17    
+ VAZMINT  12 2025       28    
+ USINA     127                 SOBRAGI
+ VAZMINT   1 2024       42    
+ VAZMINT   2 2024       27    
+ VAZMINT   3 2024       42    
+ VAZMINT   4 2024       48    
+ VAZMINT   5 2024       38    
+ VAZMINT   6 2024       31    
+ VAZMINT   7 2024       19    
+ VAZMINT   8 2024       19    
+ VAZMINT   9 2024       13    
+ VAZMINT  10 2024       18    
+ VAZMINT  11 2024       26    
+ VAZMINT  12 2024       43    
+ VAZMINT   1 2025       42    
+ VAZMINT   2 2025       27    
+ VAZMINT   3 2025       42    
+ VAZMINT   4 2025       48    
+ VAZMINT   5 2025       38    
+ VAZMINT   6 2025       31    
+ VAZMINT   7 2025       19    
+ VAZMINT   8 2025       19    
+ VAZMINT   9 2025       13    
+ VAZMINT  10 2025       18    
+ VAZMINT  11 2025       26    
+ VAZMINT  12 2025       43    
+ USINA     129                 SIMPLICIO
+ VAZMINT   1 2024       20    
+ VAZMINT   2 2024       41    
+ VAZMINT   3 2024      122    
+ VAZMINT   4 2024       96    
+ VAZMINT   5 2024       67    
+ VAZMINT   6 2024       61    
+ VAZMINT   7 2024       25    
+ VAZMINT   8 2024       23    
+ VAZMINT   9 2024        9    
+ VAZMINT  10 2024       17    
+ VAZMINT  11 2024       66    
+ VAZMINT  12 2024       95    
+ VAZMINT   1 2025       20    
+ VAZMINT   2 2025       41    
+ VAZMINT   3 2025      122    
+ VAZMINT   4 2025       96    
+ VAZMINT   5 2025       67    
+ VAZMINT   6 2025       61    
+ VAZMINT   7 2025       25    
+ VAZMINT   8 2025       23    
+ VAZMINT   9 2025        9    
+ VAZMINT  10 2025       17    
+ VAZMINT  11 2025       66    
+ VAZMINT  12 2025       95    
+ USINA     130                 ILHA POMBOS
+ VAZMINT   1 2024      136    
+ VAZMINT   2 2024      153    
+ VAZMINT   3 2024      258    
+ VAZMINT   4 2024      256    
+ VAZMINT   5 2024      234    
+ VAZMINT   6 2024      197    
+ VAZMINT   7 2024      116    
+ VAZMINT   8 2024      140    
+ VAZMINT   9 2024       92    
+ VAZMINT  10 2024      117    
+ VAZMINT  11 2024      151    
+ VAZMINT  12 2024      210    
+ VAZMINT   1 2025      136    
+ VAZMINT   2 2025      153    
+ VAZMINT   3 2025      258    
+ VAZMINT   4 2025      256    
+ VAZMINT   5 2025      234    
+ VAZMINT   6 2025      197    
+ VAZMINT   7 2025      116    
+ VAZMINT   8 2025      140    
+ VAZMINT   9 2025       92    
+ VAZMINT  10 2025      117    
+ VAZMINT  11 2025      151    
+ VAZMINT  12 2025      210    
+ USINA     132                 FONTES
+ VAZMINT   1 2024        6    
+ VAZMINT   2 2024        6    
+ VAZMINT   3 2024        6    
+ VAZMINT   4 2024        6    
+ VAZMINT   5 2024        6    
+ VAZMINT   6 2024        6    
+ VAZMINT   7 2024        6    
+ VAZMINT   8 2024        6    
+ VAZMINT   9 2024        6    
+ VAZMINT  10 2024        6    
+ VAZMINT  11 2024        6    
+ VAZMINT  12 2024        6    
+ VAZMINT   1 2025        6    
+ VAZMINT   2 2025        6    
+ VAZMINT   3 2025        6    
+ VAZMINT   4 2025        6    
+ VAZMINT   5 2025        6    
+ VAZMINT   6 2025        6    
+ VAZMINT   7 2025        6    
+ VAZMINT   8 2025        6    
+ VAZMINT   9 2025        6    
+ VAZMINT  10 2025        6    
+ VAZMINT  11 2025        6    
+ VAZMINT  12 2025        6    
+ USINA     133                 P. PASSOS
+ VAZMINT   1 2024      120    
+ VAZMINT   2 2024      120    
+ VAZMINT   3 2024      120    
+ VAZMINT   4 2024      120    
+ VAZMINT   5 2024      120    
+ VAZMINT   6 2024      120    
+ VAZMINT   7 2024      120    
+ VAZMINT   8 2024      120    
+ VAZMINT   9 2024      120    
+ VAZMINT  10 2024      120    
+ VAZMINT  11 2024      120    
+ VAZMINT  12 2024      120    
+ VAZMINT   1 2025      120    
+ VAZMINT   2 2025      120    
+ VAZMINT   3 2025      120    
+ VAZMINT   4 2025      120    
+ VAZMINT   5 2025      120    
+ VAZMINT   6 2025      120    
+ VAZMINT   7 2025      120    
+ VAZMINT   8 2025      120    
+ VAZMINT   9 2025      120    
+ VAZMINT  10 2025      120    
+ VAZMINT  11 2025      120    
+ VAZMINT  12 2025      120    
+ USINA     134                 SALTO GRANDE
+ VAZMINT   1 2024       37    
+ VAZMINT   2 2024       24    
+ VAZMINT   3 2024       63    
+ VAZMINT   4 2024       62    
+ VAZMINT   5 2024       43    
+ VAZMINT   6 2024       47    
+ VAZMINT   7 2024       27    
+ VAZMINT   8 2024       25    
+ VAZMINT   9 2024       22    
+ VAZMINT  10 2024       20    
+ VAZMINT  11 2024       18    
+ VAZMINT  12 2024       46    
+ VAZMINT   1 2025       37    
+ VAZMINT   2 2025       24    
+ VAZMINT   3 2025       63    
+ VAZMINT   4 2025       62    
+ VAZMINT   5 2025       43    
+ VAZMINT   6 2025       47    
+ VAZMINT   7 2025       27    
+ VAZMINT   8 2025       25    
+ VAZMINT   9 2025       22    
+ VAZMINT  10 2025       20    
+ VAZMINT  11 2025       18    
+ VAZMINT  12 2025       46    
+ USINA     135                 P. ESTRELA
+ VAZMINT   1 2024       44    
+ VAZMINT   2 2024       45    
+ VAZMINT   3 2024       73    
+ VAZMINT   4 2024       49    
+ VAZMINT   5 2024       50    
+ VAZMINT   6 2024       54    
+ VAZMINT   7 2024       33    
+ VAZMINT   8 2024       10    
+ VAZMINT   9 2024       16    
+ VAZMINT  10 2024       10    
+ VAZMINT  11 2024       28    
+ VAZMINT  12 2024       53    
+ VAZMINT   1 2025       44    
+ VAZMINT   2 2025       45    
+ VAZMINT   3 2025       73    
+ VAZMINT   4 2025       49    
+ VAZMINT   5 2025       50    
+ VAZMINT   6 2025       54    
+ VAZMINT   7 2025       33    
+ VAZMINT   8 2025       10    
+ VAZMINT   9 2025       16    
+ VAZMINT  10 2025       10    
+ VAZMINT  11 2025       28    
+ VAZMINT  12 2025       53    
+ USINA     139                 CANDONGA
+ VAZMINT   1 2024       58    
+ VAZMINT   2 2024       58    
+ VAZMINT   3 2024       58    
+ VAZMINT   4 2024       58    
+ VAZMINT   5 2024       58    
+ VAZMINT   6 2024       58    
+ VAZMINT   7 2024       58    
+ VAZMINT   8 2024       58    
+ VAZMINT   9 2024       58    
+ VAZMINT  10 2024       58    
+ VAZMINT  11 2024       58    
+ VAZMINT  12 2024       58    
+ VAZMINT   1 2025       58    
+ VAZMINT   2 2025       58    
+ VAZMINT   3 2025       58    
+ VAZMINT   4 2025       58    
+ VAZMINT   5 2025       58    
+ VAZMINT   6 2025       58    
+ VAZMINT   7 2025       58    
+ VAZMINT   8 2025       58    
+ VAZMINT   9 2025       58    
+ VAZMINT  10 2025       58    
+ VAZMINT  11 2025       58    
+ VAZMINT  12 2025       58    
+ USINA     141                 BAGUARI
+ VAZMINT   1 2024      225    
+ VAZMINT   2 2024      164    
+ VAZMINT   3 2024      315    
+ VAZMINT   4 2024      261    
+ VAZMINT   5 2024      216    
+ VAZMINT   6 2024      208    
+ VAZMINT   7 2024      139    
+ VAZMINT   8 2024      122    
+ VAZMINT   9 2024      109    
+ VAZMINT  10 2024      102    
+ VAZMINT  11 2024      150    
+ VAZMINT  12 2024      212    
+ VAZMINT   1 2025      225    
+ VAZMINT   2 2025      164    
+ VAZMINT   3 2025      315    
+ VAZMINT   4 2025      261    
+ VAZMINT   5 2025      216    
+ VAZMINT   6 2025      208    
+ VAZMINT   7 2025      139    
+ VAZMINT   8 2025      122    
+ VAZMINT   9 2025      109    
+ VAZMINT  10 2025      102    
+ VAZMINT  11 2025      150    
+ VAZMINT  12 2025      212    
+ USINA     143                 AIMORES
+ VAZMINT   1 2024      215    
+ VAZMINT   2 2024      138    
+ VAZMINT   3 2024      343    
+ VAZMINT   4 2024      263    
+ VAZMINT   5 2024      257    
+ VAZMINT   6 2024      246    
+ VAZMINT   7 2024      119    
+ VAZMINT   8 2024      104    
+ VAZMINT   9 2024       68    
+ VAZMINT  10 2024       91    
+ VAZMINT  11 2024      144    
+ VAZMINT  12 2024      182    
+ VAZMINT   1 2025      215    
+ VAZMINT   2 2025      138    
+ VAZMINT   3 2025      343    
+ VAZMINT   4 2025      263    
+ VAZMINT   5 2025      257    
+ VAZMINT   6 2025      246    
+ VAZMINT   7 2025      119    
+ VAZMINT   8 2025      104    
+ VAZMINT   9 2025       68    
+ VAZMINT  10 2025       91    
+ VAZMINT  11 2025      144    
+ VAZMINT  12 2025      182    
+ USINA     144                 MASCARENHAS
+ VAZMINT   1 2024      336    
+ VAZMINT   2 2024      246    
+ VAZMINT   3 2024      476    
+ VAZMINT   4 2024      371    
+ VAZMINT   5 2024      316    
+ VAZMINT   6 2024      324    
+ VAZMINT   7 2024      211    
+ VAZMINT   8 2024      210    
+ VAZMINT   9 2024      210    
+ VAZMINT  10 2024      210    
+ VAZMINT  11 2024      210    
+ VAZMINT  12 2024      273    
+ VAZMINT   1 2025      336    
+ VAZMINT   2 2025      246    
+ VAZMINT   3 2025      476    
+ VAZMINT   4 2025      371    
+ VAZMINT   5 2025      316    
+ VAZMINT   6 2025      324    
+ VAZMINT   7 2025      211    
+ VAZMINT   8 2025      210    
+ VAZMINT   9 2025      210    
+ VAZMINT  10 2025      210    
+ VAZMINT  11 2025      210    
+ VAZMINT  12 2025      273    
+ USINA     148                 IRAPE
+ VAZMINT   1 2024       48    
+ VAZMINT   2 2024       48    
+ VAZMINT   3 2024       48    
+ VAZMINT   4 2024       48    
+ VAZMINT   5 2024       48    
+ VAZMINT   6 2024       48    
+ VAZMINT   7 2024       48    
+ VAZMINT   8 2024       48    
+ VAZMINT   9 2024       48    
+ VAZMINT  10 2024       48    
+ VAZMINT  11 2024       48    
+ VAZMINT  12 2024       48    
+ VAZMINT   1 2025       48    
+ VAZMINT   2 2025       48    
+ VAZMINT   3 2025       48    
+ VAZMINT   4 2025       48    
+ VAZMINT   5 2025       48    
+ VAZMINT   6 2025       48    
+ VAZMINT   7 2025       48    
+ VAZMINT   8 2025       48    
+ VAZMINT   9 2025       48    
+ VAZMINT  10 2025       48    
+ VAZMINT  11 2025       48    
+ VAZMINT  12 2025       48    
+ VMAXT     1 2024       90 '%'
+ VMAXT     2 2024     94.6 '%'
+ VMAXT     3 2024     98.4 '%'
+ VMAXT     4 2024      100 '%'
+ VMAXT     5 2024      100 '%'
+ VMAXT     6 2024      100 '%'
+ VMAXT     7 2024      100 '%'
+ VMAXT     8 2024      100 '%'
+ VMAXT     9 2024      100 '%'
+ VMAXT    10 2024     84.3 '%'
+ VMAXT    11 2024     85.4 '%'
+ VMAXT    12 2024     87.8 '%'
+ VMAXT     1 2025       90 '%'
+ VMAXT     2 2025     94.6 '%'
+ VMAXT     3 2025     98.4 '%'
+ VMAXT     4 2025      100 '%'
+ VMAXT     5 2025      100 '%'
+ VMAXT     6 2025      100 '%'
+ VMAXT     7 2025      100 '%'
+ VMAXT     8 2025      100 '%'
+ VMAXT     9 2025      100 '%'
+ VMAXT    10 2025     84.3 '%'
+ VMAXT    11 2025     85.4 '%'
+ VMAXT    12 2025     87.8 '%'
+ USINA     153                 SAO DOMINGOS
+ VAZMINT   1 2024      130    
+ VAZMINT   2 2024      108    
+ VAZMINT   3 2024      104    
+ VAZMINT   4 2024       73    
+ VAZMINT   5 2024       92    
+ VAZMINT   6 2024      112    
+ VAZMINT   7 2024      118    
+ VAZMINT   8 2024      105    
+ VAZMINT   9 2024      122    
+ VAZMINT  10 2024      118    
+ VAZMINT  11 2024      118    
+ VAZMINT  12 2024      125    
+ VAZMINT   1 2025      130    
+ VAZMINT   2 2025      108    
+ VAZMINT   3 2025      104    
+ VAZMINT   4 2025       73    
+ VAZMINT   5 2025       92    
+ VAZMINT   6 2025      112    
+ VAZMINT   7 2025      118    
+ VAZMINT   8 2025      105    
+ VAZMINT   9 2025      122    
+ VAZMINT  10 2025      118    
+ VAZMINT  11 2025      118    
+ VAZMINT  12 2025      125    
+ USINA     154                 ITAPEBI
+ VAZMINT   1 2024       38    
+ VAZMINT   2 2024       38    
+ VAZMINT   3 2024       38    
+ VAZMINT   4 2024       38    
+ VAZMINT   5 2024       38    
+ VAZMINT   6 2024       38    
+ VAZMINT   7 2024       38    
+ VAZMINT   8 2024       38    
+ VAZMINT   9 2024       38    
+ VAZMINT  10 2024       38    
+ VAZMINT  11 2024       38    
+ VAZMINT  12 2024       38    
+ VAZMINT   1 2025       38    
+ VAZMINT   2 2025       38    
+ VAZMINT   3 2025       38    
+ VAZMINT   4 2025       38    
+ VAZMINT   5 2025       38    
+ VAZMINT   6 2025       38    
+ VAZMINT   7 2025       38    
+ VAZMINT   8 2025       38    
+ VAZMINT   9 2025       38    
+ VAZMINT  10 2025       38    
+ VAZMINT  11 2025       38    
+ VAZMINT  12 2025       38    
+ USINA     155                 RETIRO BAIXO
+ VAZMINT   1 2024       28    
+ VAZMINT   2 2024       28    
+ VAZMINT   3 2024       28    
+ VAZMINT   4 2024       28    
+ VAZMINT   5 2024       28    
+ VAZMINT   6 2024       28    
+ VAZMINT   7 2024       28    
+ VAZMINT   8 2024       28    
+ VAZMINT   9 2024       28    
+ VAZMINT  10 2024       28    
+ VAZMINT  11 2024       28    
+ VAZMINT  12 2024       28    
+ VAZMINT   1 2025       28    
+ VAZMINT   2 2025       28    
+ VAZMINT   3 2025       28    
+ VAZMINT   4 2025       28    
+ VAZMINT   5 2025       28    
+ VAZMINT   6 2025       28    
+ VAZMINT   7 2025       28    
+ VAZMINT   8 2025       28    
+ VAZMINT   9 2025       28    
+ VAZMINT  10 2025       28    
+ VAZMINT  11 2025       28    
+ VAZMINT  12 2025       28    
+ USINA     156                 TRES MARIAS
+ VAZMINT   1 2024      150    
+ VAZMINT   2 2024      150    
+ VAZMINT   3 2024      150    
+ VAZMINT   4 2024      150    
+ VAZMINT   5 2024      150    
+ VAZMINT   6 2024      150    
+ VAZMINT   7 2024      150    
+ VAZMINT   8 2024      150    
+ VAZMINT   9 2024      150    
+ VAZMINT  10 2024      150    
+ VAZMINT  11 2024      150    
+ VAZMINT  12 2024      150    
+ VAZMINT   1 2025      150    
+ VAZMINT   2 2025      150    
+ VAZMINT   3 2025      150    
+ VAZMINT   4 2025      150    
+ VAZMINT   5 2025      150    
+ VAZMINT   6 2025      150    
+ VAZMINT   7 2025      150    
+ VAZMINT   8 2025      150    
+ VAZMINT   9 2025      150    
+ VAZMINT  10 2025      150    
+ VAZMINT  11 2025      150    
+ VAZMINT  12 2025      150    
+ VMAXT     1 2024     85.5 '%'
+ VMAXT     2 2024       89 '%'
+ VMAXT     3 2024     96.1 '%'
+ VMAXT     4 2024      100 '%'
+ VMAXT     5 2024      100 '%'
+ VMAXT     6 2024      100 '%'
+ VMAXT     7 2024      100 '%'
+ VMAXT     8 2024      100 '%'
+ VMAXT     9 2024      100 '%'
+ VMAXT    10 2024      100 '%'
+ VMAXT    11 2024     87.6 '%'
+ VMAXT    12 2024     80.6 '%'
+ VMAXT     1 2025     85.5 '%'
+ VMAXT     2 2025       89 '%'
+ VMAXT     3 2025     96.1 '%'
+ VMAXT     4 2025      100 '%'
+ VMAXT     5 2025      100 '%'
+ VMAXT     6 2025      100 '%'
+ VMAXT     7 2025      100 '%'
+ VMAXT     8 2025      100 '%'
+ VMAXT     9 2025      100 '%'
+ VMAXT    10 2025      100 '%'
+ VMAXT    11 2025     87.6 '%'
+ VMAXT    12 2025     80.6 '%'
+ USINA     162                 QUEIMADO
+ VAZMINT   5 2024       17    
+ VAZMINT   6 2024       17    
+ VAZMINT   7 2024       17    
+ VAZMINT   8 2024       17    
+ VAZMINT   9 2024       17    
+ VAZMINT  10 2024       17    
+ VAZMINT  11 2024      8.8    
+ VAZMINT  12 2024      8.8    
+ VAZMINT   1 2025      8.8    
+ VAZMINT   2 2025      8.8    
+ VAZMINT   3 2025      8.8    
+ VAZMINT   4 2025      8.8    
+ VAZMINT   5 2025       17    
+ VAZMINT   6 2025       17    
+ VAZMINT   7 2025       17    
+ VAZMINT   8 2025       17    
+ VAZMINT   9 2025       17    
+ VAZMINT  10 2025       17    
+ VAZMINT  11 2025      8.8    
+ VAZMINT  12 2025      8.8    
+ VMAXT     5 2024      100 '%'
+ VMAXT     6 2024      100 '%'
+ VMAXT     7 2024      100 '%'
+ VMAXT     8 2024      100 '%'
+ VMAXT     9 2024      100 '%'
+ VMAXT    10 2024      100 '%'
+ VMAXT    11 2024     89.7 '%'
+ VMAXT    12 2024       82 '%'
+ VMAXT     1 2025     87.1 '%'
+ VMAXT     2 2025     92.3 '%'
+ VMAXT     3 2025      100 '%'
+ VMAXT     4 2025      100 '%'
+ VMAXT     5 2025      100 '%'
+ VMAXT     6 2025      100 '%'
+ VMAXT     7 2025      100 '%'
+ VMAXT     8 2025      100 '%'
+ VMAXT     9 2025      100 '%'
+ VMAXT    10 2025      100 '%'
+ VMAXT    11 2025     89.7 '%'
+ VMAXT    12 2025       82 '%'
+ USINA     169                 SOBRADINHO
+ VAZMINT   1 2024      800    
+ VAZMINT   2 2024      800    
+ VAZMINT   3 2024      800    
+ VAZMINT   4 2024      800    
+ VAZMINT   5 2024      800    
+ VAZMINT   6 2024      800    
+ VAZMINT   7 2024      800    
+ VAZMINT   8 2024      800    
+ VAZMINT   9 2024      800    
+ VAZMINT  10 2024      800    
+ VAZMINT  11 2024      800    
+ VAZMINT  12 2024      800    
+ VAZMINT   1 2025      800    
+ VAZMINT   2 2025      800    
+ VAZMINT   3 2025      800    
+ VAZMINT   4 2025      800    
+ VAZMINT   5 2025      800    
+ VAZMINT   6 2025      800    
+ VAZMINT   7 2025      800    
+ VAZMINT   8 2025      800    
+ VAZMINT   9 2025      800    
+ VAZMINT  10 2025      800    
+ VAZMINT  11 2025      800    
+ VAZMINT  12 2025      800    
+ VMAXT     1 2024     78.1 '%'
+ VMAXT     2 2024     83.1 '%'
+ VMAXT     3 2024     92.2 '%'
+ VMAXT     4 2024     94.9 '%'
+ VMAXT     5 2024      100 '%'
+ VMAXT     6 2024      100 '%'
+ VMAXT     7 2024      100 '%'
+ VMAXT     8 2024      100 '%'
+ VMAXT     9 2024      100 '%'
+ VMAXT    10 2024      100 '%'
+ VMAXT    11 2024     87.2 '%'
+ VMAXT    12 2024     77.7 '%'
+ VMAXT     1 2025     78.1 '%'
+ VMAXT     2 2025     83.1 '%'
+ VMAXT     3 2025     92.2 '%'
+ VMAXT     4 2025     94.9 '%'
+ VMAXT     5 2025      100 '%'
+ VMAXT     6 2025      100 '%'
+ VMAXT     7 2025      100 '%'
+ VMAXT     8 2025      100 '%'
+ VMAXT     9 2025      100 '%'
+ VMAXT    10 2025      100 '%'
+ VMAXT    11 2025     87.2 '%'
+ VMAXT    12 2025     77.7 '%'
+ USINA     172                 ITAPARICA
+ VAZMINT   1 2024      800    
+ VAZMINT   2 2024      800    
+ VAZMINT   3 2024      800    
+ VAZMINT   4 2024      800    
+ VAZMINT   5 2024      800    
+ VAZMINT   6 2024      800    
+ VAZMINT   7 2024      800    
+ VAZMINT   8 2024      800    
+ VAZMINT   9 2024      800    
+ VAZMINT  10 2024      800    
+ VAZMINT  11 2024      800    
+ VAZMINT  12 2024      800    
+ VAZMINT   1 2025      800    
+ VAZMINT   2 2025      800    
+ VAZMINT   3 2025      800    
+ VAZMINT   4 2025      800    
+ VAZMINT   5 2025      800    
+ VAZMINT   6 2025      800    
+ VAZMINT   7 2025      800    
+ VAZMINT   8 2025      800    
+ VAZMINT   9 2025      800    
+ VAZMINT  10 2025      800    
+ VAZMINT  11 2025      800    
+ VAZMINT  12 2025      800    
+ VMAXT     1 2024     54.9 '%'
+ VMAXT     2 2024       59 '%'
+ VMAXT     3 2024     64.2 '%'
+ VMAXT     4 2024     86.5 '%'
+ VMAXT     5 2024      100 '%'
+ VMAXT     6 2024      100 '%'
+ VMAXT     7 2024      100 '%'
+ VMAXT     8 2024      100 '%'
+ VMAXT     9 2024      100 '%'
+ VMAXT    10 2024      100 '%'
+ VMAXT    11 2024     82.3 '%'
+ VMAXT    12 2024     54.9 '%'
+ VMAXT     1 2025     54.9 '%'
+ VMAXT     2 2025       59 '%'
+ VMAXT     3 2025     64.2 '%'
+ VMAXT     4 2025     86.5 '%'
+ VMAXT     5 2025      100 '%'
+ VMAXT     6 2025      100 '%'
+ VMAXT     7 2025      100 '%'
+ VMAXT     8 2025      100 '%'
+ VMAXT     9 2025      100 '%'
+ VMAXT    10 2025      100 '%'
+ VMAXT    11 2025     82.3 '%'
+ VMAXT    12 2025     54.9 '%'
+ USINA     176                 COMP PAF-MOX
+ VAZMINT   1 2024      800    
+ VAZMINT   2 2024      800    
+ VAZMINT   3 2024      800    
+ VAZMINT   4 2024      800    
+ VAZMINT   5 2024      800    
+ VAZMINT   6 2024      800    
+ VAZMINT   7 2024      800    
+ VAZMINT   8 2024      800    
+ VAZMINT   9 2024      800    
+ VAZMINT  10 2024      800    
+ VAZMINT  11 2024      800    
+ VAZMINT  12 2024      800    
+ VAZMINT   1 2025      800    
+ VAZMINT   2 2025      800    
+ VAZMINT   3 2025      800    
+ VAZMINT   4 2025      800    
+ VAZMINT   5 2025      800    
+ VAZMINT   6 2025      800    
+ VAZMINT   7 2025      800    
+ VAZMINT   8 2025      800    
+ VAZMINT   9 2025      800    
+ VAZMINT  10 2025      800    
+ VAZMINT  11 2025      800    
+ VAZMINT  12 2025      800    
+ USINA     178                 XINGO
+ VAZMINT   1 2024      800    
+ VAZMINT   2 2024      800    
+ VAZMINT   3 2024      800    
+ VAZMINT   4 2024      800    
+ VAZMINT   5 2024      800    
+ VAZMINT   6 2024      800    
+ VAZMINT   7 2024      800    
+ VAZMINT   8 2024      800    
+ VAZMINT   9 2024      800    
+ VAZMINT  10 2024      800    
+ VAZMINT  11 2024      800    
+ VAZMINT  12 2024      800    
+ VAZMINT   1 2025      800    
+ VAZMINT   2 2025      800    
+ VAZMINT   3 2025      800    
+ VAZMINT   4 2025      800    
+ VAZMINT   5 2025      800    
+ VAZMINT   6 2025      800    
+ VAZMINT   7 2025      800    
+ VAZMINT   8 2025      800    
+ VAZMINT   9 2025      800    
+ VAZMINT  10 2025      800    
+ VAZMINT  11 2025      800    
+ VAZMINT  12 2025      800    
+ USINA     190                 B. ESPERANCA
+ VAZMINT   1 2024      240    
+ VAZMINT   2 2024      240    
+ VAZMINT   3 2024      240    
+ VAZMINT   4 2024      240    
+ VAZMINT   5 2024      240    
+ VAZMINT   6 2024      240    
+ VAZMINT   7 2024      240    
+ VAZMINT   8 2024      240    
+ VAZMINT   9 2024      240    
+ VAZMINT  10 2024      240    
+ VAZMINT  11 2024      240    
+ VAZMINT  12 2024      240    
+ VAZMINT   1 2025      240    
+ VAZMINT   2 2025      240    
+ VAZMINT   3 2025      240    
+ VAZMINT   4 2025      240    
+ VAZMINT   5 2025      240    
+ VAZMINT   6 2025      240    
+ VAZMINT   7 2025      240    
+ VAZMINT   8 2025      240    
+ VAZMINT   9 2025      240    
+ VAZMINT  10 2025      240    
+ VAZMINT  11 2025      240    
+ VAZMINT  12 2025      240    
+ VMAXT     1 2024     63.9 '%'
+ VMAXT     2 2024     63.9 '%'
+ VMAXT     3 2024     72.3 '%'
+ VMAXT     4 2024     85.9 '%'
+ VMAXT     5 2024      100 '%'
+ VMAXT     6 2024      100 '%'
+ VMAXT     7 2024      100 '%'
+ VMAXT     8 2024      100 '%'
+ VMAXT     9 2024      100 '%'
+ VMAXT    10 2024      100 '%'
+ VMAXT    11 2024     69.1 '%'
+ VMAXT    12 2024     68.1 '%'
+ VMAXT     1 2025     63.9 '%'
+ VMAXT     2 2025     63.9 '%'
+ VMAXT     3 2025     72.3 '%'
+ VMAXT     4 2025     85.9 '%'
+ VMAXT     5 2025      100 '%'
+ VMAXT     6 2025      100 '%'
+ VMAXT     7 2025      100 '%'
+ VMAXT     8 2025      100 '%'
+ VMAXT     9 2025      100 '%'
+ VMAXT    10 2025      100 '%'
+ VMAXT    11 2025     69.1 '%'
+ VMAXT    12 2025     68.1 '%'
+ USINA     192                 GUILMAN-AMOR
+ VAZMINT   1 2024       30    
+ VAZMINT   2 2024       24    
+ VAZMINT   3 2024       41    
+ VAZMINT   4 2024       24    
+ VAZMINT   5 2024     19.2    
+ VAZMINT   6 2024       25    
+ VAZMINT   7 2024     19.2    
+ VAZMINT   8 2024     19.2    
+ VAZMINT   9 2024     19.2    
+ VAZMINT  10 2024     19.2    
+ VAZMINT  11 2024       26    
+ VAZMINT  12 2024       27    
+ VAZMINT   1 2025       30    
+ VAZMINT   2 2025       24    
+ VAZMINT   3 2025       41    
+ VAZMINT   4 2025       24    
+ VAZMINT   5 2025     19.2    
+ VAZMINT   6 2025       25    
+ VAZMINT   7 2025     19.2    
+ VAZMINT   8 2025     19.2    
+ VAZMINT   9 2025     19.2    
+ VAZMINT  10 2025     19.2    
+ VAZMINT  11 2025       26    
+ VAZMINT  12 2025       27    
+ USINA     195                 JAURU
+ VAZMINT   1 2024       82    
+ VAZMINT   2 2024       74    
+ VAZMINT   3 2024       85    
+ VAZMINT   4 2024       75    
+ VAZMINT   5 2024       60    
+ VAZMINT   6 2024       72    
+ VAZMINT   7 2024       65    
+ VAZMINT   8 2024       66    
+ VAZMINT   9 2024       68    
+ VAZMINT  10 2024       68    
+ VAZMINT  11 2024       76    
+ VAZMINT  12 2024       79    
+ VAZMINT   1 2025       82    
+ VAZMINT   2 2025       74    
+ VAZMINT   3 2025       85    
+ VAZMINT   4 2025       75    
+ VAZMINT   5 2025       60    
+ VAZMINT   6 2025       72    
+ VAZMINT   7 2025       65    
+ VAZMINT   8 2025       66    
+ VAZMINT   9 2025       68    
+ VAZMINT  10 2025       68    
+ VAZMINT  11 2025       76    
+ VAZMINT  12 2025       79    
+ USINA     196                 GUAPORE
+ VAZMINT   1 2024       39    
+ VAZMINT   2 2024       35    
+ VAZMINT   3 2024       39    
+ VAZMINT   4 2024       39    
+ VAZMINT   5 2024       30    
+ VAZMINT   6 2024       30    
+ VAZMINT   7 2024       28    
+ VAZMINT   8 2024       28    
+ VAZMINT   9 2024       27    
+ VAZMINT  10 2024       30    
+ VAZMINT  11 2024       32    
+ VAZMINT  12 2024       35    
+ VAZMINT   1 2025       39    
+ VAZMINT   2 2025       35    
+ VAZMINT   3 2025       39    
+ VAZMINT   4 2025       39    
+ VAZMINT   5 2025       30    
+ VAZMINT   6 2025       30    
+ VAZMINT   7 2025       28    
+ VAZMINT   8 2025       28    
+ VAZMINT   9 2025       27    
+ VAZMINT  10 2025       30    
+ VAZMINT  11 2025       32    
+ VAZMINT  12 2025       35    
+ USINA     203                 CORUMBA III
+ VAZMINT   1 2024        0    
+ VAZMINT   2 2024        0    
+ VAZMINT   3 2024       17    
+ VAZMINT   4 2024        0    
+ VAZMINT   5 2024        0    
+ VAZMINT   6 2024        0    
+ VAZMINT   7 2024       23    
+ VAZMINT   8 2024        0    
+ VAZMINT   9 2024        0    
+ VAZMINT  10 2024        0    
+ VAZMINT  11 2024        0    
+ VAZMINT  12 2024        0    
+ VAZMINT   1 2025        0    
+ VAZMINT   2 2025        0    
+ VAZMINT   3 2025       17    
+ VAZMINT   4 2025        0    
+ VAZMINT   5 2025        0    
+ VAZMINT   6 2025        0    
+ VAZMINT   7 2025       23    
+ VAZMINT   8 2025        0    
+ VAZMINT   9 2025        0    
+ VAZMINT  10 2025        0    
+ VAZMINT  11 2025        0    
+ VAZMINT  12 2025        0    
+ USINA     204                 CACH CALDEIR
+ VAZMINT   1 2024      335    
+ VAZMINT   2 2024      322    
+ VAZMINT   3 2024      404    
+ VAZMINT   4 2024      430    
+ VAZMINT   5 2024      559    
+ VAZMINT   6 2024      373    
+ VAZMINT   7 2024      709    
+ VAZMINT   8 2024      351    
+ VAZMINT   9 2024      296    
+ VAZMINT  10 2024      164    
+ VAZMINT  11 2024       53    
+ VAZMINT  12 2024      303    
+ VAZMINT   1 2025      335    
+ VAZMINT   2 2025      322    
+ VAZMINT   3 2025      404    
+ VAZMINT   4 2025      430    
+ VAZMINT   5 2025      559    
+ VAZMINT   6 2025      373    
+ VAZMINT   7 2025      709    
+ VAZMINT   8 2025      351    
+ VAZMINT   9 2025      296    
+ VAZMINT  10 2025      164    
+ VAZMINT  11 2025       53    
+ VAZMINT  12 2025      303    
+ USINA     215                 SALTO PILAO
+ VAZMINT   1 2024       57    
+ VAZMINT   2 2024       24    
+ VAZMINT   3 2024        0    
+ VAZMINT   4 2024        0    
+ VAZMINT   5 2024        0    
+ VAZMINT   6 2024        0    
+ VAZMINT   7 2024       26    
+ VAZMINT   8 2024       10    
+ VAZMINT   9 2024       14    
+ VAZMINT  10 2024       13    
+ VAZMINT  11 2024        8    
+ VAZMINT  12 2024       58    
+ VAZMINT   1 2025       57    
+ VAZMINT   2 2025       24    
+ VAZMINT   3 2025        0    
+ VAZMINT   4 2025        0    
+ VAZMINT   5 2025        0    
+ VAZMINT   6 2025        0    
+ VAZMINT   7 2025       26    
+ VAZMINT   8 2025       10    
+ VAZMINT   9 2025       14    
+ VAZMINT  10 2025       13    
+ VAZMINT  11 2025        8    
+ VAZMINT  12 2025       58    
+ USINA     217                 ROSAL
+ VAZMINT   1 2024       23    
+ VAZMINT   2 2024        9    
+ VAZMINT   3 2024       23    
+ VAZMINT   4 2024       23    
+ VAZMINT   5 2024       19    
+ VAZMINT   6 2024       16    
+ VAZMINT   7 2024        6    
+ VAZMINT   8 2024        1    
+ VAZMINT   9 2024        2    
+ VAZMINT  10 2024        3    
+ VAZMINT  11 2024       27    
+ VAZMINT  12 2024       18    
+ VAZMINT   1 2025       23    
+ VAZMINT   2 2025        9    
+ VAZMINT   3 2025       23    
+ VAZMINT   4 2025       23    
+ VAZMINT   5 2025       19    
+ VAZMINT   6 2025       16    
+ VAZMINT   7 2025        6    
+ VAZMINT   8 2025        1    
+ VAZMINT   9 2025        2    
+ VAZMINT  10 2025        3    
+ VAZMINT  11 2025       27    
+ VAZMINT  12 2025       18    
+ USINA     227                 SINOP
+ VAZMINT   1 2024      272    
+ VAZMINT   2 2024      272    
+ VAZMINT   3 2024      272    
+ VAZMINT   4 2024      272    
+ VAZMINT   5 2024      272    
+ VAZMINT   6 2024      272    
+ VAZMINT   7 2024      272    
+ VAZMINT   8 2024      272    
+ VAZMINT   9 2024      272    
+ VAZMINT  10 2024      272    
+ VAZMINT  11 2024      272    
+ VAZMINT  12 2024      272    
+ VAZMINT   1 2025      272    
+ VAZMINT   2 2025      272    
+ VAZMINT   3 2025      272    
+ VAZMINT   4 2025      272    
+ VAZMINT   5 2025      272    
+ VAZMINT   6 2025      272    
+ VAZMINT   7 2025      272    
+ VAZMINT   8 2025      272    
+ VAZMINT   9 2025      272    
+ VAZMINT  10 2025      272    
+ VAZMINT  11 2025      272    
+ VAZMINT  12 2025      272    
+ VMAXT     1 2024      100 '%'
+ VMAXT     2 2024      100 '%'
+ VMAXT     3 2024      100 '%'
+ VMAXT     4 2024      100 '%'
+ VMAXT     5 2024      100 '%'
+ VMAXT     6 2024    71.76 '%'
+ VMAXT     7 2024    71.76 '%'
+ VMAXT     8 2024    71.76 '%'
+ VMAXT     9 2024    71.76 '%'
+ VMAXT    10 2024    71.76 '%'
+ VMAXT    11 2024      100 '%'
+ VMAXT    12 2024      100 '%'
+ VMAXT     1 2025      100 '%'
+ VMAXT     2 2025      100 '%'
+ VMAXT     3 2025      100 '%'
+ VMAXT     4 2025      100 '%'
+ VMAXT     5 2025      100 '%'
+ VMAXT     6 2025    71.76 '%'
+ VMAXT     7 2025    71.76 '%'
+ VMAXT     8 2025    71.76 '%'
+ VMAXT     9 2025    71.76 '%'
+ VMAXT    10 2025    71.76 '%'
+ VMAXT    11 2025      100 '%'
+ VMAXT    12 2025      100 '%'
+ USINA     228                 COLIDER
+ VAZMINT   1 2024      192    
+ VAZMINT   2 2024      192    
+ VAZMINT   3 2024      192    
+ VAZMINT   4 2024      192    
+ VAZMINT   5 2024      192    
+ VAZMINT   6 2024      192    
+ VAZMINT   7 2024      192    
+ VAZMINT   8 2024      192    
+ VAZMINT   9 2024      192    
+ VAZMINT  10 2024      192    
+ VAZMINT  11 2024      192    
+ VAZMINT  12 2024      192    
+ VAZMINT   1 2025      192    
+ VAZMINT   2 2025      192    
+ VAZMINT   3 2025      192    
+ VAZMINT   4 2025      192    
+ VAZMINT   5 2025      192    
+ VAZMINT   6 2025      192    
+ VAZMINT   7 2025      192    
+ VAZMINT   8 2025      192    
+ VAZMINT   9 2025      192    
+ VAZMINT  10 2025      192    
+ VAZMINT  11 2025      192    
+ VAZMINT  12 2025      192    
+ USINA     229                 TELES PIRES
+ VAZMINT   1 2024      390    
+ VAZMINT   2 2024      390    
+ VAZMINT   3 2024      390    
+ VAZMINT   4 2024      390    
+ VAZMINT   5 2024      390    
+ VAZMINT   6 2024      390    
+ VAZMINT   7 2024      390    
+ VAZMINT   8 2024      390    
+ VAZMINT   9 2024      390    
+ VAZMINT  10 2024      390    
+ VAZMINT  11 2024      390    
+ VAZMINT  12 2024      390    
+ VAZMINT   1 2025      390    
+ VAZMINT   2 2025      390    
+ VAZMINT   3 2025      390    
+ VAZMINT   4 2025      390    
+ VAZMINT   5 2025      390    
+ VAZMINT   6 2025      390    
+ VAZMINT   7 2025      390    
+ VAZMINT   8 2025      390    
+ VAZMINT   9 2025      390    
+ VAZMINT  10 2025      390    
+ VAZMINT  11 2025      390    
+ VAZMINT  12 2025      390    
+ USINA     241                 SLT VERDINHO
+ VAZMINT   1 2024      217    
+ VAZMINT   2 2024      163    
+ VAZMINT   3 2024      165    
+ VAZMINT   4 2024      122    
+ VAZMINT   5 2024      109    
+ VAZMINT   6 2024      118    
+ VAZMINT   7 2024      102    
+ VAZMINT   8 2024       96    
+ VAZMINT   9 2024      109    
+ VAZMINT  10 2024      119    
+ VAZMINT  11 2024      215    
+ VAZMINT  12 2024      168    
+ VAZMINT   1 2025      217    
+ VAZMINT   2 2025      163    
+ VAZMINT   3 2025      165    
+ VAZMINT   4 2025      122    
+ VAZMINT   5 2025      109    
+ VAZMINT   6 2025      118    
+ VAZMINT   7 2025      102    
+ VAZMINT   8 2025       96    
+ VAZMINT   9 2025      109    
+ VAZMINT  10 2025      119    
+ VAZMINT  11 2025      215    
+ VAZMINT  12 2025      168    
+ USINA     242                 FIC SINOP
+ VMAXT     5 2024      100 '%'
+ VMAXT     6 2024    71.76 '%'
+ VMAXT     7 2024    71.76 '%'
+ VMAXT     8 2024    71.76 '%'
+ VMAXT     9 2024    71.76 '%'
+ VMAXT    10 2024    71.76 '%'
+ VMAXT    11 2024      100 '%'
+ VMAXT    12 2024      100 '%'
+ VMAXT     1 2025      100 '%'
+ VMAXT     2 2025      100 '%'
+ VMAXT     3 2025      100 '%'
+ VMAXT     4 2025      100 '%'
+ VMAXT     5 2025      100 '%'
+ VMAXT     6 2025    71.76 '%'
+ VMAXT     7 2025    71.76 '%'
+ VMAXT     8 2025    71.76 '%'
+ VMAXT     9 2025    71.76 '%'
+ VMAXT    10 2025    71.76 '%'
+ VMAXT    11 2025      100 '%'
+ VMAXT    12 2025      100 '%'
+ USINA     244                 FIC TELES PI
+ VAZMINT   1 2024      500    
+ VAZMINT   2 2024      500    
+ VAZMINT   3 2024      500    
+ VAZMINT   4 2024      500    
+ VAZMINT   5 2024      500    
+ VAZMINT   6 2024      500    
+ VAZMINT   7 2024      500    
+ VAZMINT   8 2024      500    
+ VAZMINT   9 2024      500    
+ VAZMINT  10 2024      500    
+ VAZMINT  11 2024      500    
+ VAZMINT  12 2024      500    
+ VAZMINT   1 2025      500    
+ VAZMINT   2 2025      500    
+ VAZMINT   3 2025      500    
+ VAZMINT   4 2025      500    
+ VAZMINT   5 2025      500    
+ VAZMINT   6 2025      500    
+ VAZMINT   7 2025      500    
+ VAZMINT   8 2025      500    
+ VAZMINT   9 2025      500    
+ VAZMINT  10 2025      500    
+ VAZMINT  11 2025      500    
+ VAZMINT  12 2025      500    
+ USINA     249                 OURINHOS
+ VAZMINT   1 2024       97    
+ VAZMINT   2 2024       93    
+ VAZMINT   3 2024        9    
+ VAZMINT   4 2024       90    
+ VAZMINT   5 2024       90    
+ VAZMINT   6 2024      132    
+ VAZMINT   7 2024      124    
+ VAZMINT   8 2024      133    
+ VAZMINT   9 2024      103    
+ VAZMINT  10 2024      100    
+ VAZMINT  11 2024       89    
+ VAZMINT  12 2024       95    
+ VAZMINT   1 2025       97    
+ VAZMINT   2 2025       93    
+ VAZMINT   3 2025        9    
+ VAZMINT   4 2025       90    
+ VAZMINT   5 2025       90    
+ VAZMINT   6 2025      132    
+ VAZMINT   7 2025      124    
+ VAZMINT   8 2025      133    
+ VAZMINT   9 2025      103    
+ VAZMINT  10 2025      100    
+ VAZMINT  11 2025       89    
+ VAZMINT  12 2025       95    
+ USINA     251                 SERRA MESA
+ VAZMINT   5 2024      100    
+ VAZMINT   6 2024      300    
+ VAZMINT   7 2024      300    
+ VAZMINT   8 2024      300    
+ VAZMINT   9 2024      300    
+ VAZMINT  10 2024      300    
+ VAZMINT  11 2024      300    
+ VAZMINT  12 2024      100    
+ VAZMINT   1 2025      100    
+ VAZMINT   2 2025      100    
+ VAZMINT   3 2025      100    
+ VAZMINT   4 2025      100    
+ VAZMINT   5 2025      100    
+ VAZMINT   6 2025      300    
+ VAZMINT   7 2025      300    
+ VAZMINT   8 2025      300    
+ VAZMINT   9 2025      300    
+ VAZMINT  10 2025      300    
+ VAZMINT  11 2025      300    
+ VAZMINT  12 2025      100    
+ VMAXT     5 2024       55 '%'
+ VMAXT     6 2024       55 '%'
+ VMAXT     7 2024       55 '%'
+ VMAXT     8 2024       55 '%'
+ VMAXT     9 2024       55 '%'
+ VMAXT    10 2024       55 '%'
+ VMAXT    11 2024       55 '%'
+ VMAXT    12 2024       55 '%'
+ VMAXT     1 2025       55 '%'
+ VMAXT     2 2025       55 '%'
+ VMAXT     3 2025       55 '%'
+ VMAXT     4 2025       55 '%'
+ VMAXT     5 2025       55 '%'
+ VMAXT     6 2025       55 '%'
+ VMAXT     7 2025       55 '%'
+ VMAXT     8 2025       55 '%'
+ VMAXT     9 2025       55 '%'
+ VMAXT    10 2025       55 '%'
+ VMAXT    11 2025       55 '%'
+ VMAXT    12 2025       55 '%'
+ USINA     252                 CANA BRAVA
+ VAZMINT   1 2024       90    
+ VAZMINT   2 2024       90    
+ VAZMINT   3 2024       90    
+ VAZMINT   4 2024       90    
+ VAZMINT   5 2024       90    
+ VAZMINT   6 2024       90    
+ VAZMINT   7 2024       90    
+ VAZMINT   8 2024       90    
+ VAZMINT   9 2024       90    
+ VAZMINT  10 2024       90    
+ VAZMINT  11 2024       90    
+ VAZMINT  12 2024       90    
+ VAZMINT   1 2025       90    
+ VAZMINT   2 2025       90    
+ VAZMINT   3 2025       90    
+ VAZMINT   4 2025       90    
+ VAZMINT   5 2025       90    
+ VAZMINT   6 2025       90    
+ VAZMINT   7 2025       90    
+ VAZMINT   8 2025       90    
+ VAZMINT   9 2025       90    
+ VAZMINT  10 2025       90    
+ VAZMINT  11 2025       90    
+ VAZMINT  12 2025       90    
+ USINA     253                 SAO SALVADOR
+ VAZMINT   1 2024       90    
+ VAZMINT   2 2024       90    
+ VAZMINT   3 2024       90    
+ VAZMINT   4 2024       90    
+ VAZMINT   5 2024       90    
+ VAZMINT   6 2024       90    
+ VAZMINT   7 2024       90    
+ VAZMINT   8 2024       90    
+ VAZMINT   9 2024       90    
+ VAZMINT  10 2024       90    
+ VAZMINT  11 2024       90    
+ VAZMINT  12 2024       90    
+ VAZMINT   1 2025       90    
+ VAZMINT   2 2025       90    
+ VAZMINT   3 2025       90    
+ VAZMINT   4 2025       90    
+ VAZMINT   5 2025       90    
+ VAZMINT   6 2025       90    
+ VAZMINT   7 2025       90    
+ VAZMINT   8 2025       90    
+ VAZMINT   9 2025       90    
+ VAZMINT  10 2025       90    
+ VAZMINT  11 2025       90    
+ VAZMINT  12 2025       90    
+ USINA     257                 PEIXE ANGICA
+ VAZMINT   1 2024      360    
+ VAZMINT   2 2024      360    
+ VAZMINT   3 2024      360    
+ VAZMINT   4 2024      360    
+ VAZMINT   5 2024      360    
+ VAZMINT   6 2024      360    
+ VAZMINT   7 2024      360    
+ VAZMINT   8 2024      360    
+ VAZMINT   9 2024      360    
+ VAZMINT  10 2024      360    
+ VAZMINT  11 2024      360    
+ VAZMINT  12 2024      360    
+ VAZMINT   1 2025      360    
+ VAZMINT   2 2025      360    
+ VAZMINT   3 2025      360    
+ VAZMINT   4 2025      360    
+ VAZMINT   5 2025      360    
+ VAZMINT   6 2025      360    
+ VAZMINT   7 2025      360    
+ VAZMINT   8 2025      360    
+ VAZMINT   9 2025      360    
+ VAZMINT  10 2025      360    
+ VAZMINT  11 2025      360    
+ VAZMINT  12 2025      360    
+ USINA     261                 LAJEADO
+ VAZMINT   1 2024      255    
+ VAZMINT   2 2024      255    
+ VAZMINT   3 2024      255    
+ VAZMINT   4 2024      255    
+ VAZMINT   5 2024      255    
+ VAZMINT   6 2024      255    
+ VAZMINT   7 2024      255    
+ VAZMINT   8 2024      255    
+ VAZMINT   9 2024      255    
+ VAZMINT  10 2024      255    
+ VAZMINT  11 2024      255    
+ VAZMINT  12 2024      255    
+ VAZMINT   1 2025      255    
+ VAZMINT   2 2025      255    
+ VAZMINT   3 2025      255    
+ VAZMINT   4 2025      255    
+ VAZMINT   5 2025      255    
+ VAZMINT   6 2025      255    
+ VAZMINT   7 2025      255    
+ VAZMINT   8 2025      255    
+ VAZMINT   9 2025      255    
+ VAZMINT  10 2025      255    
+ VAZMINT  11 2025      255    
+ VAZMINT  12 2025      255    
+ USINA     262                 SALTO
+ VAZMINT   1 2024      198    
+ VAZMINT   2 2024      140    
+ VAZMINT   3 2024      158    
+ VAZMINT   4 2024      107    
+ VAZMINT   5 2024      106    
+ VAZMINT   6 2024      122    
+ VAZMINT   7 2024       92    
+ VAZMINT   8 2024       87    
+ VAZMINT   9 2024       92    
+ VAZMINT  10 2024      132    
+ VAZMINT  11 2024      208    
+ VAZMINT  12 2024      150    
+ VAZMINT   1 2025      198    
+ VAZMINT   2 2025      140    
+ VAZMINT   3 2025      158    
+ VAZMINT   4 2025      107    
+ VAZMINT   5 2025      106    
+ VAZMINT   6 2025      122    
+ VAZMINT   7 2025       92    
+ VAZMINT   8 2025       87    
+ VAZMINT   9 2025       92    
+ VAZMINT  10 2025      132    
+ VAZMINT  11 2025      208    
+ VAZMINT  12 2025      150    
+ USINA     267                 ESTREITO TOC
+ VAZMINT   1 2024      744    
+ VAZMINT   2 2024      744    
+ VAZMINT   3 2024      744    
+ VAZMINT   4 2024      744    
+ VAZMINT   5 2024      744    
+ VAZMINT   6 2024      744    
+ VAZMINT   7 2024      744    
+ VAZMINT   8 2024      744    
+ VAZMINT   9 2024      744    
+ VAZMINT  10 2024      744    
+ VAZMINT  11 2024      744    
+ VAZMINT  12 2024      744    
+ VAZMINT   1 2025      744    
+ VAZMINT   2 2025      744    
+ VAZMINT   3 2025      744    
+ VAZMINT   4 2025      744    
+ VAZMINT   5 2025      744    
+ VAZMINT   6 2025      744    
+ VAZMINT   7 2025      744    
+ VAZMINT   8 2025      744    
+ VAZMINT   9 2025      744    
+ VAZMINT  10 2025      744    
+ VAZMINT  11 2025      744    
+ VAZMINT  12 2025      744    
+ USINA     272                 CURUA-UNA
+ VAZMINT   1 2024      164    
+ VAZMINT   2 2024      140    
+ VAZMINT   3 2024      193    
+ VAZMINT   4 2024      153    
+ VAZMINT   5 2024      166    
+ VAZMINT   6 2024      156    
+ VAZMINT   7 2024      123    
+ VAZMINT   8 2024      130    
+ VAZMINT   9 2024      160    
+ VAZMINT  10 2024      148    
+ VAZMINT  11 2024      137    
+ VAZMINT  12 2024      161    
+ VAZMINT   1 2025      164    
+ VAZMINT   2 2025      140    
+ VAZMINT   3 2025      193    
+ VAZMINT   4 2025      153    
+ VAZMINT   5 2025      166    
+ VAZMINT   6 2025      156    
+ VAZMINT   7 2025      123    
+ VAZMINT   8 2025      130    
+ VAZMINT   9 2025      160    
+ VAZMINT  10 2025      148    
+ VAZMINT  11 2025      137    
+ VAZMINT  12 2025      161    
+ USINA     275                 TUCURUI
+ CFUGA     5 2024     9.61    
+ CFUGA     6 2024     7.13    
+ CFUGA     7 2024      6.5    
+ CFUGA     8 2024     6.46    
+ CFUGA     9 2024     6.36    
+ CFUGA    10 2024     6.37    
+ CFUGA    11 2024     6.44    
+ CFUGA    12 2024     7.22    
+ CFUGA     1 2025     9.02    
+ CFUGA     2 2025    10.79    
+ CFUGA     3 2025     11.9    
+ CFUGA     4 2025    11.98    
+ CFUGA     5 2025     9.61    
+ CFUGA     6 2025     7.13    
+ CFUGA     7 2025      6.5    
+ CFUGA     8 2025     6.46    
+ CFUGA     9 2025     6.36    
+ CFUGA    10 2025     6.37    
+ CFUGA    11 2025     6.44    
+ CFUGA    12 2025     7.22    
+ VAZMINT   1 2024     2802    
+ VAZMINT   2 2024     2943    
+ VAZMINT   3 2024     2291    
+ VAZMINT   4 2024     3628    
+ VAZMINT   5 2024     3345    
+ VAZMINT   6 2024     2263    
+ VAZMINT   7 2024     2281    
+ VAZMINT   8 2024     2231    
+ VAZMINT   9 2024     2207    
+ VAZMINT  10 2024     2394    
+ VAZMINT  11 2024     2572    
+ VAZMINT  12 2024     2714    
+ VAZMINT   1 2025     2802    
+ VAZMINT   2 2025     2943    
+ VAZMINT   3 2025     2291    
+ VAZMINT   4 2025     3628    
+ VAZMINT   5 2025     3345    
+ VAZMINT   6 2025     2263    
+ VAZMINT   7 2025     2281    
+ VAZMINT   8 2025     2231    
+ VAZMINT   9 2025     2207    
+ VAZMINT  10 2025     2394    
+ VAZMINT  11 2025     2572    
+ VAZMINT  12 2025     2714    
+ USINA     276                 RONDON 2
+ VAZMINT   1 2024       98    
+ VAZMINT   2 2024       93    
+ VAZMINT   3 2024      121    
+ VAZMINT   4 2024       92    
+ VAZMINT   5 2024       91    
+ VAZMINT   6 2024       79    
+ VAZMINT   7 2024       72    
+ VAZMINT   8 2024       69    
+ VAZMINT   9 2024       47    
+ VAZMINT  10 2024       68    
+ VAZMINT  11 2024       55    
+ VAZMINT  12 2024       60    
+ VAZMINT   1 2025       98    
+ VAZMINT   2 2025       93    
+ VAZMINT   3 2025      121    
+ VAZMINT   4 2025       92    
+ VAZMINT   5 2025       91    
+ VAZMINT   6 2025       79    
+ VAZMINT   7 2025       72    
+ VAZMINT   8 2025       69    
+ VAZMINT   9 2025       47    
+ VAZMINT  10 2025       68    
+ VAZMINT  11 2025       55    
+ VAZMINT  12 2025       60    
+ USINA     277                 BALBINA
+ VAZMINT   5 2024      303    
+ VAZMINT   6 2024      377    
+ VAZMINT   7 2024      430    
+ VAZMINT   8 2024      353    
+ VAZMINT   9 2024      300    
+ VAZMINT  10 2024      390    
+ VAZMINT  11 2024      499    
+ VAZMINT  12 2024      390    
+ VAZMINT   1 2025      390    
+ VAZMINT   2 2025      342    
+ VAZMINT   3 2025      309    
+ VAZMINT   4 2025      395    
+ VAZMINT   5 2025      303    
+ VAZMINT   6 2025      377    
+ VAZMINT   7 2025      430    
+ VAZMINT   8 2025      353    
+ VAZMINT   9 2025      300    
+ VAZMINT  10 2025      390    
+ VAZMINT  11 2025      499    
+ VAZMINT  12 2025      390    
+ USINA     278                 MANSO
+ VAZMINT   1 2024      127    
+ VAZMINT   2 2024      124    
+ VAZMINT   3 2024      121    
+ VAZMINT   4 2024      122    
+ VAZMINT   5 2024      126    
+ VAZMINT   6 2024      117    
+ VAZMINT   7 2024      119    
+ VAZMINT   8 2024      119    
+ VAZMINT   9 2024      121    
+ VAZMINT  10 2024      131    
+ VAZMINT  11 2024      133    
+ VAZMINT  12 2024      123    
+ VAZMINT   1 2025      127    
+ VAZMINT   2 2025      124    
+ VAZMINT   3 2025      121    
+ VAZMINT   4 2025      122    
+ VAZMINT   5 2025      126    
+ VAZMINT   6 2025      117    
+ VAZMINT   7 2025      119    
+ VAZMINT   8 2025      119    
+ VAZMINT   9 2025      121    
+ VAZMINT  10 2025      131    
+ VAZMINT  11 2025      133    
+ VAZMINT  12 2025      123    
+ USINA     279                 SAMUEL
+ VAZMINT   1 2024      521    
+ VAZMINT   2 2024      497    
+ VAZMINT   3 2024      723    
+ VAZMINT   4 2024      401    
+ VAZMINT   5 2024      255    
+ VAZMINT   6 2024      192    
+ VAZMINT   7 2024      181    
+ VAZMINT   8 2024      228    
+ VAZMINT   9 2024      256    
+ VAZMINT  10 2024      223    
+ VAZMINT  11 2024      334    
+ VAZMINT  12 2024      240    
+ VAZMINT   1 2025      521    
+ VAZMINT   2 2025      497    
+ VAZMINT   3 2025      723    
+ VAZMINT   4 2025      401    
+ VAZMINT   5 2025      255    
+ VAZMINT   6 2025      192    
+ VAZMINT   7 2025      181    
+ VAZMINT   8 2025      228    
+ VAZMINT   9 2025      256    
+ VAZMINT  10 2025      223    
+ VAZMINT  11 2025      334    
+ VAZMINT  12 2025      240    
+ USINA     280                 COARA NUNES
+ VAZMINT   1 2024      345    
+ VAZMINT   2 2024      218    
+ VAZMINT   3 2024      320    
+ VAZMINT   4 2024      346    
+ VAZMINT   5 2024      296    
+ VAZMINT   6 2024      376    
+ VAZMINT   7 2024      277    
+ VAZMINT   8 2024      300    
+ VAZMINT   9 2024      205    
+ VAZMINT  10 2024      173    
+ VAZMINT  11 2024       61    
+ VAZMINT  12 2024      227    
+ VAZMINT   1 2025      345    
+ VAZMINT   2 2025      218    
+ VAZMINT   3 2025      320    
+ VAZMINT   4 2025      346    
+ VAZMINT   5 2025      296    
+ VAZMINT   6 2025      376    
+ VAZMINT   7 2025      277    
+ VAZMINT   8 2025      300    
+ VAZMINT   9 2025      205    
+ VAZMINT  10 2025      173    
+ VAZMINT  11 2025       61    
+ VAZMINT  12 2025      227    
+ USINA     281                 PONTE PEDRA
+ VAZMINT   1 2024       67    
+ VAZMINT   2 2024       77    
+ VAZMINT   3 2024       68    
+ VAZMINT   4 2024       50    
+ VAZMINT   5 2024       46    
+ VAZMINT   6 2024       57    
+ VAZMINT   7 2024       56    
+ VAZMINT   8 2024       56    
+ VAZMINT   9 2024       45    
+ VAZMINT  10 2024       47    
+ VAZMINT  11 2024       70    
+ VAZMINT  12 2024       75    
+ VAZMINT   1 2025       67    
+ VAZMINT   2 2025       77    
+ VAZMINT   3 2025       68    
+ VAZMINT   4 2025       50    
+ VAZMINT   5 2025       46    
+ VAZMINT   6 2025       57    
+ VAZMINT   7 2025       56    
+ VAZMINT   8 2025       56    
+ VAZMINT   9 2025       45    
+ VAZMINT  10 2025       47    
+ VAZMINT  11 2025       70    
+ VAZMINT  12 2025       75    
+ USINA     283                 STA CLARA MG
+ VAZMINT   1 2024       15    
+ VAZMINT   2 2024       15    
+ VAZMINT   3 2024       19    
+ VAZMINT   4 2024       27    
+ VAZMINT   5 2024       15    
+ VAZMINT   6 2024       33    
+ VAZMINT   7 2024       15    
+ VAZMINT   8 2024       15    
+ VAZMINT   9 2024       15    
+ VAZMINT  10 2024       15    
+ VAZMINT  11 2024       15    
+ VAZMINT  12 2024       39    
+ VAZMINT   1 2025       15    
+ VAZMINT   2 2025       15    
+ VAZMINT   3 2025       19    
+ VAZMINT   4 2025       27    
+ VAZMINT   5 2025       15    
+ VAZMINT   6 2025       33    
+ VAZMINT   7 2025       15    
+ VAZMINT   8 2025       15    
+ VAZMINT   9 2025       15    
+ VAZMINT  10 2025       15    
+ VAZMINT  11 2025       15    
+ VAZMINT  12 2025       39    
+ USINA     284                 FERREIRA GOM
+ VAZMINT   1 2024      314    
+ VAZMINT   2 2024      303    
+ VAZMINT   3 2024      350    
+ VAZMINT   4 2024      427    
+ VAZMINT   5 2024      964    
+ VAZMINT   6 2024      550    
+ VAZMINT   7 2024      604    
+ VAZMINT   8 2024      457    
+ VAZMINT   9 2024      286    
+ VAZMINT  10 2024      149    
+ VAZMINT  11 2024       63    
+ VAZMINT  12 2024      267    
+ VAZMINT   1 2025      314    
+ VAZMINT   2 2025      303    
+ VAZMINT   3 2025      350    
+ VAZMINT   4 2025      427    
+ VAZMINT   5 2025      964    
+ VAZMINT   6 2025      550    
+ VAZMINT   7 2025      604    
+ VAZMINT   8 2025      457    
+ VAZMINT   9 2025      286    
+ VAZMINT  10 2025      149    
+ VAZMINT  11 2025       63    
+ VAZMINT  12 2025      267    
+ USINA     285                 JIRAU
+ CFUGA     5 2024    74.03    
+ CFUGA     6 2024    73.14    
+ CFUGA     7 2024    72.58    
+ CFUGA     8 2024    72.38    
+ CFUGA     9 2024    72.05    
+ CFUGA    10 2024    72.21    
+ CFUGA    11 2024    72.42    
+ CFUGA    12 2024    72.89    
+ CFUGA     1 2025    73.74    
+ CFUGA     2 2025    74.58    
+ CFUGA     3 2025    75.18    
+ CFUGA     4 2025    75.02    
+ CFUGA     5 2025    74.03    
+ CFUGA     6 2025    73.14    
+ CFUGA     7 2025    72.58    
+ CFUGA     8 2025    72.38    
+ CFUGA     9 2025    72.05    
+ CFUGA    10 2025    72.21    
+ CFUGA    11 2025    72.42    
+ CFUGA    12 2025    72.89    
+ CMONT     5 2024    89.73    
+ CMONT     6 2024    87.95    
+ CMONT     7 2024    85.23    
+ CMONT     8 2024    83.28    
+ CMONT     9 2024    82.77    
+ CMONT    10 2024    83.02    
+ CMONT    11 2024    84.51    
+ CMONT    12 2024    87.18    
+ CMONT     1 2025    89.47    
+ CMONT     2 2025    90.02    
+ CMONT     3 2025    90.03    
+ CMONT     4 2025    90.03    
+ CMONT     5 2025    89.73    
+ CMONT     6 2025    87.95    
+ CMONT     7 2025    85.23    
+ CMONT     8 2025    83.28    
+ CMONT     9 2025    82.77    
+ CMONT    10 2025    83.02    
+ CMONT    11 2025    84.51    
+ CMONT    12 2025    87.18    
+ VAZMINT   1 2024     7172    
+ VAZMINT   2 2024    16448    
+ VAZMINT   3 2024    13789    
+ VAZMINT   4 2024    12052    
+ VAZMINT   5 2024     7343    
+ VAZMINT   6 2024     4204    
+ VAZMINT   7 2024     5674    
+ VAZMINT   8 2024     3531    
+ VAZMINT   9 2024     3240    
+ VAZMINT  10 2024     3240    
+ VAZMINT  11 2024     3240    
+ VAZMINT  12 2024     3240    
+ VAZMINT   1 2025     7172    
+ VAZMINT   2 2025    16448    
+ VAZMINT   3 2025    13789    
+ VAZMINT   4 2025    12052    
+ VAZMINT   5 2025     7343    
+ VAZMINT   6 2025     4204    
+ VAZMINT   7 2025     5674    
+ VAZMINT   8 2025     3531    
+ VAZMINT   9 2025     3240    
+ VAZMINT  10 2025     3240    
+ VAZMINT  11 2025     3240    
+ VAZMINT  12 2025     3240    
+ USINA     286                 STO ANT JARI
+ VAZMINT   1 2024      343    
+ VAZMINT   2 2024      502    
+ VAZMINT   3 2024      294    
+ VAZMINT   4 2024      688    
+ VAZMINT   5 2024      698    
+ VAZMINT   6 2024      651    
+ VAZMINT   7 2024       74    
+ VAZMINT   8 2024      396    
+ VAZMINT   9 2024      370    
+ VAZMINT  10 2024      234    
+ VAZMINT  11 2024      117    
+ VAZMINT  12 2024      347    
+ VAZMINT   1 2025      343    
+ VAZMINT   2 2025      502    
+ VAZMINT   3 2025      294    
+ VAZMINT   4 2025      688    
+ VAZMINT   5 2025      698    
+ VAZMINT   6 2025      651    
+ VAZMINT   7 2025       74    
+ VAZMINT   8 2025      396    
+ VAZMINT   9 2025      370    
+ VAZMINT  10 2025      234    
+ VAZMINT  11 2025      117    
+ VAZMINT  12 2025      347    
+ USINA     287                 STO ANTONIO
+ CFUGA     5 2024    56.61    
+ CFUGA     6 2024    54.21    
+ CFUGA     7 2024    52.12    
+ CFUGA     8 2024    50.95    
+ CFUGA     9 2024    49.03    
+ CFUGA    10 2024     50.1    
+ CFUGA    11 2024    51.66    
+ CFUGA    12 2024    53.37    
+ CFUGA     1 2025    55.86    
+ CFUGA     2 2025     57.8    
+ CFUGA     3 2025    58.99    
+ CFUGA     4 2025    58.67    
+ CFUGA     5 2025    56.61    
+ CFUGA     6 2025    54.21    
+ CFUGA     7 2025    52.12    
+ CFUGA     8 2025    50.95    
+ CFUGA     9 2025    49.03    
+ CFUGA    10 2025     50.1    
+ CFUGA    11 2025    51.66    
+ CFUGA    12 2025    53.37    
+ VAZMINT   1 2024    11468    
+ VAZMINT   2 2024    19192    
+ VAZMINT   3 2024    13047    
+ VAZMINT   4 2024    14427    
+ VAZMINT   5 2024     8609    
+ VAZMINT   6 2024     7082    
+ VAZMINT   7 2024     5704    
+ VAZMINT   8 2024     3591    
+ VAZMINT   9 2024     3293    
+ VAZMINT  10 2024     3293    
+ VAZMINT  11 2024     3293    
+ VAZMINT  12 2024     3945    
+ VAZMINT   1 2025    11468    
+ VAZMINT   2 2025    19192    
+ VAZMINT   3 2025    13047    
+ VAZMINT   4 2025    14427    
+ VAZMINT   5 2025     8609    
+ VAZMINT   6 2025     7082    
+ VAZMINT   7 2025     5704    
+ VAZMINT   8 2025     3591    
+ VAZMINT   9 2025     3293    
+ VAZMINT  10 2025     3293    
+ VAZMINT  11 2025     3293    
+ VAZMINT  12 2025     3945    
+ USINA     288                 BELO MONTE
+ CMONT     5 2024       97    
+ CMONT     6 2024       97    
+ CMONT     7 2024    96.98    
+ CMONT     8 2024    96.85    
+ CMONT     9 2024    96.14    
+ CMONT    10 2024    95.39    
+ CMONT    11 2024    96.18    
+ CMONT    12 2024    96.89    
+ CMONT     1 2025    96.98    
+ CMONT     2 2025       97    
+ CMONT     3 2025       97    
+ CMONT     4 2025       97    
+ CMONT     5 2025       97    
+ CMONT     6 2025       97    
+ CMONT     7 2025    96.98    
+ CMONT     8 2025    96.85    
+ CMONT     9 2025    96.14    
+ CMONT    10 2025    95.39    
+ CMONT    11 2025    96.18    
+ CMONT    12 2025    96.89    
+ VAZMINT   1 2024      558    
+ VAZMINT   2 2024      300    
+ VAZMINT   3 2024     4707    
+ VAZMINT   4 2024     4229    
+ VAZMINT   5 2024     4286    
+ VAZMINT   6 2024     1173    
+ VAZMINT   7 2024      300    
+ VAZMINT   8 2024      300    
+ VAZMINT   9 2024      300    
+ VAZMINT  10 2024      300    
+ VAZMINT  11 2024      300    
+ VAZMINT  12 2024      300    
+ VAZMINT   1 2025      558    
+ VAZMINT   2 2025      300    
+ VAZMINT   3 2025     4707    
+ VAZMINT   4 2025     4229    
+ VAZMINT   5 2025     4286    
+ VAZMINT   6 2025     1173    
+ VAZMINT   7 2025      300    
+ VAZMINT   8 2025      300    
+ VAZMINT   9 2025      300    
+ VAZMINT  10 2025      300    
+ VAZMINT  11 2025      300    
+ VAZMINT  12 2025      300    
+ USINA     290                 ESPORA
+ VAZMINT   1 2024       69    
+ VAZMINT   2 2024       70    
+ VAZMINT   3 2024       67    
+ VAZMINT   4 2024       50    
+ VAZMINT   5 2024       49    
+ VAZMINT   6 2024       67    
+ VAZMINT   7 2024       57    
+ VAZMINT   8 2024       73    
+ VAZMINT   9 2024       59    
+ VAZMINT  10 2024       77    
+ VAZMINT  11 2024       63    
+ VAZMINT  12 2024       69    
+ VAZMINT   1 2025       69    
+ VAZMINT   2 2025       70    
+ VAZMINT   3 2025       67    
+ VAZMINT   4 2025       50    
+ VAZMINT   5 2025       49    
+ VAZMINT   6 2025       67    
+ VAZMINT   7 2025       57    
+ VAZMINT   8 2025       73    
+ VAZMINT   9 2025       59    
+ VAZMINT  10 2025       77    
+ VAZMINT  11 2025       63    
+ VAZMINT  12 2025       69    
+ USINA     291                 FIC SERRA ME
+ VAZMINT   5 2024      100    
+ VAZMINT   6 2024      300    
+ VAZMINT   7 2024      300    
+ VAZMINT   8 2024      300    
+ VAZMINT   9 2024      300    
+ VAZMINT  10 2024      300    
+ VAZMINT  11 2024      300    
+ VAZMINT  12 2024      100    
+ VAZMINT   1 2025      100    
+ VAZMINT   2 2025      100    
+ VAZMINT   3 2025      100    
+ VAZMINT   4 2025      100    
+ VAZMINT   5 2025      100    
+ VAZMINT   6 2025      300    
+ VAZMINT   7 2025      300    
+ VAZMINT   8 2025      300    
+ VAZMINT   9 2025      300    
+ VAZMINT  10 2025      300    
+ VAZMINT  11 2025      300    
+ VAZMINT  12 2025      100    
+ VMAXT     1 2024       55 '%'
+ VMAXT     2 2024       55 '%'
+ VMAXT     3 2024       55 '%'
+ VMAXT     4 2024       55 '%'
+ VMAXT     5 2024       55 '%'
+ VMAXT     6 2024       55 '%'
+ VMAXT     7 2024       55 '%'
+ VMAXT     8 2024       55 '%'
+ VMAXT     9 2024       55 '%'
+ VMAXT    10 2024       55 '%'
+ VMAXT    11 2024       55 '%'
+ VMAXT    12 2024       55 '%'
+ VMAXT     1 2025       55 '%'
+ VMAXT     2 2025       55 '%'
+ VMAXT     3 2025       55 '%'
+ VMAXT     4 2025       55 '%'
+ VMAXT     5 2025       55 '%'
+ VMAXT     6 2025       55 '%'
+ VMAXT     7 2025       55 '%'
+ VMAXT     8 2025       55 '%'
+ VMAXT     9 2025       55 '%'
+ VMAXT    10 2025       55 '%'
+ VMAXT    11 2025       55 '%'
+ VMAXT    12 2025       55 '%'
+ USINA     292                 FIC CANA BRA
+ VAZMINT   1 2024       90    
+ VAZMINT   2 2024       90    
+ VAZMINT   3 2024       90    
+ VAZMINT   4 2024       90    
+ VAZMINT   5 2024       90    
+ VAZMINT   6 2024       90    
+ VAZMINT   7 2024       90    
+ VAZMINT   8 2024       90    
+ VAZMINT   9 2024       90    
+ VAZMINT  10 2024       90    
+ VAZMINT  11 2024       90    
+ VAZMINT  12 2024       90    
+ VAZMINT   1 2025       90    
+ VAZMINT   2 2025       90    
+ VAZMINT   3 2025       90    
+ VAZMINT   4 2025       90    
+ VAZMINT   5 2025       90    
+ VAZMINT   6 2025       90    
+ VAZMINT   7 2025       90    
+ VAZMINT   8 2025       90    
+ VAZMINT   9 2025       90    
+ VAZMINT  10 2025       90    
+ VAZMINT  11 2025       90    
+ VAZMINT  12 2025       90    
+ USINA     294                 FIC QUEIMADO
+ VAZMINT   5 2024       17    
+ VAZMINT   6 2024       17    
+ VAZMINT   7 2024       17    
+ VAZMINT   8 2024       17    
+ VAZMINT   9 2024       17    
+ VAZMINT  10 2024       17    
+ VAZMINT  11 2024      8.8    
+ VAZMINT  12 2024      8.8    
+ VAZMINT   1 2025      8.8    
+ VAZMINT   2 2025      8.8    
+ VAZMINT   3 2025      8.8    
+ VAZMINT   4 2025      8.8    
+ VAZMINT   5 2025       17    
+ VAZMINT   6 2025       17    
+ VAZMINT   7 2025       17    
+ VAZMINT   8 2025       17    
+ VAZMINT   9 2025       17    
+ VAZMINT  10 2025       17    
+ VAZMINT  11 2025      8.8    
+ VAZMINT  12 2025      8.8    
+ VMAXT     5 2024      100 '%'
+ VMAXT     6 2024      100 '%'
+ VMAXT     7 2024      100 '%'
+ VMAXT     8 2024      100 '%'
+ VMAXT     9 2024      100 '%'
+ VMAXT    10 2024      100 '%'
+ VMAXT    11 2024     89.7 '%'
+ VMAXT    12 2024       82 '%'
+ VMAXT     1 2025     87.1 '%'
+ VMAXT     2 2025     92.3 '%'
+ VMAXT     3 2025      100 '%'
+ VMAXT     4 2025      100 '%'
+ VMAXT     5 2025      100 '%'
+ VMAXT     6 2025      100 '%'
+ VMAXT     7 2025      100 '%'
+ VMAXT     8 2025      100 '%'
+ VMAXT     9 2025      100 '%'
+ VMAXT    10 2025      100 '%'
+ VMAXT    11 2025     89.7 '%'
+ VMAXT    12 2025       82 '%'
+ USINA     295                 FIC TRES MAR
+ VAZMINT   1 2024      150    
+ VAZMINT   2 2024      150    
+ VAZMINT   3 2024      150    
+ VAZMINT   4 2024      150    
+ VAZMINT   5 2024      150    
+ VAZMINT   6 2024      150    
+ VAZMINT   7 2024      150    
+ VAZMINT   8 2024      150    
+ VAZMINT   9 2024      150    
+ VAZMINT  10 2024      150    
+ VAZMINT  11 2024      150    
+ VAZMINT  12 2024      150    
+ VAZMINT   1 2025      150    
+ VAZMINT   2 2025      150    
+ VAZMINT   3 2025      150    
+ VAZMINT   4 2025      150    
+ VAZMINT   5 2025      150    
+ VAZMINT   6 2025      150    
+ VAZMINT   7 2025      150    
+ VAZMINT   8 2025      150    
+ VAZMINT   9 2025      150    
+ VAZMINT  10 2025      150    
+ VAZMINT  11 2025      150    
+ VAZMINT  12 2025      150    
+ VMAXT     1 2024     85.5 '%'
+ VMAXT     2 2024       89 '%'
+ VMAXT     3 2024     96.1 '%'
+ VMAXT     4 2024      100 '%'
+ VMAXT     5 2024      100 '%'
+ VMAXT     6 2024      100 '%'
+ VMAXT     7 2024      100 '%'
+ VMAXT     8 2024      100 '%'
+ VMAXT     9 2024      100 '%'
+ VMAXT    10 2024      100 '%'
+ VMAXT    11 2024     87.6 '%'
+ VMAXT    12 2024     80.6 '%'
+ VMAXT     1 2025     85.5 '%'
+ VMAXT     2 2025       89 '%'
+ VMAXT     3 2025     96.1 '%'
+ VMAXT     4 2025      100 '%'
+ VMAXT     5 2025      100 '%'
+ VMAXT     6 2025      100 '%'
+ VMAXT     7 2025      100 '%'
+ VMAXT     8 2025      100 '%'
+ VMAXT     9 2025      100 '%'
+ VMAXT    10 2025      100 '%'
+ VMAXT    11 2025     87.6 '%'
+ VMAXT    12 2025     80.6 '%'
+ USINA     298                 FIC IRAPE
+ VAZMINT   1 2024       48    
+ VAZMINT   2 2024       48    
+ VAZMINT   3 2024       48    
+ VAZMINT   4 2024       48    
+ VAZMINT   5 2024       48    
+ VAZMINT   6 2024       48    
+ VAZMINT   7 2024       48    
+ VAZMINT   8 2024       48    
+ VAZMINT   9 2024       48    
+ VAZMINT  10 2024       48    
+ VAZMINT  11 2024       48    
+ VAZMINT  12 2024       48    
+ VAZMINT   1 2025       48    
+ VAZMINT   2 2025       48    
+ VAZMINT   3 2025       48    
+ VAZMINT   4 2025       48    
+ VAZMINT   5 2025       48    
+ VAZMINT   6 2025       48    
+ VAZMINT   7 2025       48    
+ VAZMINT   8 2025       48    
+ VAZMINT   9 2025       48    
+ VAZMINT  10 2025       48    
+ VAZMINT  11 2025       48    
+ VAZMINT  12 2025       48    
+ VMAXT     1 2024       90 '%'
+ VMAXT     2 2024     94.6 '%'
+ VMAXT     3 2024     98.4 '%'
+ VMAXT     4 2024      100 '%'
+ VMAXT     5 2024      100 '%'
+ VMAXT     6 2024      100 '%'
+ VMAXT     7 2024      100 '%'
+ VMAXT     8 2024      100 '%'
+ VMAXT     9 2024      100 '%'
+ VMAXT    10 2024     84.3 '%'
+ VMAXT    11 2024     85.4 '%'
+ VMAXT    12 2024     87.8 '%'
+ VMAXT     1 2025       90 '%'
+ VMAXT     2 2025     94.6 '%'
+ VMAXT     3 2025     98.4 '%'
+ VMAXT     4 2025      100 '%'
+ VMAXT     5 2025      100 '%'
+ VMAXT     6 2025      100 '%'
+ VMAXT     7 2025      100 '%'
+ VMAXT     8 2025      100 '%'
+ VMAXT     9 2025      100 '%'
+ VMAXT    10 2025     84.3 '%'
+ VMAXT    11 2025     85.4 '%'
+ VMAXT    12 2025     87.8 '%'
+ USINA     302                 FIC LAJEADO
+ VAZMINT   1 2024      255    
+ VAZMINT   2 2024      255    
+ VAZMINT   3 2024      255    
+ VAZMINT   4 2024      255    
+ VAZMINT   5 2024      255    
+ VAZMINT   6 2024      255    
+ VAZMINT   7 2024      255    
+ VAZMINT   8 2024      255    
+ VAZMINT   9 2024      255    
+ VAZMINT  10 2024      255    
+ VAZMINT  11 2024      255    
+ VAZMINT  12 2024      255    
+ VAZMINT   1 2025      255    
+ VAZMINT   2 2025      255    
+ VAZMINT   3 2025      255    
+ VAZMINT   4 2025      255    
+ VAZMINT   5 2025      255    
+ VAZMINT   6 2025      255    
+ VAZMINT   7 2025      255    
+ VAZMINT   8 2025      255    
+ VAZMINT   9 2025      255    
+ VAZMINT  10 2025      255    
+ VAZMINT  11 2025      255    
+ VAZMINT  12 2025      255    
+ USINA     303                 FIC PEIXE AN
+ VAZMINT   1 2024      360    
+ VAZMINT   2 2024      360    
+ VAZMINT   3 2024      360    
+ VAZMINT   4 2024      360    
+ VAZMINT   5 2024      360    
+ VAZMINT   6 2024      360    
+ VAZMINT   7 2024      360    
+ VAZMINT   8 2024      360    
+ VAZMINT   9 2024      360    
+ VAZMINT  10 2024      360    
+ VAZMINT  11 2024      360    
+ VAZMINT  12 2024      360    
+ VAZMINT   1 2025      360    
+ VAZMINT   2 2025      360    
+ VAZMINT   3 2025      360    
+ VAZMINT   4 2025      360    
+ VAZMINT   5 2025      360    
+ VAZMINT   6 2025      360    
+ VAZMINT   7 2025      360    
+ VAZMINT   8 2025      360    
+ VAZMINT   9 2025      360    
+ VAZMINT  10 2025      360    
+ VAZMINT  11 2025      360    
+ VAZMINT  12 2025      360    
+ USINA     304                 ITIQUIRA 1
+ VAZMINT   1 2024       57    
+ VAZMINT   2 2024       75    
+ VAZMINT   3 2024       72    
+ VAZMINT   4 2024       50    
+ VAZMINT   5 2024       44    
+ VAZMINT   6 2024       58    
+ VAZMINT   7 2024       17    
+ VAZMINT   8 2024       21    
+ VAZMINT   9 2024       42    
+ VAZMINT  10 2024       48    
+ VAZMINT  11 2024       61    
+ VAZMINT  12 2024       29    
+ VAZMINT   1 2025       57    
+ VAZMINT   2 2025       75    
+ VAZMINT   3 2025       72    
+ VAZMINT   4 2025       50    
+ VAZMINT   5 2025       44    
+ VAZMINT   6 2025       58    
+ VAZMINT   7 2025       17    
+ VAZMINT   8 2025       21    
+ VAZMINT   9 2025       42    
+ VAZMINT  10 2025       48    
+ VAZMINT  11 2025       61    
+ VAZMINT  12 2025       29    
+ USINA     305                 ITIQUIRA 2
+ VAZMINT   1 2024       58    
+ VAZMINT   2 2024       89    
+ VAZMINT   3 2024       51    
+ VAZMINT   4 2024       48    
+ VAZMINT   5 2024       45    
+ VAZMINT   6 2024       62    
+ VAZMINT   7 2024     39.5    
+ VAZMINT   8 2024     39.5    
+ VAZMINT   9 2024       43    
+ VAZMINT  10 2024       49    
+ VAZMINT  11 2024       63    
+ VAZMINT  12 2024     39.5    
+ VAZMINT   1 2025       58    
+ VAZMINT   2 2025       89    
+ VAZMINT   3 2025       51    
+ VAZMINT   4 2025       48    
+ VAZMINT   5 2025       45    
+ VAZMINT   6 2025       62    
+ VAZMINT   7 2025     39.5    
+ VAZMINT   8 2025     39.5    
+ VAZMINT   9 2025       43    
+ VAZMINT  10 2025       49    
+ VAZMINT  11 2025       63    
+ VAZMINT  12 2025     39.5    
+ USINA     306                 FIC SAO SALV
+ VAZMINT   1 2024       90    
+ VAZMINT   2 2024       90    
+ VAZMINT   3 2024       90    
+ VAZMINT   4 2024       90    
+ VAZMINT   5 2024       90    
+ VAZMINT   6 2024       90    
+ VAZMINT   7 2024       90    
+ VAZMINT   8 2024       90    
+ VAZMINT   9 2024       90    
+ VAZMINT  10 2024       90    
+ VAZMINT  11 2024       90    
+ VAZMINT  12 2024       90    
+ VAZMINT   1 2025       90    
+ VAZMINT   2 2025       90    
+ VAZMINT   3 2025       90    
+ VAZMINT   4 2025       90    
+ VAZMINT   5 2025       90    
+ VAZMINT   6 2025       90    
+ VAZMINT   7 2025       90    
+ VAZMINT   8 2025       90    
+ VAZMINT   9 2025       90    
+ VAZMINT  10 2025       90    
+ VAZMINT  11 2025       90    
+ VAZMINT  12 2025       90    
+ USINA     308                 FIC RETIRO B
+ VAZMINT   1 2024       28    
+ VAZMINT   2 2024       28    
+ VAZMINT   3 2024       28    
+ VAZMINT   4 2024       28    
+ VAZMINT   5 2024       28    
+ VAZMINT   6 2024       28    
+ VAZMINT   7 2024       28    
+ VAZMINT   8 2024       28    
+ VAZMINT   9 2024       28    
+ VAZMINT  10 2024       28    
+ VAZMINT  11 2024       28    
+ VAZMINT  12 2024       28    
+ VAZMINT   1 2025       28    
+ VAZMINT   2 2025       28    
+ VAZMINT   3 2025       28    
+ VAZMINT   4 2025       28    
+ VAZMINT   5 2025       28    
+ VAZMINT   6 2025       28    
+ VAZMINT   7 2025       28    
+ VAZMINT   8 2025       28    
+ VAZMINT   9 2025       28    
+ VAZMINT  10 2025       28    
+ VAZMINT  11 2025       28    
+ VAZMINT  12 2025       28    
+ USINA     310                 DARDANELOS
+ VAZMINT   1 2024      240    
+ VAZMINT   2 2024      296    
+ VAZMINT   3 2024      291    
+ VAZMINT   4 2024      260    
+ VAZMINT   5 2024      198    
+ VAZMINT   6 2024      247    
+ VAZMINT   7 2024       67    
+ VAZMINT   8 2024       51    
+ VAZMINT   9 2024        8    
+ VAZMINT  10 2024        5    
+ VAZMINT  11 2024       76    
+ VAZMINT  12 2024      290    
+ VAZMINT   1 2025      240    
+ VAZMINT   2 2025      296    
+ VAZMINT   3 2025      291    
+ VAZMINT   4 2025      260    
+ VAZMINT   5 2025      198    
+ VAZMINT   6 2025      247    
+ VAZMINT   7 2025       67    
+ VAZMINT   8 2025       51    
+ VAZMINT   9 2025        8    
+ VAZMINT  10 2025        5    
+ VAZMINT  11 2025       76    
+ VAZMINT  12 2025      290    
+ USINA     311                 CACU
+ VAZMINT   1 2024      223    
+ VAZMINT   2 2024      142    
+ VAZMINT   3 2024      191    
+ VAZMINT   4 2024      133    
+ VAZMINT   5 2024      107    
+ VAZMINT   6 2024      125    
+ VAZMINT   7 2024       83    
+ VAZMINT   8 2024       72    
+ VAZMINT   9 2024       86    
+ VAZMINT  10 2024      119    
+ VAZMINT  11 2024      228    
+ VAZMINT  12 2024      187    
+ VAZMINT   1 2025      223    
+ VAZMINT   2 2025      142    
+ VAZMINT   3 2025      191    
+ VAZMINT   4 2025      133    
+ VAZMINT   5 2025      107    
+ VAZMINT   6 2025      125    
+ VAZMINT   7 2025       83    
+ VAZMINT   8 2025       72    
+ VAZMINT   9 2025       86    
+ VAZMINT  10 2025      119    
+ VAZMINT  11 2025      228    
+ VAZMINT  12 2025      187    
+ USINA     312                 B. COQUEIROS
+ VAZMINT   1 2024      214    
+ VAZMINT   2 2024      121    
+ VAZMINT   3 2024      137    
+ VAZMINT   4 2024       90    
+ VAZMINT   5 2024       96    
+ VAZMINT   6 2024      116    
+ VAZMINT   7 2024       83    
+ VAZMINT   8 2024       62    
+ VAZMINT   9 2024       85    
+ VAZMINT  10 2024      103    
+ VAZMINT  11 2024      228    
+ VAZMINT  12 2024      177    
+ VAZMINT   1 2025      214    
+ VAZMINT   2 2025      121    
+ VAZMINT   3 2025      137    
+ VAZMINT   4 2025       90    
+ VAZMINT   5 2025       96    
+ VAZMINT   6 2025      116    
+ VAZMINT   7 2025       83    
+ VAZMINT   8 2025       62    
+ VAZMINT   9 2025       85    
+ VAZMINT  10 2025      103    
+ VAZMINT  11 2025      228    
+ VAZMINT  12 2025      177    
+ USINA     314                 B.MONTE COMP
+ CMONT     5 2024       97    
+ CMONT     6 2024       97    
+ CMONT     7 2024    96.98    
+ CMONT     8 2024    96.85    
+ CMONT     9 2024    96.14    
+ CMONT    10 2024    95.39    
+ CMONT    11 2024    96.18    
+ CMONT    12 2024    96.89    
+ CMONT     1 2025    96.98    
+ CMONT     2 2025       97    
+ CMONT     3 2025       97    
+ CMONT     4 2025       97    
+ CMONT     5 2025       97    
+ CMONT     6 2025       97    
+ CMONT     7 2025    96.98    
+ CMONT     8 2025    96.85    
+ CMONT     9 2025    96.14    
+ CMONT    10 2025    95.39    
+ CMONT    11 2025    96.18    
+ CMONT    12 2025    96.89    
+ USINA     315                 FOZ R CLARO
+ VAZMINT   1 2024      230    
+ VAZMINT   2 2024      140    
+ VAZMINT   3 2024      210    
+ VAZMINT   4 2024      129    
+ VAZMINT   5 2024       91    
+ VAZMINT   6 2024      131    
+ VAZMINT   7 2024       89    
+ VAZMINT   8 2024       74    
+ VAZMINT   9 2024       89    
+ VAZMINT  10 2024      103    
+ VAZMINT  11 2024      231    
+ VAZMINT  12 2024      158    
+ VAZMINT   1 2025      230    
+ VAZMINT   2 2025      140    
+ VAZMINT   3 2025      210    
+ VAZMINT   4 2025      129    
+ VAZMINT   5 2025       91    
+ VAZMINT   6 2025      131    
+ VAZMINT   7 2025       89    
+ VAZMINT   8 2025       74    
+ VAZMINT   9 2025       89    
+ VAZMINT  10 2025      103    
+ VAZMINT  11 2025      231    
+ VAZMINT  12 2025      158    
+ USINA     319                 FIC MAUA
+ VAZMINT   1 2024       88    
+ VAZMINT   2 2024       61    
+ VAZMINT   3 2024       60    
+ VAZMINT   4 2024       60    
+ VAZMINT   5 2024       60    
+ VAZMINT   6 2024       60    
+ VAZMINT   7 2024       60    
+ VAZMINT   8 2024       61    
+ VAZMINT   9 2024       62    
+ VAZMINT  10 2024       60    
+ VAZMINT  11 2024       60    
+ VAZMINT  12 2024       60    
+ VAZMINT   1 2025       88    
+ VAZMINT   2 2025       61    
+ VAZMINT   3 2025       60    
+ VAZMINT   4 2025       60    
+ VAZMINT   5 2025       60    
+ VAZMINT   6 2025       60    
+ VAZMINT   7 2025       60    
+ VAZMINT   8 2025       61    
+ VAZMINT   9 2025       62    
+ VAZMINT  10 2025       60    
+ VAZMINT  11 2025       60    
+ VAZMINT  12 2025       60    
+ USINA     325                 FIC GUAPORE
+ VAZMINT   1 2024       39    
+ VAZMINT   2 2024       35    
+ VAZMINT   3 2024       39    
+ VAZMINT   4 2024       39    
+ VAZMINT   5 2024       30    
+ VAZMINT   6 2024       30    
+ VAZMINT   7 2024       28    
+ VAZMINT   8 2024       28    
+ VAZMINT   9 2024       27    
+ VAZMINT  10 2024       30    
+ VAZMINT  11 2024       32    
+ VAZMINT  12 2024       35    
+ VAZMINT   1 2025       39    
+ VAZMINT   2 2025       35    
+ VAZMINT   3 2025       39    
+ VAZMINT   4 2025       39    
+ VAZMINT   5 2025       30    
+ VAZMINT   6 2025       30    
+ VAZMINT   7 2025       28    
+ VAZMINT   8 2025       28    
+ VAZMINT   9 2025       27    
+ VAZMINT  10 2025       30    
+ VAZMINT  11 2025       32    
+ VAZMINT  12 2025       35    
+ USINA    234                            JARDIM OURO
+ NUMCNJ   3
+ NUMMAQ   1 1        
+ POTEFE   1.00 1        
+ NUMBAS   1 

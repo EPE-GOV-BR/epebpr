@@ -707,24 +707,24 @@ CREATE TABLE BPO_A31_DISPONIBILIDADE_UTE_GNL (
     A01_NR_CASO                         INTEGER NOT NULL,
     A01_CD_MODELO                       INTEGER NOT NULL,
     A02_NR_SUBSISTEMA                   INTEGER NOT NULL,
-    A14_NR_MES                          INTEGER NOT NULL,
-    A14_NR_SERIE                        INTEGER NOT NULL,
-    A14_CD_USINA                        INTEGER NOT NULL,
-    A14_VL_POTENCIA                     REAL,
-    A14_VL_FATOR_CAPACIDADE             REAL,
-    A14_VL_PERC_TEIF                    REAL,
-    A14_VL_PERC_IP                      REAL,
-    A14_VL_INFLEXIBILIDADE              REAL,
-    A14_VL_DISPONIBILIDADE_MAXIMA_PONTA REAL,
-    A14_VL_CVU                          REAL,
+    A31_NR_MES                          INTEGER NOT NULL,
+    A31_NR_SERIE                        INTEGER NOT NULL,
+    A31_CD_USINA                        INTEGER NOT NULL,
+    A31_VL_POTENCIA                     REAL,
+    A31_VL_FATOR_CAPACIDADE             REAL,
+    A31_VL_PERC_TEIF                    REAL,
+    A31_VL_PERC_IP                      REAL,
+    A31_VL_INFLEXIBILIDADE              REAL,
+    A31_VL_DISPONIBILIDADE_MAXIMA_PONTA REAL,
+    A31_VL_CVU                          REAL,
     PRIMARY KEY (
         A01_TP_CASO,
         A01_NR_CASO,
         A01_CD_MODELO,
         A02_NR_SUBSISTEMA,
-        A14_NR_MES,
-        A14_NR_SERIE,
-        A14_CD_USINA
+        A31_NR_MES,
+        A31_NR_SERIE,
+        A31_CD_USINA
     )
 );
 

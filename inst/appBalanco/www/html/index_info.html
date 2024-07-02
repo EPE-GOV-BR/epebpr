@@ -38,7 +38,7 @@
 		
 		<p>&bull; A informação de carga, presente no arquivo <font face = "Courier New">sistema.xxx</font>, deve apresentar dados para todos os subsistemas (mesmo que com valor zerado)</p>
 		
-		<p>&bull; Arquivo <font face = "Courier New"><b>dadosOFR.xlsx</b></font>: Possui as contribuições das renováveis não despachadas para a ponta, o valor percentual das reservas de carga por subsistema e mês e o valor percentual da reserva por motivo da variabilidade das fontes renováveis. O arquivo possui seis abas: FatorPonta, RelacaoIndicativas, SazonalidadeIndicativas, TipoContribuicaoPonta, ReservaRenovavel e Reserva. Este arquivo deve estar presente na mesma pasta dos arquivos do caso, indicada na interface da ferramenta.</p>
+		<p>&bull; Arquivo <font face = "Courier New"><b>dadosOFR.xlsx</b></font>: Possui as contribuições das renováveis não despachadas para a ponta, o valor percentual das reservas de carga por subsistema e mês e o valor percentual da reserva por motivo da variabilidade das fontes renováveis. O arquivo possui seis abas: FatorPonta, RelacaoIndicativas, SazonalidadeIndicativas, TipoContribuicaoPonta, ReservaRenovavel, Reserva e Armazenamento. Este arquivo deve estar presente na mesma pasta dos arquivos do caso, indicada na interface da ferramenta.</p>
 		
 		<p style="margin-left: 20px">&bull; <b>FatorPonta</b>: Nessa aba ficam os fatores de contribuição mensal para potência informados em função da potência instalada da fonte. É utilizado para fontes em que há uma contribuição específica para potência (fonte do tipo 1). Vale destacar que a coluna <font face = "Courier New">A18_CD_TIPO_FONTE</font> se refere ao código do bloco de usinas não simuladas definida no arquivo <font face = "Courier New">patamar.*</font> e seu valor deve estar coerente com o definido no arquivo.</p>
 		
@@ -63,6 +63,10 @@
 		<p style="margin-left: 20px">&bull; <b>Reserva</b>: Nessa aba ficam os dados da reserva em função da carga. Os valores são percentuais relativos aos subsistemas e mês.</p>
 		
 		<p style="margin-left: 30px; padding-top:6px"><img src = "../imagens/cabecalho_reserva_carga.png" /></p>
+		
+		<p style="margin-left: 20px">&bull; <b>Armazenamento</b>: Nessa aba ficam os dados de projetos de tecnlogia de armazenamento (baterias e hidrelétricas reversíveis). O campos NomeFonteMDI corresponde ao cabeçalho do arquivo saidaExpansao.txt, oriundo do MDI. O campo FatorContribuicao indica o valor em percentual da contribuição dos projetos de armazenamento para o atendimento à ponta, em relação à capacidade instalada.</p>
+		
+		<p style="margin-left: 30px; padding-top:6px"><img src = "../imagens/cabecalho_armazenamento.png" /></p>
 		
 		<p>&bull; Arquivo <font face = "Courier New"><b>GeraPeq.xlsx</b></font>: Planilha excel contendo a geração sazonalizada das fontes não simuladas (pequenas). Os dados devem estar na aba de nome "Principal". Este arquivo deve estar presente na mesma pasta dos arquivos do caso quando a execução do BP for do tipo "Demanda Determinística". O campo TIPO deste arquivo corresponde ao campo <font face = "Courier New">A18_TX_DESCRICAO</font> da aba <b>TipoContribuicaoPonta</b> e ao campo TipoFonte da aba <b>RelacaoIndicativas</b>, ambas da planilha <font face = "Courier New"><b>dadosOFR.xlsx</b></font>. O campo NOME corresponde ao campo NomeFonteMDI da aba <b>RelacaoIndicativas</b> da planilha <font face = "Courier New"><b>dadosOFR.xlsx</b></font>.</p>
 		
@@ -105,7 +109,7 @@
 			
 			<li>Faz a gravação dos dados de agrupamento dos intercâmbios do NEWAVE na tabela <font face = "Courier New">BPO_A15_AGRUPAMENTOS_INTERCAMBIO</font> usando funções do pacote <font face = "Courier New">leitorrmpe</font></li>
 			
-			<li>Faz a gravação dos dados das usinas termelétricas ao longo do horizonte de simulação do NEWAVE nas tabelas <font face = "Courier New">BPO_A14_DISPONIBILIDADE_UTE</font> e <font face = "Courier New">BPO_A31_DISPONIBILIDADE_UTE_GNL</font> usando funções do pacote <font face = "Courier New">leitorrmpe</font></li>
+			<li>Faz a gravação dos dados das usinas termelétricas ao longo do horizonte de simulação do NEWAVE nas tabelas <font face = "Courier New">BPO_A14_DISPONIBILIDADE_UTE</font> e <font face = "Courier New">BPO_A31_DISPONIBILIDADE_UTE_GNL</font> usando funções do pacote <font face = "Courier New">leitorrmpe</font>. As usinas com despacho antecipado GNL estão definidas no arquivo <font face = "Courier New">adterm.d*</font> do NEWAVE. A disponibilidade das usinas com despacho antecipado GNL é definida de acordo com o despacho por série verificado nos arquivos <font face = "Courier New">gtertXXX.out</font>. Caso a geração seja maior que zero, considera-se a disponibilidade destas usinas. caso contrário, a disponibilidade considerada é nula.</li>
 			
 			<li>Faz a gravação dos dados de disponibilidade das outras fontes renováveis do NEWAVE na tabela <font face = "Courier New">BPO_A13_DISPONIBILIDADE_OFR</font>. Além disso, grava as tabelas de apoio <font face = "Courier New">BPO_A18_TIPOS_OFR</font> e <font face = "Courier New">BPO_A19_FATOR_PONTA_OFR</font>.
 			<ol>
@@ -124,8 +128,12 @@
 			</ol>
 			</li>
 
-			<li>Faz o cálculo e a gravação dos dados de reserva em função da carga e em função da potência instalada de renováveis na tabela <font face = "Courier New">BPO_A21_RESERVA</font></li>			
+			<li>Faz o cálculo e a gravação dos dados de reserva em função da carga e em função da potência instalada de renováveis na tabela <font face = "Courier New">BPO_A21_RESERVA</font></li>
+			
+			<li>Faz o cálculo e a gravação dos dados de disponibilidade dos projetos de tecnologia de armazenamento na tabela <font face = "Courier New">BPO_A32_DISPONIBILIDADE_ARMAZENAMENTO</font></li>
+			
 		</ol>
+		<br>
 		<p>Passada a gravação dos dados de entrada, se inicia o cálculo da disponibilidade hidráulica e atualização e gravação das tabelas <font face = "Courier New">BPO_A06_SAIDA_HIDRO_NEWAVE</font>, <font face = "Courier New">BPO_A08_DADOS_CALCULADOS_UHE</font> e <font face = "Courier New">BPO_A09_DISPONIBILIDADE_HIDRO_PONTA_SUBSISTEMA</font></p>
 		<ol>
 			<li>Atualiza a informação de submotorização da tabela <font face = "Courier New">BPO_A06_SAIDA_HIDRO_NEWAVE</font> com dados de submotorização por REE (<font face = "Courier New">relat.d*</font>)</li>
@@ -154,7 +162,7 @@
 			
 			<li>Agrega disponibilidade de potência das usinas por REE</li>
 			
-			<li>Calcula a disponibilidade hidráulica máxima na ponta para os REEs que modulam de acordo com tabela. A tabela relaciona valores de vazão com geração hidráulica. Para valores de vazão entre pontos da tabela é realizada uma interpolação. Atualmente a tabela está armazenada internamente no pacote e possui dados para os REE de Itaipu e Belo Monte. Os dados da tabela são apresentados na figura abaixo:</font></li>
+			<li>Calcula a disponibilidade hidráulica máxima na ponta para os REEs que modulam de acordo com tabela. A tabela relaciona valores de vazão com geração hidráulica. Para valores de vazão entre pontos da tabela é realizada uma interpolação. Atualmente a tabela está armazenada internamente no pacote e possui dados para os REE de Itaipu e Belo Monte. Os dados da tabela são apresentados na figura abaixo e os dados de calculo para as usinas destes REEs são armazenados na tabela <font face = "Courier New">BPO_A33_DADOS_CALCULADOS_UHE_REE_TABELA</font>.</li>
 			
 			<p style="margin-left: 30px; padding-top:6px"><img src = "../imagens/tabela_modulacao.png" /></p>
 			
