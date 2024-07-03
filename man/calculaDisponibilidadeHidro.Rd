@@ -33,7 +33,7 @@ calculaDisponibilidadeHidro(
 
 \item{flagVert}{booleano que indica se considera ou nao o vertimento para todas as UHE}
 
-\item{execShiny}{booleano que indica se a função está sendo executada em um contexto reativo, para atualização da barra de progresso}
+\item{execShiny}{booleano que indica se a funcao esta sendo executada em um contexto reativo, para atualizacao da barra de progresso}
 }
 \value{
 \code{mensagem} vetor de caracteres com a mensagem de sucesso de gravacao na base

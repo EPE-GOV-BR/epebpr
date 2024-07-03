@@ -15,9 +15,9 @@
 #'
 #' @export
 graficosGF <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, tipoGrafico,
-                       tituloGraficoCVARMes = paste0("Profundidade de Déficit - CVaR Mensal 5% - Caso ", numeroCaso),
-                       tituloGraficoVARMes = paste0("Profundidade de Déficit - VaR Mensal 5% - Caso ", numeroCaso),
-                       tituloGraficoVARAno = paste0("Profundidade de Déficit - VaR Anual 5% - Caso ", numeroCaso)) {
+                       tituloGraficoCVARMes = paste0("Profundidade de D\u00E9ficit - CVaR Mensal 5% - Caso ", numeroCaso),
+                       tituloGraficoVARMes = paste0("Profundidade de D\u00E9ficit - VaR Mensal 5% - Caso ", numeroCaso),
+                       tituloGraficoVARAno = paste0("Profundidade de D\u00E9ficit - VaR Anual 5% - Caso ", numeroCaso)) {
   
   conexao <- DBI::dbConnect(RSQLite::SQLite(), baseSQLite)
   # query no banco com join para buscar defict e demanda por serie para calculo da profundidade
@@ -82,16 +82,16 @@ graficosGF <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, tipoGrafico,
     subsistemasEsconder <- dplyr::setdiff((1:length(subsistemas)), which(subsistemas == "SIN"))
     
     grafico <- plotly::plot_ly(data = tib.resultadosCvarMes, x = ~mes, y = ~cvar, color = ~subsistema, type = "bar",
-                               hovertemplate = "<b>Déficit % da Demanda</b>: %{y:.1%}<br><b>Mês</b>: %{x}") %>% 
+                               hovertemplate = "<b>D\u00E9ficit % da Demanda</b>: %{y:.1%}<br><b>M\u00EDs</b>: %{x}") %>% 
       plotly::layout( 
         title = paste0("<b>", tituloGraficoCVARMes, "</b>"),
         legend = list(title = list(text='<b> Subsistemas </b>')), #orientation = 'h'),
         yaxis = list( 
-          title = "<b>Déficit % da Demanda</b>", 
+          title = "<b>D\u00E9ficit % da Demanda</b>", 
           tickformat = "p" 
         ), 
         xaxis = list( 
-          title = "<b>Mês</b>", 
+          title = "<b>M\u00EDs</b>", 
           ticktext = as.list(nomeMes), 
           tickvals = as.list(1:12)
         )
@@ -118,16 +118,16 @@ graficosGF <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, tipoGrafico,
     subsistemasEsconder <- dplyr::setdiff((1:length(subsistemas)), which(subsistemas == "SIN"))
     
     grafico <- plotly::plot_ly(data = tib.resultadosVarMes, x = ~mes, y = ~var, color = ~subsistema, type = "bar",
-                               hovertemplate = "<b>Déficit em MW</b>: %{y:.0f}<br><b>Mês</b>: %{x}") %>% 
+                               hovertemplate = "<b>D\u00E9ficit em MW</b>: %{y:.0f}<br><b>M\u00EDs</b>: %{x}") %>% 
       plotly::layout( 
         title = paste0("<b>", tituloGraficoVARMes, "</b>"),
         legend = list(title = list(text='<b> Subsistemas </b>')), #orientation = 'h'),
         yaxis = list( 
-          title = "<b>Déficit em MW</b>", 
+          title = "<b>D\u00E9ficit em MW</b>", 
           tickformat = "" 
         ), 
         xaxis = list( 
-          title = "<b>Mês</b>", 
+          title = "<b>M\u00EDs</b>", 
           ticktext = as.list(nomeMes), 
           tickvals = as.list(1:12)
         )
@@ -146,12 +146,12 @@ graficosGF <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, tipoGrafico,
     subsistemasEsconder <- dplyr::setdiff((1:length(subsistemas)), which(subsistemas == "SIN"))
     
     grafico <- plotly::plot_ly(data = tib.resultadosVarAno, x = 1, y = ~var, color = ~subsistema, type = "bar",
-                               hovertemplate = "<b>Déficit em MW</b>: %{y:.0f}") %>% 
+                               hovertemplate = "<b>D\u00E9ficit em MW</b>: %{y:.0f}") %>% 
       plotly::layout( 
         title = paste0("<b>", tituloGraficoVARAno, "</b>"),
         legend = list(title = list(text='<b> Subsistemas </b>')), #orientation = 'h'),
         yaxis = list( 
-          title = "<b>Déficit em MW</b>", 
+          title = "<b>D\u00E9ficit em MW</b>", 
           tickformat = "" 
         ), 
         xaxis = list( 

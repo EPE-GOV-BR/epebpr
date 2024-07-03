@@ -13,14 +13,15 @@
 #' @param balancoResumido variavel binaria para decidir se vai gravar somente o balanco resumido (\code{BPO_A16_BALANCO}) ou 
 #' tambem o por gerador (\code{BPO_A17_BALANCO_GERADOR}). Valor padrao T.
 #' @param distribuicaoDeficit variavel com valor (percentual) da demanda para ser o limite de disponibilidade do deficit distribuido. Valor padrao 0.05
-#' @param execShiny booleano que indica se a função está sendo executada em um contexto reativo, para atualização da barra de progresso
+#' @param execShiny booleano que indica se a funcao esta sendo executada em um contexto reativo, para atualizacao da barra de progresso
 #'
 #' @return \code{mensagem} vetor de caracteres com a mensagem de sucesso de gravacao dos resultados dos balancos 
 #' nas tabelas BPO_A16_BALANCO, BPO_A17_BALANCO_GERADOR e BPO_A20_BALANCO_SUBSISTEMA
 #'
 #' @examples
 #' \dontrun{
-#' calculaBalancoParalelo("C:/PDE2027_Caso080/bp.slqlite3", 1, 80, 1, 2e-6, 3e-5, 1e-5, 0.1, T, 1, F)}
+#' calculaBalancoParalelo("C:/PDE2027_Caso080/bp.slqlite3", 1, 80, 1, 2e-6, 3e-5, 1e-5, 0.1, T, 1, F)
+#' }
 #' 
 #' @importFrom foreach %dopar%
 #' 
@@ -41,7 +42,7 @@ calculaBalancoParalelo <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
   df.subsistemas <- DBI::dbGetQuery(conexao, query)
   if(nrow(df.subsistemas) == 0) {
     DBI::dbDisconnect(conexao)
-    stop("Não h\u00E1 dados de sistemas (BPO_A02_SUBSISTEMAS) para o caso!")
+    stop("N\u00E3o h\u00E1 dados de sistemas (BPO_A02_SUBSISTEMAS) para o caso!")
   }
   
   # seleciona o numero total de series hidrologicas
@@ -91,7 +92,7 @@ calculaBalancoParalelo <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
   df.faixasDeficit <- data.frame(tipoUsina = "DEFICITREALOCADO", faixas = seq(0, distribuicaoDeficit, 0.005)) %>% 
     dplyr::mutate(tipoUsinaFaixa = paste0(tipoUsina, stringr::str_replace(faixas, "\\.", "_")))
   
-  df.defictRealocado <- dplyr::inner_join(df.defictRealocado, df.faixasDeficit, by = "tipoUsina") %>% 
+  df.defictRealocado <- dplyr::inner_join(df.defictRealocado, df.faixasDeficit, by = "tipoUsina", relationship = "many-to-many") %>% 
     dplyr::mutate(tipoUsina = tipoUsinaFaixa, 
                   disponibilidade = ifelse(faixas > 0, 
                                            disponibilidade * 0.005,
@@ -329,5 +330,5 @@ calculaBalancoParalelo <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
   # # fecha conexao
   # DBI::dbDisconnect(conexao)
   
-  return("Balanço de potência executado e gravado com sucesso!")
+  return("Balan\u00E7o de pot\u00EAncia executado e gravado com sucesso!")
 }

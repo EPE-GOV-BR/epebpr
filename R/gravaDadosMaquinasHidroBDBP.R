@@ -13,7 +13,8 @@
 #'
 #' @examples
 #' \dontrun{
-#' gravacaoDadosMaquinasHidroBDBP("C:/PDE2027_Caso080", conexao, 1, 80, 1)}
+#' gravacaoDadosMaquinasHidroBDBP("C:/PDE2027_Caso080", conexao, 1, 80, 1)
+#' }
 #'
 #' @export
 gravacaoDadosMaquinasHidroBDBP <- function(pastaCaso, conexao, tipoCaso, numeroCaso, codModelo) {
@@ -21,7 +22,7 @@ gravacaoDadosMaquinasHidroBDBP <- function(pastaCaso, conexao, tipoCaso, numeroC
     stop("favor indicar a pasta com os arquivos do BP")
   }
   if (missing(conexao)) {
-    stop("favor indicar a conexão com o banco de dados")
+    stop("favor indicar a conex\u00E3o com o banco de dados")
   }
   if (missing(tipoCaso)) {
     stop("favor indicar tipo do caso")
@@ -30,7 +31,7 @@ gravacaoDadosMaquinasHidroBDBP <- function(pastaCaso, conexao, tipoCaso, numeroC
     stop("favor indicar o n\u00FAmero do caso")
   }
   if (missing(codModelo)) {
-    stop("favor indicar o código do modelo")
+    stop("favor indicar o c\u00F3digo do modelo")
   }
   
   # executa query para apagar da tabela BPO_A04_MAQUINAS_UHE os dados referentes a um possivel mesmo caso rodado anteriormente, 
@@ -63,7 +64,7 @@ gravacaoDadosMaquinasHidroBDBP <- function(pastaCaso, conexao, tipoCaso, numeroC
   df.MaqUHE <- dplyr::inner_join(df.dadosConfiguracao, df.configuracaoHidro, by = c("codUsina")) %>% 
     dplyr::filter((!stringr::str_detect(nomeUsina, "FIC ") & !stringr::str_detect(nomeUsina, "FICT"))) %>% 
     dplyr::select(codUsina,idUsinaExistente,idModificacaoUsina,conjunto,numeroMaquinas,potenciaUnitaria,quedaEfetiva) %>% 
-    dplyr::mutate(aux = 1) %>% dplyr::inner_join(dplyr::mutate(leitorrmpe::definePeriodo(pastaCaso), aux = 1), by = c("aux")) %>% 
+    dplyr::mutate(aux = 1) %>% dplyr::inner_join(dplyr::mutate(leitorrmpe::definePeriodo(pastaCaso), aux = 1), by = c("aux"), relationship = "many-to-many") %>% 
     dplyr::left_join(df.alteracaoConjunto, by = c("codUsina","conjunto","anoMes")) %>% 
     dplyr::left_join(df.dadosExpansaoHidroTempo, by = c("codUsina","conjunto","anoMes")) %>% 
     dplyr::mutate(numeroMaquinasFinal = ifelse((idUsinaExistente=="NC"), 

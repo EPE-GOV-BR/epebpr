@@ -10,6 +10,8 @@ aplicacaoBalanco()
 Executa a aplicacao web do Balanco de Potencia
 }
 \examples{
+\dontrun{
 aplicacaoBalanco()
+}
 
 }

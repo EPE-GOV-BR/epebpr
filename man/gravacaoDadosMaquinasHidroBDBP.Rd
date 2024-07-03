@@ -32,6 +32,7 @@ Os dados sao gravados na tabela BPO_A04_MAQUINAS_UHE do BDBP.
 }
 \examples{
 \dontrun{
-gravacaoDadosMaquinasHidroBDBP("C:/PDE2027_Caso080", conexao, 1, 80, 1)}
+gravacaoDadosMaquinasHidroBDBP("C:/PDE2027_Caso080", conexao, 1, 80, 1)
+}
 
 }

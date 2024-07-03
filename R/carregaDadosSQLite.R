@@ -19,7 +19,7 @@
 #' @param codTucurui codigo atribuido para a usina de Tucurui
 #' @param cotaLimiteTucurui valor da cota da usina de Tucurui [m]
 #' @param geracaoLimiteTucurui valor da geracao limite da usina de Tucurui
-#' @param execShiny booleano que indica se a função está sendo executada em um contexto reativo, para atualização da barra de progresso
+#' @param execShiny booleano que indica se a funcao esta sendo executada em um contexto reativo, para atualizacao da barra de progresso
 #'
 #'
 #' @return \code{mensagem} vetor de caracteres com a mensagem de sucesso de gravacao na base
@@ -62,7 +62,7 @@ carregaDadosSQLite <- function(baseSQLite,
       dplyr::mutate(seriesHidro = fimHistorico - inicioHistorico + 1) %>%
       dplyr::summarise(media = mean(seriesHidro), minimo = min(seriesHidro), maximo = max(seriesHidro))
     if (seriesHidro$media != seriesHidro$minimo | seriesHidro$media != seriesHidro$maximo | seriesHidro$minimo != seriesHidro$maximo) {
-      stop("Séries hidro não possuem mesmo horizonte cadastrado no arquivo confhd!")
+      stop("S\u00E9ries hidro n\u00E3o possuem mesmo horizonte cadastrado no arquivo confhd!")
     }
     fimHistorico <- df.configuracaoHidro %>% dplyr::pull(fimHistorico) %>% max()
     # resgata o valor de inicio de varredura da serie historica para contabilizar quantidade de series
@@ -71,7 +71,7 @@ carregaDadosSQLite <- function(baseSQLite,
       dplyr::pull(anoInicio)
     seriesHidro <- fimHistorico - inicioSimulacaoHistorico + 1
   } else {
-    stop("Simulação final após convergência PDDE do NEWAVE deve ser com séries sintéticas ou históricas!")
+    stop("Simula\u00E7\u00E3o final ap\u00F3s converg\u00EAncia PDDE do NEWAVE deve ser com s\u00E9ries sint\u00E9ticas ou hist\u00F3ricas!")
   }
   
   # barra de progresso
@@ -83,7 +83,7 @@ carregaDadosSQLite <- function(baseSQLite,
     arquivoInfoMDI <- paste(pastaCaso, "infoMDI.txt", sep = "/")
     # verifica exitencia do arquivo
     if (!file.exists(arquivoInfoMDI)) {
-      stop(paste0("arquivo ", arquivoInfoMDI, " com dados gerais do MDI não encontrado!"))
+      stop(paste0("arquivo ", arquivoInfoMDI, " com dados gerais do MDI n\u00E3o encontrado!"))
     }
     df.infoMDI <- readr::read_delim(stringi::stri_enc_toutf8(arquivoInfoMDI), 
                                     locale = readr::locale(encoding = "latin1"),
@@ -230,5 +230,5 @@ carregaDadosSQLite <- function(baseSQLite,
   # fecha conexao
   DBI::dbDisconnect(conexao)
   
-  return("Leitura e gravação dos dados de entrada efetuadas com sucesso!")
+  return("Leitura e grava\u00E7\u00E3o dos dados de entrada efetuadas com sucesso!")
 }

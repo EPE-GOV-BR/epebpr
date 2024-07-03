@@ -6,17 +6,15 @@
 #' @param nomeBD nome do banco de dados
 #' @return mensagem de sucesso
 #'
-#' @import readr
-#' @import DBI
-#' @import stringr
-#'
 #' @examples
+#' \dontrun{
 #' criaBDBalanco("C:/PDE2027_Caso080/BD", "bd_balanco_pde")
-#'
+#' }
+#' 
 #' @export
 criaBDBalanco <- function(caminho, nomeBD) {
   if (!dir.exists(caminho)) {
-    mensagem <- "Pasta definida para gravar banco de dados não existe!"
+    mensagem <- "Pasta definida para gravar banco de dados n\u00E3o existe!"
   } else {
     caminhoSQL <- system.file("SQL", package = "epebpr")
     # monta query que vai criar estrutura do banco de dados

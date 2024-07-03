@@ -11,7 +11,7 @@
 #' @param codModelo valor inteiro com o codigo do modelo. 1:NEWAVE; 2:SUISHI
 #' @param codTucurui codigo atribuido para a usina de Tucurui
 #' @param flagVert booleano que indica se considera ou nao o vertimento para todas as UHE
-#' @param execShiny booleano que indica se a função está sendo executada em um contexto reativo, para atualização da barra de progresso
+#' @param execShiny booleano que indica se a funcao esta sendo executada em um contexto reativo, para atualizacao da barra de progresso
 #'
 #' @return \code{mensagem} vetor de caracteres com a mensagem de sucesso de gravacao na base
 #'
@@ -170,9 +170,9 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipo
   } else {
     
     # barra de progresso
-    if(execShiny){incProgress(4/100, detail = "Excluindo outras execuções de BP para o mesmo caso")}
+    if(execShiny){incProgress(4/100, detail = "Excluindo outras execu\u00E7\u00F5es de BP para o mesmo caso")}
     
-    ##### EXCLUSÃO DE DADOS DE EXECUÇÕES ANTERIORES #####
+    ##### EXCLUSAO DE DADOS DE EXECUCOES ANTERIORES #####
     
     # limpa base BPO_A08_DADOS_CALCULADOS_UHE de outras execucoes para o mesmo caso
     DBI::dbExecute(conexaoSQLite, "PRAGMA locking_mode = EXCLUSIVE;")
@@ -203,9 +203,9 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipo
     DBI::dbExecute(conexaoSQLite, "PRAGMA locking_mode = NORMAL;")
     
     # barra de progresso
-    if(execShiny){incProgress(3/100, detail = "Atualização de Submotorização")}
+    if(execShiny){incProgress(3/100, detail = "Atualiza\u00E7\u00E3o de Submotoriza\u00E7\u00E3o")}
     
-    ##### SUBMOTORIZAÇÃO #####
+    ##### SUBMOTORIZACAO #####
     
     # atualizacao de submotorizacao
     quantidadeExpansaoHidro <- df.dadosExpansaoHidro <- leitorrmpe::leituraDadosExpansaoUsinasHidro(pastaCaso) %>% 
@@ -344,7 +344,7 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipo
     # verifica se os REE definidos estao na tabela
     if (length(dplyr::setdiff(reeTipo4, unique(df.tabelaModulacao$codREE))) != 0) {
       DBI::dbDisconnect(conexao)
-      stop("REE escolhido para modulação por tabela não possui dados definidos na tabela")
+      stop("REE escolhido para modula\u00E7\u00E3o por tabela n\u00E7o possui dados definidos na tabela")
     }
     
     # for criado para resolver problema de alocacao de memoria. orginalmente era um data frame unico com todos os dados, contudo,
@@ -358,14 +358,15 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipo
       # barra de progresso
       if(execShiny){incProgress((1/(quantidadeJanela - 1))*0.3, detail = paste(round(andaJanela*100/(quantidadeJanela - 1), 0),"%"))}
       
-      ##### CÁLCULO DISPONIBILIDADE TIPO 1 ######
+      ##### CALCULO DISPONIBILIDADE TIPO 1 ######
       df.saidasHidroTipo1 <- df.saidasHidro %>% 
         dplyr::filter(dplyr::between(A06_NR_SERIE, janelaSeries[andaJanela], (janelaSeries[andaJanela + 1] - 1)),
                       A02_NR_REE %in% reeTipo1)
       
       df.dadosCalculadosUHE <- dplyr::inner_join(df.dadosVigentesUHETipo1, 
                                                  df.saidasHidroTipo1, 
-                                                 by = c("A02_NR_REE", "A05_NR_MES" = "A06_NR_MES")) %>% 
+                                                 by = c("A02_NR_REE", "A05_NR_MES" = "A06_NR_MES"),
+                                                 relationship = "many-to-many") %>% 
         dplyr::mutate(A08_VL_VOLUME_OPERATIVO = (A05_VL_VOL_MAX - A05_VL_VOL_MIN) * A06_VL_PERC_ARMAZENAMENTO + A05_VL_VOL_MIN,
                       colunaFlagVert = flagVert,
                       # verifica o flag de vertimento, se verdadeiro soma o vertimento na variavel de GH
@@ -410,7 +411,8 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipo
       # 4 - POTENCIA MaXIMA(per,ser)
       # 4.1) PARA POTENCIA REFERENTE AOS CONJUNTOS Ja EXISTENTES: ALTURA DE REFERENCIA DO CONJUNTO >= ALTURA DE QUEDA
       df.dadosCalculadosUHEMaquinas <- dplyr::inner_join(df.dadosCalculadosUHE, df.potMaquinas,
-                                                         by = c("A01_CD_MODELO", "A01_NR_CASO", "A01_TP_CASO", "A03_CD_USINA"))
+                                                         by = c("A01_CD_MODELO", "A01_NR_CASO", "A01_TP_CASO", "A03_CD_USINA"),
+                                                         relationship = "many-to-many")
       
       # Para os conjuntos onde a altura de queda liquida e menor que a altura de referencia do conjunto, a potencia
       # nao e igual a maxima, mas um percentual da maxima, calculado a partir da razao (HLIQ/HREF)^coef da turbina
@@ -570,7 +572,7 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipo
                   A01_CD_MODELO = ", codModelo, ";")
       df.dadosSsistNaoModulam <- DBI::dbGetQuery(conexaoSQLite, sql)
       
-      ##### CÁLCULO DISPONIBILIDADE TIPO 4 PELA TABELA ######
+      ##### CALCULO DISPONIBILIDADE TIPO 4 PELA TABELA ######
       if(length(reeTipo4) > 0){
         df.saidasHidroTipo4 <- df.saidasHidro %>% 
           dplyr::filter(dplyr::between(A06_NR_SERIE, janelaSeries[andaJanela], (janelaSeries[andaJanela + 1] - 1)), A02_NR_REE %in% reeTipo4)
@@ -604,7 +606,10 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipo
           dplyr::group_by(codREE, anoMes) %>%
           dplyr::mutate(proporcao = GHmax/sum(GHmax))
 
-        df.dadosUHEModulamTabelaUsina <- dplyr::left_join(df.saidasHidroTipo4, df.prodREEModulaTabela, by = c("A02_NR_REE" = "codREE", "A06_NR_MES" = "anoMes")) %>% 
+        df.dadosUHEModulamTabelaUsina <- dplyr::left_join(df.saidasHidroTipo4, 
+                                                          df.prodREEModulaTabela, 
+                                                          by = c("A02_NR_REE" = "codREE", "A06_NR_MES" = "anoMes"),
+                                                          relationship = "many-to-many") %>% 
           dplyr::left_join(lt.hidrogramaBM[["usinas"]], by = c("codUsina")) %>% 
           dplyr::mutate(mes = A06_NR_MES%%100) %>% 
           dplyr::left_join(df.hidrograma, by = c("mes", "grupo", "codUsina" = "codUsinaHidrograma")) %>% 

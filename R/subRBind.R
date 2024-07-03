@@ -7,7 +7,9 @@
 #' @return \code{lt.saida} lista onde os data frames de lista1 e lista2 foram agrupados (rbind) seguindo cada estrutura de data frame
 #'
 #' @examples
+#' \dontrun{
 #' subRBind(lista1, lista2)
+#' }
 #'
 subRBind <- function(lista1, lista2) {
   subItens <- names(lista1)

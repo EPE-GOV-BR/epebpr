@@ -89,6 +89,7 @@ balancoPeriodoClp(201901, 1, T, conexao, df.custoDefict, df.geracaoTermicaTotal,
 df.geracaoTermicaGnl, df.geracaoTransmissaoTotal, df.geracaoRenovaveisTotal,
 df.geracaoArmazenamentoTotal, df.limitesAgrupamentoLinhasTotal, df.demanda,
 df.geracaoHidroTotal,df.agrupamentoLinhas, tipoCaso, numeroCaso, codModelo,
-df.subsistemas, cvuHidro, df.defictRealocado)}
+df.subsistemas, cvuHidro, df.defictRealocado)
+}
 
 }

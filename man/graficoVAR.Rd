@@ -27,15 +27,15 @@ graficoVAR(
 
 \item{codModelo}{valor inteiro com o codigo do modelo. 1:NEWAVE; 2:SUISHI}
 
+\item{inicioHorizonteGrafico}{valor numerico do ano de inicio do horizonte para o grafico. Formato: AAAA. Ex: 2020}
+
+\item{fimHorizonteGrafico}{valor numerico do ano de fim do horizonte para o grafico. Formato: AAAA. Ex:2029}
+
 \item{tipoGrafico}{valor numerico identificando o tipo de grafico. 5: Mensal por patamar; 6: Mensal em linha; 7:Anual}
 
-\item{inicioHorizonte}{valor numerico do ano de inicio do horizonte para o grafico. Formato: AAAA. Ex: 2020}
+\item{tituloGraficoVARMes}{vetor de caracteres com o titulo do grafico de VAR mensal - Nao obrigatorio - valor padrao com numero do caso}
 
-\item{fimHorizonte}{valor numerico do ano de fim do horizonte para o grafico. Formato: AAAA. Ex:2029}
-
-\item{tituloGraficoCVARMes}{vetor de caracteres com o titulo do grafico de CVAR mensal - Nao obrigatorio - valor padrao com numero do caso}
-
-\item{tituloGraficoCVARAno}{vetor de caracteres com o titulo do grafico de CVAR anual - Nao obrigatorio - valor padrao com numero do caso}
+\item{tituloGraficoVARAno}{vetor de caracteres com o titulo do grafico de VAR anual - Nao obrigatorio - valor padrao com numero do caso}
 }
 \value{
 objeto do tipo plotly

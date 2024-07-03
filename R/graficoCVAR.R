@@ -6,8 +6,8 @@
 #' @param tipoCaso valor inteiro. 1:PDE; 2:PMO e 3;Garantia Fisica
 #' @param numeroCaso valor inteiro com o numero do caso
 #' @param codModelo valor inteiro com o codigo do modelo. 1:NEWAVE; 2:SUISHI
-#' @param inicioHorizonte valor numerico do ano de inicio do horizonte para o grafico. Formato: AAAA. Ex: 2020
-#' @param fimHorizonte valor numerico do ano de fim do horizonte para o grafico. Formato: AAAA. Ex:2029
+#' @param inicioHorizonteGrafico valor numerico do ano de inicio do horizonte para o grafico. Formato: AAAA. Ex: 2020
+#' @param fimHorizonteGrafico valor numerico do ano de fim do horizonte para o grafico. Formato: AAAA. Ex:2029
 #' @param tipoGrafico valor numerico identificando o tipo de grafico. 1: Mensal por patamar; 2: Mensal em linha; 3:Anual
 #' @param tituloGraficoCVARMes vetor de caracteres com o titulo do grafico de CVAR mensal - Nao obrigatorio - valor padrao com numero do caso
 #' @param tituloGraficoCVARAno vetor de caracteres com o titulo do grafico de CVAR anual - Nao obrigatorio - valor padrao com numero do caso
@@ -17,8 +17,8 @@
 #' @export
 graficoCVAR <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
                         inicioHorizonteGrafico, fimHorizonteGrafico, tipoGrafico,
-                        tituloGraficoCVARMes = paste0("Profundidade de Déficit - CVAR Mensal 5% - Caso ", numeroCaso),
-                        tituloGraficoCVARAno = paste0("Profundidade de Déficit - CVAR Anual - Caso ", numeroCaso)) {
+                        tituloGraficoCVARMes = paste0("Profundidade de D\u00E9ficit - CVAR Mensal 5% - Caso ", numeroCaso),
+                        tituloGraficoCVARAno = paste0("Profundidade de D\u00E9ficit - CVAR Anual - Caso ", numeroCaso)) {
   
   conexao <- DBI::dbConnect(RSQLite::SQLite(), baseSQLite)
   
@@ -69,19 +69,19 @@ graficoCVAR <- function(baseSQLite, tipoCaso, numeroCaso, codModelo,
     mesesLinha <- seq(primeiroMes - 1/12, ultimoMes + 1/12, 1/12) %>% format("%Y-%m-%d")
     
     graficoCVaR <- plotly::plot_ly(data = tib.resultadosCvarMes, x = ~anoMes, y = ~A22_VL_CVAR, name = "", type = "bar", showlegend = F,
-                                   hovertemplate = "<b>Déficit % da Demanda</b>: %{y:.1%}<br><b>Mês</b>: %{x|%Y-%m}<extra></extra>") %>% 
+                                   hovertemplate = "<b>D\u00E9ficit % da Demanda</b>: %{y:.1%}<br><b>M\u00EAs</b>: %{x|%Y-%m}<extra></extra>") %>% 
       plotly::add_trace(tib.resultadosCvarMes, x = ~anoMes, y = ~cvar, type = 'scatter',
                         mode = 'text', text = ~textoCVaR, textposition = 'top center', texttemplate = "<b>%{text}</b>") %>%
       plotly::add_trace(tib.resultadosCvarMes, x = mesesLinha, y = 0.05, type = 'scatter', mode = 'lines', color = I("red"),
-                        hovertemplate = "<b>Limite de critério de suprimento: %{y:.0%}<extra></extra>") %>% 
+                        hovertemplate = "<b>Limite de crit\u00E9rio de suprimento: %{y:.0%}<extra></extra>") %>% 
       plotly::layout( 
         title = paste0("<b>", tituloGraficoCVARMes, "</b>"),
         yaxis = list( 
-          title = "<b>Déficit % da Demanda</b>", 
+          title = "<b>D\u00E9ficit % da Demanda</b>", 
           tickformat = "p" 
         ), 
         xaxis = list( 
-          title = "<b>Mês</b>", 
+          title = "<b>M\u00EAs</b>", 
           ticktext = as.list(as.character(zoo::as.yearmon(marcasEixoMes))), 
           tickvals = as.list(marcasEixoMes)
         )
@@ -117,12 +117,12 @@ graficoCVAR <- function(baseSQLite, tipoCaso, numeroCaso, codModelo,
     # exibe grafico anual de cvar
     graficoCVaR <- plotly::plot_ly(data = tib.resultadosCvarAno, x = ~A23_NR_ANO, y = ~A23_VL_CVAR, color = ~A23_TX_PERCENT_CVAR, 
                                    colors = "Set3", type = "bar",
-                                   hovertemplate = "<b>Déficit % da Demanda</b>: %{y:.1%}<br><b>Ano</b>: %{x}") %>% 
+                                   hovertemplate = "<b>D\u00E9ficit % da Demanda</b>: %{y:.1%}<br><b>Ano</b>: %{x}") %>% 
       plotly::layout( 
         title = paste0("<b>", tituloGraficoCVARAno, "</b>"),
         legend = list(orientation = 'h', x = "0.3"),
         yaxis = list( 
-          title = "<b>Déficit % da Demanda</b>", 
+          title = "<b>D\u00E9ficit % da Demanda</b>", 
           tickformat = "p"), 
         xaxis = list(
           title = "<b>Ano</b>",

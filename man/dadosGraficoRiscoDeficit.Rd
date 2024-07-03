@@ -23,11 +23,11 @@ dadosGraficoRiscoDeficit(
 
 \item{codModelo}{valor inteiro com o codigo do modelo. 1:NEWAVE; 2:SUISHI}
 
+\item{inicioHorizonteGrafico}{valor numerico do ano de inicio do horizonte para o grafico. Formato: AAAA. Ex: 2020}
+
+\item{fimHorizonteGrafico}{valor numerico do ano de fim do horizonte para o grafico. Formato: AAAA. Ex:2029}
+
 \item{tituloGrafico}{vetor de caracteres com o titulo do grafico de risco - Nao obrigatorio - valor padrao com numero do caso}
-
-\item{inicioHorizonte}{valor numerico do ano de inicio do horizonte para o grafico. Formato: AAAA. Ex: 2020}
-
-\item{fimHorizonte}{valor numerico do ano de fim do horizonte para o grafico. Formato: AAAA. Ex:2029}
 }
 \value{
 tib.resultadosRisco tibble com os dados do grafico de risco

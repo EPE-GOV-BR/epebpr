@@ -40,7 +40,8 @@
 #' df.geracaoTermicaGnl, df.geracaoTransmissaoTotal, df.geracaoRenovaveisTotal,
 #' df.geracaoArmazenamentoTotal, df.limitesAgrupamentoLinhasTotal, df.demanda,
 #' df.geracaoHidroTotal,df.agrupamentoLinhas, tipoCaso, numeroCaso, codModelo,
-#' df.subsistemas, cvuHidro, df.defictRealocado)}
+#' df.subsistemas, cvuHidro, df.defictRealocado)
+#' }
 #'
 #' @export
 balancoPeriodoClp <- function(periodo,
@@ -70,14 +71,14 @@ balancoPeriodoClp <- function(periodo,
   # critica de existencia de dados
   if(nrow(df.demandaLiquida) == 0) {
     DBI::dbDisconnect(conexao)
-    stop(paste0("Não há demanda (BPO_A10_DEMANDA) definida para o período de ", periodo))
+    stop(paste0("N\u00E3o h\u00E1 demanda (BPO_A10_DEMANDA) definida para o per\u00EDodo de ", periodo))
   }
   
   # filtrando geracao termica para o mes especifico
   # critica de existencia de dados
   if(nrow(df.geracaoTermicaTotal %>% dplyr::filter(anoMes == periodo)) == 0) {
     DBI::dbDisconnect(conexao)
-    stop(paste0("Não há geração térmica (BPO_A14_DISPONIBILIDADE_UTE) para o período de ", periodo))
+    stop(paste0("N\u00E3o h\u00E1 gera\u00E7\u00E3o t\u00E9rmica (BPO_A14_DISPONIBILIDADE_UTE) para o per\u00EDodo de ", periodo))
     
   }
   # filtrando geracao termica
@@ -94,7 +95,7 @@ balancoPeriodoClp <- function(periodo,
   # critica de existencia de dados
   if(nrow(df.geracaoTransmissaoTotal %>% dplyr::filter(anoMes == periodo)) == 0) {
     DBI::dbDisconnect(conexao)
-    stop(paste0("Não há transmissão (BPO_A11_INTERCAMBIOS) para o período de ", periodo))
+    stop(paste0("N\u00E3o h\u00E1 transmiss\u00E3o (BPO_A11_INTERCAMBIOS) para o per\u00EDodo de ", periodo))
   }
   
   # filtrando limites das linhas de transmissao
@@ -105,7 +106,7 @@ balancoPeriodoClp <- function(periodo,
   # critica de existencia de dados
   if(nrow(df.geracaoRenovaveisTotal %>% dplyr::filter(anoMes == periodo)) == 0) {
     DBI::dbDisconnect(conexao)
-    stop(paste0("Não há renováveis (BPO_A13_DISPONIBILIDADE_OFR) para o período de ", periodo))
+    stop(paste0("N\u00E3o h\u00E1 renov\u00E1veis (BPO_A13_DISPONIBILIDADE_OFR) para o per\u00EDodo de ", periodo))
   }
   
   # filtrando geracao renovavel
@@ -120,7 +121,7 @@ balancoPeriodoClp <- function(periodo,
   # critica de existencia de dados caso nao seja caso de GF
   if(nrow(df.limitesAgrupamentoLinhasTotal %>% dplyr::filter(anoMes == periodo)) == 0 & tipoCaso != 3) {
     DBI::dbDisconnect(conexao)
-    stop(paste0("Não há limites de agrupamentos de linhas (BPO_A12_LIMITE_AGRUPAMENTOS_INTERCAMBIO) para o período de ", periodo))
+    stop(paste0("N\u00E3o h\u00E1 limites de agrupamentos de linhas (BPO_A12_LIMITE_AGRUPAMENTOS_INTERCAMBIO) para o per\u00EDodo de ", periodo))
   }
   
   # filtrando limites dos grupos de linhas de transmissao
@@ -136,8 +137,8 @@ balancoPeriodoClp <- function(periodo,
   # critica de existencia de dados
   if(nrow(df.geracaoHidro) == 0) {
     DBI::dbDisconnect(conexao)
-    stop(paste0("Não há hídricas (BPO_A09_DISPONIBILIDADE_HIDRO_PONTA_SUBSISTEMA) para o período de ", 
-                periodo, " e série hidro ", idSerieHidro))
+    stop(paste0("N\u00E3o h\u00E1 h\u00EDdricas (BPO_A09_DISPONIBILIDADE_HIDRO_PONTA_SUBSISTEMA) para o per\u00EDodo de ", 
+                periodo, " e s\u00E9rie hidro ", idSerieHidro))
   }
   df.geracaoHidro$cvu <- cvuHidro
   
@@ -160,21 +161,21 @@ balancoPeriodoClp <- function(periodo,
   # verifica inconsistencia de limites das variaveis
   if (any(is.na(df.geracao$disponibilidade))) {
     DBI::dbDisconnect(conexao)
-    stop(paste0("Problema na disponibilidade da geração para execução de ",
-                periodo, ", série hidro ", idSerieHidro))
+    stop(paste0("Problema na disponibilidade da gera\u00E7\u00E3o para execu\u00E7\u00E3o de ",
+                periodo, ", s\u00E9rie hidro ", idSerieHidro))
   }
   if (any(is.na(df.geracao$inflexibilidade))) {
     DBI::dbDisconnect(conexao)
-    stop(paste0("Problema na inflexibilidade da geração para execução de ",
-                periodo, ", série hidro ", idSerieHidro))
+    stop(paste0("Problema na inflexibilidade da gera\u00E7\u00E3o para execu\u00E7\u00E3o de ",
+                periodo, ", s\u00E9rie hidro ", idSerieHidro))
   }
   inconsistenciaLimites <- df.geracao$disponibilidade - df.geracao$inflexibilidade
   inconsistenciaLimites <- inconsistenciaLimites < 0
   inconsistenciaLimites <- any(inconsistenciaLimites == T)
   if(inconsistenciaLimites) {
     DBI::dbDisconnect(conexao)
-    stop(paste0("Problema de limites na geração para execução de ",
-                periodo, ", série hidro ", idSerieHidro))
+    stop(paste0("Problema de limites na gera\u00E7\u00E3o para execu\u00E7\u00E3o de ",
+                periodo, ", s\u00E9rie hidro ", idSerieHidro))
   }
   
   # Balanco
@@ -246,11 +247,11 @@ balancoPeriodoClp <- function(periodo,
                                 lhs = rlb, 
                                 rhs = rub)
   
-  # critica caso problema seja inviável
+  # critica caso problema seja inviavel
   if(solucao[["status"]] != 7 && solucao[["status"]] != 15) {
     DBI::dbDisconnect(conexao)
-    stop(paste0("Não foi encontrada solução viável (", solucao[["status_message"]],") para execução de ", 
-                periodo, ", série hidro ", idSerieHidro))
+    stop(paste0("N\u00E3o foi encontrada solu\u00E7\u00E3o vi\u00E1vel (", solucao[["status_message"]],") para execu\u00E7\u00E3o de ", 
+                periodo, ", s\u00E9rie hidro ", idSerieHidro))
   }
   
   # solucao primal das variaveis
@@ -279,11 +280,11 @@ balancoPeriodoClp <- function(periodo,
                                 lhs = rlb, 
                                 rhs = rub)
   
-  # critica caso problema seja inviável
+  # critica caso problema seja inviavel
   if(solucao[["status"]] != 7 && solucao[["status"]] != 15) {
     DBI::dbDisconnect(conexao)
-    stop(paste0("Não foi encontrada solução viável (", solucao[["status_message"]],") para execução com transmissão ilimitada de ", 
-                periodo, ", série hidro ", idSerieHidro))
+    stop(paste0("N\u00E3o foi encontrada solu\u00E7\u00E3o vi\u00E1vel (", solucao[["status_message"]],") para execu\u00E7\u00E3o com transmiss\u00E3o ilimitada de ", 
+                periodo, ", s\u00E9rie hidro ", idSerieHidro))
   }
   
   # solucao primal das variaveis

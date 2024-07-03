@@ -15,7 +15,8 @@
 #' 
 #' @examples
 #' \dontrun{
-#' gravacaoDadosArmazenamentoBDBP("C:/PDE2027_Caso080", conexao, 1, 80, 1, 201901, 203312)}
+#' gravacaoDadosArmazenamentoBDBP("C:/PDE2027_Caso080", conexao, 1, 80, 1, 201901, 203312)
+#' }
 #'
 #' @export
 gravacaoDadosArmazenamentoBDBP <- function(pastaCaso, conexao, tipoCaso, numeroCaso, codModelo, anoMesInicioMDI, anoMesFimMDI) {
@@ -23,16 +24,16 @@ gravacaoDadosArmazenamentoBDBP <- function(pastaCaso, conexao, tipoCaso, numeroC
     stop("favor indicar a pasta com os arquivos do BP")
   }
   if (missing(conexao)) {
-    stop("favor indicar a conexão com o banco de dados")
+    stop("favor indicar a conex\u00E3o com o banco de dados")
   }
   if (missing(tipoCaso)) {
     stop("favor indicar tipo do caso")
   }
   if (missing(numeroCaso)) {
-    stop("favor indicar o número do caso")
+    stop("favor indicar o n\u00FAmero do caso")
   }
   if (missing(codModelo)) {
-    stop("favor indicar o código do modelo")
+    stop("favor indicar o c\u00F3digo do modelo")
   }
   if (missing(anoMesInicioMDI)) {
     stop("favor indicar a data do inicio do caso simulado")
@@ -53,7 +54,7 @@ gravacaoDadosArmazenamentoBDBP <- function(pastaCaso, conexao, tipoCaso, numeroC
   # verifica exitencia do excel
   if (!file.exists(arquivoDadosOFR)) {
     DBI::dbDisconnect(conexao)
-    stop(paste0("arquivo ", arquivoDadosOFR, " com dados de oferta renov\u00E1vel não encontrado em ", pastaCaso))
+    stop(paste0("arquivo ", arquivoDadosOFR, " com dados de oferta renov\u00E1vel n\u00E3o encontrado em ", pastaCaso))
   }
   # verifica se o excel possui a aba Armazenamento
   abasExcelDadosOFR <- c("Armazenamento")
@@ -61,7 +62,7 @@ gravacaoDadosArmazenamentoBDBP <- function(pastaCaso, conexao, tipoCaso, numeroC
   abasExistentes <- dplyr::setdiff(abasExcelDadosOFR,abasExcelDadosOFRLidos)
   if(length(abasExistentes) != 0) {
     DBI::dbDisconnect(conexao)
-    stop(paste0("arquivo ", arquivoDadosOFR, " não possui a(s) aba(s) ", paste(abasExistentes, collapse = ", "), 
+    stop(paste0("arquivo ", arquivoDadosOFR, " n\u00E3o possui a(s) aba(s) ", paste(abasExistentes, collapse = ", "), 
                 " ou h\u00E1 problema com o(s) nome(s) da(s) aba(s)!"))
   }
   
@@ -71,7 +72,7 @@ gravacaoDadosArmazenamentoBDBP <- function(pastaCaso, conexao, tipoCaso, numeroC
   
   if (length(arquivoExpansao) != 1) {
     DBI::dbDisconnect(conexao)
-    stop("Arquivo texto saidaExpansao não encontrado ou multiplos arquivos com nome saidaExpansao em ", pastaCaso)
+    stop("Arquivo texto saidaExpansao n\u00E3o encontrado ou multiplos arquivos com nome saidaExpansao em ", pastaCaso)
   }
   
   # le arquivo com as expansoes do MDI - trata ";" no fim para nao ter avisos
@@ -92,13 +93,13 @@ gravacaoDadosArmazenamentoBDBP <- function(pastaCaso, conexao, tipoCaso, numeroC
     format("%Y%m") %>% 
     as.integer()
   
-  # calcula a disponibilidade multiplicando a potencia pelo fator de contribuição
+  # calcula a disponibilidade multiplicando a potencia pelo fator de contribuicao
   df.dispArmazenamento <- df.expansao %>% 
     dplyr::mutate("anoMes" = horizonte) %>% 
     dplyr::select("anoMes", tidyr::everything()) %>% 
     dplyr::select(dplyr::where( ~ sum(.) > 0))
   
-  # verifica se existe expansão de projetos de armazenamento no caso
+  # verifica se existe expansao de projetos de armazenamento no caso
   if(ncol(df.dispArmazenamento) > 1){
     df.dispArmazenamento <- df.dispArmazenamento %>% 
       tidyr::pivot_longer(!anoMes, names_to = "NomeFonteMDI", values_to = "Pot") %>% 

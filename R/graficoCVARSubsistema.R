@@ -6,17 +6,16 @@
 #' @param tipoCaso valor inteiro. 1:PDE; 2:PMO e 3;Garantia Fisica
 #' @param numeroCaso valor inteiro com o numero do caso
 #' @param codModelo valor inteiro com o codigo do modelo. 1:NEWAVE; 2:SUISHI
-#' @param inicioHorizonte valor numerico do ano de inicio do horizonte para o grafico. Formato: AAAA. Ex: 2020
-#' @param fimHorizonte valor numerico do ano de fim do horizonte para o grafico. Formato: AAAA. Ex:2029
-#' @param tituloGraficoCVARMes vetor de caracteres com o titulo do grafico de CVAR mensal - Nao obrigatorio - valor padrao com numero do caso
-#' @param tituloGraficoCVARAno vetor de caracteres com o titulo do grafico de CVAR anual - Nao obrigatorio - valor padrao com numero do caso
+#' @param inicioHorizonteGrafico valor numerico do ano de inicio do horizonte para o grafico. Formato: AAAA. Ex: 2020
+#' @param fimHorizonteGrafico valor numerico do ano de fim do horizonte para o grafico. Formato: AAAA. Ex:2029
+#' @param tituloGraficoCVARMes vetor de caracteres com o titulo do grafico - Nao obrigatorio - valor padrao com numero do caso
 #'
 #' @return objeto do tipo plotly
 #'
 #' @export
 graficoCVARSubsistema <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
                                   inicioHorizonteGrafico, fimHorizonteGrafico, 
-                                  tituloGraficoCVARMes = paste0("Profundidade de Déficit - CVAR Mensal 5% - Caso ", numeroCaso)) {
+                                  tituloGraficoCVARMes = paste0("Profundidade de D\u00E9ficit - CVAR Mensal 5% - Caso ", numeroCaso)) {
   
   conexao <- DBI::dbConnect(RSQLite::SQLite(), baseSQLite)
   # query no banco com join para buscar defict e demanda por serie para calculo da profundidade
@@ -57,16 +56,16 @@ graficoCVARSubsistema <- function(baseSQLite, tipoCaso, numeroCaso, codModelo,
     dplyr::pull(anoMes) %>% c(., max(tib.resultadosCvarMes$anoMes))
   
   grafico <- plotly::plot_ly(data = tib.resultadosCvarMes, x = ~anoMes, y = ~A24_VL_CVAR_5, color = ~A02_TX_DESCRICAO_SUBSISTEMA, type = "bar",
-                             hovertemplate = "<b>Déficit % da Demanda</b>: %{y:.1%}<br><b>Mês</b>: %{x|%Y-%m}") %>% 
+                             hovertemplate = "<b>D\u00E9ficit % da Demanda</b>: %{y:.1%}<br><b>M\u00EAs</b>: %{x|%Y-%m}") %>% 
     plotly::layout( 
       title = paste0("<b>", tituloGraficoCVARMes, "</b>"),
       legend = list(title = list(text='<b> Subsistemas </b>')), #orientation = 'h'),
       yaxis = list( 
-        title = "<b>Déficit % da Demanda</b>", 
+        title = "<b>D\u00E9ficit % da Demanda</b>", 
         tickformat = "p" 
       ), 
       xaxis = list( 
-        title = "<b>Mês</b>", 
+        title = "<b>M\u00EAs</b>", 
         ticktext = as.list(as.character(zoo::as.yearmon(marcasEixoMes))), 
         tickvals = as.list(marcasEixoMes)
       )

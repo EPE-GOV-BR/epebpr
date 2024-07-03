@@ -40,7 +40,7 @@ tambem o por gerador (\code{BPO_A17_BALANCO_GERADOR}). Valor padrao T.}
 
 \item{distribuicaoDeficit}{variavel com valor (percentual) da demanda para ser o limite de disponibilidade do deficit distribuido. Valor padrao 0.05}
 
-\item{execShiny}{booleano que indica se a função está sendo executada em um contexto reativo, para atualização da barra de progresso}
+\item{execShiny}{booleano que indica se a funcao esta sendo executada em um contexto reativo, para atualizacao da barra de progresso}
 }
 \value{
 \code{mensagem} vetor de caracteres com a mensagem de sucesso de gravacao dos resultados dos balancos 
@@ -51,6 +51,7 @@ Monta e resolve o problema linear de um balanco de potencia. Funcao criada para 
 }
 \examples{
 \dontrun{
-calculaBalancoParalelo("C:/PDE2027_Caso080/bp.slqlite3", 1, 80, 1, 2e-6, 3e-5, 1e-5, 0.1, T, 1, F)}
+calculaBalancoParalelo("C:/PDE2027_Caso080/bp.slqlite3", 1, 80, 1, 2e-6, 3e-5, 1e-5, 0.1, T, 1, F)
+}
 
 }

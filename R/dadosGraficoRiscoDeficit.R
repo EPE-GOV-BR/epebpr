@@ -6,15 +6,15 @@
 #' @param tipoCaso valor inteiro. 1:PDE; 2:PMO e 3;Garantia Fisica
 #' @param numeroCaso valor inteiro com o numero do caso
 #' @param codModelo valor inteiro com o codigo do modelo. 1:NEWAVE; 2:SUISHI
-#' @param inicioHorizonte valor numerico do ano de inicio do horizonte para o grafico. Formato: AAAA. Ex: 2020
-#' @param fimHorizonte valor numerico do ano de fim do horizonte para o grafico. Formato: AAAA. Ex:2029
+#' @param inicioHorizonteGrafico valor numerico do ano de inicio do horizonte para o grafico. Formato: AAAA. Ex: 2020
+#' @param fimHorizonteGrafico valor numerico do ano de fim do horizonte para o grafico. Formato: AAAA. Ex:2029
 #' @param tituloGrafico vetor de caracteres com o titulo do grafico de risco - Nao obrigatorio - valor padrao com numero do caso
 #'
 #' @return tib.resultadosRisco tibble com os dados do grafico de risco
 #'
 #' @export
 dadosGraficoRiscoDeficit <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, inicioHorizonteGrafico, fimHorizonteGrafico, 
-                                     tituloGrafico = paste0("Risco de Déficit - Caso ", numeroCaso)) {
+                                     tituloGrafico = paste0("Risco de D\u00E9ficit - Caso ", numeroCaso)) {
   
   conexao <- DBI::dbConnect(RSQLite::SQLite(), baseSQLite)
   # query no banco para buscar defict por serie para calculo do risco

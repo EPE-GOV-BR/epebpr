@@ -18,6 +18,8 @@ mensagem de sucesso
 Executa script SQL e cria banco de dados SQLite com estrutura dos dados do balanco de potencia
 }
 \examples{
+\dontrun{
 criaBDBalanco("C:/PDE2027_Caso080/BD", "bd_balanco_pde")
+}
 
 }

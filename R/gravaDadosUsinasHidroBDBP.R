@@ -13,7 +13,8 @@
 #'
 #' @examples
 #' \dontrun{
-#' gravaDadosUsinasHidroBDBP("C:/PDE2027_Caso080", conexao, 1, 80, 1)}
+#' gravaDadosUsinasHidroBDBP("C:/PDE2027_Caso080", conexao, 1, 80, 1)
+#' }
 #'
 #' @export
 gravaDadosUsinasHidroBDBP <- function(pasta, conexao, tipoCaso, numeroCaso, codModelo) {
@@ -21,7 +22,7 @@ gravaDadosUsinasHidroBDBP <- function(pasta, conexao, tipoCaso, numeroCaso, codM
     stop("favor indicar a pasta com os arquivos do BP")
   }
   if (missing(conexao)) {
-    stop("favor indicar a conexão com o banco de dados")
+    stop("favor indicar a conex\u00E3o com o banco de dados")
   }
   if (missing(tipoCaso)) {
     stop("favor indicar tipo do caso")
@@ -30,7 +31,7 @@ gravaDadosUsinasHidroBDBP <- function(pasta, conexao, tipoCaso, numeroCaso, codM
     stop("favor indicar o n\u00FAmero do caso")
   }
   if (missing(codModelo)) {
-    stop("favor indicar o código do modelo")
+    stop("favor indicar o c\u00F3digo do modelo")
   }
   
   # limpa BPO_A03_DADOS_UHE de dados iguais de execucoes anteriores

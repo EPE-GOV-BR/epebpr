@@ -24,13 +24,11 @@ graficoCVARSubsistema(
 
 \item{codModelo}{valor inteiro com o codigo do modelo. 1:NEWAVE; 2:SUISHI}
 
-\item{tituloGraficoCVARMes}{vetor de caracteres com o titulo do grafico de CVAR mensal - Nao obrigatorio - valor padrao com numero do caso}
+\item{inicioHorizonteGrafico}{valor numerico do ano de inicio do horizonte para o grafico. Formato: AAAA. Ex: 2020}
 
-\item{inicioHorizonte}{valor numerico do ano de inicio do horizonte para o grafico. Formato: AAAA. Ex: 2020}
+\item{fimHorizonteGrafico}{valor numerico do ano de fim do horizonte para o grafico. Formato: AAAA. Ex:2029}
 
-\item{fimHorizonte}{valor numerico do ano de fim do horizonte para o grafico. Formato: AAAA. Ex:2029}
-
-\item{tituloGraficoCVARAno}{vetor de caracteres com o titulo do grafico de CVAR anual - Nao obrigatorio - valor padrao com numero do caso}
+\item{tituloGraficoCVARMes}{vetor de caracteres com o titulo do grafico - Nao obrigatorio - valor padrao com numero do caso}
 }
 \value{
 objeto do tipo plotly

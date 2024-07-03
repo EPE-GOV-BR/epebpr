@@ -13,7 +13,8 @@
 #'
 #' @examples
 #' \dontrun{
-#' gravacaoDadosIntercambioBDBP(pastaCaso, conexao, tipoCaso, numeroCaso, codModelo)}
+#' gravacaoDadosIntercambioBDBP(pastaCaso, conexao, tipoCaso, numeroCaso, codModelo)
+#' }
 #'
 #' @export
 gravacaoDadosIntercambioBDBP <- function(pastaCaso, conexao, tipoCaso, numeroCaso, codModelo) {
@@ -21,7 +22,7 @@ gravacaoDadosIntercambioBDBP <- function(pastaCaso, conexao, tipoCaso, numeroCas
     stop("favor indicar a pasta com os arquivos do BP")
   }
   if (missing(conexao)) {
-    stop("favor indicar a conexão com o banco de dados")
+    stop("favor indicar a conex\u00E3o com o banco de dados")
   }
   if (missing(tipoCaso)) {
     stop("favor indicar tipo do caso")
@@ -30,7 +31,7 @@ gravacaoDadosIntercambioBDBP <- function(pastaCaso, conexao, tipoCaso, numeroCas
     stop("favor indicar o n\u00FAmero do caso")
   }
   if (missing(codModelo)) {
-    stop("favor indicar o código do modelo")
+    stop("favor indicar o c\u00F3digo do modelo")
   }
   
   # executa query para apagar da tabela BPO_A11_INTERCAMBIOS os dados referentes a um possivel mesmo caso rodado anteriormente, 

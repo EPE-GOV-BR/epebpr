@@ -14,7 +14,8 @@
 #'
 #' @examples
 #' \dontrun{
-#' gravacaoDadosDemandaBDBP("C:/PDE2027_Caso080", conexao, 1, 80, 1)}
+#' gravacaoDadosDemandaBDBP("C:/PDE2027_Caso080", conexao, 1, 80, 1)
+#' }
 #'
 #' @export
 gravacaoDadosDemandaBDBP <- function(pastaCaso, conexao, tipoCaso, numeroCaso, codModelo, tipoDemanda) {
@@ -22,16 +23,16 @@ gravacaoDadosDemandaBDBP <- function(pastaCaso, conexao, tipoCaso, numeroCaso, c
     stop("favor indicar a pasta com os arquivos do BP")
   }
   if (missing(conexao)) {
-    stop("favor indicar a conexão com o banco de dados")
+    stop("favor indicar a conex\u00E3o com o banco de dados")
   }
   if (missing(tipoCaso)) {
     stop("favor indicar tipo do caso")
   }
   if (missing(numeroCaso)) {
-    stop("favor indicar o número do caso")
+    stop("favor indicar o n\u00FAmero do caso")
   }
   if (missing(codModelo)) {
-    stop("favor indicar o código do modelo")
+    stop("favor indicar o c\u00F3digo do modelo")
   }
   if (missing(tipoDemanda)) {
     stop("favor indicar o tipo de demanda")
@@ -68,7 +69,7 @@ gravacaoDadosDemandaBDBP <- function(pastaCaso, conexao, tipoCaso, numeroCaso, c
     subsistemasConjuntos <- length(dplyr::intersect(unique(df.mercado$codSubsistema), unique(df.patamar$codSubsistema)))
     if (length(unique(df.mercado$codSubsistema)) != subsistemasConjuntos | length(unique(df.patamar$codSubsistema)) != subsistemasConjuntos) {
       DBI::dbDisconnect(conexao)
-      stop("Patamares de carga e mercado não possuem os mesmos subsistemas!")
+      stop("Patamares de carga e mercado n\u00E3o possuem os mesmos subsistemas!")
     }
     
     # horizonte de simulacao, no formato anoMes (AAAAMM)
@@ -94,10 +95,10 @@ gravacaoDadosDemandaBDBP <- function(pastaCaso, conexao, tipoCaso, numeroCaso, c
     detalhesCargaLiqMax <- list.files(path = pastaCaso, pattern = "^detalhesCargaLiquida")
     if (length(detalhesCargaLiqMax) != 1) {
       DBI::dbDisconnect(conexao)
-      stop("Planilha de detalhes da carga líquida máxima não encontrada ou multiplos arquivos com nome detalhesCargaLiquida em ", pastaCaso)
+      stop("Planilha de detalhes da carga l\u00EDquida m\u00E1xima n\u00E1o encontrada ou multiplos arquivos com nome detalhesCargaLiquida em ", pastaCaso)
     }
     
-    # leitura do excel com detalhes da carga liquida máxima
+    # leitura do excel com detalhes da carga liquida maxima
     df.detalhesCLiqMax <- readxl::read_xlsx(path = paste(pastaCaso, detalhesCargaLiqMax, sep = "/"))
     
     # leitura dos REES/subsistemas cadastrados para garantir que nao haja geracao em local inexistente
@@ -118,7 +119,7 @@ gravacaoDadosDemandaBDBP <- function(pastaCaso, conexao, tipoCaso, numeroCaso, c
     
     if (diferencaREE != 0) {
       DBI::dbDisconnect(conexao)
-      stop("Planilha de detalhes com dados em subsistema/REE não cadastrado!")
+      stop("Planilha de detalhes com dados em subsistema/REE n\u00E3o cadastrado!")
     }
     
     # verifica quais subsistemas nao estao na planilha de detalhes de carga liquida

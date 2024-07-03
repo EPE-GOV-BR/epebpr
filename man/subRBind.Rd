@@ -18,6 +18,8 @@ subRBind(lista1, lista2)
 Funcao para efetuar o rbind nos data frames dentro de listas que sao a saida da funcao balancoPeriodo()
 }
 \examples{
+\dontrun{
 subRBind(lista1, lista2)
+}
 
 }

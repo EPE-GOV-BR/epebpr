@@ -32,6 +32,7 @@ Os dados sao gravados na tabela BPO_A05_DADOS_VIGENTES_UHE do BDBP.
 }
 \examples{
 \dontrun{
-gravacaoDadosHidroVigenteBDBP("C:/PDE2027_Caso080", conexao, 1, 80, 1)}
+gravacaoDadosHidroVigenteBDBP("C:/PDE2027_Caso080", conexao, 1, 80, 1)
+}
 
 }

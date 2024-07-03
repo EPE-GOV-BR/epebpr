@@ -26,16 +26,16 @@ uiBalanco <- fluidPage(
                     # link para ajuda
                     tags$a(href = "html/index.html", target = "_blank", 
                            img(src = "imagens/logo-wiki.png", height = "36px", 
-                               style = 'position: absolute; top: 7px; right: 60px;'), title = "Documentação e Ajuda"),
+                               style = 'position: absolute; top: 7px; right: 60px;'), title = "Documenta\u00E7\u00E3o e Ajuda"),
                     tags$div(style = 'position: absolute; top: 8px; right: 10px;', 
                              tags$button(id = "btnSair", class="btn action-button", style = "background-color: transparent; padding: 0px",
                                          img(src = "imagens/close.png", onmouseover = "this.src = 'imagens/close-red.png'", 
                                              onmouseout = "this.src = 'imagens/close.png'",
-                                             height = "34px", title = "Encerrar Balanço")))),
-    windowTitle = HTML("Balanço"),
+                                             height = "34px", title = "Encerrar Balan\u00E9o")))),
+    windowTitle = HTML("Balan\u00E7o"),
     
     # Painel principal do balanco
-    tabPanel(HTML("Balanço de Potência"),
+    tabPanel(HTML("Balan\u00E7o de Pot\u00EAncia"),
              sidebarLayout(
                sidebarPanel(width = 3,
                  # Selecao do tipo de caso
@@ -66,8 +66,8 @@ uiBalanco <- fluidPage(
                  tags$div(style="display:inline-block; width:140px",
                           selectInput(inputId = "idDemanda",
                                       label = "Demanda:",
-                                      choices = c("Líquida" = 2,
-                                                  "Determinística" = 1),
+                                      choices = c("L\u00EDquida" = 2,
+                                                  "Determin\u00EDstica" = 1),
                                       selected = 2)),
                  tags$br(),
                  
@@ -95,7 +95,7 @@ uiBalanco <- fluidPage(
                  # Entrada para percentual de rateio do deficit
                  tags$div(style="display:inline-block; width:170px",
                           numericInput(inputId = "distribuicaoDeficit",
-                                       label = HTML("Distribuição Déficit [%]:"),
+                                       label = HTML("Distribui\u00E7\u00E3o D\u00E9ficit [%]:"),
                                        min = 0,
                                        max = 100,
                                        value = 100)),
@@ -104,11 +104,11 @@ uiBalanco <- fluidPage(
                  
                  # Entrada de texto para a descricao do caso
                  textInput(inputId = "descricao",
-                           label = HTML("Descrição do Caso:"),
+                           label = HTML("Descri\u00E7\u00E3o do Caso:"),
                            value = NULL),
                  
                  wellPanel(style = "padding: 5px;",
-                           tags$b(HTML("REEs Não Modulam")),
+                           tags$b(HTML("REEs N\u00E3o Modulam")),
                            tags$br(),
                            # Entrada para sistemas que nao modulam na ponta
                            tags$div(style="display:inline-block; width:150px",
@@ -123,7 +123,7 @@ uiBalanco <- fluidPage(
                            # Entrada para sistemas que nao modulam na media
                            tags$div(style="display:inline-block; width:150px",
                                     textInput(inputId = "sistemasNaoModulamMedia",
-                                              label = HTML("GHMédia:"),
+                                              label = HTML("GHM\u00E9dia:"),
                                               value = "6, 13",
                                               placeholder = "sist1, sist2, etc."))),
                  
@@ -171,7 +171,7 @@ uiBalanco <- fluidPage(
                               width = 77),
                  tags$br(),
                  tags$br(),
-                 HTML("Etapas de execução:"),
+                 HTML("Etapas de execu\u00E7\u00E3o:"),
                  tags$br(),
                  tags$div(style = "display:inline-block; width:5px"),
                  tags$div(style="display:inline-block;",
@@ -190,7 +190,7 @@ uiBalanco <- fluidPage(
                                         label = HTML("BP"))),
                  tags$br(),
                  conditionalPanel(condition = "input.execucaoBP == 1 || input.disponibilidadeHidro == 1",
-                                  HTML("Opções adicionais:")
+                                  HTML("Op\u00E7\u00F5es adicionais:")
                  ),
                  conditionalPanel(condition = "input.execucaoBP == 1",
                                   tags$div(style = "display:inline-block; width:5px"),
@@ -209,7 +209,7 @@ uiBalanco <- fluidPage(
 
                  # Action button
                  tags$div(style = "height:8px"),
-                 HTML("Calcula Balanço de Potência"),
+                 HTML("Calcula Balan\u00E7o de Pot\u00EAncia"),
                  tags$div(style = "height:3px"),
                  actionButton(inputId = "btnBalanco",
                               label = NULL,
@@ -225,7 +225,7 @@ uiBalanco <- fluidPage(
              )
     ),
     # Painel de graficos
-    tabPanel(HTML("Gráficos"),
+    tabPanel(HTML("Gr\u00E1ficos"),
              sidebarLayout(
                sidebarPanel(width = 3,
                             # Localiza base SQLite
@@ -247,12 +247,12 @@ uiBalanco <- fluidPage(
                                                          selected = -2),
                                              
                                              # Horizonte do grafico
-                                             HTML("Defina o horizonte de exibição do gráfico"),
+                                             HTML("Defina o horizonte de exibi\u00E7\u00E3o do gr\u00E1fico"),
                                              tags$br(),
                                              # Espaco
                                              tags$div(style = "height:3px"),
                                              # Entrada para inicio da serie do grafico
-                                             HTML("Início:"),
+                                             HTML("In\u00EDcio:"),
                                              tags$div(style="display:inline-block; width:100px",
                                                       numericInput(inputId = "anoInicioGrafico", 
                                                                    label = NULL,
@@ -274,7 +274,7 @@ uiBalanco <- fluidPage(
                                              tags$br(),
                                              # Input dos casos na base
                                              selectInput(inputId = "tipoGrafico",
-                                                         label = HTML("Tipo de Gráfico:"),
+                                                         label = HTML("Tipo de Gr\u00E1fico:"),
                                                          choices = c("CVaR Mensal" = 1,
                                                                      "CVaR Mensal Subsistema" = 9,
                                                                      "CVaR Anual" = 3, 
@@ -282,8 +282,8 @@ uiBalanco <- fluidPage(
                                                                      "Risco (LOLP) Anual" = 8,
                                                                      "VaR Mensal" = 6,
                                                                      "VaR Anual" = 7,
-                                                                     "Requisitos de Potência" = 13,
-                                                                     "Requisitos de Potência - Quadrimestral" = 14,
+                                                                     "Requisitos de Pot\u00EAncia" = 13,
+                                                                     "Requisitos de Pot\u00EAncia - Quadrimestral" = 14,
                                                                      "CVaR Mensal GF" = 10,
                                                                      "VaR Mensal GF" = 11,
                                                                      "VaR Anual GF" = 12),

@@ -11,7 +11,7 @@ serverBalanco <- function(input, output, session) {
   ####### ABA BALANCO #######
   output$textoPasta <- renderText("Escolha a pasta do caso:")
   pastaCaso <- ""
-  output$textoPastaSaidas <- renderText("Escolha a pasta com as saídas do caso (nwlistop):")
+  output$textoPastaSaidas <- renderText("Escolha a pasta com as sa\u00EDdas do caso (nwlistop):")
   pastaSaidas <- ""
   output$textoBaseSQLite <- renderText("Escolha a base SQLite ou crie nova:")
   baseSQLite <- ""
@@ -34,8 +34,8 @@ serverBalanco <- function(input, output, session) {
   observeEvent(input$btnCriaBaseSQLite, {
     showModal(
       modalDialog(
-        title = HTML("Criar nova base de dados para o Balanço de Potência"),
-        tags$div(style="display:inline-block;", HTML("Localização da pasta:")),
+        title = HTML("Criar nova base de dados para o Balan\u00E7o de Pot\u00EAncia"),
+        tags$div(style="display:inline-block;", HTML("Localiza\u00E7\u00E3o da pasta:")),
         span(strong(textOutput(outputId = "pastaBDModal"), style = "color:red; display:inline-block")),
         actionButton(inputId = "btnProcurarPastaBD",
                      label = NULL,
@@ -116,12 +116,12 @@ serverBalanco <- function(input, output, session) {
   # monitora o botao de selecao da pasta de saidas do caso (nwlistop)
   observeEvent(input$btnPastaSaidas, {
     if (Sys.info()["sysname"] == "Windows") {
-      pastaSaidas <<- choose.dir(caption = "Escolha a pasta com as saídas do caso (nwlistop)")
+      pastaSaidas <<- choose.dir(caption = "Escolha a pasta com as sa\u00EDdas do caso (nwlistop)")
     } else {
       pastaSaidas <<- file.choose() %>% dirname()
     }
     output$pastaSaidas <- renderText(pastaSaidas)
-    output$textoPastaSaidas <- renderText("Pasta com as saídas do caso (nwlistop):")
+    output$textoPastaSaidas <- renderText("Pasta com as sa\u00EDdas do caso (nwlistop):")
   })
   
   # monitora o botao para encerrar o app
@@ -142,12 +142,12 @@ serverBalanco <- function(input, output, session) {
     shiny::validate(
       need(input$numeroCaso, "Caso sem n\u00FAmero"),
       need(input$horasPonta, "Defina o n\u00FAmero de horas de ponta"),
-      need(input$descricao, "Caso sem descrição"),
+      need(input$descricao, "Caso sem descri\u00E7\u00E3o"),
       need(pastaCaso != "", "Defina a pasta de caso"),
-      need(pastaSaidas != "", "Defina a pasta com as saídas do caso (nwlistop)"),
+      need(pastaSaidas != "", "Defina a pasta com as sa\u00EDdas do caso (nwlistop)"),
       need(baseSQLite != "", "Defina a base de dados SQLite"),
-      need(input$distribuicaoDeficit, "Defina valor de limite do rateio do déficit (0-100%)"),
-      need(validaModulacao == 0, "Apenas um tipo de modulação de GH pode ser definido para cada REE")
+      need(input$distribuicaoDeficit, "Defina valor de limite do rateio do d\u00E9ficit (0-100%)"),
+      need(validaModulacao == 0, "Apenas um tipo de modula\u00E7\u00E3o de GH pode ser definido para cada REE")
     )
     
     tictoc::tic()
@@ -158,11 +158,11 @@ serverBalanco <- function(input, output, session) {
       # pega dados gerais do NEWAVE
       df.dadosGerais <- leitorrmpe::leituraDadosGerais(pastaCaso)
       if (df.dadosGerais$tipoSimulacao == 1) {
-        mensagemLeitura <- "Lendo dados de simulação com séries sintéticas e gravando no banco de dados..."
+        mensagemLeitura <- "Lendo dados de simula\u00E7\u00E3o com s\u00E9ries sint\u00E9ticas e gravando no banco de dados..."
       } else if (df.dadosGerais$tipoSimulacao == 2){
-        mensagemLeitura <- "Lendo dados de simulação com séries históricas e gravando no banco de dados..."
+        mensagemLeitura <- "Lendo dados de simula\u00E7\u00E3o com s\u00E9ries hist\u00F3ricas e gravando no banco de dados..."
       } else {
-        return("Outro tipo de simulação. <font color=red>Verifique o arquivo dger!</font>")
+        return("Outro tipo de simula\u00E7\u00E3o. <font color=red>Verifique o arquivo dger!</font>")
       }
     } else {
       mensagemLeitura <- "Processando a Leitura de Dados..."
@@ -212,7 +212,7 @@ serverBalanco <- function(input, output, session) {
       # bloco de calculo de balanco
       # verifica se o usuario escolheu efetuar o calculo do BP
       if (as.logical(input$execucaoBP)) {
-        setProgress(message = "Calculando balanço de potência...")
+        setProgress(message = "Calculando balan\u00E7o de pot\u00EAncia...")
         mensagem <- calculaBalancoParalelo(baseSQLite,
                                            as.integer(input$tipoCaso),
                                            as.integer(input$numeroCaso),
@@ -225,7 +225,7 @@ serverBalanco <- function(input, output, session) {
                                            as.double(input$distribuicaoDeficit)/100,
                                            TRUE)
         
-        # se o balanço foi calculado, gera saidas na BD e em excel
+        # se o balanco foi calculado, gera saidas na BD e em excel
         df.dadosGerais <- leitorrmpe::leituraDadosGerais(pastaCaso)
         mensagemSaidas <- gravacaoSaidasAnalises(baseSQLite, as.integer(input$tipoCaso), as.integer(input$numeroCaso), as.integer(input$codModelo), df.dadosGerais)
         
@@ -239,35 +239,35 @@ serverBalanco <- function(input, output, session) {
     tempoExecucao <- paste0("Executado em: ", tempoExecucao %/% 3600, " h. ",
                             (tempoExecucao - (tempoExecucao %/% 3600 * 3600)) %/% 60, " min. ", tempoExecucao %% 60, " seg.")
     
-    # salva para controle as opções de execução escolhidas
+    # salva para controle as opcoes de execucao escolhidas
     arqOpt <- paste0(pastaCaso, "/optExec_", stringr::str_remove(basename(baseSQLite), "\\.sqlite3"), ".txt")
-    # momento do inicio da execução
-    cat(paste0(# versão do pacote utilizada
-               "Versão do pacote epebpr: ", packageVersion("epebpr"), "\n",
-               # usuário
-               "Usuário: ", Sys.getenv("USERNAME"), "\n",
+    # momento do inicio da execucao
+    cat(paste0(# versao do pacote utilizada
+               "Vers\u00E3o do pacote epebpr: ", packageVersion("epebpr"), "\n",
+               # usuario
+               "Usu\u00E1rio: ", Sys.getenv("USERNAME"), "\n",
                # pastas e arquivos selecionados
-               "Diretório NEWAVE: ", pastaCaso, "\n",
-               "Diretório NWLISTOP: ", pastaSaidas, "\n",
+               "Diret\u00F3rio NEWAVE: ", pastaCaso, "\n",
+               "Diret\u00F3rio NWLISTOP: ", pastaSaidas, "\n",
                "Base de Dados: ", baseSQLite, "\n",
-               # opções de execução
+               # opcoes de execucao
                "Tipo de Caso: ", ifelse(input$tipoCaso == 1, "PDE", ifelse(input$tipoCaso == 2, "PMO", ifelse(input$tipoCaso == 3, "GF", NA))), "\n",
                "Modelo: ", ifelse(input$codModelo == 1, "NEWAVE", ifelse(input$codModelo == 2, "SUISHI", NA)), "\n",
-               "Demanda: ", ifelse(input$idDemanda == 1, "Determinística", ifelse(input$idDemanda == 2, "Líquida", NA)), "\n",
-               "Nº do caso: ", input$numeroCaso, "\n",
+               "Demanda: ", ifelse(input$idDemanda == 1, "Determin\u00EDstica", ifelse(input$idDemanda == 2, "L\u00EDquida", NA)), "\n",
+               "N\u00B0 do caso: ", input$numeroCaso, "\n",
                "Horas de Ponta: ", input$horasPonta, "\n",
-               "Distribuição Déficit [%]: ", input$distribuicaoDeficit, "\n",
-               "Descrição: ", input$descricao, "\n",
-               "REEs não modulam GHPonta: ", input$sistemasNaoModulamPonta, "\n",
-               "REEs não modulam GHMédia: ", input$sistemasNaoModulamMedia, "\n",
+               "Distribui\u00E7\u00E3o D\u00E9ficit [%]: ", input$distribuicaoDeficit, "\n",
+               "Descri\u00E7\u00E3o: ", input$descricao, "\n",
+               "REEs n\u00E3o modulam GHPonta: ", input$sistemasNaoModulamPonta, "\n",
+               "REEs n\u00E3o modulam GHM\u00E9dia: ", input$sistemasNaoModulamMedia, "\n",
                "REEs modulam por tabela: ", input$sistemasModulamTabela, "\n",
-               "Balanço Resumido: ", ifelse(input$balancoResumido, "Sim", "Não"), "\n",
-               "Dados: ", ifelse(input$leituraDados, "Sim", "Não"), "\n",
-               "Disp. Hidro: ", ifelse(input$disponibilidadeHidro, "Sim", "Não"), "\n",
-               "Balanço de Ponta: ", ifelse(input$execucaoBP, "Sim", "Não"), "\n",
-               "Vertimento para todas UHE: ", ifelse(input$flagVert, "Sim", "Não"), "\n",
-               "Término da execução: ", lubridate::now(), "\n",
-               "Tempo total de execução:", tempoExecucao
+               "Balan\u00E7o Resumido: ", ifelse(input$balancoResumido, "Sim", "N\u00E3o"), "\n",
+               "Dados: ", ifelse(input$leituraDados, "Sim", "N\u00E3o"), "\n",
+               "Disp. Hidro: ", ifelse(input$disponibilidadeHidro, "Sim", "N\u00E3o"), "\n",
+               "Balan\u00E7o de Ponta: ", ifelse(input$execucaoBP, "Sim", "N\u00E3o"), "\n",
+               "Vertimento para todas UHE: ", ifelse(input$flagVert, "Sim", "N\u00E3o"), "\n",
+               "T\u00E9rmino da execu\u00E7\u00E3o: ", lubridate::now(), "\n",
+               tempoExecucao
     ), file = arqOpt)
     
     return({paste(mensagemBancoDados, mensagemDisponibilidade, mensagem, tempoExecucao, sep = "<br>")})
@@ -309,9 +309,9 @@ serverBalanco <- function(input, output, session) {
   grafico <- eventReactive(input$btnGrafico, 
                            {
                              shiny::validate(
-                               need(input$anoInicioGrafico, HTML("Favor determinar o início do horizonte para o gráfico!")),
-                               need(input$anoFimGrafico, HTML("Favor determinar o fim do horizonte para o gráfico!")),
-                               need(input$casoGrafico != -1, HTML("Favor selecionar um caso para o gráfico!"))
+                               need(input$anoInicioGrafico, HTML("Favor determinar o in\u00EDcio do horizonte para o gr\u00E1fico!")),
+                               need(input$anoFimGrafico, HTML("Favor determinar o fim do horizonte para o gr\u00E1fico!")),
+                               need(input$casoGrafico != -1, HTML("Favor selecionar um caso para o gr\u00E1fico!"))
                              )
                              show_modal_spinner()
                              chaveGrafico <- c(input$casoGrafico %>% str_split(";") %>% unlist() %>% as.numeric())

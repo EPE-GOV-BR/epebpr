@@ -40,11 +40,11 @@ dadosFatorDispHidro <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, ini
   # leitura dos dados de pdisp das UTE GNL por cenario
   dispTermGnl <- DBI::dbReadTable(conexao, name = 'BPO_A31_DISPONIBILIDADE_UTE_GNL') %>%
     dplyr::filter(A01_TP_CASO == tipoCaso, A01_NR_CASO == numeroCaso, A01_CD_MODELO == codModelo) %>% 
-    dplyr::select(A14_NR_SERIE, A14_VL_DISPONIBILIDADE_MAXIMA_PONTA, ANO_MES = A14_NR_MES, A02_NR_SUBSISTEMA) %>% 
+    dplyr::select(A31_NR_SERIE, A31_VL_DISPONIBILIDADE_MAXIMA_PONTA, ANO_MES = A31_NR_MES, A02_NR_SUBSISTEMA) %>% 
     dplyr::mutate(anoMes = as.character(ANO_MES) %>% zoo::as.yearmon("%Y%m") %>% zoo::as.Date()) %>% 
     dplyr::filter(dplyr::between(as.integer(format(anoMes, "%Y")), inicioHorizonte, fimHorizonte)) %>% 
-    dplyr::group_by(ANO_MES, A14_NR_SERIE) %>%
-    dplyr::reframe(UTE_GNL = sum(A14_VL_DISPONIBILIDADE_MAXIMA_PONTA))
+    dplyr::group_by(ANO_MES, A31_NR_SERIE) %>%
+    dplyr::reframe(UTE_GNL = sum(A31_VL_DISPONIBILIDADE_MAXIMA_PONTA))
   
   # leitura pdisp renovaveis
   dispRenov <- DBI::dbReadTable(conexao, name = 'BPO_A13_DISPONIBILIDADE_OFR') %>%
@@ -91,8 +91,8 @@ dadosFatorDispHidro <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, ini
   
   DBI::dbDisconnect(conexao)
   
-  # faz o balanço e pega os piores cenarios
-  balanco <- dplyr::left_join(dispHidroSin, dispTermGnl, by = c("ANO_MES", "A09_NR_SERIE" = "A14_NR_SERIE")) %>%
+  # faz o balanco e pega os piores cenarios
+  balanco <- dplyr::left_join(dispHidroSin, dispTermGnl, by = c("ANO_MES", "A09_NR_SERIE" = "A31_NR_SERIE")) %>%
     dplyr::left_join(dispTerm, by = "ANO_MES") %>% 
     dplyr::left_join(dispRenov, by = "ANO_MES") %>% 
     dplyr::left_join(demanda, by = "ANO_MES") %>% 

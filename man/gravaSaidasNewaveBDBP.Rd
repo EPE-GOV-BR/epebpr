@@ -36,6 +36,7 @@ do banco de dados do balanco de potencia. Usa funcoes do pacote (\code{leitorrmp
 }
 \examples{
 \dontrun{
-gravaSaidasNewaveBDBP("C:/PDE2027_Caso080", "C:/PDE2027_Caso080/nwlistop", conexao, 1, 80, 1)}
+gravaSaidasNewaveBDBP("C:/PDE2027_Caso080", "C:/PDE2027_Caso080/nwlistop", conexao, 1, 80, 1)
+}
 
 }

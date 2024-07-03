@@ -21,7 +21,9 @@
 #' 
 #' @examples
 #' \dontrun{
-#' gravacaoDadosDisponibilidadeOutrasFontesBDBP("C:/PDE2027_Caso080", conexao, 1, 80, 1, 1, 201901, 203312)}
+#' gravacaoDadosDisponibilidadeOutrasFontesBDBP("C:/PDE2027_Caso080", conexao, 
+#' 1, 80, 1, 1, 201901, 203312)
+#' }
 #'
 #' @export
 gravacaoDadosDisponibilidadeOutrasFontesBDBP <- function(pastaCaso, conexao, tipoCaso, numeroCaso, tipoDemanda, codModelo, anoMesInicioMDI, anoMesFimMDI) {
@@ -29,19 +31,19 @@ gravacaoDadosDisponibilidadeOutrasFontesBDBP <- function(pastaCaso, conexao, tip
     stop("favor indicar a pasta com os arquivos do BP")
   }
   if (missing(conexao)) {
-    stop("favor indicar a conexão com o banco de dados")
+    stop("favor indicar a conex\u00E3o com o banco de dados")
   }
   if (missing(tipoCaso)) {
     stop("favor indicar tipo do caso")
   }
   if (missing(numeroCaso)) {
-    stop("favor indicar o número do caso")
+    stop("favor indicar o n\u00FAmero do caso")
   }
   if (missing(tipoDemanda)) {
     stop("favor indicar o tipo de demanda")
   }
   if (missing(codModelo)) {
-    stop("favor indicar o código do modelo")
+    stop("favor indicar o c\u00F3digo do modelo")
   }
   if (missing(anoMesInicioMDI)) {
     stop("favor indicar a data do inicio do caso simulado")
@@ -50,7 +52,7 @@ gravacaoDadosDisponibilidadeOutrasFontesBDBP <- function(pastaCaso, conexao, tip
     stop("favor indicar a data do fim do caso simulado")
   } 
 
-  ## verifica se o caso é do tipo carga liquida ou bruta e faz o processamento de acordo com o caso
+  ## verifica se o caso e do tipo carga liquida ou bruta e faz o processamento de acordo com o caso
   if(tipoDemanda == 1){
   ###### DETERMINISTICO #####  
   
@@ -58,7 +60,7 @@ gravacaoDadosDisponibilidadeOutrasFontesBDBP <- function(pastaCaso, conexao, tip
     planilhaPequenas <- list.files(path = pastaCaso, pattern = "^GeraPeq")
     if (length(planilhaPequenas) != 1) {
       DBI::dbDisconnect(conexao)
-      stop("Planilha de pequenas não encontrada ou multiplos arquivos com nome GeraPeq em ", pastaCaso)
+      stop("Planilha de pequenas n\u00E3o encontrada ou multiplos arquivos com nome GeraPeq em ", pastaCaso)
     }
     # verifica se o excel possui a aba correta
     abasExcelPequenas <- "Principal"
@@ -66,7 +68,7 @@ gravacaoDadosDisponibilidadeOutrasFontesBDBP <- function(pastaCaso, conexao, tip
     abasExistentes <- dplyr::setdiff(abasExcelPequenas,abasExcelPequenasLidos)
     if(length(abasExistentes != 0)) {
       DBI::dbDisconnect(conexao)
-      stop(paste0("arquivo ", planilhaPequenas, " não possui a aba de nome Principal!"))
+      stop(paste0("arquivo ", planilhaPequenas, " n\u00E3o possui a aba de nome Principal!"))
     }
     
     # leitura do excel com informacao das usinas contratadas
@@ -77,7 +79,7 @@ gravacaoDadosDisponibilidadeOutrasFontesBDBP <- function(pastaCaso, conexao, tip
     codificacao <- Encoding(colnames(df.renovaveis)) %>% .[. != "unknown"] %>% unique()
     if (length(codificacao) != 1) {
       DBI::dbDisconnect(conexao)
-      stop("Problema de codificação (UTF-8) na Planilha de pequenas. Uma solução é remover os acentos dos nomes das colunas.")
+      stop("Problema de codifica\u00E7\u00E3o (UTF-8) na Planilha de pequenas. Uma solu\u00E7\u00E3o \u00E9 remover os acentos dos nomes das colunas.")
     }
     colnames(df.renovaveis) <- iconv(colnames(df.renovaveis), from = codificacao, to = "ASCII//TRANSLIT")
     
@@ -102,7 +104,7 @@ gravacaoDadosDisponibilidadeOutrasFontesBDBP <- function(pastaCaso, conexao, tip
     
     if (diferencaREE != 0) {
       DBI::dbDisconnect(conexao)
-      stop("Planilha de pequenas com oferta renov\u00E1vel em subsistema/REE não cadastrado!")
+      stop("Planilha de pequenas com oferta renov\u00E1vel em subsistema/REE n\u00E3o cadastrado!")
     }
     
     ## dados de outras renovaveis
@@ -110,7 +112,7 @@ gravacaoDadosDisponibilidadeOutrasFontesBDBP <- function(pastaCaso, conexao, tip
     # verifica exitencia do excel
     if (!file.exists(arquivoDadosOFR)) {
       DBI::dbDisconnect(conexao)
-      stop(paste0("arquivo ", arquivoDadosOFR, " com dados de oferta renov\u00E1vel não encontrado em ", pastaCaso))
+      stop(paste0("arquivo ", arquivoDadosOFR, " com dados de oferta renov\u00E1vel n\u00E3o encontrado em ", pastaCaso))
     }
     # verifica se o excel possui as abas corretas
     abasExcelDadosOFR <- c("FatorPonta", "RelacaoIndicativas", "SazonalidadeIndicativas", "TipoContribuicaoPonta")
@@ -118,7 +120,7 @@ gravacaoDadosDisponibilidadeOutrasFontesBDBP <- function(pastaCaso, conexao, tip
     abasExistentes <- dplyr::setdiff(abasExcelDadosOFR,abasExcelDadosOFRLidos)
     if(length(abasExistentes) != 0) {
       DBI::dbDisconnect(conexao)
-      stop(paste0("arquivo ", arquivoDadosOFR, " não possui a(s) aba(s) ", paste(abasExistentes, collapse = ", "), 
+      stop(paste0("arquivo ", arquivoDadosOFR, " n\u00E3o possui a(s) aba(s) ", paste(abasExistentes, collapse = ", "), 
                   " ou h\u00E1 problema com o(s) nome(s) da(s) aba(s)!"))
     }
     
@@ -175,8 +177,8 @@ gravacaoDadosDisponibilidadeOutrasFontesBDBP <- function(pastaCaso, conexao, tip
       
       if (length(codificacao) != 1) {
         DBI::dbDisconnect(conexao)
-        stop("Problema de codificação (UTF-8) na Planilha ", arquivoDadosOFR,  
-             " na aba SazonalidadeIndicativas. Uma solução é remover os acentos dos nomes das colunas.")
+        stop("Problema de codifica\u00E7\u00E3o (UTF-8) na Planilha ", arquivoDadosOFR,  
+             " na aba SazonalidadeIndicativas. Uma solu\u00E7\u00E3o \u00E9 remover os acentos dos nomes das colunas.")
       }
       
       colnames(df.sazonalidadeIndicativas) <- iconv(colnames(df.sazonalidadeIndicativas), from = "UTF-8", to = "ASCII//TRANSLIT")
@@ -185,7 +187,7 @@ gravacaoDadosDisponibilidadeOutrasFontesBDBP <- function(pastaCaso, conexao, tip
       
       if (length(arquivoExpansao) != 1) {
         DBI::dbDisconnect(conexao)
-        stop("Arquivo texto saidaExpansao não encontrado ou multiplos arquivos com nome saidaExpansao em ", pastaCaso)
+        stop("Arquivo texto saidaExpansao n\u00E3o encontrado ou multiplos arquivos com nome saidaExpansao em ", pastaCaso)
       }
       
       # le arquivo com as expansoes do MDI - trata ";" no fim para nao ter avisos
@@ -252,7 +254,7 @@ gravacaoDadosDisponibilidadeOutrasFontesBDBP <- function(pastaCaso, conexao, tip
       dplyr::group_by(sistema, TIPO, dataRef) %>% 
       dplyr::summarise(POT = sum(`POT (MW)`), .groups = "drop") %>% 
       dplyr::mutate(aux = 1) %>% 
-      dplyr::inner_join(df.periodo, by = "aux") %>% 
+      dplyr::inner_join(df.periodo, by = "aux", relationship = "many-to-many") %>% 
       dplyr::select(-aux) %>% 
       dplyr::mutate(valpot = ifelse((anoMes >= dataRef), "sim", "nao")) %>% 
       dplyr::filter(valpot != "nao") %>% 
@@ -266,7 +268,7 @@ gravacaoDadosDisponibilidadeOutrasFontesBDBP <- function(pastaCaso, conexao, tip
       dplyr::group_by(sistema, TIPO, dataRef) %>% 
       dplyr::summarise(dplyr::across(tidyr::everything(), sum), .groups = "drop") %>% 
       dplyr::mutate(aux = 1) %>% 
-      dplyr::inner_join(df.periodo, by = "aux") %>% 
+      dplyr::inner_join(df.periodo, by = "aux", relationship = "many-to-many") %>% 
       dplyr::select(-aux) %>% 
       dplyr::mutate(valpot = ifelse((anoMes >= dataRef),"sim", "nao")) %>% 
       dplyr::filter(valpot != "nao") %>% 
@@ -337,10 +339,10 @@ gravacaoDadosDisponibilidadeOutrasFontesBDBP <- function(pastaCaso, conexao, tip
     detalhesCargaLiqMax <- list.files(path = pastaCaso, pattern = "^detalhesCargaLiquida")
     if (length(detalhesCargaLiqMax) != 1) {
       DBI::dbDisconnect(conexao)
-      stop("Planilha de detalhes da carga líquida máxima não encontrada ou multiplos arquivos com nome detalhesCargaLiquida em ", pastaCaso)
+      stop("Planilha de detalhes da carga l\u00EDquida m\u00E1xima n\u00E1o encontrada ou multiplos arquivos com nome detalhesCargaLiquida em ", pastaCaso)
     }
     
-    # leitura do excel com detalhes da carga liquida máxima
+    # leitura do excel com detalhes da carga liquida maxima
     df.detalhesCLiqMax <- readxl::read_xlsx(path = paste(pastaCaso, detalhesCargaLiqMax, sep = "/"))
     
     # leitura dos REES/subsistemas cadastrados para garantir que nao haja geracao em local inexistente
@@ -355,7 +357,7 @@ gravacaoDadosDisponibilidadeOutrasFontesBDBP <- function(pastaCaso, conexao, tip
     
     if (diferencaREE != 0) {
       DBI::dbDisconnect(conexao)
-      stop("Planilha de detalhes com dados em subsistema/REE não cadastrado!")
+      stop("Planilha de detalhes com dados em subsistema/REE n\u00E3o cadastrado!")
     }
     
     ## arquivo dadosORF
@@ -364,7 +366,7 @@ gravacaoDadosDisponibilidadeOutrasFontesBDBP <- function(pastaCaso, conexao, tip
     # verifica exitencia do excel
     if (!file.exists(arquivoDadosOFR)) {
       DBI::dbDisconnect(conexao)
-      stop(paste0("arquivo ", arquivoDadosOFR, " com dados de oferta renov\u00E1vel não encontrado em ", pastaCaso))
+      stop(paste0("arquivo ", arquivoDadosOFR, " com dados de oferta renov\u00E1vel n\u00E3o encontrado em ", pastaCaso))
     }
     # verifica se o excel possui as abas corretas
     abasExcelDadosOFR <- c("FatorPonta", "RelacaoIndicativas", "SazonalidadeIndicativas", "TipoContribuicaoPonta")
@@ -372,7 +374,7 @@ gravacaoDadosDisponibilidadeOutrasFontesBDBP <- function(pastaCaso, conexao, tip
     abasExistentes <- dplyr::setdiff(abasExcelDadosOFR,abasExcelDadosOFRLidos)
     if(length(abasExistentes) != 0) {
       DBI::dbDisconnect(conexao)
-      stop(paste0("arquivo ", arquivoDadosOFR, " não possui a(s) aba(s) ", paste(abasExistentes, collapse = ", "), 
+      stop(paste0("arquivo ", arquivoDadosOFR, " n\u00E3o possui a(s) aba(s) ", paste(abasExistentes, collapse = ", "), 
                   " ou h\u00E1 problema com o(s) nome(s) da(s) aba(s)!"))
     }
     
@@ -407,7 +409,7 @@ gravacaoDadosDisponibilidadeOutrasFontesBDBP <- function(pastaCaso, conexao, tip
     # salva BPO_A19_FATOR_PONTA_OFR
     DBI::dbWriteTable(conexao, "BPO_A19_FATOR_PONTA_OFR", df.fatorPontaOFR, append = T)
     
-    ##### CONTRIBUIÇÃO DAS EXISTENTES É PELA PLaNILHA DE DETALHES CARGA LIQUIDA
+    ##### CONTRIBUICAO DAS EXISTENTES E PELA PLaNILHA DE DETALHES CARGA LIQUIDA
     
     # define data frame com os dados de energia das usinas nao simuladas, para cada periodo do horizonte de simulacao
     df.energiaOFREx <- df.detalhesCLiqMax %>% 
@@ -428,7 +430,7 @@ gravacaoDadosDisponibilidadeOutrasFontesBDBP <- function(pastaCaso, conexao, tip
     
     # define data frame com a disponibilidade de ponta das usinas nao simuladas, 
     # para cada periodo do horizonte de simulacao
-    # para o caso da carga liquida corresponde à contribuição das renovaveis no momento da 
+    # para o caso da carga liquida corresponde a contribuicao das renovaveis no momento da 
     # carga liquida maxima do SIN para cada periodo
     df.disponibilidadeOFREx <- df.energiaOFREx %>% 
       dplyr::inner_join(df.tipoContribuicaoPonta, by = c("TIPO" = "A18_TX_DESCRICAO")) %>%
@@ -447,7 +449,7 @@ gravacaoDadosDisponibilidadeOutrasFontesBDBP <- function(pastaCaso, conexao, tip
     df.energiaOFR <- df.energiaOFREx
     df.disponibilidadeOFR <- df.disponibilidadeOFREx
     
-    ##### CONTRIBUIÇÃO DAS INDICATIVAS
+    ##### CONTRIBUICAO DAS INDICATIVAS
     # processa informacoes das indicativas para incluir no arquivo de renovaveis se for PDE
     if (tipoCaso == 1) {
       # tabela com de/para dos nomes das indicativas
@@ -464,8 +466,8 @@ gravacaoDadosDisponibilidadeOutrasFontesBDBP <- function(pastaCaso, conexao, tip
       
       if (length(codificacao) != 1) {
         DBI::dbDisconnect(conexao)
-        stop("Problema de codificação (UTF-8) na Planilha ", arquivoDadosOFR,  
-             " na aba SazonalidadeIndicativas. Uma solução é remover os acentos dos nomes das colunas.")
+        stop("Problema de codifica\u00E7\u00E3o (UTF-8) na Planilha ", arquivoDadosOFR,  
+             " na aba SazonalidadeIndicativas. Uma solu\u00E7\u00E3o \u00E9 remover os acentos dos nomes das colunas.")
       }
       
       colnames(df.sazonalidadeIndicativas) <- iconv(colnames(df.sazonalidadeIndicativas), from = "UTF-8", to = "ASCII//TRANSLIT")
@@ -474,7 +476,7 @@ gravacaoDadosDisponibilidadeOutrasFontesBDBP <- function(pastaCaso, conexao, tip
       
       if (length(arquivoExpansao) != 1) {
         DBI::dbDisconnect(conexao)
-        stop("Arquivo texto saidaExpansao não encontrado ou multiplos arquivos com nome saidaExpansao em ", pastaCaso)
+        stop("Arquivo texto saidaExpansao n\u00E3o encontrado ou multiplos arquivos com nome saidaExpansao em ", pastaCaso)
       }
       
       # le arquivo com as expansoes do MDI - trata ";" no fim para nao ter avisos e verifica encoding para ler corretamente
@@ -543,7 +545,7 @@ gravacaoDadosDisponibilidadeOutrasFontesBDBP <- function(pastaCaso, conexao, tip
         dplyr::group_by(sistema, TIPO, dataRef) %>% 
         dplyr::summarise(POT = sum(`POT (MW)`), .groups = "drop") %>% 
         dplyr::mutate(aux = 1) %>% 
-        dplyr::inner_join(df.periodo, by = "aux") %>% 
+        dplyr::inner_join(df.periodo, by = "aux", relationship = "many-to-many") %>% 
         dplyr::select(-aux) %>% 
         dplyr::mutate(valpot = ifelse((anoMes >= dataRef), "sim", "nao")) %>% 
         dplyr::filter(valpot != "nao") %>% 
@@ -557,7 +559,7 @@ gravacaoDadosDisponibilidadeOutrasFontesBDBP <- function(pastaCaso, conexao, tip
         dplyr::group_by(sistema, TIPO, dataRef) %>% 
         dplyr::summarise(dplyr::across(tidyr::everything(), sum), .groups = "drop") %>% 
         dplyr::mutate(aux = 1) %>% 
-        dplyr::inner_join(df.periodo, by = "aux") %>% 
+        dplyr::inner_join(df.periodo, by = "aux", relationship = "many-to-many") %>% 
         dplyr::select(-aux) %>% 
         dplyr::mutate(valpot = ifelse((anoMes >= dataRef),"sim", "nao")) %>% 
         dplyr::filter(valpot != "nao") %>% 
@@ -578,7 +580,7 @@ gravacaoDadosDisponibilidadeOutrasFontesBDBP <- function(pastaCaso, conexao, tip
       
       if (nrow(df.verificaFator) > 0) {
         DBI::dbDisconnect(conexao)
-        stop("Não foram definidos fatores de contribuição de ponta (planilha dadosOFR, aba FatorPonta) para as seguintes fontes:\n", sprintf("A18_CD_TIPO_FONTE %s A02_NR_SUBSISTEMA %s\n", df.verificaFator$A18_CD_TIPO_FONTE, df.verificaFator$sistema))
+        stop("N\u00E3o foram definidos fatores de contribui\u00E7\u00E3o de ponta (planilha dadosOFR, aba FatorPonta) para as seguintes fontes:\n", sprintf("A18_CD_TIPO_FONTE %s A02_NR_SUBSISTEMA %s\n", df.verificaFator$A18_CD_TIPO_FONTE, df.verificaFator$sistema))
       }
       
       # define data frame com o calculo final da disponibilidade de ponta das usinas nao simuladas, 

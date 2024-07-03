@@ -15,7 +15,8 @@
 #'
 #' @examples
 #' \dontrun{
-#' gravaSaidasNewaveBDBP("C:/PDE2027_Caso080", "C:/PDE2027_Caso080/nwlistop", conexao, 1, 80, 1)}
+#' gravaSaidasNewaveBDBP("C:/PDE2027_Caso080", "C:/PDE2027_Caso080/nwlistop", conexao, 1, 80, 1)
+#' }
 #'
 #' @export
 gravaSaidasNewaveBDBP <- function(pasta, pastaSaidas, conexao, tipoCaso, numeroCaso, codModelo) {
@@ -23,10 +24,10 @@ gravaSaidasNewaveBDBP <- function(pasta, pastaSaidas, conexao, tipoCaso, numeroC
     stop("favor indicar a pasta com os arquivos do BP")
   }
   if (missing(pastaSaidas)) {
-    stop("favor indicar a pasta com os arquivos de saída do NEWAVE")
+    stop("favor indicar a pasta com os arquivos de sa\u00EDda do NEWAVE")
   }
   if (missing(conexao)) {
-    stop("favor indicar a conexão com o banco de dados")
+    stop("favor indicar a conex\u00E3o com o banco de dados")
   }
   if (missing(tipoCaso)) {
     stop("favor indicar tipo do caso")
@@ -35,7 +36,7 @@ gravaSaidasNewaveBDBP <- function(pasta, pastaSaidas, conexao, tipoCaso, numeroC
     stop("favor indicar o n\u00FAmero do caso")
   }
   if (missing(codModelo)) {
-    stop("favor indicar o código do modelo")
+    stop("favor indicar o c\u00F3digo do modelo")
   }
   
   # limpa BPO_A06_SAIDA_HIDRO_NEWAVE de dados iguais de execucoes anteriores

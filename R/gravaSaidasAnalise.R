@@ -1,6 +1,6 @@
 #' Gravacao dos principais dados de saida
 #'
-#' Faz a gravacao dos dados das principais saidas de analise do balanço de ponta em arquivo excel e no banco de dados do Balanco de Potencia (BDBP).
+#' Faz a gravacao dos dados das principais saidas de analise do balanCo de ponta em arquivo excel e no banco de dados do Balanco de Potencia (BDBP).
 #' Os dados sao gravados nas tabelas a partir da BPO_A22 do BDBP
 #'
 #' @param baseSQLite caracter com a localizacao da base de dados do BP.
@@ -13,7 +13,8 @@
 #' 
 #' @examples
 #' \dontrun{
-#' gravacaoSaidasAnalises("C:/PDE2027_Caso080.sqlite3", 1, 80, 1)}
+#' gravacaoSaidasAnalises("C:/PDE2027_Caso080.sqlite3", 1, 80, 1)
+#' }
 #'
 #' @export
 gravacaoSaidasAnalises <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, df.dadosGerais) {
@@ -27,7 +28,7 @@ gravacaoSaidasAnalises <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
     stop("favor indicar o n\u00FAmero do caso")
   }
   if (missing(codModelo)) {
-    stop("favor indicar o código do modelo")
+    stop("favor indicar o c\u00F3digo do modelo")
   }
   
   # arquivo excel sera salvo na mesma pasta da BD
@@ -137,7 +138,7 @@ gravacaoSaidasAnalises <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
                                                  df.dadosGerais$anoInicio, 
                                                  (df.dadosGerais$anoInicio + df.dadosGerais$duracaoEstudo - 1))
   
-  # Dados de distribuição do Déficit e CVaR
+  # Dados de distribuicao do Deficit e CVaR
   dadosDistDef <- dadosDistDeficit(baseSQLite, 
                                    tipoCaso,
                                    numeroCaso,
@@ -162,11 +163,11 @@ gravacaoSaidasAnalises <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
                            "LOLP Anual SIN" = dadosRiscoAnual,
                            "LOLP Mensal Subs" = dadosRiscoMensalSubs,
                            "LOLP Anual Subs" = dadosRiscoAnualSubs,
-                           "Requisito de Potência" = dadosRequisitoPot,
-                           "Requisito de Potência Quadr" = dadosRequisitoPotQuad,
-                           "Distribuição do Déficit" = dadosDistDef[["distDef"]],
-                           "Variação do CVaR Mensal" = dadosDistDef[["distCvar"]],
-                           "Dist Déficit x CVaR Max" = dadosDistDef[["distDefxCvarMax"]],
+                           "Requisito de Pot\u00EAncia" = dadosRequisitoPot,
+                           "Requisito de Pot\u00EAncia Quadr" = dadosRequisitoPotQuad,
+                           "Distribui\u00E7\u00E3o do D\u00E9ficit" = dadosDistDef[["distDef"]],
+                           "Varia\u00E7\u00E3o do CVaR Mensal" = dadosDistDef[["distCvar"]],
+                           "Dist D\u00E9ficit x CVaR Max" = dadosDistDef[["distDefxCvarMax"]],
                            "Disp Hidro Anual" = dadosFatorDisp),
                       path = paste0(pastaSaidaExcel, "//resumoSaidasBP_", stringr::str_remove(basename(baseSQLite), "\\.sqlite3"), ".xlsx"))
   

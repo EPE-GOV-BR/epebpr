@@ -26,6 +26,7 @@ Usa funcoes do pacote (\code{leitorrmpe}).
 }
 \examples{
 \dontrun{
-gravaDadosUsinasHidroBDBP("C:/PDE2027_Caso080", conexao, 1, 80, 1)}
+gravaDadosUsinasHidroBDBP("C:/PDE2027_Caso080", conexao, 1, 80, 1)
+}
 
 }

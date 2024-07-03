@@ -6,15 +6,15 @@
 #' @param tipoCaso valor inteiro. 1:PDE; 2:PMO e 3;Garantia Fisica
 #' @param numeroCaso valor inteiro com o numero do caso
 #' @param codModelo valor inteiro com o codigo do modelo. 1:NEWAVE; 2:SUISHI
-#' @param inicioHorizonte valor numerico do ano de inicio do horizonte para o grafico. Formato: AAAA. Ex: 2020
-#' @param fimHorizonte valor numerico do ano de fim do horizonte para o grafico. Formato: AAAA. Ex:2029
+#' @param inicioHorizonteGrafico valor numerico do ano de inicio do horizonte para o grafico. Formato: AAAA. Ex: 2020
+#' @param fimHorizonteGrafico valor numerico do ano de fim do horizonte para o grafico. Formato: AAAA. Ex:2029
 #' @param tituloGrafico vetor de caracteres com o titulo do grafico de risco - Nao obrigatorio - valor padrao com numero do caso
 #'
 #' @return objeto do tipo ggplot
 #'
 #' @export
 graficoRiscoDeficit <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, inicioHorizonteGrafico, fimHorizonteGrafico, 
-                                tituloGrafico = paste0("Risco de Déficit - Caso ", numeroCaso)) {
+                                tituloGrafico = paste0("Risco de D\u00E9ficit - Caso ", numeroCaso)) {
   
   conexao <- DBI::dbConnect(RSQLite::SQLite(), baseSQLite)
   # query no banco
@@ -78,8 +78,8 @@ graficoRiscoDeficit <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, ini
     ggplot2::geom_text(ggplot2::aes(label = ifelse(anoMes %in% maximosAnuais, scales::percent(A27_VL_LOLP, accuracy = 0.1, scale = 100, suffix = "%", decimal.mark = ","), "")), 
                        nudge_y = (ceiling(max(tib.resultadosMes$A27_VL_LOLP)*10)/10 * 0.05),
                        hjust = 0.4, show.legend = FALSE, fontface = "bold", size = 5, family = "sans") +
-    ggplot2::scale_x_date(name = "Mês", date_labels = "%b-%y", expand = c(0,0), breaks = marcasEixoMes) + 
-    ggplot2::scale_y_continuous(name = "Risco de Déficit", expand = c(0,0), labels = scales::percent_format(accuracy = 0.1, scale = 100, suffix = "%", decimal.mark = ","),
+    ggplot2::scale_x_date(name = "M\u00EDs", date_labels = "%b-%y", expand = c(0,0), breaks = marcasEixoMes) + 
+    ggplot2::scale_y_continuous(name = "Risco de D\u00E9ficit", expand = c(0,0), labels = scales::percent_format(accuracy = 0.1, scale = 100, suffix = "%", decimal.mark = ","),
                                 breaks = seq(0, ceiling(max(tib.resultadosMes$A27_VL_LOLP)*10)/10, ceiling(max(tib.resultadosMes$A27_VL_LOLP)*10)/10/16),
                                 limits = c(0, ceiling(max(tib.resultadosMes$A27_VL_LOLP)*10)/10)) +
     ggplot2::scale_fill_manual(name = NULL, values = "steelblue") +

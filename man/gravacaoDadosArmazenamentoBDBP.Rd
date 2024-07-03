@@ -38,6 +38,7 @@ Os dados sao gravados na tabela BPO_A32_DISPONIBILIDADE_ARMAZENAMENTO do BDBP.
 }
 \examples{
 \dontrun{
-gravacaoDadosArmazenamentoBDBP("C:/PDE2027_Caso080", conexao, 1, 80, 1, 201901, 203312)}
+gravacaoDadosArmazenamentoBDBP("C:/PDE2027_Caso080", conexao, 1, 80, 1, 201901, 203312)
+}
 
 }

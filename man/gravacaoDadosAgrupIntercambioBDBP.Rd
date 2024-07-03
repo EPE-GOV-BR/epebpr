@@ -32,6 +32,7 @@ Os dados sao gravados na tabela BPO_A15_AGRUPAMENTOS_INTERCAMBIO do BDBP.
 }
 \examples{
 \dontrun{
-gravacaoDadosAgrupIntercambioBDBP("C:/PDE2027_Caso080", conexao, 1, 80, 1)}
+gravacaoDadosAgrupIntercambioBDBP("C:/PDE2027_Caso080", conexao, 1, 80, 1)
+}
 
 }

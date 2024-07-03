@@ -35,6 +35,8 @@ Os dados sao gravados na tabela BPO_A14_DISPONIBILIDADE_UTE do BDBP.
 }
 \examples{
 \dontrun{
-gravacaoDadosTermeletricasBDBP("C:/PDE2027_Caso080", "C:/PDE2027_Caso080/nwlistop", conexao, 1, 80, 1)}
+gravacaoDadosTermeletricasBDBP("C:/PDE2027_Caso080", "C:/PDE2027_Caso080/nwlistop", 
+conexao, 1, 80, 1)
+}
 
 }

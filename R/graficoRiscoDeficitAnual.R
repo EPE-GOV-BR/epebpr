@@ -6,15 +6,15 @@
 #' @param tipoCaso valor inteiro. 1:PDE; 2:PMO e 3;Garantia Fisica
 #' @param numeroCaso valor inteiro com o numero do caso
 #' @param codModelo valor inteiro com o codigo do modelo. 1:NEWAVE; 2:SUISHI
-#' @param inicioHorizonte valor numerico do ano de inicio do horizonte para o grafico. Formato: AAAA. Ex: 2020
-#' @param fimHorizonte valor numerico do ano de fim do horizonte para o grafico. Formato: AAAA. Ex:2029
+#' @param inicioHorizonteGrafico valor numerico do ano de inicio do horizonte para o grafico. Formato: AAAA. Ex: 2020
+#' @param fimHorizonteGrafico valor numerico do ano de fim do horizonte para o grafico. Formato: AAAA. Ex:2029
 #' @param tituloGrafico vetor de caracteres com o titulo do grafico de risco - Nao obrigatorio - valor padrao com numero do caso
 #'
 #' @return objeto do tipo plotly
 #'
 #' @export
 graficoRiscoDeficitAnual <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, inicioHorizonteGrafico, fimHorizonteGrafico, 
-                                     tituloGrafico = paste0("Risco de Déficit (LOLP) - Caso ", numeroCaso)) {
+                                     tituloGrafico = paste0("Risco de D\u00E9ficit (LOLP) - Caso ", numeroCaso)) {
   
   conexao <- DBI::dbConnect(RSQLite::SQLite(), baseSQLite)
   # query no banco
@@ -38,13 +38,13 @@ graficoRiscoDeficitAnual <- function(baseSQLite, tipoCaso, numeroCaso, codModelo
   graficoRisco <- plotly::plot_ly(data = tib.resultados, x = ~A28_NR_ANO, y = ~A28_VL_LOLP, name = "", type = "bar", showlegend = F,
                                   textposition = 'outside', texttemplate = "<b>%{y:.1%}</b>",
                                   # <extra></extra> remove o trece do hover
-                                  hovertemplate = "<b>Risco de Déficit</b>: %{y:.1%}<br><b>Ano</b>: %{x}<extra></extra>") %>%
+                                  hovertemplate = "<b>Risco de D\u00E9ficit</b>: %{y:.1%}<br><b>Ano</b>: %{x}<extra></extra>") %>%
     plotly::add_trace(tib.resultados, x = ~A28_NR_ANO, y = 0.05, type = 'scatter', mode = 'lines', color = I("red"),
-                      hovertemplate = "<b>Limite de critério de suprimento: %{y:.0%}<extra></extra>") %>%
+                      hovertemplate = "<b>Limite de crit\u00E9rio de suprimento: %{y:.0%}<extra></extra>") %>%
     plotly::layout( 
       title = paste0("<b>", tituloGrafico, "</b>"),
       yaxis = list( 
-        title = "<b>Risco de Déficit</b>", 
+        title = "<b>Risco de D\u00E9ficit</b>", 
         tickformat = "p"),
       xaxis = list(
         title = "<b>Ano</b>",

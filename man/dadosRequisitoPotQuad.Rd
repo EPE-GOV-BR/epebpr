@@ -22,9 +22,9 @@ dadosRequisitoPotQuad(
 
 \item{codModelo}{valor inteiro com o codigo do modelo. 1:NEWAVE; 2:SUISHI}
 
-\item{inicioHorizonte}{valor numerico do ano de inicio do horizonte para o grafico. Formato: AAAA. Ex: 2020}
+\item{inicioHorizonteGrafico}{valor numerico do ano de inicio do horizonte para o grafico. Formato: AAAA. Ex: 2020}
 
-\item{fimHorizonte}{valor numerico do ano de fim do horizonte para o grafico. Formato: AAAA. Ex:2029}
+\item{fimHorizonteGrafico}{valor numerico do ano de fim do horizonte para o grafico. Formato: AAAA. Ex:2029}
 }
 \value{
 tib.requisitosPotQuad tibble com os dados do grafico de Requisitos de Potencia Quadrimestral

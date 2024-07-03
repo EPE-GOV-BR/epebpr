@@ -32,6 +32,7 @@ Os dados sao gravados na tabela BPO_A11_INTERCAMBIOS do BDBP.
 }
 \examples{
 \dontrun{
-gravacaoDadosIntercambioBDBP(pastaCaso, conexao, tipoCaso, numeroCaso, codModelo)}
+gravacaoDadosIntercambioBDBP(pastaCaso, conexao, tipoCaso, numeroCaso, codModelo)
+}
 
 }

@@ -3,7 +3,7 @@ test_that("epebpr works", {
   caminho <- withr::local_tempdir()
   criaBDBalanco(caminho, "testeCL")
   caminhoBD <- paste(caminho, "testeCL.sqlite3", sep = "/")
-
+  
   expect_equal(carregaDadosSQLite(baseSQLite = caminhoBD,
                                   pastaCaso = "testDataCL",
                                   pastaSaidas = "testDataCL/nwlistop",
@@ -20,8 +20,8 @@ test_that("epebpr works", {
                                   cotaLimiteTucurui = 62,
                                   geracaoLimiteTucurui = 4000,
                                   execShiny = FALSE),
-               "Leitura e gravação dos dados de entrada efetuadas com sucesso!")
-
+               "Leitura e grava\u00E7\u00E3o dos dados de entrada efetuadas com sucesso!")
+  
   # calcula disp hidro com flag vertimento TRUE
   expect_equal(calculaDisponibilidadeHidro(baseSQLite = caminhoBD,
                                            pastaCaso = "testDataCL",
@@ -32,7 +32,7 @@ test_that("epebpr works", {
                                            codTucurui = 275,
                                            flagVert = TRUE),
                "Disponibilidade hidro processada com sucesso!")
-
+  
   # calcula disp hidro com flag vertimento FALSE
   expect_equal(calculaDisponibilidadeHidro(baseSQLite = caminhoBD,
                                            pastaCaso = "testDataCL",
@@ -43,7 +43,7 @@ test_that("epebpr works", {
                                            codTucurui = 275,
                                            flagVert = FALSE),
                "Disponibilidade hidro processada com sucesso!")
-
+  
   # calcula balanco resumido
   expect_equal(calculaBalancoParalelo(baseSQLite = caminhoBD,
                                       tipoCaso = 1,
@@ -56,8 +56,8 @@ test_that("epebpr works", {
                                       balancoResumido = TRUE,
                                       distribuicaoDeficit = 1,
                                       execShiny = FALSE),
-               "Balanço de potência executado e gravado com sucesso!")
-
+               "Balan\u00E7o de pot\u00EAncia executado e gravado com sucesso!")
+  
   # calcula balanco completo
   expect_equal(calculaBalancoParalelo(baseSQLite = caminhoBD,
                                       tipoCaso = 1,
@@ -70,13 +70,21 @@ test_that("epebpr works", {
                                       balancoResumido = FALSE,
                                       distribuicaoDeficit = 1,
                                       execShiny = FALSE),
-               "Balanço de potência executado e gravado com sucesso!")
-
+               "Balan\u00E7o de pot\u00EAncia executado e gravado com sucesso!")
+  
+  # grava saidas da analise
+  expect_equal(gravacaoSaidasAnalises(baseSQLite = caminhoBD,
+                                      tipoCaso = 1,
+                                      numeroCaso = 1,
+                                      codModelo = 1,
+                                      df.dadosGerais = leitorrmpe::leituraDadosGerais("testDataCL")),
+               "saidas de analise gravadas com sucesso!")
+  
   #### PDE, NEWAVE, Carga Bruta
   caminho <- withr::local_tempdir()
   criaBDBalanco(caminho, "testeCB")
   caminhoBD <- paste(caminho, "testeCB.sqlite3", sep = "/")
-
+  
   expect_equal(carregaDadosSQLite(baseSQLite = caminhoBD,
                                   pastaCaso = "testDataCB",
                                   pastaSaidas = "testDataCB/nwlistop",
@@ -93,8 +101,8 @@ test_that("epebpr works", {
                                   cotaLimiteTucurui = 62,
                                   geracaoLimiteTucurui = 4000,
                                   execShiny = FALSE),
-               "Leitura e gravação dos dados de entrada efetuadas com sucesso!")
-
+               "Leitura e grava\u00E7\u00E3o dos dados de entrada efetuadas com sucesso!")
+  
   # calcula disp hidro com flag vertimento TRUE
   expect_equal(calculaDisponibilidadeHidro(baseSQLite = caminhoBD,
                                            pastaCaso = "testDataCB",
@@ -105,7 +113,7 @@ test_that("epebpr works", {
                                            codTucurui = 275,
                                            flagVert = TRUE),
                "Disponibilidade hidro processada com sucesso!")
-
+  
   # calcula disp hidro com flag vertimento FALSE
   expect_equal(calculaDisponibilidadeHidro(baseSQLite = caminhoBD,
                                            pastaCaso = "testDataCB",
@@ -116,7 +124,7 @@ test_that("epebpr works", {
                                            codTucurui = 275,
                                            flagVert = FALSE),
                "Disponibilidade hidro processada com sucesso!")
-
+  
   # calcula balanco resumido
   expect_equal(calculaBalancoParalelo(baseSQLite = caminhoBD,
                                       tipoCaso = 1,
@@ -129,8 +137,8 @@ test_that("epebpr works", {
                                       balancoResumido = TRUE,
                                       distribuicaoDeficit = 1,
                                       execShiny = FALSE),
-               "Balanço de potência executado e gravado com sucesso!")
-
+               "Balan\u00E7o de pot\u00EAncia executado e gravado com sucesso!")
+  
   # calcula balanco completo
   expect_equal(calculaBalancoParalelo(baseSQLite = caminhoBD,
                                       tipoCaso = 1,
@@ -143,8 +151,16 @@ test_that("epebpr works", {
                                       balancoResumido = FALSE,
                                       distribuicaoDeficit = 1,
                                       execShiny = FALSE),
-               "Balanço de potência executado e gravado com sucesso!")
-
+               "Balan\u00E7o de pot\u00EAncia executado e gravado com sucesso!")
+  
+  # grava saidas da analise
+  expect_equal(gravacaoSaidasAnalises(baseSQLite = caminhoBD,
+                                      tipoCaso = 1,
+                                      numeroCaso = 1,
+                                      codModelo = 1,
+                                      df.dadosGerais = leitorrmpe::leituraDadosGerais("testDataCB")),
+               "saidas de analise gravadas com sucesso!")
+  
   #### PMO, NEWAVE, Carga Bruta
   caminho <- withr::local_tempdir()
   criaBDBalanco(caminho, "testePMO")
@@ -166,7 +182,7 @@ test_that("epebpr works", {
                                   cotaLimiteTucurui = 62,
                                   geracaoLimiteTucurui = 4000,
                                   execShiny = FALSE),
-               "Leitura e gravação dos dados de entrada efetuadas com sucesso!")
+               "Leitura e grava\u00E7\u00E3o dos dados de entrada efetuadas com sucesso!")
   
   # calcula disp hidro com flag vertimento TRUE
   expect_equal(calculaDisponibilidadeHidro(baseSQLite = caminhoBD,
@@ -202,7 +218,7 @@ test_that("epebpr works", {
                                       balancoResumido = TRUE,
                                       distribuicaoDeficit = 1,
                                       execShiny = FALSE),
-               "Balanço de potência executado e gravado com sucesso!")
+               "Balan\u00E7o de pot\u00EAncia executado e gravado com sucesso!")
   
   # calcula balanco completo
   expect_equal(calculaBalancoParalelo(baseSQLite = caminhoBD,
@@ -216,5 +232,13 @@ test_that("epebpr works", {
                                       balancoResumido = FALSE,
                                       distribuicaoDeficit = 1,
                                       execShiny = FALSE),
-               "Balanço de potência executado e gravado com sucesso!")
+               "Balan\u00E7o de pot\u00EAncia executado e gravado com sucesso!")
+  
+  # grava saidas da analise
+  expect_equal(gravacaoSaidasAnalises(baseSQLite = caminhoBD,
+                                      tipoCaso = 2,
+                                      numeroCaso = 1,
+                                      codModelo = 1,
+                                      df.dadosGerais = leitorrmpe::leituraDadosGerais("testDataPMO")),
+               "saidas de analise gravadas com sucesso!")
 })

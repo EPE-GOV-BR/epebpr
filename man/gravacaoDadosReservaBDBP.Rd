@@ -35,6 +35,7 @@ Os dados sao gravados na tabela BPO_A21_RESERVA do BDBP. Consulta as tabelas BPO
 }
 \examples{
 \dontrun{
-gravacaoDadosReservaBDBP("C:/PDE2027_Caso080", conexao, 1, 80, 1, df.energiaOFR)}
+gravacaoDadosReservaBDBP("C:/PDE2027_Caso080", conexao, 1, 80, 1, df.energiaOFR)
+}
 
 }

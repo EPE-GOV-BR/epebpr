@@ -4,8 +4,8 @@
 #' @param tipoCaso valor inteiro. 1:PDE; 2:PMO e 3;Garantia Fisica
 #' @param numeroCaso valor inteiro com o numero do caso
 #' @param codModelo valor inteiro com o codigo do modelo. 1:NEWAVE; 2:SUISHI
-#' @param inicioHorizonte valor numerico do ano de inicio do horizonte para o grafico. Formato: AAAA. Ex: 2020
-#' @param fimHorizonte valor numerico do ano de fim do horizonte para o grafico. Formato: AAAA. Ex:2029
+#' @param inicioHorizonteGrafico valor numerico do ano de inicio do horizonte para o grafico. Formato: AAAA. Ex: 2020
+#' @param fimHorizonteGrafico valor numerico do ano de fim do horizonte para o grafico. Formato: AAAA. Ex:2029
 #'
 #' @return tib.requisitosPot tibble com os dados do grafico de Requisitos de Potencia
 #'
@@ -74,7 +74,7 @@ dadosRequisitoPot <- function(baseSQLite, tipoCaso, numeroCaso, codModelo,
   
   DBI::dbDisconnect(conexao)
   
-  # calcula o requisito por mês
+  # calcula o requisito por mes
   tib.resultadosCvarMes <- tib.resultados %>%
     dplyr::group_by(A09_NR_MES, DEMANDA, RESERVA_F, RESERVA_C) %>%
     dplyr::summarise(cvar5 = cvar(DEFICIT, 0.05)) %>% 

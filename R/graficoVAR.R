@@ -6,19 +6,19 @@
 #' @param tipoCaso valor inteiro. 1:PDE; 2:PMO e 3;Garantia Fisica
 #' @param numeroCaso valor inteiro com o numero do caso
 #' @param codModelo valor inteiro com o codigo do modelo. 1:NEWAVE; 2:SUISHI
-#' @param inicioHorizonte valor numerico do ano de inicio do horizonte para o grafico. Formato: AAAA. Ex: 2020
-#' @param fimHorizonte valor numerico do ano de fim do horizonte para o grafico. Formato: AAAA. Ex:2029
+#' @param inicioHorizonteGrafico valor numerico do ano de inicio do horizonte para o grafico. Formato: AAAA. Ex: 2020
+#' @param fimHorizonteGrafico valor numerico do ano de fim do horizonte para o grafico. Formato: AAAA. Ex:2029
 #' @param tipoGrafico valor numerico identificando o tipo de grafico. 5: Mensal por patamar; 6: Mensal em linha; 7:Anual
-#' @param tituloGraficoCVARMes vetor de caracteres com o titulo do grafico de CVAR mensal - Nao obrigatorio - valor padrao com numero do caso
-#' @param tituloGraficoCVARAno vetor de caracteres com o titulo do grafico de CVAR anual - Nao obrigatorio - valor padrao com numero do caso
+#' @param tituloGraficoVARMes vetor de caracteres com o titulo do grafico de VAR mensal - Nao obrigatorio - valor padrao com numero do caso
+#' @param tituloGraficoVARAno vetor de caracteres com o titulo do grafico de VAR anual - Nao obrigatorio - valor padrao com numero do caso
 #'
 #' @return objeto do tipo plotly
 #'
 #' @export
 graficoVAR <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
                        inicioHorizonteGrafico, fimHorizonteGrafico, tipoGrafico,
-                       tituloGraficoVARMes = paste0("Profundidade de Déficit - VaR Mensal - Caso ", numeroCaso),
-                       tituloGraficoVARAno = paste0("Profundidade de Déficit - VaR Anual - Caso ", numeroCaso)) {
+                       tituloGraficoVARMes = paste0("Profundidade de D\u00E9ficit - VaR Mensal - Caso ", numeroCaso),
+                       tituloGraficoVARAno = paste0("Profundidade de D\u00E9ficit - VaR Anual - Caso ", numeroCaso)) {
   
   conexao <- DBI::dbConnect(RSQLite::SQLite(), baseSQLite)
   
@@ -68,12 +68,12 @@ graficoVAR <- function(baseSQLite, tipoCaso, numeroCaso, codModelo,
       dplyr::pull(anoMes) %>% c(., max(tib.resultadosVarMes$anoMes))
     
     graficoVaR <- plotly::plot_ly(data = tib.resultadosVarMes, x = ~anoMes, y = ~A25_VL_VAR, color = ~A25_TX_PERCENT_VAR, type = "bar",
-                                  hovertemplate = "<b>Déficit em MW</b>: %{y:.0f}<br><b>Mês</b>: %{x|%Y-%m}<extra></extra>") %>% 
+                                  hovertemplate = "<b>D\u00E9ficit em MW</b>: %{y:.0f}<br><b>M\u00EDs</b>: %{x|%Y-%m}<extra></extra>") %>% 
       plotly::layout( 
         title = paste0("<b>", tituloGraficoVARMes, "</b>"),
         legend = list(orientation = 'h', x = "0.3", y = "-0.15"),
         yaxis = list( 
-          title = "<b>Déficit em MW</b>", 
+          title = "<b>D\u00E9ficit em MW</b>", 
           tickformat = ".0f"
         ), 
         xaxis = list( 
@@ -116,12 +116,12 @@ graficoVAR <- function(baseSQLite, tipoCaso, numeroCaso, codModelo,
     # exibe grafico anual de var
     graficoVaR <- plotly::plot_ly(data = tib.resultadosVarAno, x = ~A26_NR_ANO, y = ~A26_VL_VAR, color = ~A26_TX_PERCENT_VAR, 
                                   colors = "Set3", type = "bar",
-                                  hovertemplate = "<b>Déficit em MW</b>: %{y:.0f}<br><b>Ano</b>: %{x}") %>% 
+                                  hovertemplate = "<b>D\u00E9ficit em MW</b>: %{y:.0f}<br><b>Ano</b>: %{x}") %>% 
       plotly::layout( 
         title = paste0("<b>", tituloGraficoVARAno, "</b>"),
         legend = list(orientation = 'h', x = "0.3"),
         yaxis = list( 
-          title = "<b>Déficit em MW</b>", 
+          title = "<b>D\u00E9ficit em MW</b>", 
           tickformat = ".0f"), 
         xaxis = list(
           title = "<b>Ano</b>",

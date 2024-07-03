@@ -27,11 +27,12 @@ gravacaoSaidasAnalises(
 \code{mensagem} vetor de caracteres com a mensagem de sucesso de gravacao dos dados de saida de analise
 }
 \description{
-Faz a gravacao dos dados das principais saidas de analise do balanço de ponta em arquivo excel e no banco de dados do Balanco de Potencia (BDBP).
+Faz a gravacao dos dados das principais saidas de analise do balanCo de ponta em arquivo excel e no banco de dados do Balanco de Potencia (BDBP).
 Os dados sao gravados nas tabelas a partir da BPO_A22 do BDBP
 }
 \examples{
 \dontrun{
-gravacaoSaidasAnalises("C:/PDE2027_Caso080.sqlite3", 1, 80, 1)}
+gravacaoSaidasAnalises("C:/PDE2027_Caso080.sqlite3", 1, 80, 1)
+}
 
 }
