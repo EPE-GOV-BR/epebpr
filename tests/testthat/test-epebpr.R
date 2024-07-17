@@ -22,7 +22,7 @@ test_that("epebpr works", {
                                   execShiny = FALSE),
                "Leitura e grava\u00E7\u00E3o dos dados de entrada efetuadas com sucesso!")
   
-  # calcula disp hidro com flag vertimento TRUE
+  # calcula disp hidro com flag vertimento TRUE e flag UHE FALSE
   expect_equal(calculaDisponibilidadeHidro(baseSQLite = caminhoBD,
                                            pastaCaso = "testDataCL",
                                            pastaSaidas = "testDataCL/nwlistop",
@@ -30,10 +30,11 @@ test_that("epebpr works", {
                                            numeroCaso = 1,
                                            codModelo = 1,
                                            codTucurui = 275,
-                                           flagVert = TRUE),
+                                           flagVert = TRUE,
+                                           flagUHE = FALSE),
                "Disponibilidade hidro processada com sucesso!")
   
-  # calcula disp hidro com flag vertimento FALSE
+  # calcula disp hidro com flag vertimento FALSE e flag UHE TRUE
   expect_equal(calculaDisponibilidadeHidro(baseSQLite = caminhoBD,
                                            pastaCaso = "testDataCL",
                                            pastaSaidas = "testDataCL/nwlistop",
@@ -41,7 +42,8 @@ test_that("epebpr works", {
                                            numeroCaso = 1,
                                            codModelo = 1,
                                            codTucurui = 275,
-                                           flagVert = FALSE),
+                                           flagVert = FALSE,
+                                           flagUHE = TRUE),
                "Disponibilidade hidro processada com sucesso!")
   
   # calcula balanco resumido
@@ -103,7 +105,7 @@ test_that("epebpr works", {
                                   execShiny = FALSE),
                "Leitura e grava\u00E7\u00E3o dos dados de entrada efetuadas com sucesso!")
   
-  # calcula disp hidro com flag vertimento TRUE
+  # calcula disp hidro com flag vertimento TRUE e flag UHE FALSE
   expect_equal(calculaDisponibilidadeHidro(baseSQLite = caminhoBD,
                                            pastaCaso = "testDataCB",
                                            pastaSaidas = "testDataCB/nwlistop",
@@ -111,10 +113,11 @@ test_that("epebpr works", {
                                            numeroCaso = 1,
                                            codModelo = 1,
                                            codTucurui = 275,
-                                           flagVert = TRUE),
+                                           flagVert = TRUE,
+                                           flagUHE = FALSE),
                "Disponibilidade hidro processada com sucesso!")
   
-  # calcula disp hidro com flag vertimento FALSE
+  # calcula disp hidro com flag vertimento FALSE e flag UHE TRUE
   expect_equal(calculaDisponibilidadeHidro(baseSQLite = caminhoBD,
                                            pastaCaso = "testDataCB",
                                            pastaSaidas = "testDataCB/nwlistop",
@@ -122,7 +125,8 @@ test_that("epebpr works", {
                                            numeroCaso = 1,
                                            codModelo = 1,
                                            codTucurui = 275,
-                                           flagVert = FALSE),
+                                           flagVert = FALSE,
+                                           flagUHE = TRUE),
                "Disponibilidade hidro processada com sucesso!")
   
   # calcula balanco resumido
@@ -184,7 +188,7 @@ test_that("epebpr works", {
                                   execShiny = FALSE),
                "Leitura e grava\u00E7\u00E3o dos dados de entrada efetuadas com sucesso!")
   
-  # calcula disp hidro com flag vertimento TRUE
+  # calcula disp hidro com flag vertimento TRUE e flag UHE FALSE
   expect_equal(calculaDisponibilidadeHidro(baseSQLite = caminhoBD,
                                            pastaCaso = "testDataPMO",
                                            pastaSaidas = "testDataPMO/nwlistop",
@@ -192,10 +196,11 @@ test_that("epebpr works", {
                                            numeroCaso = 1,
                                            codModelo = 1,
                                            codTucurui = 275,
-                                           flagVert = TRUE),
+                                           flagVert = TRUE,
+                                           flagUHE = FALSE),
                "Disponibilidade hidro processada com sucesso!")
   
-  # calcula disp hidro com flag vertimento FALSE
+  # calcula disp hidro com flag vertimento FALSE e flag UHE TRUE
   expect_equal(calculaDisponibilidadeHidro(baseSQLite = caminhoBD,
                                            pastaCaso = "testDataPMO",
                                            pastaSaidas = "testDataPMO/nwlistop",
@@ -203,7 +208,8 @@ test_that("epebpr works", {
                                            numeroCaso = 1,
                                            codModelo = 1,
                                            codTucurui = 275,
-                                           flagVert = FALSE),
+                                           flagVert = FALSE,
+                                           flagUHE = TRUE),
                "Disponibilidade hidro processada com sucesso!")
   
   # calcula balanco resumido

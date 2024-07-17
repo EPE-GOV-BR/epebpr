@@ -138,8 +138,8 @@ uiBalanco <- fluidPage(
                                               placeholder = "sist1, sist2, etc."))),
                  
                  # Localiza base SQLite
-                 textOutput(outputId = "textoBaseSQLite"),
-                 tags$span(strong(textOutput(outputId = "baseSQLite"), style = c("color:red"))),
+                 tags$span(strong(textOutput(outputId = "textoBaseSQLite"))),
+                 tags$span(strong(textOutput(outputId = "baseSQLite"), style = c("color:red; font-size:10px"))),
                  tags$div(style = "height:3px"),
                  tags$div(actionButton(inputId = "btnBaseSQLite",
                                        label = NULL,
@@ -152,8 +152,8 @@ uiBalanco <- fluidPage(
                  
                  # Localiza a pasta do caso
                  tags$div(style = "height:8px"),
-                 textOutput(outputId = "textoPasta"),
-                 tags$span(strong(textOutput(outputId = "pasta"), style = c("color:red"))),
+                 tags$span(strong(textOutput(outputId = "textoPasta"))),
+                 tags$span(strong(textOutput(outputId = "pasta"), style = c("color:red; font-size:10px"))),
                  tags$div(style = "height:3px"),
                  actionButton(inputId = "btnPasta",
                               label = NULL,
@@ -162,8 +162,8 @@ uiBalanco <- fluidPage(
                  
                  # Localiza a pasta de dados de saida do caso (nwlistop)
                  tags$div(style = "height:8px"),
-                 textOutput(outputId = "textoPastaSaidas"),
-                 tags$span(strong(textOutput(outputId = "pastaSaidas"), style = c("color:red"))),
+                 tags$span(strong(textOutput(outputId = "textoPastaSaidas"))),
+                 tags$span(strong(textOutput(outputId = "pastaSaidas"), style = c("color:red; font-size:10px"))),
                  tags$div(style = "height:3px"),
                  actionButton(inputId = "btnPastaSaidas",
                               label = NULL,
@@ -171,26 +171,26 @@ uiBalanco <- fluidPage(
                               width = 77),
                  tags$br(),
                  tags$br(),
-                 HTML("Etapas de execu\u00E7\u00E3o:"),
+                 tags$b(HTML("Etapas de execu\u00E7\u00E3o:")),
                  tags$br(),
                  tags$div(style = "display:inline-block; width:5px"),
                  tags$div(style="display:inline-block;",
                           checkboxInput(inputId = "leituraDados",
                                         value = T,
-                                        label = HTML("Dados"))),
+                                        label = HTML("1. Dados"))),
                  tags$div(style = "display:inline-block; width:5px"),
                  tags$div(style="display:inline-block;",
                           checkboxInput(inputId = "disponibilidadeHidro",
                                         value = T,
-                                        label = HTML("Disp. Hidro"))),
+                                        label = HTML("2. Disp. Hidro"))),
                  tags$div(style = "display:inline-block; width:5px"),
                  tags$div(style="display:inline-block;",
                           checkboxInput(inputId = "execucaoBP",
                                         value = T,
-                                        label = HTML("BP"))),
+                                        label = HTML("3. BP"))),
                  tags$br(),
                  conditionalPanel(condition = "input.execucaoBP == 1 || input.disponibilidadeHidro == 1",
-                                  HTML("Op\u00E7\u00F5es adicionais:")
+                                  tags$b(HTML("Op\u00E7\u00F5es adicionais:"))
                  ),
                  conditionalPanel(condition = "input.execucaoBP == 1",
                                   tags$div(style = "display:inline-block; width:5px"),
@@ -204,17 +204,19 @@ uiBalanco <- fluidPage(
                                   tags$div(style="display:inline-block;",
                                            checkboxInput(inputId = "flagVert",
                                                          value = F,
-                                                         label = HTML("Considerar Vertimento para todas UHE")))
+                                                         label = HTML("Considerar Vertimento para todas UHE")),
+                                           checkboxInput(inputId = "flagUHE",
+                                                         value = F,
+                                                         label = HTML("Gravar dados individuais das UHE")))
                  ),
 
                  # Action button
                  tags$div(style = "height:8px"),
-                 HTML("Calcula Balan\u00E7o de Pot\u00EAncia"),
                  tags$div(style = "height:3px"),
                  actionButton(inputId = "btnBalanco",
-                              label = NULL,
-                              icon = icon("calculator"),
-                              width = 77)
+                              label = "Executar",
+                              icon = icon("play"),
+                              width = 200)
                  
                ),
                

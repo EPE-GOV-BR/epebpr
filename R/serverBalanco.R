@@ -75,7 +75,7 @@ serverBalanco <- function(input, output, session) {
       updateTextInput(session, "nomeBD", placeholder = "Favor selecionar um nome!")
     } else{
       mensagemModal <- criaBDBalanco(pastaBD, input$nomeBD)
-      baseSQLite <<- paste0(pastaBD, "/", input$nomeBD, ".sqlite3")
+      baseSQLite <<- paste0(pastaBD, "\\", input$nomeBD, ".sqlite3")
       removeModal()
       showModal(
         modalDialog(
@@ -204,6 +204,7 @@ serverBalanco <- function(input, output, session) {
                                                                as.integer(input$codModelo),
                                                                codTucurui,
                                                                input$flagVert,
+                                                               input$flagUHE,
                                                                TRUE)
       } else {
         mensagemDisponibilidade <- ""

@@ -12,7 +12,8 @@ calculaDisponibilidadeHidro(
   numeroCaso,
   codModelo,
   codTucurui,
-  flagVert,
+  flagVert = FALSE,
+  flagUHE = FALSE,
   execShiny = FALSE
 )
 }
@@ -32,6 +33,8 @@ calculaDisponibilidadeHidro(
 \item{codTucurui}{codigo atribuido para a usina de Tucurui}
 
 \item{flagVert}{booleano que indica se considera ou nao o vertimento para todas as UHE}
+
+\item{flagUHE}{booleano que indica se as saidas individuais por UHE deverao ou nao ser gravadas na base de dados}
 
 \item{execShiny}{booleano que indica se a funcao esta sendo executada em um contexto reativo, para atualizacao da barra de progresso}
 }

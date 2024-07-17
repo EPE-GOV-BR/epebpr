@@ -11,12 +11,13 @@
 #' @param codModelo valor inteiro com o codigo do modelo. 1:NEWAVE; 2:SUISHI
 #' @param codTucurui codigo atribuido para a usina de Tucurui
 #' @param flagVert booleano que indica se considera ou nao o vertimento para todas as UHE
+#' @param flagUHE booleano que indica se as saidas individuais por UHE deverao ou nao ser gravadas na base de dados
 #' @param execShiny booleano que indica se a funcao esta sendo executada em um contexto reativo, para atualizacao da barra de progresso
 #'
 #' @return \code{mensagem} vetor de caracteres com a mensagem de sucesso de gravacao na base
 #'
 #' @export
-calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipoCaso, numeroCaso, codModelo, codTucurui, flagVert, execShiny = FALSE) {
+calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipoCaso, numeroCaso, codModelo, codTucurui, flagVert = FALSE, flagUHE = FALSE, execShiny = FALSE) {
   # SQLite
   conexaoSQLite <- DBI::dbConnect(RSQLite::SQLite(), baseSQLite)
   # fecha conexao com a base SQLite na saida da funcao, seja por erro ou normalmente
@@ -203,7 +204,7 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipo
     DBI::dbExecute(conexaoSQLite, "PRAGMA locking_mode = NORMAL;")
     
     # barra de progresso
-    if(execShiny){incProgress(3/100, detail = "Atualiza\u00E7\u00E3o de Submotoriza\u00E7\u00E3o")}
+    if(execShiny){incProgress(4/100, detail = "Atualiza\u00E7\u00E3o de Submotoriza\u00E7\u00E3o")}
     
     ##### SUBMOTORIZACAO #####
     
@@ -239,7 +240,7 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipo
     ###### LEITURA DE DADOS ######
     
     # barra de progresso
-    if(execShiny){incProgress(3/100, detail = "Leitura de dados")}
+    if(execShiny){incProgress(8/100, detail = "Leitura de dados")}
     
     sql <- paste0("SELECT * FROM BPO_A02_REES
                  WHERE A01_TP_CASO = ", tipoCaso, " AND
@@ -347,210 +348,205 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipo
       stop("REE escolhido para modula\u00E7\u00E3o por tabela n\u00E7o possui dados definidos na tabela")
     }
     
-    # for criado para resolver problema de alocacao de memoria. orginalmente era um data frame unico com todos os dados, contudo,
-    # trabalalhando com series sinteticas, acabava por exaurir a memoria.
-    tamanhoJanela <- 100
-    janelaSeries <- c(seq(1, df.dadosCaso$numeroSeries, tamanhoJanela), (df.dadosCaso$numeroSeries + 1))
-    quantidadeJanela <- length(janelaSeries)
-    df.dadosCalculadosUHETipo4 <- NULL #tabela nova a ser criada com dados por usinas dos ree que modulam por tabela
-    for (andaJanela in 1:(quantidadeJanela - 1)) {
-      
-      # barra de progresso
-      if(execShiny){incProgress((1/(quantidadeJanela - 1))*0.3, detail = paste(round(andaJanela*100/(quantidadeJanela - 1), 0),"%"))}
-      
-      ##### CALCULO DISPONIBILIDADE TIPO 1 ######
-      df.saidasHidroTipo1 <- df.saidasHidro %>% 
-        dplyr::filter(dplyr::between(A06_NR_SERIE, janelaSeries[andaJanela], (janelaSeries[andaJanela + 1] - 1)),
-                      A02_NR_REE %in% reeTipo1)
-      
-      df.dadosCalculadosUHE <- dplyr::inner_join(df.dadosVigentesUHETipo1, 
-                                                 df.saidasHidroTipo1, 
-                                                 by = c("A02_NR_REE", "A05_NR_MES" = "A06_NR_MES"),
-                                                 relationship = "many-to-many") %>% 
-        dplyr::mutate(A08_VL_VOLUME_OPERATIVO = (A05_VL_VOL_MAX - A05_VL_VOL_MIN) * A06_VL_PERC_ARMAZENAMENTO + A05_VL_VOL_MIN,
-                      colunaFlagVert = flagVert,
-                      # verifica o flag de vertimento, se verdadeiro soma o vertimento na variavel de GH
-                      A06_VL_GERACAO_HIDRAULICA = ifelse(colunaFlagVert,
-                                                         A06_VL_GERACAO_HIDRAULICA + A06_VL_SUBMOTORIZACAO + A06_VL_VERTIMENTO_TURBINAVEL,
-                                                         A06_VL_GERACAO_HIDRAULICA + A06_VL_SUBMOTORIZACAO)
-        ) %>% 
-        dplyr::select(-colunaFlagVert)
-      
-      df.dadosCalculadosUHE <- dplyr::inner_join(df.dadosCalculadosUHE, df.dadosMaquinasUHE, by = "A03_CD_USINA") %>% 
-        dplyr::mutate(VL_POT_EXP = round(A05_VL_POTENCIA - POT_TOTAL, 2))
-      
-      df.dadosCalculadosUHE <- dplyr::inner_join(df.dadosCalculadosUHE, df.dadosUHETipo1, by = "A03_CD_USINA") %>% 
-        dplyr::mutate(A01_TP_CASO = tipoCaso, A01_NR_CASO = numeroCaso, A01_CD_MODELO = codModelo) %>% 
-        dplyr::select(A01_TP_CASO, A01_NR_CASO, A01_CD_MODELO, A03_CD_USINA, A08_NR_MES = A05_NR_MES, A08_NR_SERIE = A06_NR_SERIE, A02_NR_REE, 
-                      A08_VL_VOLUME_OPERATIVO, A03_NR_PCV_0, A03_NR_PCV_1, A03_NR_PCV_2, A03_NR_PCV_3, A03_NR_PCV_4, 
-                      A03_VL_PERDA, A03_TP_PERDA, A03_VL_PRODUTIBILIDADE, A05_NR_CANAL_FUGA_MEDIO, A05_VL_TEIF, A05_VL_IP, 
-                      A05_VL_VAZAO_MINIMA, A06_VL_GERACAO_HIDRAULICA, VL_POT_EXP)
-      
-      # 2 - COTA OPERATIVA(per,ser) => CALCULADA a partir do VOLUME OPERATIVO(per,ser) e do polinomio cota-volume
-      # 3 - ALTURA DE QUEDA LIQUIDA(per,ser) => CALCULADA a partir da COTA OPERATIVA(per,ser), CANAL DE FUGA MEDIO (per) e Perdas
-      # 3.1 - Altura de queda liquida = Cota Operativa - Canal de Fuga medio
-      # 3.2 - Abate as perdas
-      df.dadosCalculadosUHE <- df.dadosCalculadosUHE %>%
-        dplyr::mutate(A08_VL_COTA_OPERATIVA = A03_NR_PCV_0  + (A03_NR_PCV_1 * A08_VL_VOLUME_OPERATIVO) +
-                        (A03_NR_PCV_2 * A08_VL_VOLUME_OPERATIVO^2) +
-                        (A03_NR_PCV_3 * A08_VL_VOLUME_OPERATIVO^3) +
-                        (A03_NR_PCV_4 * A08_VL_VOLUME_OPERATIVO^4),
-                      A08_VL_ALTURA_LIQUIDA = ifelse(A03_TP_PERDA == 1,
-                                                     (A08_VL_COTA_OPERATIVA - A05_NR_CANAL_FUGA_MEDIO) * (1 - (A03_VL_PERDA / 100)),
-                                                     (A08_VL_COTA_OPERATIVA - A05_NR_CANAL_FUGA_MEDIO)- A03_VL_PERDA))
-      
-      
-      # limpa campos ja usados
-      df.dadosCalculadosUHE <- df.dadosCalculadosUHE %>%
-        dplyr::select(-A03_NR_PCV_0, -A03_NR_PCV_1, -A03_NR_PCV_2, -A03_NR_PCV_3,
-                      -A03_NR_PCV_4, -A03_VL_PERDA, -A05_NR_CANAL_FUGA_MEDIO)
-      
-      # 3.3 - Ajuste caso encontre algum valor negativo
-      df.dadosCalculadosUHE$A08_VL_ALTURA_LIQUIDA[df.dadosCalculadosUHE$A08_VL_ALTURA_LIQUIDA < 0.0001] <- 0.0001
-      
-      # 4 - POTENCIA MaXIMA(per,ser)
-      # 4.1) PARA POTENCIA REFERENTE AOS CONJUNTOS Ja EXISTENTES: ALTURA DE REFERENCIA DO CONJUNTO >= ALTURA DE QUEDA
-      df.dadosCalculadosUHEMaquinas <- dplyr::inner_join(df.dadosCalculadosUHE, df.potMaquinas,
-                                                         by = c("A01_CD_MODELO", "A01_NR_CASO", "A01_TP_CASO", "A03_CD_USINA"),
-                                                         relationship = "many-to-many")
-      
-      # Para os conjuntos onde a altura de queda liquida e menor que a altura de referencia do conjunto, a potencia
-      # nao e igual a maxima, mas um percentual da maxima, calculado a partir da razao (HLIQ/HREF)^coef da turbina
-      df.dadosCalculadosUHEMaquinas <- df.dadosCalculadosUHEMaquinas %>%
-        dplyr::mutate(A08_VL_POTENCIA_MAXIMA = ifelse(A08_VL_ALTURA_LIQUIDA >= A04_VL_ALTURA_REFERENCIA,
-                                                      A04_NR_MAQUINAS * A04_VL_POTENCIA * (1 - A05_VL_TEIF) * (1 - A05_VL_IP),
-                                                      A04_NR_MAQUINAS * A04_VL_POTENCIA * (1 - A05_VL_TEIF) * (1 - A05_VL_IP) *
-                                                        (A08_VL_ALTURA_LIQUIDA/A04_VL_ALTURA_REFERENCIA)^VL_COEF_TURBINA))
-      
-      # 4.3) PARA POTENCIA EM EXPANSaO e ALTURA DE REFERENCIA DO CONJUNTO 1 >= ALTURA DE QUEDA LiQUIDA(per,ser): APENAS ABATE DO TOTAL EM EXPANSaO O TEIF E O IP
-      # 4.4) PARA POTENCIA EM EXPANSAO e ALTURA DE REFERENCIA DO CONJUNTO 1 < ALTURA DE QUEDA LiQUIDA(per,ser):
-      # APENAS ABATE DO TOTAL EM EXPANSaO O TEIF E O IP E APLICA AINDA
-      # UM FATOR DE REDUcaO DA POTENCIA IGUAL A (ALTURA DE QUEDA LiQUIDA(per,ser)/ALTURA DE REFERENCIA DO CONJUNTO 1)^COEFICIENTE DA TURBINA
-      df.dadosCalculadosUHEMaquinas <- df.dadosCalculadosUHEMaquinas %>%
-        dplyr::mutate(A08_VL_POTENCIA_MAXIMA =
-                        (A08_VL_POTENCIA_MAXIMA + ifelse((A04_NR_CONJUNTO == 1 & VL_POT_EXP > 0) ,
-                                                         ifelse(A08_VL_ALTURA_LIQUIDA >= A04_VL_ALTURA_REFERENCIA,
-                                                                VL_POT_EXP * (1 - A05_VL_TEIF) * (1 - A05_VL_IP),
-                                                                VL_POT_EXP * (1 - A05_VL_TEIF) * (1 - A05_VL_IP) *
-                                                                  (A08_VL_ALTURA_LIQUIDA/A04_VL_ALTURA_REFERENCIA)^VL_COEF_TURBINA ),
-                                                         0)))
-      
-      df.potenciaMaximaUHE <- df.dadosCalculadosUHEMaquinas %>%
-        dplyr::group_by(A01_CD_MODELO, A01_TP_CASO, A01_NR_CASO, A03_CD_USINA, A08_NR_MES, A08_NR_SERIE) %>%
-        dplyr::summarise(A08_VL_POTENCIA_MAXIMA = sum(A08_VL_POTENCIA_MAXIMA)) %>% dplyr::ungroup()
-      
-      # remove data frame ja utilizado
-      rm(df.dadosCalculadosUHEMaquinas)
-      
-      df.dadosCalculadosUHE <- dplyr::inner_join(df.dadosCalculadosUHE, df.potenciaMaximaUHE,
-                                                 by = c("A01_CD_MODELO", "A01_NR_CASO", "A01_TP_CASO", "A03_CD_USINA", "A08_NR_MES", "A08_NR_SERIE"))
-      
-      # remove data frame ja utilizado
-      rm(df.potenciaMaximaUHE)
-      
-      ###################################################################################################################################
-      # Segundo Passo: Modula a geracao na ponta, respeitando a geracao media (GHTOT(per,res)) durante as horas do mes,
-      # o GHMIN(per,ser) fora na hora da ponta e a maxima contribuicao
-      # POTENCIA MAXIMA(per,ser) durante o numero de horas em que a ponta ocorre
-      ###################################################################################################################################
-      # GHMIN CALCULADO ORIGINALMENTE
-      
-      # Atualiza GHMIN se potencia maxima for inferior ao GHMIN
-      df.dadosCalculadosUHE <- df.dadosCalculadosUHE %>%
-        dplyr::mutate(A08_VL_GERACAO_HIDRO_MINIMA_ORIGINAL =
-                        A08_VL_ALTURA_LIQUIDA * A03_VL_PRODUTIBILIDADE * A05_VL_VAZAO_MINIMA,
-                      A08_VL_GERACAO_HIDRO_MINIMA = ifelse(A08_VL_GERACAO_HIDRO_MINIMA_ORIGINAL > A08_VL_POTENCIA_MAXIMA,
-                                                           A08_VL_POTENCIA_MAXIMA,
-                                                           A08_VL_GERACAO_HIDRO_MINIMA_ORIGINAL))
-      
-      
-      df.dadosCalculadosSsist <- df.dadosCalculadosUHE %>%
-        dplyr::group_by(A01_CD_MODELO, A01_TP_CASO, A01_NR_CASO, A02_NR_REE, A08_NR_MES, A08_NR_SERIE) %>%
-        dplyr::summarise(A09_VL_GERACAO_HIDRO_MINIMA_TMP = sum(A08_VL_GERACAO_HIDRO_MINIMA),
-                         A09_VL_POTENCIA_MAXIMA = sum(A08_VL_POTENCIA_MAXIMA)) %>%
-        dplyr::ungroup()
-      
-      df.dadosCalculadosUHE <- dplyr::inner_join(df.dadosCalculadosUHE, df.dadosCalculadosSsist,
-                                                 by = c("A01_CD_MODELO", "A01_NR_CASO", "A01_TP_CASO", "A02_NR_REE", "A08_NR_MES", "A08_NR_SERIE"))
-      
-      
-      # Calcula GHTOT por usina:
-      # Rateia o GHTOT pela potencia maxima, ja abatida do GHMIN*/
-      # GHMIN_UHE = GHMIN_UHE X (1 - (GHMIN_SSIS - GHTOT_SSIS)/GHMIN_SSIS)
-      # GHMEDIA = GHMIN_UHE + ((GHTOT_SSIS - GHMIN_SSIS) X ((POT_MAX_UHE - GHMIN_UHE)/(POT_MAX_SSIS - GHMIN_SSIS)))
-      # Modula o GHTOT, maximizando a geracao na horas de ponta*/
-      # POT_MODULADA = ((GHMEDIA X 730.5) - (GHMIN X (730.5 - HORASPONTA))) / HORASPONTA
-      df.dadosCalculadosUHE <- df.dadosCalculadosUHE %>%
-        dplyr::mutate(A08_VL_GERACAO_HIDRO_MINIMA = ifelse((A06_VL_GERACAO_HIDRAULICA < A09_VL_GERACAO_HIDRO_MINIMA_TMP),
-                                                           (A08_VL_GERACAO_HIDRO_MINIMA * 
-                                                              (1 - (A09_VL_GERACAO_HIDRO_MINIMA_TMP - A06_VL_GERACAO_HIDRAULICA) / A09_VL_GERACAO_HIDRO_MINIMA_TMP)),
-                                                           A08_VL_GERACAO_HIDRO_MINIMA))
-      
-      df.dadosCalculadosUHE <- df.dadosCalculadosUHE %>% dplyr::select(-A09_VL_GERACAO_HIDRO_MINIMA_TMP)
-      
-      df.dadosCalculadosSsist <- df.dadosCalculadosUHE %>%
-        dplyr::group_by(A01_CD_MODELO, A01_TP_CASO, A01_NR_CASO, A02_NR_REE, A08_NR_MES, A08_NR_SERIE) %>%
-        dplyr::summarise(A09_VL_GERACAO_HIDRO_MINIMA_TMP = sum(A08_VL_GERACAO_HIDRO_MINIMA)) %>% dplyr::ungroup()
-      
-      df.dadosCalculadosUHE <- dplyr::inner_join(df.dadosCalculadosUHE, df.dadosCalculadosSsist,
-                                                 by = c("A01_CD_MODELO", "A01_NR_CASO", "A01_TP_CASO", "A02_NR_REE", "A08_NR_MES", "A08_NR_SERIE"))
-      
-      df.dadosCalculadosUHE <- df.dadosCalculadosUHE %>%
-        dplyr::mutate(A08_VL_GERACAO_HIDRO_MEDIA = (A08_VL_GERACAO_HIDRO_MINIMA + ((A06_VL_GERACAO_HIDRAULICA - A09_VL_GERACAO_HIDRO_MINIMA_TMP) *
-                                                                                     ((A08_VL_POTENCIA_MAXIMA - A08_VL_GERACAO_HIDRO_MINIMA) / 
-                                                                                        (A09_VL_POTENCIA_MAXIMA - A09_VL_GERACAO_HIDRO_MINIMA_TMP)))),
-                      A08_VL_POTENCIA_MAXIMA_MODULADA = (((A08_VL_GERACAO_HIDRO_MEDIA * 730.5) -
-                                                            (A08_VL_GERACAO_HIDRO_MINIMA * (730.5 - df.dadosCaso$horasPonta))) / df.dadosCaso$horasPonta))
-      
-      # Ajusta potencia maxima de acordo com o limite superior
-      df.dadosCalculadosUHE <- df.dadosCalculadosUHE %>%
-        dplyr::mutate(A08_VL_POTENCIA_MAXIMA_MODULADA = ifelse(A08_VL_POTENCIA_MAXIMA_MODULADA > A08_VL_POTENCIA_MAXIMA,
-                                                               A08_VL_POTENCIA_MAXIMA,
-                                                               A08_VL_POTENCIA_MAXIMA_MODULADA),
-                      A08_VL_VAZAO_MAXIMA = 0,
-                      A08_VL_VAZAO_MAXIMA_MODULADA = 0,
-                      A08_VL_ALTURA_MODULADA = 0)
-      
-      # Ajusta potencia maxima de tucurui
-      df.dadosCalculadosUHE <- df.dadosCalculadosUHE %>%
-        dplyr::mutate(A08_VL_POTENCIA_MAXIMA_MODULADA = ifelse((A03_CD_USINA == codTucurui &
-                                                                  A08_VL_POTENCIA_MAXIMA_MODULADA > df.dadosCaso$gerLimiteTucurui &
-                                                                  A08_VL_COTA_OPERATIVA < df.dadosCaso$cotaLimiteTucurui),
-                                                               df.dadosCaso$gerLimiteTucurui,
-                                                               A08_VL_POTENCIA_MAXIMA_MODULADA))
-      
-      
-      df.dadosCalculadosUHE <- df.dadosCalculadosUHE %>%
-        dplyr::select(A01_TP_CASO, A01_NR_CASO, A01_CD_MODELO, A03_CD_USINA, A08_NR_MES,
-                      A08_NR_SERIE, A02_NR_REE, A08_VL_VOLUME_OPERATIVO,
-                      A08_VL_COTA_OPERATIVA, A08_VL_ALTURA_LIQUIDA, A08_VL_VAZAO_MAXIMA,
-                      A08_VL_POTENCIA_MAXIMA, A08_VL_GERACAO_HIDRO_MINIMA_ORIGINAL,
-                      A08_VL_GERACAO_HIDRO_MINIMA, A08_VL_GERACAO_HIDRO_MEDIA,
-                      A08_VL_VAZAO_MAXIMA_MODULADA, A08_VL_ALTURA_MODULADA,
-                      A08_VL_POTENCIA_MAXIMA_MODULADA)
-      
-      
-      # grava dados calculados na BPO_A08_DADOS_CALCULADOS_UHE
+    # barra de progresso
+    if(execShiny){incProgress(8/100, detail = "Realizando c\u00E1lculo")}
+    
+    ##### CALCULO DISPONIBILIDADE TIPO 1 ######
+    df.saidasHidroTipo1 <- df.saidasHidro %>% 
+      dplyr::filter(A02_NR_REE %in% reeTipo1)
+    
+    df.dadosCalculadosUHE <- dplyr::inner_join(df.dadosVigentesUHETipo1, 
+                                               df.saidasHidroTipo1, 
+                                               by = c("A02_NR_REE", "A05_NR_MES" = "A06_NR_MES"),
+                                               relationship = "many-to-many") %>% 
+      dplyr::mutate(A08_VL_VOLUME_OPERATIVO = (A05_VL_VOL_MAX - A05_VL_VOL_MIN) * A06_VL_PERC_ARMAZENAMENTO + A05_VL_VOL_MIN,
+                    colunaFlagVert = flagVert,
+                    # verifica o flag de vertimento, se verdadeiro soma o vertimento na variavel de GH
+                    A06_VL_GERACAO_HIDRAULICA = ifelse(colunaFlagVert,
+                                                       A06_VL_GERACAO_HIDRAULICA + A06_VL_SUBMOTORIZACAO + A06_VL_VERTIMENTO_TURBINAVEL,
+                                                       A06_VL_GERACAO_HIDRAULICA + A06_VL_SUBMOTORIZACAO)
+      ) %>% 
+      dplyr::select(-colunaFlagVert)
+    
+    df.dadosCalculadosUHE <- dplyr::inner_join(df.dadosCalculadosUHE, df.dadosMaquinasUHE, by = "A03_CD_USINA") %>% 
+      dplyr::mutate(VL_POT_EXP = round(A05_VL_POTENCIA - POT_TOTAL, 2))
+    
+    df.dadosCalculadosUHE <- dplyr::inner_join(df.dadosCalculadosUHE, df.dadosUHETipo1, by = "A03_CD_USINA") %>% 
+      dplyr::mutate(A01_TP_CASO = tipoCaso, A01_NR_CASO = numeroCaso, A01_CD_MODELO = codModelo) %>% 
+      dplyr::select(A01_TP_CASO, A01_NR_CASO, A01_CD_MODELO, A03_CD_USINA, A08_NR_MES = A05_NR_MES, A08_NR_SERIE = A06_NR_SERIE, A02_NR_REE, 
+                    A08_VL_VOLUME_OPERATIVO, A03_NR_PCV_0, A03_NR_PCV_1, A03_NR_PCV_2, A03_NR_PCV_3, A03_NR_PCV_4, 
+                    A03_VL_PERDA, A03_TP_PERDA, A03_VL_PRODUTIBILIDADE, A05_NR_CANAL_FUGA_MEDIO, A05_VL_TEIF, A05_VL_IP, 
+                    A05_VL_VAZAO_MINIMA, A06_VL_GERACAO_HIDRAULICA, VL_POT_EXP)
+    
+    # 2 - COTA OPERATIVA(per,ser) => CALCULADA a partir do VOLUME OPERATIVO(per,ser) e do polinomio cota-volume
+    # 3 - ALTURA DE QUEDA LIQUIDA(per,ser) => CALCULADA a partir da COTA OPERATIVA(per,ser), CANAL DE FUGA MEDIO (per) e Perdas
+    # 3.1 - Altura de queda liquida = Cota Operativa - Canal de Fuga medio
+    # 3.2 - Abate as perdas
+    df.dadosCalculadosUHE <- df.dadosCalculadosUHE %>%
+      dplyr::mutate(A08_VL_COTA_OPERATIVA = A03_NR_PCV_0  + (A03_NR_PCV_1 * A08_VL_VOLUME_OPERATIVO) +
+                      (A03_NR_PCV_2 * A08_VL_VOLUME_OPERATIVO^2) +
+                      (A03_NR_PCV_3 * A08_VL_VOLUME_OPERATIVO^3) +
+                      (A03_NR_PCV_4 * A08_VL_VOLUME_OPERATIVO^4),
+                    A08_VL_ALTURA_LIQUIDA = ifelse(A03_TP_PERDA == 1,
+                                                   (A08_VL_COTA_OPERATIVA - A05_NR_CANAL_FUGA_MEDIO) * (1 - (A03_VL_PERDA / 100)),
+                                                   (A08_VL_COTA_OPERATIVA - A05_NR_CANAL_FUGA_MEDIO)- A03_VL_PERDA))
+    
+    
+    # limpa campos ja usados
+    df.dadosCalculadosUHE <- df.dadosCalculadosUHE %>%
+      dplyr::select(-A03_NR_PCV_0, -A03_NR_PCV_1, -A03_NR_PCV_2, -A03_NR_PCV_3,
+                    -A03_NR_PCV_4, -A03_VL_PERDA, -A05_NR_CANAL_FUGA_MEDIO)
+    
+    # 3.3 - Ajuste caso encontre algum valor negativo
+    df.dadosCalculadosUHE$A08_VL_ALTURA_LIQUIDA[df.dadosCalculadosUHE$A08_VL_ALTURA_LIQUIDA < 0.0001] <- 0.0001
+    
+    # 4 - POTENCIA MaXIMA(per,ser)
+    # 4.1) PARA POTENCIA REFERENTE AOS CONJUNTOS Ja EXISTENTES: ALTURA DE REFERENCIA DO CONJUNTO >= ALTURA DE QUEDA
+    df.dadosCalculadosUHEMaquinas <- dplyr::inner_join(df.dadosCalculadosUHE, df.potMaquinas,
+                                                       by = c("A01_CD_MODELO", "A01_NR_CASO", "A01_TP_CASO", "A03_CD_USINA"),
+                                                       relationship = "many-to-many")
+    
+    # Para os conjuntos onde a altura de queda liquida e menor que a altura de referencia do conjunto, a potencia
+    # nao e igual a maxima, mas um percentual da maxima, calculado a partir da razao (HLIQ/HREF)^coef da turbina
+    df.dadosCalculadosUHEMaquinas <- df.dadosCalculadosUHEMaquinas %>%
+      dplyr::mutate(A08_VL_POTENCIA_MAXIMA = ifelse(A08_VL_ALTURA_LIQUIDA >= A04_VL_ALTURA_REFERENCIA,
+                                                    A04_NR_MAQUINAS * A04_VL_POTENCIA * (1 - A05_VL_TEIF) * (1 - A05_VL_IP),
+                                                    A04_NR_MAQUINAS * A04_VL_POTENCIA * (1 - A05_VL_TEIF) * (1 - A05_VL_IP) *
+                                                      (A08_VL_ALTURA_LIQUIDA/A04_VL_ALTURA_REFERENCIA)^VL_COEF_TURBINA))
+    
+    # 4.3) PARA POTENCIA EM EXPANSaO e ALTURA DE REFERENCIA DO CONJUNTO 1 >= ALTURA DE QUEDA LiQUIDA(per,ser): APENAS ABATE DO TOTAL EM EXPANSaO O TEIF E O IP
+    # 4.4) PARA POTENCIA EM EXPANSAO e ALTURA DE REFERENCIA DO CONJUNTO 1 < ALTURA DE QUEDA LiQUIDA(per,ser):
+    # APENAS ABATE DO TOTAL EM EXPANSaO O TEIF E O IP E APLICA AINDA
+    # UM FATOR DE REDUcaO DA POTENCIA IGUAL A (ALTURA DE QUEDA LiQUIDA(per,ser)/ALTURA DE REFERENCIA DO CONJUNTO 1)^COEFICIENTE DA TURBINA
+    df.dadosCalculadosUHEMaquinas <- df.dadosCalculadosUHEMaquinas %>%
+      dplyr::mutate(A08_VL_POTENCIA_MAXIMA =
+                      (A08_VL_POTENCIA_MAXIMA + ifelse((A04_NR_CONJUNTO == 1 & VL_POT_EXP > 0) ,
+                                                       ifelse(A08_VL_ALTURA_LIQUIDA >= A04_VL_ALTURA_REFERENCIA,
+                                                              VL_POT_EXP * (1 - A05_VL_TEIF) * (1 - A05_VL_IP),
+                                                              VL_POT_EXP * (1 - A05_VL_TEIF) * (1 - A05_VL_IP) *
+                                                                (A08_VL_ALTURA_LIQUIDA/A04_VL_ALTURA_REFERENCIA)^VL_COEF_TURBINA ),
+                                                       0)))
+    
+    df.potenciaMaximaUHE <- df.dadosCalculadosUHEMaquinas %>%
+      dplyr::group_by(A01_CD_MODELO, A01_TP_CASO, A01_NR_CASO, A03_CD_USINA, A08_NR_MES, A08_NR_SERIE) %>%
+      dplyr::summarise(A08_VL_POTENCIA_MAXIMA = sum(A08_VL_POTENCIA_MAXIMA)) %>% dplyr::ungroup()
+    
+    # remove data frame ja utilizado
+    rm(df.dadosCalculadosUHEMaquinas)
+    
+    df.dadosCalculadosUHE <- dplyr::inner_join(df.dadosCalculadosUHE, df.potenciaMaximaUHE,
+                                               by = c("A01_CD_MODELO", "A01_NR_CASO", "A01_TP_CASO", "A03_CD_USINA", "A08_NR_MES", "A08_NR_SERIE"))
+    
+    # remove data frame ja utilizado
+    rm(df.potenciaMaximaUHE)
+    
+    ###################################################################################################################################
+    # Segundo Passo: Modula a geracao na ponta, respeitando a geracao media (GHTOT(per,res)) durante as horas do mes,
+    # o GHMIN(per,ser) fora na hora da ponta e a maxima contribuicao
+    # POTENCIA MAXIMA(per,ser) durante o numero de horas em que a ponta ocorre
+    ###################################################################################################################################
+    # GHMIN CALCULADO ORIGINALMENTE
+    
+    # Atualiza GHMIN se potencia maxima for inferior ao GHMIN
+    df.dadosCalculadosUHE <- df.dadosCalculadosUHE %>%
+      dplyr::mutate(A08_VL_GERACAO_HIDRO_MINIMA_ORIGINAL =
+                      A08_VL_ALTURA_LIQUIDA * A03_VL_PRODUTIBILIDADE * A05_VL_VAZAO_MINIMA,
+                    A08_VL_GERACAO_HIDRO_MINIMA = ifelse(A08_VL_GERACAO_HIDRO_MINIMA_ORIGINAL > A08_VL_POTENCIA_MAXIMA,
+                                                         A08_VL_POTENCIA_MAXIMA,
+                                                         A08_VL_GERACAO_HIDRO_MINIMA_ORIGINAL))
+    
+    
+    df.dadosCalculadosSsist <- df.dadosCalculadosUHE %>%
+      dplyr::group_by(A01_CD_MODELO, A01_TP_CASO, A01_NR_CASO, A02_NR_REE, A08_NR_MES, A08_NR_SERIE) %>%
+      dplyr::summarise(A09_VL_GERACAO_HIDRO_MINIMA_TMP = sum(A08_VL_GERACAO_HIDRO_MINIMA),
+                       A09_VL_POTENCIA_MAXIMA = sum(A08_VL_POTENCIA_MAXIMA)) %>%
+      dplyr::ungroup()
+    
+    df.dadosCalculadosUHE <- dplyr::inner_join(df.dadosCalculadosUHE, df.dadosCalculadosSsist,
+                                               by = c("A01_CD_MODELO", "A01_NR_CASO", "A01_TP_CASO", "A02_NR_REE", "A08_NR_MES", "A08_NR_SERIE"))
+    
+    
+    # Calcula GHTOT por usina:
+    # Rateia o GHTOT pela potencia maxima, ja abatida do GHMIN*/
+    # GHMIN_UHE = GHMIN_UHE X (1 - (GHMIN_SSIS - GHTOT_SSIS)/GHMIN_SSIS)
+    # GHMEDIA = GHMIN_UHE + ((GHTOT_SSIS - GHMIN_SSIS) X ((POT_MAX_UHE - GHMIN_UHE)/(POT_MAX_SSIS - GHMIN_SSIS)))
+    # Modula o GHTOT, maximizando a geracao na horas de ponta*/
+    # POT_MODULADA = ((GHMEDIA X 730.5) - (GHMIN X (730.5 - HORASPONTA))) / HORASPONTA
+    df.dadosCalculadosUHE <- df.dadosCalculadosUHE %>%
+      dplyr::mutate(A08_VL_GERACAO_HIDRO_MINIMA = ifelse((A06_VL_GERACAO_HIDRAULICA < A09_VL_GERACAO_HIDRO_MINIMA_TMP),
+                                                         (A08_VL_GERACAO_HIDRO_MINIMA * 
+                                                            (1 - (A09_VL_GERACAO_HIDRO_MINIMA_TMP - A06_VL_GERACAO_HIDRAULICA) / A09_VL_GERACAO_HIDRO_MINIMA_TMP)),
+                                                         A08_VL_GERACAO_HIDRO_MINIMA))
+    
+    df.dadosCalculadosUHE <- df.dadosCalculadosUHE %>% dplyr::select(-A09_VL_GERACAO_HIDRO_MINIMA_TMP)
+    
+    df.dadosCalculadosSsist <- df.dadosCalculadosUHE %>%
+      dplyr::group_by(A01_CD_MODELO, A01_TP_CASO, A01_NR_CASO, A02_NR_REE, A08_NR_MES, A08_NR_SERIE) %>%
+      dplyr::summarise(A09_VL_GERACAO_HIDRO_MINIMA_TMP = sum(A08_VL_GERACAO_HIDRO_MINIMA)) %>% dplyr::ungroup()
+    
+    df.dadosCalculadosUHE <- dplyr::inner_join(df.dadosCalculadosUHE, df.dadosCalculadosSsist,
+                                               by = c("A01_CD_MODELO", "A01_NR_CASO", "A01_TP_CASO", "A02_NR_REE", "A08_NR_MES", "A08_NR_SERIE"))
+    
+    df.dadosCalculadosUHE <- df.dadosCalculadosUHE %>%
+      dplyr::mutate(A08_VL_GERACAO_HIDRO_MEDIA = (A08_VL_GERACAO_HIDRO_MINIMA + ((A06_VL_GERACAO_HIDRAULICA - A09_VL_GERACAO_HIDRO_MINIMA_TMP) *
+                                                                                   ((A08_VL_POTENCIA_MAXIMA - A08_VL_GERACAO_HIDRO_MINIMA) / 
+                                                                                      (A09_VL_POTENCIA_MAXIMA - A09_VL_GERACAO_HIDRO_MINIMA_TMP)))),
+                    A08_VL_POTENCIA_MAXIMA_MODULADA = (((A08_VL_GERACAO_HIDRO_MEDIA * 730.5) -
+                                                          (A08_VL_GERACAO_HIDRO_MINIMA * (730.5 - df.dadosCaso$horasPonta))) / df.dadosCaso$horasPonta))
+    
+    # Ajusta potencia maxima de acordo com o limite superior
+    df.dadosCalculadosUHE <- df.dadosCalculadosUHE %>%
+      dplyr::mutate(A08_VL_POTENCIA_MAXIMA_MODULADA = ifelse(A08_VL_POTENCIA_MAXIMA_MODULADA > A08_VL_POTENCIA_MAXIMA,
+                                                             A08_VL_POTENCIA_MAXIMA,
+                                                             A08_VL_POTENCIA_MAXIMA_MODULADA),
+                    A08_VL_VAZAO_MAXIMA = 0,
+                    A08_VL_VAZAO_MAXIMA_MODULADA = 0,
+                    A08_VL_ALTURA_MODULADA = 0)
+    
+    # Ajusta potencia maxima de tucurui
+    df.dadosCalculadosUHE <- df.dadosCalculadosUHE %>%
+      dplyr::mutate(A08_VL_POTENCIA_MAXIMA_MODULADA = ifelse((A03_CD_USINA == codTucurui &
+                                                                A08_VL_POTENCIA_MAXIMA_MODULADA > df.dadosCaso$gerLimiteTucurui &
+                                                                A08_VL_COTA_OPERATIVA < df.dadosCaso$cotaLimiteTucurui),
+                                                             df.dadosCaso$gerLimiteTucurui,
+                                                             A08_VL_POTENCIA_MAXIMA_MODULADA))
+    
+    
+    df.dadosCalculadosUHE <- df.dadosCalculadosUHE %>%
+      dplyr::select(A01_TP_CASO, A01_NR_CASO, A01_CD_MODELO, A03_CD_USINA, A08_NR_MES,
+                    A08_NR_SERIE, A02_NR_REE, A08_VL_VOLUME_OPERATIVO,
+                    A08_VL_COTA_OPERATIVA, A08_VL_ALTURA_LIQUIDA, A08_VL_VAZAO_MAXIMA,
+                    A08_VL_POTENCIA_MAXIMA, A08_VL_GERACAO_HIDRO_MINIMA_ORIGINAL,
+                    A08_VL_GERACAO_HIDRO_MINIMA, A08_VL_GERACAO_HIDRO_MEDIA,
+                    A08_VL_VAZAO_MAXIMA_MODULADA, A08_VL_ALTURA_MODULADA,
+                    A08_VL_POTENCIA_MAXIMA_MODULADA)
+    
+    
+    # grava dados calculados na BPO_A08_DADOS_CALCULADOS_UHE
+    if(flagUHE){
+      if(execShiny){incProgress(0, detail = "Gravando Dados Calculados por UHE")}
       DBI::dbExecute(conexaoSQLite, "PRAGMA locking_mode = EXCLUSIVE;")
       DBI::dbWriteTable(conexaoSQLite, "BPO_A08_DADOS_CALCULADOS_UHE", df.dadosCalculadosUHE, append = T)
       DBI::dbExecute(conexaoSQLite, "PRAGMA locking_mode = NORMAL;")
-      
-      
-      # monta estrutuda de dados para a tabela BPO_A09_DISPONIBILIDADE_HIDRO_PONTA_SUBSISTEMA
-      df.dadosCalculadosSsist <- df.dadosCalculadosUHE %>%
-        dplyr::group_by(A01_CD_MODELO, A01_TP_CASO, A01_NR_CASO, A02_NR_REE, A08_NR_MES, A08_NR_SERIE) %>%
-        dplyr::summarise(A09_VL_GERACAO_HIDRO_MINIMA = sum(A08_VL_GERACAO_HIDRO_MINIMA),
-                         A09_VL_GERACAO_HIDRO_MINIMA_ORIGINAL = sum(A08_VL_GERACAO_HIDRO_MINIMA_ORIGINAL),
-                         A09_VL_DISPONIBILIDADE_MAXIMA_PONTA = sum(A08_VL_POTENCIA_MAXIMA_MODULADA),
-                         A09_VL_POTENCIA_MAXIMA = sum(A08_VL_POTENCIA_MAXIMA)) %>%
-        dplyr::ungroup()
-      
-      # corrigindo nome das colunas para ficar igual a tabela BPO_A09_DISPONIBILIDADE_HIDRO_PONTA_SUBSISTEMA
-      colnames(df.dadosCalculadosSsist)[5:6] <- c("A09_NR_MES", "A09_NR_SERIE")
-      
-      ##### DISPONIBILIDADE TIPO 2 E 3 ######
-      
-      sql <- paste0("SELECT
+    }
+    
+    # monta estrutuda de dados para a tabela BPO_A09_DISPONIBILIDADE_HIDRO_PONTA_SUBSISTEMA
+    df.dadosCalculadosSsist <- df.dadosCalculadosUHE %>%
+      dplyr::group_by(A01_CD_MODELO, A01_TP_CASO, A01_NR_CASO, A02_NR_REE, A08_NR_MES, A08_NR_SERIE) %>%
+      dplyr::summarise(A09_VL_GERACAO_HIDRO_MINIMA = sum(A08_VL_GERACAO_HIDRO_MINIMA),
+                       A09_VL_GERACAO_HIDRO_MINIMA_ORIGINAL = sum(A08_VL_GERACAO_HIDRO_MINIMA_ORIGINAL),
+                       A09_VL_DISPONIBILIDADE_MAXIMA_PONTA = sum(A08_VL_POTENCIA_MAXIMA_MODULADA),
+                       A09_VL_POTENCIA_MAXIMA = sum(A08_VL_POTENCIA_MAXIMA)) %>%
+      dplyr::ungroup()
+    
+    # corrigindo nome das colunas para ficar igual a tabela BPO_A09_DISPONIBILIDADE_HIDRO_PONTA_SUBSISTEMA
+    colnames(df.dadosCalculadosSsist)[5:6] <- c("A09_NR_MES", "A09_NR_SERIE")
+    
+    # barra de progresso
+    if(execShiny){incProgress(8/100, detail = "Realizando c\u00E1lculo")}
+    
+    ##### DISPONIBILIDADE TIPO 2 E 3 ######
+    sql <- paste0("SELECT
                   A01_CD_MODELO,
                   A01_TP_CASO,
                   A01_NR_CASO,
@@ -566,167 +562,171 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipo
                   A02_NR_REE IN (SELECT A02_NR_REE FROM BPO_A02_REES
                                  WHERE A02_TP_CALC_POTENCIA IN (2, 3) AND A01_TP_CASO = ", tipoCaso, " AND
                                   A01_NR_CASO = ", numeroCaso, " AND A01_CD_MODELO = ", codModelo, ") AND
-                  A06_NR_SERIE BETWEEN ", janelaSeries[andaJanela], " AND ", (janelaSeries[andaJanela + 1] - 1), " AND                
                   A01_TP_CASO = ", tipoCaso, " AND
                   A01_NR_CASO = ", numeroCaso, " AND
                   A01_CD_MODELO = ", codModelo, ";")
-      df.dadosSsistNaoModulam <- DBI::dbGetQuery(conexaoSQLite, sql)
+    df.dadosSsistNaoModulam <- DBI::dbGetQuery(conexaoSQLite, sql)
+    
+    ##### CALCULO DISPONIBILIDADE TIPO 4 PELA TABELA ######
+    if(length(reeTipo4) > 0){
+      df.saidasHidroTipo4 <- df.saidasHidro %>% 
+        dplyr::filter(A02_NR_REE %in% reeTipo4)
       
-      ##### CALCULO DISPONIBILIDADE TIPO 4 PELA TABELA ######
-      if(length(reeTipo4) > 0){
-        df.saidasHidroTipo4 <- df.saidasHidro %>% 
-          dplyr::filter(dplyr::between(A06_NR_SERIE, janelaSeries[andaJanela], (janelaSeries[andaJanela + 1] - 1)), A02_NR_REE %in% reeTipo4)
-        
-        # calculo da pordutibilidade das usinas dos REE tipo 4
-        df.prodREEModulaTabela <- dplyr::full_join(leitorrmpe::leituraAlteracaoDadosUsinasHidro(pastaCaso)[[1]],
-                                                   leitorrmpe::leituraDadosUsinasHidro(pastaCaso)[[1]] %>%
-                                                     tidyr::crossing(anoMes = unique(df.saidasHidroTipo4$A06_NR_MES)) %>% 
-                                                     dplyr::select(codUsina, anoMes, poliCotaVolumeA0, poliCotaVolumeA1, poliCotaVolumeA2, poliCotaVolumeA3, poliCotaVolumeA4, volumeMaximo, volumeReferencia, canalFugaMedio, tipoPerda, perda, tipoTurbina, TEIF, IP, produtibilidade) %>%
-                                                     dplyr::mutate(volumeReferencia = ifelse(volumeReferencia < volumeMaximo, volumeMaximo, volumeReferencia)) %>%
-                                                     dplyr::select(-volumeMaximo) %>%  
-                                                     dplyr::mutate(kturb = ifelse(tipoTurbina == 2, 1.2, 1.5)),
-                                                   by=c("codUsina" ,"anoMes")) %>% 
-          dplyr::left_join(leitorrmpe::leituraConfiguracaoHidro(pastaCaso) %>% dplyr::select(codREE,codUsina), by=c("codUsina")) %>% 
-          dplyr::mutate(volumeMaximo = ifelse(is.na(volumeMaximo) | volumeMaximo >  volumeReferencia ,volumeReferencia,volumeMaximo)) %>%
-          dplyr::mutate(nivelMontante = ifelse(is.na(nivelMontante),
-                                               poliCotaVolumeA0 + volumeMaximo*poliCotaVolumeA1 + volumeMaximo^2*poliCotaVolumeA2 + volumeMaximo^3*poliCotaVolumeA3+ volumeMaximo^4*poliCotaVolumeA4,
-                                               nivelMontante)) %>%
-          dplyr::mutate(canalFuga = ifelse(is.na(canalFuga), canalFugaMedio, canalFuga)) %>%
-          dplyr::mutate(perda = ifelse(tipoPerda==2, perda, (nivelMontante - canalFuga)*perda/100)) %>%
-          dplyr::mutate(Hliq = nivelMontante-canalFuga - perda) %>% 
-          dplyr::left_join(leitorrmpe::leituraDadosUsinasHidro(pastaCaso)[[3]], by = c("codUsina"), relationship = "many-to-many") %>%
-          dplyr::mutate(potConj = numeroMaquinas * ifelse(Hliq >= quedaEfetiva, potenciaUnitaria, potenciaUnitaria*(Hliq/quedaEfetiva)^kturb),
-                        produtibilidade = produtibilidade * (nivelMontante - canalFuga-perda)) %>%
-          dplyr::filter(codUsina %in% UHEtipo4, anoMes %in% unique(df.saidasHidroTipo4$A06_NR_MES)) %>%
-          dplyr::group_by(codREE, codUsina, anoMes, produtibilidade, TEIF, IP) %>%
-          dplyr::summarize(GHmax = sum(potConj)) %>%
-          dplyr::ungroup() %>%
-          dplyr::mutate(GHmax=GHmax * (1 - TEIF/100) * (1 - IP/100)) %>%
-          dplyr::select(codREE, codUsina, anoMes, GHmax, produtibilidade) %>%
-          dplyr::group_by(codREE, anoMes) %>%
-          dplyr::mutate(proporcao = GHmax/sum(GHmax))
-
-        df.dadosUHEModulamTabelaUsina <- dplyr::left_join(df.saidasHidroTipo4, 
-                                                          df.prodREEModulaTabela, 
-                                                          by = c("A02_NR_REE" = "codREE", "A06_NR_MES" = "anoMes"),
-                                                          relationship = "many-to-many") %>% 
-          dplyr::left_join(lt.hidrogramaBM[["usinas"]], by = c("codUsina")) %>% 
-          dplyr::mutate(mes = A06_NR_MES%%100) %>% 
-          dplyr::left_join(df.hidrograma, by = c("mes", "grupo", "codUsina" = "codUsinaHidrograma")) %>% 
-          dplyr::select(-mes) %>% 
-          dplyr::mutate(flag = flagVert,
-                        ghtot_ree = ifelse(flag,
-                                           A06_VL_GERACAO_HIDRAULICA + A06_VL_SUBMOTORIZACAO + A06_VL_VERTIMENTO_TURBINAVEL,
-                                           A06_VL_GERACAO_HIDRAULICA + A06_VL_SUBMOTORIZACAO),
-                        gh = ghtot_ree * proporcao,
-                        flagHidrograma = ifelse(!is.na(grupo) & !is.na(vazao), 1, ifelse(!is.na(grupo) & is.na(vazao), 0, NA))) %>% 
-          dplyr::left_join(df.tabelaModulacao %>% dplyr::select(-codUsina), by = c("A02_NR_REE" = "codREE")) %>%
-          dplyr::group_by(A02_NR_REE, A06_NR_MES, A06_NR_SERIE, grupo) %>% 
-          dplyr::mutate(proporcao_hidrograma = (GHmax  * flagHidrograma)/sum(GHmax  * flagHidrograma),
-                        proporcao_impactada = (GHmax  * (1 - flagHidrograma))/sum(GHmax  * (1 - flagHidrograma)),
-                        gh_hidrograma = pmin(produtibilidade * vazao, GHmax),
-                        gh_impactada = ifelse(flagHidrograma == 0,
-                                              pmin(GHmax, pmax(0, sum(gh) - sum(gh_hidrograma, na.rm = T))) * proporcao_impactada,
-                                              NA),
-                        gh_hidrograma_corrigido = ifelse(flagHidrograma == 1,
-                                                         pmin(gh_hidrograma, sum(gh) * proporcao_hidrograma) + pmax(0,(sum(gh) - sum(gh_impactada,na.rm = T) - sum(gh_hidrograma,na.rm = T))) * proporcao_hidrograma,
-                                                         NA),
-                        gh_corrigido = dplyr::coalesce(gh_hidrograma_corrigido, gh_impactada, gh),
-                        vazao = gh_corrigido/produtibilidade) %>% 
-          dplyr::ungroup() %>% 
-          dplyr::rowwise() %>% 
-          dplyr::mutate(pdisph = ifelse(codUsina %in% unique(df.tabelaModulacao$codUsina),
-                                        funcao(vazao),
-                                        gh_corrigido),
-                        A01_CD_MODELO = codModelo,
-                        A01_TP_CASO = tipoCaso,
-                        A01_NR_CASO = numeroCaso) %>% 
-          dplyr::rename(A33_NR_MES = A06_NR_MES,
-                        A33_NR_SERIE = A06_NR_SERIE,
-                        A03_CD_USINA = codUsina,
-                        A33_VL_GERACAO_HIDRO_REE = ghtot_ree,
-                        A33_VL_PRODUTIBILIDADE = produtibilidade,
-                        A33_VL_PROPORCAO = proporcao,
-                        A33_VL_VAZAO = vazao,
-                        A33_VL_GERACAO_HIDRO_CORRIGIDA = gh_corrigido,
-                        A33_VL_POTENCIA_MAXIMA = GHmax,
-                        A33_VL_DISPONIBILIDADE_MAXIMA_PONTA = pdisph) %>% 
-          dplyr::select(A01_CD_MODELO, 
-                        A01_TP_CASO, 
-                        A01_NR_CASO,
-                        A02_NR_REE,
-                        A33_NR_MES, 
-                        A33_NR_SERIE,
-                        A03_CD_USINA,
-                        A33_VL_GERACAO_HIDRO_REE,
-                        A33_VL_PRODUTIBILIDADE,
-                        A33_VL_PROPORCAO,
-                        A33_VL_VAZAO,
-                        A33_VL_GERACAO_HIDRO_CORRIGIDA,
-                        A33_VL_POTENCIA_MAXIMA,
-                        A33_VL_DISPONIBILIDADE_MAXIMA_PONTA)
-                        
-        df.dadosUHEModulamTabela <- df.dadosUHEModulamTabelaUsina %>% 
-          dplyr::group_by(A02_NR_REE, A33_NR_SERIE, A33_NR_MES) %>% #dados por REE
-          dplyr::reframe(A33_VL_DISPONIBILIDADE_MAXIMA_PONTA = sum(A33_VL_DISPONIBILIDADE_MAXIMA_PONTA),
-                         A33_VL_POTENCIA_MAXIMA = sum(A33_VL_POTENCIA_MAXIMA)) %>% 
-          dplyr::ungroup() %>% 
-          dplyr::mutate(A09_VL_DISPONIBILIDADE_MAXIMA_PONTA = A33_VL_DISPONIBILIDADE_MAXIMA_PONTA,
-                        A01_CD_MODELO = codModelo,
-                        A01_TP_CASO = tipoCaso,
-                        A01_NR_CASO = numeroCaso,
-                        A09_NR_MES = A33_NR_MES,
-                        A09_NR_SERIE = A33_NR_SERIE,
-                        A09_VL_GERACAO_HIDRO_MINIMA = 0,
-                        A09_VL_GERACAO_HIDRO_MINIMA_ORIGINAL = 0,
-                        A09_VL_POTENCIA_MAXIMA = A33_VL_POTENCIA_MAXIMA) %>% 
-          dplyr::select(A01_CD_MODELO, 
-                        A01_TP_CASO, 
-                        A01_NR_CASO, 
-                        A02_NR_REE, 
-                        A09_NR_MES,
-                        A09_NR_SERIE, 
-                        A09_VL_GERACAO_HIDRO_MINIMA, 
-                        A09_VL_GERACAO_HIDRO_MINIMA_ORIGINAL,
-                        A09_VL_DISPONIBILIDADE_MAXIMA_PONTA, 
-                        A09_VL_POTENCIA_MAXIMA)
-        
-        # grava dados calculados na BPO_A33_DADOS_CALCULADOS_UHE_REE_TABELA
+      # calculo da pordutibilidade das usinas dos REE tipo 4
+      df.prodREEModulaTabela <- dplyr::full_join(leitorrmpe::leituraAlteracaoDadosUsinasHidro(pastaCaso)[[1]],
+                                                 leitorrmpe::leituraDadosUsinasHidro(pastaCaso)[[1]] %>%
+                                                   tidyr::crossing(anoMes = unique(df.saidasHidroTipo4$A06_NR_MES)) %>% 
+                                                   dplyr::select(codUsina, anoMes, poliCotaVolumeA0, poliCotaVolumeA1, poliCotaVolumeA2, poliCotaVolumeA3, poliCotaVolumeA4, volumeMaximo, volumeReferencia, canalFugaMedio, tipoPerda, perda, tipoTurbina, TEIF, IP, produtibilidade) %>%
+                                                   dplyr::mutate(volumeReferencia = ifelse(volumeReferencia < volumeMaximo, volumeMaximo, volumeReferencia)) %>%
+                                                   dplyr::select(-volumeMaximo) %>%  
+                                                   dplyr::mutate(kturb = ifelse(tipoTurbina == 2, 1.2, 1.5)),
+                                                 by=c("codUsina" ,"anoMes")) %>% 
+        dplyr::left_join(leitorrmpe::leituraConfiguracaoHidro(pastaCaso) %>% dplyr::select(codREE,codUsina), by=c("codUsina")) %>% 
+        dplyr::mutate(volumeMaximo = ifelse(is.na(volumeMaximo) | volumeMaximo >  volumeReferencia ,volumeReferencia,volumeMaximo)) %>%
+        dplyr::mutate(nivelMontante = ifelse(is.na(nivelMontante),
+                                             poliCotaVolumeA0 + volumeMaximo*poliCotaVolumeA1 + volumeMaximo^2*poliCotaVolumeA2 + volumeMaximo^3*poliCotaVolumeA3+ volumeMaximo^4*poliCotaVolumeA4,
+                                             nivelMontante)) %>%
+        dplyr::mutate(canalFuga = ifelse(is.na(canalFuga), canalFugaMedio, canalFuga)) %>%
+        dplyr::mutate(perda = ifelse(tipoPerda==2, perda, (nivelMontante - canalFuga)*perda/100)) %>%
+        dplyr::mutate(Hliq = nivelMontante-canalFuga - perda) %>% 
+        dplyr::left_join(leitorrmpe::leituraDadosUsinasHidro(pastaCaso)[[3]], by = c("codUsina"), relationship = "many-to-many") %>%
+        dplyr::mutate(potConj = numeroMaquinas * ifelse(Hliq >= quedaEfetiva, potenciaUnitaria, potenciaUnitaria*(Hliq/quedaEfetiva)^kturb),
+                      produtibilidade = produtibilidade * (nivelMontante - canalFuga-perda)) %>%
+        dplyr::filter(codUsina %in% UHEtipo4, anoMes %in% unique(df.saidasHidroTipo4$A06_NR_MES)) %>%
+        dplyr::group_by(codREE, codUsina, anoMes, produtibilidade, TEIF, IP) %>%
+        dplyr::summarize(GHmax = sum(potConj)) %>%
+        dplyr::ungroup() %>%
+        dplyr::mutate(GHmax=GHmax * (1 - TEIF/100) * (1 - IP/100)) %>%
+        dplyr::select(codREE, codUsina, anoMes, GHmax, produtibilidade) %>%
+        dplyr::group_by(codREE, anoMes) %>%
+        dplyr::mutate(proporcao = GHmax/sum(GHmax))
+      
+      df.dadosUHEModulamTabelaUsina <- dplyr::left_join(df.saidasHidroTipo4, 
+                                                        df.prodREEModulaTabela, 
+                                                        by = c("A02_NR_REE" = "codREE", "A06_NR_MES" = "anoMes"),
+                                                        relationship = "many-to-many") %>% 
+        dplyr::left_join(lt.hidrogramaBM[["usinas"]], by = c("codUsina")) %>% 
+        dplyr::mutate(mes = A06_NR_MES%%100) %>% 
+        dplyr::left_join(df.hidrograma, by = c("mes", "grupo", "codUsina" = "codUsinaHidrograma")) %>% 
+        dplyr::select(-mes) %>% 
+        dplyr::mutate(flag = flagVert,
+                      ghtot_ree = ifelse(flag,
+                                         A06_VL_GERACAO_HIDRAULICA + A06_VL_SUBMOTORIZACAO + A06_VL_VERTIMENTO_TURBINAVEL,
+                                         A06_VL_GERACAO_HIDRAULICA + A06_VL_SUBMOTORIZACAO),
+                      gh = ghtot_ree * proporcao,
+                      flagHidrograma = ifelse(!is.na(grupo) & !is.na(vazao), 1, ifelse(!is.na(grupo) & is.na(vazao), 0, NA))) %>% 
+        dplyr::left_join(df.tabelaModulacao %>% dplyr::select(-codUsina), by = c("A02_NR_REE" = "codREE")) %>%
+        dplyr::group_by(A02_NR_REE, A06_NR_MES, A06_NR_SERIE, grupo) %>% 
+        dplyr::mutate(proporcao_hidrograma = (GHmax  * flagHidrograma)/sum(GHmax  * flagHidrograma),
+                      proporcao_impactada = (GHmax  * (1 - flagHidrograma))/sum(GHmax  * (1 - flagHidrograma)),
+                      gh_hidrograma = pmin(produtibilidade * vazao, GHmax),
+                      gh_impactada = ifelse(flagHidrograma == 0,
+                                            pmin(GHmax, pmax(0, sum(gh) - sum(gh_hidrograma, na.rm = T))) * proporcao_impactada,
+                                            NA),
+                      gh_hidrograma_corrigido = ifelse(flagHidrograma == 1,
+                                                       pmin(gh_hidrograma, sum(gh) * proporcao_hidrograma) + pmax(0,(sum(gh) - sum(gh_impactada,na.rm = T) - sum(gh_hidrograma,na.rm = T))) * proporcao_hidrograma,
+                                                       NA),
+                      gh_corrigido = dplyr::coalesce(gh_hidrograma_corrigido, gh_impactada, gh),
+                      vazao = gh_corrigido/produtibilidade) %>% 
+        dplyr::ungroup() %>% 
+        dplyr::rowwise() %>% 
+        dplyr::mutate(pdisph = ifelse(codUsina %in% unique(df.tabelaModulacao$codUsina),
+                                      funcao(vazao),
+                                      gh_corrigido),
+                      A01_CD_MODELO = codModelo,
+                      A01_TP_CASO = tipoCaso,
+                      A01_NR_CASO = numeroCaso) %>% 
+        dplyr::rename(A33_NR_MES = A06_NR_MES,
+                      A33_NR_SERIE = A06_NR_SERIE,
+                      A03_CD_USINA = codUsina,
+                      A33_VL_GERACAO_HIDRO_REE = ghtot_ree,
+                      A33_VL_PRODUTIBILIDADE = produtibilidade,
+                      A33_VL_PROPORCAO = proporcao,
+                      A33_VL_VAZAO = vazao,
+                      A33_VL_GERACAO_HIDRO_CORRIGIDA = gh_corrigido,
+                      A33_VL_POTENCIA_MAXIMA = GHmax,
+                      A33_VL_DISPONIBILIDADE_MAXIMA_PONTA = pdisph) %>% 
+        dplyr::select(A01_CD_MODELO, 
+                      A01_TP_CASO, 
+                      A01_NR_CASO,
+                      A02_NR_REE,
+                      A33_NR_MES, 
+                      A33_NR_SERIE,
+                      A03_CD_USINA,
+                      A33_VL_GERACAO_HIDRO_REE,
+                      A33_VL_PRODUTIBILIDADE,
+                      A33_VL_PROPORCAO,
+                      A33_VL_VAZAO,
+                      A33_VL_GERACAO_HIDRO_CORRIGIDA,
+                      A33_VL_POTENCIA_MAXIMA,
+                      A33_VL_DISPONIBILIDADE_MAXIMA_PONTA)
+      
+      df.dadosUHEModulamTabela <- df.dadosUHEModulamTabelaUsina %>% 
+        dplyr::group_by(A02_NR_REE, A33_NR_SERIE, A33_NR_MES) %>% #dados por REE
+        dplyr::reframe(A33_VL_DISPONIBILIDADE_MAXIMA_PONTA = sum(A33_VL_DISPONIBILIDADE_MAXIMA_PONTA),
+                       A33_VL_POTENCIA_MAXIMA = sum(A33_VL_POTENCIA_MAXIMA)) %>% 
+        dplyr::ungroup() %>% 
+        dplyr::mutate(A09_VL_DISPONIBILIDADE_MAXIMA_PONTA = A33_VL_DISPONIBILIDADE_MAXIMA_PONTA,
+                      A01_CD_MODELO = codModelo,
+                      A01_TP_CASO = tipoCaso,
+                      A01_NR_CASO = numeroCaso,
+                      A09_NR_MES = A33_NR_MES,
+                      A09_NR_SERIE = A33_NR_SERIE,
+                      A09_VL_GERACAO_HIDRO_MINIMA = 0,
+                      A09_VL_GERACAO_HIDRO_MINIMA_ORIGINAL = 0,
+                      A09_VL_POTENCIA_MAXIMA = A33_VL_POTENCIA_MAXIMA) %>% 
+        dplyr::select(A01_CD_MODELO, 
+                      A01_TP_CASO, 
+                      A01_NR_CASO, 
+                      A02_NR_REE, 
+                      A09_NR_MES,
+                      A09_NR_SERIE, 
+                      A09_VL_GERACAO_HIDRO_MINIMA, 
+                      A09_VL_GERACAO_HIDRO_MINIMA_ORIGINAL,
+                      A09_VL_DISPONIBILIDADE_MAXIMA_PONTA, 
+                      A09_VL_POTENCIA_MAXIMA)
+      
+      # grava dados calculados na BPO_A33_DADOS_CALCULADOS_UHE_REE_TABELA
+      if(flagUHE){
+        if(execShiny){incProgress(0, detail = "Gravando Dados Calculados por UHE")}
         DBI::dbExecute(conexaoSQLite, "PRAGMA locking_mode = EXCLUSIVE;")
         DBI::dbWriteTable(conexaoSQLite, "BPO_A33_DADOS_CALCULADOS_UHE_REE_TABELA", df.dadosUHEModulamTabelaUsina, append = T)
         DBI::dbExecute(conexaoSQLite, "PRAGMA locking_mode = NORMAL;")
-        
-        # concatena as REEs que modulam com as que nao modulam e as que modulam por tabela para gravar na base
-        df.dadosCalculadosSsist <- rbind(df.dadosCalculadosSsist, df.dadosSsistNaoModulam, df.dadosUHEModulamTabela)
-      }else{
-        df.dadosCalculadosSsist <- rbind(df.dadosCalculadosSsist, df.dadosSsistNaoModulam)
       }
       
-      # Para buscar o subsistema
-      df.dadosCalculadosSsist <- dplyr::inner_join(df.dadosCalculadosSsist, df.ree, by = c("A02_NR_REE"))
-      
-      # Nao precisa mais de REE e Descricao
-      df.dadosCalculadosSsist <- df.dadosCalculadosSsist %>%
-        dplyr::select(-A02_NR_REE, -A02_TX_DESCRICAO_REE)
-      
-      # Agrupa os dados calculados por Subsistema, totalizando
-      df.dadosCalculadosSsistAgrup <- df.dadosCalculadosSsist %>%
-        dplyr::group_by(A01_CD_MODELO,A01_NR_CASO,A01_TP_CASO,A02_NR_SUBSISTEMA,A09_NR_MES,A09_NR_SERIE) %>%
-        dplyr::summarise(A09_VL_GERACAO_HIDRO_MINIMA = round(sum(A09_VL_GERACAO_HIDRO_MINIMA),4),
-                         A09_VL_GERACAO_HIDRO_MINIMA_ORIGINAL = round(sum(A09_VL_GERACAO_HIDRO_MINIMA_ORIGINAL),4),
-                         A09_VL_DISPONIBILIDADE_MAXIMA_PONTA = round(sum(A09_VL_DISPONIBILIDADE_MAXIMA_PONTA),4),
-                         A09_VL_POTENCIA_MAXIMA = round(sum(A09_VL_POTENCIA_MAXIMA),4)) %>% 
-        dplyr::ungroup()
-      
-      # remove data frame ja utilizado
-      rm(df.dadosCalculadosSsist)
-      
-      # grava dados calculados na BPO_A09_DISPONIBILIDADE_HIDRO_PONTA_SUBSISTEMA
-      DBI::dbExecute(conexaoSQLite, "PRAGMA locking_mode = EXCLUSIVE;")
-      DBI::dbWriteTable(conexaoSQLite, "BPO_A09_DISPONIBILIDADE_HIDRO_PONTA_SUBSISTEMA", df.dadosCalculadosSsistAgrup, append = T)
-      DBI::dbExecute(conexaoSQLite, "PRAGMA locking_mode = NORMAL;")
-      
+      # concatena as REEs que modulam com as que nao modulam e as que modulam por tabela para gravar na base
+      df.dadosCalculadosSsist <- rbind(df.dadosCalculadosSsist, df.dadosSsistNaoModulam, df.dadosUHEModulamTabela)
+    }else{
+      df.dadosCalculadosSsist <- rbind(df.dadosCalculadosSsist, df.dadosSsistNaoModulam)
     }
+    
+    # Para buscar o subsistema
+    df.dadosCalculadosSsist <- dplyr::inner_join(df.dadosCalculadosSsist, df.ree, by = c("A02_NR_REE"))
+    
+    # Nao precisa mais de REE e Descricao
+    df.dadosCalculadosSsist <- df.dadosCalculadosSsist %>%
+      dplyr::select(-A02_NR_REE, -A02_TX_DESCRICAO_REE)
+    
+    # Agrupa os dados calculados por Subsistema, totalizando
+    df.dadosCalculadosSsistAgrup <- df.dadosCalculadosSsist %>%
+      dplyr::group_by(A01_CD_MODELO,A01_NR_CASO,A01_TP_CASO,A02_NR_SUBSISTEMA,A09_NR_MES,A09_NR_SERIE) %>%
+      dplyr::summarise(A09_VL_GERACAO_HIDRO_MINIMA = round(sum(A09_VL_GERACAO_HIDRO_MINIMA),4),
+                       A09_VL_GERACAO_HIDRO_MINIMA_ORIGINAL = round(sum(A09_VL_GERACAO_HIDRO_MINIMA_ORIGINAL),4),
+                       A09_VL_DISPONIBILIDADE_MAXIMA_PONTA = round(sum(A09_VL_DISPONIBILIDADE_MAXIMA_PONTA),4),
+                       A09_VL_POTENCIA_MAXIMA = round(sum(A09_VL_POTENCIA_MAXIMA),4)) %>% 
+      dplyr::ungroup()
+    
+    # remove data frame ja utilizado
+    rm(df.dadosCalculadosSsist)
+    
+    # barra de progresso
+    if(execShiny){incProgress(8/100, detail = "Gravando Disponibilidade Hidro por Subsistema")}
+    
+    # grava dados calculados na BPO_A09_DISPONIBILIDADE_HIDRO_PONTA_SUBSISTEMA
+    DBI::dbExecute(conexaoSQLite, "PRAGMA locking_mode = EXCLUSIVE;")
+    DBI::dbWriteTable(conexaoSQLite, "BPO_A09_DISPONIBILIDADE_HIDRO_PONTA_SUBSISTEMA", df.dadosCalculadosSsistAgrup, append = T)
+    DBI::dbExecute(conexaoSQLite, "PRAGMA locking_mode = NORMAL;")
+    
   }
   
   return("Disponibilidade hidro processada com sucesso!")
