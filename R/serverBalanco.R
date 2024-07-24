@@ -6,6 +6,8 @@
 #' @param output saidas da camada ui
 #' @param session objeto contendo dados e funcionalidades da da sessao
 #' @export
+#' 
+#' @importFrom dplyr %>%
 serverBalanco <- function(input, output, session) {
   
   ####### ABA BALANCO #######
