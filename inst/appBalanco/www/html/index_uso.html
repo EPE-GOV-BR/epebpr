@@ -237,7 +237,7 @@
 		<table>
 			<tr>
 				<td width = 370px>
-					<img src = "../imagens/btn_calcula_balanco.png" height = 120px />
+					<img src = "../imagens/btn_calcula_balanco.png" height = 240px />
 				</td>
 				<td>
 					Ao pressionar o botão indicado, o usuário irá executar o cálculo do balanço de ponta. A execução completa é composta por três etapas distintas:
@@ -250,7 +250,9 @@
 					<br>
 					Cada etapa do processo pode ser realizada individualmente, desde que os dados necessários estejam disponíveis na base indicada. A execução da etapa de cálculo da disponibilidade hidráulica necessita da etapa de dados concluída e a etapa de execução do BP necessita da etapa de dados e de disponibilidade hidráulica concluídas.<br>
 					<br>
-          A caixa de seleção "Considerar Vertimento para todas UHE" altera o cálculo da disponibilidade hidráulica (etapa 15.4 da página de informações), somando à geração hidráulica do REE a parcela de vertimento turbinável (vertturb).
+          A caixa de seleção "Considerar Vertimento para todas UHE" altera o cálculo da disponibilidade hidráulica (etapa 15.4 da página de informações), somando à geração hidráulica do REE a parcela de vertimento turbinável (vertturb).<br>
+          <br>
+          A caixa de seleção "Gravar dados individuais das UHE" habilita ou não a gravação da tabela BPO_A08_DADOS_CALCULADOS_UHE na base SQLite. Esta tabela contem dados intermediários necessários ao calculo da disponibilidade hidráulica e é a maior tabela da base. Sua escrita aumenta consideravelmente o tamanho do arquivo da base SQLite. 
 				</td>
 			</tr>
 		</table>
