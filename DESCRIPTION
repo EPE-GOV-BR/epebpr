@@ -38,8 +38,9 @@ Imports:
   magrittr,
   ggplot2,
   lubridate,
-  cellranger,
-  leitorrmpe
+  cellranger
+Remotes:
+  EPE-GOV-BR/leitorrmpe
 Suggests: 
     testthat (>= 3.0.0),
     withr
