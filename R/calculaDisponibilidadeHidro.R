@@ -571,7 +571,7 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipo
     if(length(reeTipo4) > 0){
       df.saidasHidroTipo4 <- df.saidasHidro %>% 
         dplyr::filter(A02_NR_REE %in% reeTipo4)
-      
+
       # calculo da pordutibilidade das usinas dos REE tipo 4
       df.prodREEModulaTabela <- dplyr::full_join(leitorrmpe::leituraAlteracaoDadosUsinasHidro(pastaCaso)[[1]],
                                                  leitorrmpe::leituraDadosUsinasHidro(pastaCaso)[[1]] %>%
@@ -582,13 +582,15 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipo
                                                    dplyr::mutate(kturb = ifelse(tipoTurbina == 2, 1.2, 1.5)),
                                                  by=c("codUsina" ,"anoMes")) %>% 
         dplyr::left_join(leitorrmpe::leituraConfiguracaoHidro(pastaCaso) %>% dplyr::select(codREE,codUsina), by=c("codUsina")) %>% 
-        dplyr::mutate(volumeMaximo = ifelse(is.na(volumeMaximo) | volumeMaximo >  volumeReferencia ,volumeReferencia,volumeMaximo)) %>%
-        dplyr::mutate(nivelMontante = ifelse(is.na(nivelMontante),
+        dplyr::mutate(volumeMaximo = ifelse(is.na(volumeMaximo) | volumeMaximo >  volumeReferencia ,volumeReferencia,volumeMaximo),
+                      nivelMontante = ifelse(is.na(nivelMontante),
                                              poliCotaVolumeA0 + volumeMaximo*poliCotaVolumeA1 + volumeMaximo^2*poliCotaVolumeA2 + volumeMaximo^3*poliCotaVolumeA3+ volumeMaximo^4*poliCotaVolumeA4,
-                                             nivelMontante)) %>%
-        dplyr::mutate(canalFuga = ifelse(is.na(canalFuga), canalFugaMedio, canalFuga)) %>%
-        dplyr::mutate(perda = ifelse(tipoPerda==2, perda, (nivelMontante - canalFuga)*perda/100)) %>%
-        dplyr::mutate(Hliq = nivelMontante-canalFuga - perda) %>% 
+                                             nivelMontante),
+                      canalFuga = ifelse(is.na(canalFuga), canalFugaMedio, canalFuga),
+                      perda = ifelse(tipoPerda==2, perda, (nivelMontante - canalFuga)*perda/100),
+                      Hliq = nivelMontante-canalFuga - perda,
+                      TEIF = ifelse(is.na(TEIF.x), TEIF.y, TEIF.x),
+                      IP = ifelse(is.na(IP.x), IP.y, IP.x)) %>% 
         dplyr::left_join(leitorrmpe::leituraDadosUsinasHidro(pastaCaso)[[3]], by = c("codUsina"), relationship = "many-to-many") %>%
         dplyr::mutate(potConj = numeroMaquinas * ifelse(Hliq >= quedaEfetiva, potenciaUnitaria, potenciaUnitaria*(Hliq/quedaEfetiva)^kturb),
                       produtibilidade = produtibilidade * (nivelMontante - canalFuga-perda)) %>%
