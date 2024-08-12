@@ -2,45 +2,44 @@ Package: epebpr
 Title: Balanco de Potencia
 Type: Package
 Version: 0.18.4
-Date: 12-08-2024
-Author: Gustavo Haydt [aut, cre],
-  Simone Brandao [aut, cre],
-  Caio Leocadio [aut, cre],
-  Saulo Silva [aut, cre]
-Maintainer: Modelos EPE-DEE-SGR <modelos.sgr@epe.gov.br>
+Authors@R: c(person("Gustavo", "Haydt", role = c("aut")),
+    person("Simone", "Brandao", role = c("aut")),
+    person("Caio", "Leocadio", role = c("aut")),
+    person("Saulo", "Silva", role = c("cre", "aut"), email = "modelos.sgr@epe.gov.br"))
 Description: Ferramenta que efetua os balancos de geracao, transmissao e carga para os patamares de ponta, permitindo calcular os indicadores do criterio de suprimento.  
+URL: https://github.com/EPE-GOV-BR/epebpr
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: TRUE
 RoxygenNote: 7.3.2
 Depends: R (>= 4.0),
-  shiny,
-  shinythemes,
-  shinybusy,
+    shiny,
+    shinythemes,
+    shinybusy,
 Imports:
-  readr,
-  readxl,
-  writexl,
-  dplyr, 
-  stringr,
-  stringi,
-  tidyr,
-  highs,
-  DBI,
-  RSQLite,
-  tictoc,
-  plotly,
-  zoo,
-  scales,
-  parallel,
-  foreach,
-  doParallel,
-  magrittr,
-  ggplot2,
-  lubridate,
-  cellranger
+    readr,
+    readxl,
+    writexl,
+    dplyr, 
+    stringr,
+    stringi,
+    tidyr,
+    highs,
+    DBI,
+    RSQLite,
+    tictoc,
+    plotly,
+    zoo,
+    scales,
+    parallel,
+    foreach,
+    doParallel,
+    magrittr,
+    ggplot2,
+    lubridate,
+    cellranger
 Remotes:
-  EPE-GOV-BR/leitorrmpe
+    EPE-GOV-BR/leitorrmpe
 Suggests: 
     testthat (>= 3.0.0),
     withr

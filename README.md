@@ -4,8 +4,6 @@
 # Ferramenta de Balanço de Potência - Pacote epebpr
 
 <!-- badges: start -->
-
-[![R-CMD-check](https://github.com/EPE-GOV-BR/epebpr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/EPE-GOV-BR/epebpr/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 <img src="man/figures/logo.png" align="right" height="100" />
