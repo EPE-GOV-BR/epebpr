@@ -37,7 +37,8 @@ Imports:
     magrittr,
     ggplot2,
     lubridate,
-    cellranger
+    cellranger,
+    leitorrmpe
 Remotes:
     EPE-GOV-BR/leitorrmpe
 Suggests: 
