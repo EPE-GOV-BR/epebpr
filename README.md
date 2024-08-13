@@ -36,7 +36,7 @@ devtools::install_github("EPE-GOV-BR/epebpr")
 Os seguintes pacotes do CRAN são necessários para a execução do BP:
 
 ``` r
-install.packages(shiny, shinythemes, shinybusy, readr, readxl, writexl, dplyr,  stringr, stringi, tidyr, highs, DBI, RSQLite, tictoc, plotly, zoo, scales, parallel, foreach, doParallel, magrittr, ggplot2, lubridate, cellranger)
+install.packages(c("shiny", "shinythemes", "shinybusy", "readr", "readxl", "writexl", "dplyr",  "stringr", "stringi", "tidyr", "highs", "DBI", "RSQLite", "tictoc", "plotly", "zoo", "scales", "parallel", "foreach", "doParallel", "magrittr", "ggplot2", "lubridate", "cellranger"))
 ```
 
 Além disso, é necessária a instalação do pacote `leitorrmpe`, também
