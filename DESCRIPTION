@@ -38,6 +38,7 @@ Imports:
     ggplot2,
     lubridate,
     cellranger,
+    rlang,
     leitorrmpe
 Remotes:
     EPE-GOV-BR/leitorrmpe
