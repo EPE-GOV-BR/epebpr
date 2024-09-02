@@ -129,15 +129,6 @@ gravacaoDadosDemandaBDBP <- function(pastaCaso, conexao, tipoCaso, numeroCaso, c
     # horizonte de simulacao, no formato anoMes (AAAAMM)
     horizonte <- leitorrmpe::definePeriodo(pastaCaso) %>% dplyr::pull(anoMes)
     
-    # cria df com a demanda igual a zero para os subsistemas sem demanda
-    df.DemandaZero <- data.frame(A01_TP_CASO = tipoCaso,
-                                 A01_NR_CASO = numeroCaso,
-                                 A01_CD_MODELO = codModelo,
-                                 A02_NR_SUBSISTEMA = rep(diferencaREE, each = length(horizonte)),
-                                 A10_NR_MES = rep(horizonte, times = length(diferencaREE)),
-                                 A10_NR_TIPO_DEMANDA = tipoDemanda,
-                                 A10_VL_DEMANDA = 0)
-    
     df.Demanda <- df.detalhesCLiqMax %>% 
       dplyr::mutate(tipoCaso = tipoCaso, 
                     numeroCaso = numeroCaso, 
@@ -154,7 +145,20 @@ gravacaoDadosDemandaBDBP <- function(pastaCaso, conexao, tipoCaso, numeroCaso, c
                     A10_NR_TIPO_DEMANDA = tipoDemanda,
                     A10_VL_DEMANDA = carga)
     
-    dfDemanda <- rbind(df.Demanda, df.DemandaZero)
+    if(!rlang::is_empty(diferencaREE)){
+      # cria df com a demanda igual a zero para os subsistemas sem demanda
+      df.DemandaZero <- data.frame(A01_TP_CASO = tipoCaso,
+                                   A01_NR_CASO = numeroCaso,
+                                   A01_CD_MODELO = codModelo,
+                                   A02_NR_SUBSISTEMA = rep(diferencaREE, each = length(horizonte)),
+                                   A10_NR_MES = rep(horizonte, times = length(diferencaREE)),
+                                   A10_NR_TIPO_DEMANDA = tipoDemanda,
+                                   A10_VL_DEMANDA = 0)
+      
+      dfDemanda <- rbind(df.Demanda, df.DemandaZero)
+    }else{
+      dfDemanda <- df.Demanda
+    }
     
   }
   
