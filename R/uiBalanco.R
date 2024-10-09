@@ -285,7 +285,7 @@ uiBalanco <- fluidPage(
                                                                      "VaR Mensal" = 6,
                                                                      "VaR Anual" = 7,
                                                                      "Requisitos de Pot\u00EAncia" = 13,
-                                                                     "Requisitos de Pot\u00EAncia - Quadrimestral" = 14)
+                                                                     "Requisitos de Pot\u00EAncia - Quadrimestral" = 14),
                                                          selected = -2),
                                              
                                              # Botao para exibir grafico
