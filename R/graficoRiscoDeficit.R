@@ -66,8 +66,7 @@ graficoRiscoDeficit <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, ini
   
   filtroDuplicados <- maximosAnuais %>% 
     format("%Y") %>% 
-    duplicated() %>% 
-    not()
+    unique()
   
   maximosAnuais <- maximosAnuais[filtroDuplicados]
   
@@ -78,7 +77,7 @@ graficoRiscoDeficit <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, ini
     ggplot2::geom_text(ggplot2::aes(label = ifelse(anoMes %in% maximosAnuais, scales::percent(A27_VL_LOLP, accuracy = 0.1, scale = 100, suffix = "%", decimal.mark = ","), "")), 
                        nudge_y = (ceiling(max(tib.resultadosMes$A27_VL_LOLP)*10)/10 * 0.05),
                        hjust = 0.4, show.legend = FALSE, fontface = "bold", size = 5, family = "sans") +
-    ggplot2::scale_x_date(name = "M\u00EDs", date_labels = "%b-%y", expand = c(0,0), breaks = marcasEixoMes) + 
+    ggplot2::scale_x_date(name = "M\u00EAs", date_labels = "%b-%y", expand = c(0,0), breaks = marcasEixoMes) + 
     ggplot2::scale_y_continuous(name = "Risco de D\u00E9ficit", expand = c(0,0), labels = scales::percent_format(accuracy = 0.1, scale = 100, suffix = "%", decimal.mark = ","),
                                 breaks = seq(0, ceiling(max(tib.resultadosMes$A27_VL_LOLP)*10)/10, ceiling(max(tib.resultadosMes$A27_VL_LOLP)*10)/10/16),
                                 limits = c(0, ceiling(max(tib.resultadosMes$A27_VL_LOLP)*10)/10)) +
@@ -87,7 +86,7 @@ graficoRiscoDeficit <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, ini
     ggplot2::ggtitle(label = tituloGrafico) + 
     ggplot2::expand_limits(x = max(tib.resultadosMes$anoMes) + 20) + # dar uma folga no grafico
     ggplot2::theme(text = ggplot2::element_text(size = 20, family = "sans"),
-                   plot.title = ggplot2::element_text(face = "bold", hjust = 0.5, size = rel(1)),
+                   plot.title = ggplot2::element_text(face = "bold", hjust = 0.5, size = ggplot2::rel(1)),
                    strip.background = ggplot2::element_blank(),
                    panel.background = ggplot2::element_rect(fill = "white"),
                    panel.grid.major = ggplot2::element_line(color = "gray92"),

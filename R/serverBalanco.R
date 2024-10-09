@@ -317,7 +317,7 @@ serverBalanco <- function(input, output, session) {
                                need(input$casoGrafico != -1, HTML("Favor selecionar um caso para o gr\u00E1fico!"))
                              )
                              show_modal_spinner()
-                             chaveGrafico <- c(input$casoGrafico %>% str_split(";") %>% unlist() %>% as.numeric())
+                             chaveGrafico <- c(input$casoGrafico %>% stringr::str_split(";") %>% unlist() %>% as.numeric())
                              # CvaR
                              if(as.numeric(input$tipoGrafico) %in% c(1, 2, 3)){
                                grafico <- graficoCVAR(baseSQLiteGrafico, 

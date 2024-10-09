@@ -260,7 +260,7 @@ uiBalanco <- fluidPage(
                                                                    label = NULL,
                                                                    min = 2018,
                                                                    max = 2050,
-                                                                   value = 2023)),
+                                                                   value = 2024)),
                                              
                                              # Espaco entre inputs
                                              tags$div(style="display:inline-block; width:7px"),
@@ -272,7 +272,7 @@ uiBalanco <- fluidPage(
                                                                    label = NULL,
                                                                    min = 2018,
                                                                    max = 2060,
-                                                                   value = 2033)),
+                                                                   value = 2034)),
                                              tags$br(),
                                              # Input dos casos na base
                                              selectInput(inputId = "tipoGrafico",
@@ -285,10 +285,7 @@ uiBalanco <- fluidPage(
                                                                      "VaR Mensal" = 6,
                                                                      "VaR Anual" = 7,
                                                                      "Requisitos de Pot\u00EAncia" = 13,
-                                                                     "Requisitos de Pot\u00EAncia - Quadrimestral" = 14,
-                                                                     "CVaR Mensal GF" = 10,
-                                                                     "VaR Mensal GF" = 11,
-                                                                     "VaR Anual GF" = 12),
+                                                                     "Requisitos de Pot\u00EAncia - Quadrimestral" = 14)
                                                          selected = -2),
                                              
                                              # Botao para exibir grafico
