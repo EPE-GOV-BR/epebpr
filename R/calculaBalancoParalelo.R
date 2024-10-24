@@ -29,7 +29,7 @@
 calculaBalancoParalelo <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, cvuTransmissao, cvuHidro, 
                                    cvuRenovaveis, cvuOutrasTermicas, balancoResumido = T, distribuicaoDeficit = 1, execShiny = F) {
   # barra de progresso
-  if(execShiny){incProgress(0.05, detail = "Caregando Dados")}
+  if(execShiny){incProgress(0.05, detail = "Carregando Dados")}
   
   # abre conexao
   conexao <- DBI::dbConnect(RSQLite::SQLite(), baseSQLite)
