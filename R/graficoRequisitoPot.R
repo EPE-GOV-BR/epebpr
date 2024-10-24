@@ -45,14 +45,14 @@ graficoRequisitosPot <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, in
   mesesLinha <- seq(primeiroMes - 1/12, ultimoMes + 1/12, 1/12) %>% format("%Y-%m-%d")
   
   graficoReqPot <- plotly::plot_ly(data = tib.requisitosPot, x = ~anoMes, y = ~A29_VL_VIOLACAO_CRITERIO, name = "", type = "bar", color = I("gray"), showlegend = T,
-                                   hovertemplate = "<b>Requisitos de pot\u00EDncia calculados para m\u00E9tricas CVaR5%(PNS) <= 5 [%Dem]</b>: %{y:.2f} MW<extra></extra>") %>% 
+                                   hovertemplate = "<b>Requisitos de pot\u00EAncia calculados para m\u00E9tricas CVaR5%(PNS) <= 5 [%Dem]</b>: %{y:.2f} MW<extra></extra>") %>% 
     plotly::add_trace(tib.requisitosPot, x = ~anoMes, y = ~A29_VL_LIMITE_CRITERIO, type = 'scatter', mode = 'lines', color = I("orange"), line = list(dash = "dash"),
                       hovertemplate = "<b>Requisito para LOLP <= 5%</b>: %{y:.2f} MW<extra></extra>") %>% 
     plotly::layout( 
-      title = "<b>Requisito de Pot\u00EDncia</b>",
+      title = "<b>Requisito de Pot\u00EAncia</b>",
       legend = list(orientation = 'h', x = "0.3"),
       yaxis = list( 
-        title = "<b>Requisito de Pot\u00EDncia para o SIN [MW]</b>", 
+        title = "<b>Requisito de Pot\u00EAncia para o SIN [MW]</b>", 
         tickformat = "d" 
       ), 
       xaxis = list( 

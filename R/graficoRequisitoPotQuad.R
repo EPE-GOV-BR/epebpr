@@ -35,12 +35,12 @@ graficoRequisitosPotQuad <- function(baseSQLite, tipoCaso, numeroCaso, codModelo
     dplyr::mutate(anoQuad = paste0(A30_NR_ANO, "-", A30_NR_QUADRIMESTRE))
   
   graficoReqPotQuad <- plotly::plot_ly(data = tib.requisitosPotQuad, x = ~anoQuad, y = ~A30_VL_REQUISITO, name = "", type = "bar", color = I("gray"), showlegend = F,
-                                       hovertemplate = "<b>Requisito de pot\u00EDncia</b>: %{y:.2f} MW<extra></extra>") %>% 
+                                       hovertemplate = "<b>Requisito de pot\u00EAncia</b>: %{y:.2f} MW<extra></extra>") %>% 
     plotly::layout( 
-      title = "<b>Requisito de Pot\u00EDncia Quadrimestral</b>",
+      title = "<b>Requisito de Pot\u00EAncia Quadrimestral</b>",
       legend = list(orientation = 'h', x = "0.3"),
       yaxis = list( 
-        title = "<b>Requisito de Pot\u00EDncia para o SIN [MW]</b>", 
+        title = "<b>Requisito de Pot\u00EAncia para o SIN [MW]</b>", 
         tickformat = "d" 
       ), 
       xaxis = list( 

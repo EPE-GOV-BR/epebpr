@@ -82,7 +82,7 @@ graficosGF <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, tipoGrafico,
     subsistemasEsconder <- dplyr::setdiff((1:length(subsistemas)), which(subsistemas == "SIN"))
     
     grafico <- plotly::plot_ly(data = tib.resultadosCvarMes, x = ~mes, y = ~cvar, color = ~subsistema, type = "bar",
-                               hovertemplate = "<b>D\u00E9ficit % da Demanda</b>: %{y:.1%}<br><b>M\u00EDs</b>: %{x}") %>% 
+                               hovertemplate = "<b>D\u00E9ficit % da Demanda</b>: %{y:.1%}<br><b>M\u00EAs</b>: %{x}") %>% 
       plotly::layout( 
         title = paste0("<b>", tituloGraficoCVARMes, "</b>"),
         legend = list(title = list(text='<b> Subsistemas </b>')), #orientation = 'h'),
@@ -91,7 +91,7 @@ graficosGF <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, tipoGrafico,
           tickformat = "p" 
         ), 
         xaxis = list( 
-          title = "<b>M\u00EDs</b>", 
+          title = "<b>M\u00EAs</b>", 
           ticktext = as.list(nomeMes), 
           tickvals = as.list(1:12)
         )
@@ -118,7 +118,7 @@ graficosGF <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, tipoGrafico,
     subsistemasEsconder <- dplyr::setdiff((1:length(subsistemas)), which(subsistemas == "SIN"))
     
     grafico <- plotly::plot_ly(data = tib.resultadosVarMes, x = ~mes, y = ~var, color = ~subsistema, type = "bar",
-                               hovertemplate = "<b>D\u00E9ficit em MW</b>: %{y:.0f}<br><b>M\u00EDs</b>: %{x}") %>% 
+                               hovertemplate = "<b>D\u00E9ficit em MW</b>: %{y:.0f}<br><b>M\u00EAs</b>: %{x}") %>% 
       plotly::layout( 
         title = paste0("<b>", tituloGraficoVARMes, "</b>"),
         legend = list(title = list(text='<b> Subsistemas </b>')), #orientation = 'h'),
@@ -127,7 +127,7 @@ graficosGF <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, tipoGrafico,
           tickformat = "" 
         ), 
         xaxis = list( 
-          title = "<b>M\u00EDs</b>", 
+          title = "<b>M\u00EAs</b>", 
           ticktext = as.list(nomeMes), 
           tickvals = as.list(1:12)
         )
