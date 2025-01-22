@@ -1,7 +1,7 @@
 Package: epebpr
 Title: Balanco de Potencia
 Type: Package
-Version: 0.18.6
+Version: 0.18.7
 Authors@R: c(person("Gustavo", "Haydt", role = c("aut")),
     person("Simone", "Brandao", role = c("aut")),
     person("Caio", "Leocadio", role = c("aut")),

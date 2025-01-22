@@ -20,6 +20,7 @@ criaBDBalanco <- function(caminho, nomeBD) {
     # monta query que vai criar estrutura do banco de dados
     query <- readr::read_file(paste(caminhoSQL, "criaBDBalanco.sql", sep = "/"), )
     query <- stringr::str_remove_all(query, "--.*\\\r")
+    query <- stringr::str_remove_all(query, "--.*\\\n")
     query <- stringr::str_remove_all(query, "\\\r")
     query <- stringr::str_remove_all(query, "\\\n")
     query <- stringr::str_split(query, ";")
