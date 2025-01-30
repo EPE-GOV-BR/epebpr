@@ -10,7 +10,7 @@
 #' @param conexao conexao com o banco de dados (classe SQLiteConnection)
 #' @param df.custoDefict data frame com custos de deficit
 #' @param df.geracaoTermicaTotal data frame com os dados das geracoes termicas
-#' @param df.geracaoTermicaGnl data frame com os dados das geracoes termicas com despacho antecipado GNL
+#' @param df.geracaoTermicaGnlTotal data frame com os dados das geracoes termicas com despacho antecipado GNL
 #' @param df.geracaoTransmissaoTotal data frame com os dados de transmissao
 #' @param df.geracaoRenovaveisTotal data frame com os dados de renovaveis
 #' @param df.geracaoArmazenamentoTotal data frame com os dados de projetos de armazenamento
@@ -23,7 +23,7 @@
 #' @param codModelo variavel com o codigo do modelo
 #' @param df.subsistemas data frame com os dados de subsistemas
 #' @param cvuHidro valor de CVU das hidro
-#' @param df.defictRealocado data frame com os dados do limite de deficit a ser realocado por subsistema
+#' @param df.defictRealocadoTotal data frame com os dados do limite de deficit a ser realocado por subsistema
 #'
 #' @return \code{lt.resultado} lista com data frames com as estruturas das tabelas com os resultados dos balancos. 
 #' A lista pode ter 2 ou 3 data frames conforme definido pela variavel \code{balancoResumido}.
@@ -37,10 +37,10 @@
 #' @examples
 #' \dontrun{
 #' balancoPeriodoClp(201901, 1, T, conexao, df.custoDefict, df.geracaoTermicaTotal,
-#' df.geracaoTermicaGnl, df.geracaoTransmissaoTotal, df.geracaoRenovaveisTotal,
+#' df.geracaoTermicaGnlTotal, df.geracaoTransmissaoTotal, df.geracaoRenovaveisTotal,
 #' df.geracaoArmazenamentoTotal, df.limitesAgrupamentoLinhasTotal, df.demanda,
 #' df.geracaoHidroTotal,df.agrupamentoLinhas, tipoCaso, numeroCaso, codModelo,
-#' df.subsistemas, cvuHidro, df.defictRealocado)
+#' df.subsistemas, cvuHidro, df.defictRealocadoTotal)
 #' }
 #'
 #' @export
@@ -50,7 +50,7 @@ balancoPeriodoClp <- function(periodo,
                               conexao,
                               df.custoDefict,
                               df.geracaoTermicaTotal,
-                              df.geracaoTermicaGnl,
+                              df.geracaoTermicaGnlTotal,
                               df.geracaoTransmissaoTotal,
                               df.geracaoRenovaveisTotal,
                               df.geracaoArmazenamentoTotal,
@@ -61,7 +61,7 @@ balancoPeriodoClp <- function(periodo,
                               tipoCaso, numeroCaso, codModelo,
                               df.subsistemas,
                               cvuHidro,
-                              df.defictRealocado) {
+                              df.defictRealocadoTotal) {
   
   # filtra demanda especifica (uso particular para carga liquida)
   df.demandaLiquida <- df.demanda %>% 
@@ -87,7 +87,7 @@ balancoPeriodoClp <- function(periodo,
     dplyr::select(tipoUsina, codUsina, subsistema, transmissao, inflexibilidade, disponibilidade, cvu)
   
   # filtrando geracao termica GNL
-  df.geracaoTermicaGnl <- df.geracaoTermicaGnl %>% 
+  df.geracaoTermicaGnl <- df.geracaoTermicaGnlTotal %>% 
     dplyr::filter(anoMes == periodo, serieGnl == idSerieHidro) %>%
     dplyr::select(tipoUsina, codUsina, subsistema, transmissao, inflexibilidade, disponibilidade, cvu)
   
@@ -143,7 +143,7 @@ balancoPeriodoClp <- function(periodo,
   df.geracaoHidro$cvu <- cvuHidro
   
   # filtra deficit realocado especifico da execucao
-  df.defictRealocado <- df.defictRealocado %>% dplyr::filter(anoMes == periodo) %>% 
+  df.defictRealocado <- df.defictRealocadoTotal %>% dplyr::filter(anoMes == periodo) %>% 
     dplyr::select(tipoUsina, codUsina, subsistema, transmissao, inflexibilidade, disponibilidade, cvu)
   
   # geracao total
@@ -238,20 +238,36 @@ balancoPeriodoClp <- function(periodo,
   rub <- c(ubDemanda, ubTransmissao, ubAgrupamento)
   # limites inferiores das linhas da matriz de restricao
   rlb <- c(lbDemanda, lbTransmissao, lbAgrupamento)
-  
+  browser()
   # resolve o modelo linear usando o highs
   solucao <- highs::highs_solve(L = df.geracao$cvu, 
                                 lower = df.geracao$inflexibilidade, 
                                 upper = df.geracao$disponibilidade, 
                                 A = matrizRestricoes, 
                                 lhs = rlb, 
-                                rhs = rub)
+                                rhs = rub,
+                                control = highs::highs_control("random_seed" = 1))
   
-  # critica caso problema seja inviavel
-  if(solucao[["status"]] != 7 && solucao[["status"]] != 15) {
-    DBI::dbDisconnect(conexao)
-    stop(paste0("N\u00E3o foi encontrada solu\u00E7\u00E3o vi\u00E1vel (", solucao[["status_message"]],") para execu\u00E7\u00E3o de ", 
-                periodo, ", s\u00E9rie hidro ", idSerieHidro))
+  # verifica se a solucao nao foi otima
+  if(solucao[["status"]] != 7) {
+    # se o solver tiver status unknown, tenta resolver atualizando a semente
+    if(solucao[["status"]] == 15){
+      seed <- 2
+      while(solucao[["status"]] == 15 & seed < 10){
+        solucao <- highs::highs_solve(L = df.geracao$cvu, 
+                                      lower = df.geracao$inflexibilidade, 
+                                      upper = df.geracao$disponibilidade, 
+                                      A = matrizRestricoes, 
+                                      lhs = rlb, 
+                                      rhs = rub,
+                                      control = highs::highs_control("random_seed" = seed))
+        seed <- seed + 1
+      }
+    }else{
+      DBI::dbDisconnect(conexao)
+      stop(paste0("N\u00E3o foi encontrada solu\u00E7\u00E3o vi\u00E1vel (", solucao[["status_message"]],") para execu\u00E7\u00E3o de ", 
+                  periodo, ", s\u00E9rie hidro ", idSerieHidro))
+    }
   }
   
   # solucao primal das variaveis
@@ -272,19 +288,35 @@ balancoPeriodoClp <- function(periodo,
   # limites inferiores das linhas da matriz de restricao
   rlb <- c(lbDemanda, lbTransmissao)
   
-  # resolve o modelo linear
+  # resolve o modelo linear usando o highs
   solucao <- highs::highs_solve(L = df.geracao$cvu, 
                                 lower = df.geracao$inflexibilidade, 
                                 upper = df.geracao$disponibilidade, 
                                 A = matrizRestricoes, 
                                 lhs = rlb, 
-                                rhs = rub)
+                                rhs = rub,
+                                control = highs::highs_control("random_seed" = 1))
   
-  # critica caso problema seja inviavel
-  if(solucao[["status"]] != 7 && solucao[["status"]] != 15) {
-    DBI::dbDisconnect(conexao)
-    stop(paste0("N\u00E3o foi encontrada solu\u00E7\u00E3o vi\u00E1vel (", solucao[["status_message"]],") para execu\u00E7\u00E3o com transmiss\u00E3o ilimitada de ", 
-                periodo, ", s\u00E9rie hidro ", idSerieHidro))
+  # verifica se a solucao nao foi otima
+  if(solucao[["status"]] != 7) {
+    # se o solver tiver status unknown, tenta resolver atualizando a semente
+    if(solucao[["status"]] == 15){
+      seed <- 2
+      while(solucao[["status"]] == 15 & seed < 10){
+        solucao <- highs::highs_solve(L = df.geracao$cvu, 
+                                      lower = df.geracao$inflexibilidade, 
+                                      upper = df.geracao$disponibilidade, 
+                                      A = matrizRestricoes, 
+                                      lhs = rlb, 
+                                      rhs = rub,
+                                      control = highs::highs_control("random_seed" = seed))
+        seed <- seed + 1
+      }
+    }else{
+      DBI::dbDisconnect(conexao)
+      stop(paste0("N\u00E3o foi encontrada solu\u00E7\u00E3o vi\u00E1vel (", solucao[["status_message"]],") para execu\u00E7\u00E3o de ", 
+                  periodo, ", s\u00E9rie hidro ", idSerieHidro))
+    }
   }
   
   # solucao primal das variaveis

@@ -92,7 +92,7 @@ calculaBalancoParalelo <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
   df.faixasDeficit <- data.frame(tipoUsina = "DEFICITREALOCADO", faixas = seq(0, distribuicaoDeficit, 0.005)) %>% 
     dplyr::mutate(tipoUsinaFaixa = paste0(tipoUsina, stringr::str_replace(faixas, "\\.", "_")))
   
-  df.defictRealocado <- dplyr::inner_join(df.defictRealocado, df.faixasDeficit, by = "tipoUsina", relationship = "many-to-many") %>% 
+  df.defictRealocadoTotal <- dplyr::inner_join(df.defictRealocado, df.faixasDeficit, by = "tipoUsina", relationship = "many-to-many") %>% 
     dplyr::mutate(tipoUsina = tipoUsinaFaixa, 
                   disponibilidade = ifelse(faixas > 0, 
                                            disponibilidade * 0.005,
@@ -121,7 +121,7 @@ calculaBalancoParalelo <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
                   "0 AS transmissao, A31_VL_INFLEXIBILIDADE AS inflexibilidade, A31_VL_DISPONIBILIDADE_MAXIMA_PONTA AS disponibilidade, A31_VL_CVU as cvu ",
                   "FROM BPO_A31_DISPONIBILIDADE_UTE_GNL WHERE A01_TP_CASO = ", tipoCaso, " AND A01_NR_CASO = ", numeroCaso, 
                   " AND A01_CD_MODELO = ", codModelo, " ORDER BY A31_NR_MES, A31_NR_SERIE, A02_NR_SUBSISTEMA, A31_CD_USINA")
-  df.geracaoTermicaGnl <- DBI::dbGetQuery(conexao, query)
+  df.geracaoTermicaGnlTotal <- DBI::dbGetQuery(conexao, query)
   
   # geracao outras renovaveis
   query <- paste0("SELECT A13_NR_MES AS anoMes, 'RENOVAVEIS' AS tipoUsina, A02_NR_SUBSISTEMA AS codUsina, A02_NR_SUBSISTEMA AS subsistema, ", 
@@ -270,7 +270,7 @@ calculaBalancoParalelo <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
                                                                                                                        conexao,
                                                                                                                        df.custoDefict,
                                                                                                                        df.geracaoTermicaTotal,
-                                                                                                                       df.geracaoTermicaGnl,
+                                                                                                                       df.geracaoTermicaGnlTotal,
                                                                                                                        df.geracaoTransmissaoTotal, 
                                                                                                                        df.geracaoRenovaveisTotal,
                                                                                                                        df.geracaoArmazenamentoTotal,
@@ -281,7 +281,7 @@ calculaBalancoParalelo <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
                                                                                                                        tipoCaso, numeroCaso, codModelo,
                                                                                                                        df.subsistemas,
                                                                                                                        cvuHidro,
-                                                                                                                       df.defictRealocado)
+                                                                                                                       df.defictRealocadoTotal)
       # salva os resultados na base
       # BPO_A16_BALANCO
       DBI::dbWriteTable(conexao, "BPO_A16_BALANCO", lt.resultado$df.resultado, append = T)
@@ -303,7 +303,7 @@ calculaBalancoParalelo <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
                                                                                                                      conexao,
                                                                                                                      df.custoDefict,
                                                                                                                      df.geracaoTermicaTotal,
-                                                                                                                     df.geracaoTermicaGnl,
+                                                                                                                     df.geracaoTermicaGnlTotal,
                                                                                                                      df.geracaoTransmissaoTotal, 
                                                                                                                      df.geracaoRenovaveisTotal,
                                                                                                                      df.geracaoArmazenamentoTotal,
@@ -314,7 +314,7 @@ calculaBalancoParalelo <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
                                                                                                                      tipoCaso, numeroCaso, codModelo,
                                                                                                                      df.subsistemas,
                                                                                                                      cvuHidro,
-                                                                                                                     df.defictRealocado)
+                                                                                                                     df.defictRealocadoTotal)
       # salva os resultados na base
       # BPO_A16_BALANCO
       DBI::dbWriteTable(conexao, "BPO_A16_BALANCO", lt.resultado$df.resultado, append = T)

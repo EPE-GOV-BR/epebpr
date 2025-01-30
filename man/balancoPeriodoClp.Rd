@@ -11,7 +11,7 @@ balancoPeriodoClp(
   conexao,
   df.custoDefict,
   df.geracaoTermicaTotal,
-  df.geracaoTermicaGnl,
+  df.geracaoTermicaGnlTotal,
   df.geracaoTransmissaoTotal,
   df.geracaoRenovaveisTotal,
   df.geracaoArmazenamentoTotal,
@@ -24,7 +24,7 @@ balancoPeriodoClp(
   codModelo,
   df.subsistemas,
   cvuHidro,
-  df.defictRealocado
+  df.defictRealocadoTotal
 )
 }
 \arguments{
@@ -41,7 +41,7 @@ tambem o por gerador (\code{BPO_A17_BALANCO_GERADOR})}
 
 \item{df.geracaoTermicaTotal}{data frame com os dados das geracoes termicas}
 
-\item{df.geracaoTermicaGnl}{data frame com os dados das geracoes termicas com despacho antecipado GNL}
+\item{df.geracaoTermicaGnlTotal}{data frame com os dados das geracoes termicas com despacho antecipado GNL}
 
 \item{df.geracaoTransmissaoTotal}{data frame com os dados de transmissao}
 
@@ -67,7 +67,7 @@ tambem o por gerador (\code{BPO_A17_BALANCO_GERADOR})}
 
 \item{cvuHidro}{valor de CVU das hidro}
 
-\item{df.defictRealocado}{data frame com os dados do limite de deficit a ser realocado por subsistema}
+\item{df.defictRealocadoTotal}{data frame com os dados do limite de deficit a ser realocado por subsistema}
 }
 \value{
 \code{lt.resultado} lista com data frames com as estruturas das tabelas com os resultados dos balancos. 
@@ -86,10 +86,10 @@ Funcao criada para poder executar processamento paralelo.
 \examples{
 \dontrun{
 balancoPeriodoClp(201901, 1, T, conexao, df.custoDefict, df.geracaoTermicaTotal,
-df.geracaoTermicaGnl, df.geracaoTransmissaoTotal, df.geracaoRenovaveisTotal,
+df.geracaoTermicaGnlTotal, df.geracaoTransmissaoTotal, df.geracaoRenovaveisTotal,
 df.geracaoArmazenamentoTotal, df.limitesAgrupamentoLinhasTotal, df.demanda,
 df.geracaoHidroTotal,df.agrupamentoLinhas, tipoCaso, numeroCaso, codModelo,
-df.subsistemas, cvuHidro, df.defictRealocado)
+df.subsistemas, cvuHidro, df.defictRealocadoTotal)
 }
 
 }
