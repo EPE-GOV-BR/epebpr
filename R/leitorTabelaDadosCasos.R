@@ -18,7 +18,7 @@ leituraTabelaDadosCasos <- function(baseSQLite) {
   
   # df auxiliares
   df.tipoCaso <- data.frame(tipoCaso = c(1,2,3), descTipoCaso = c("PDE", "PMO", "GF"))
-  df.modelo <- data.frame(codModelo = c(1,2), descModelo = c("NEWAVE", "SUISHI"))
+  df.modelo <- data.frame(codModelo = 1, descModelo = "NEWAVE")
   
   # monta estrutura para input
   df.dadosCaso <- dplyr::inner_join(df.dadosCaso, df.tipoCaso, by = "tipoCaso")

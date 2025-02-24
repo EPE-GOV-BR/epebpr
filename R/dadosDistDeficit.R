@@ -3,7 +3,7 @@
 #' @param baseSQLite nome e localizacao da base SQLite do balanco de potencia
 #' @param tipoCaso valor inteiro. 1:PDE; 2:PMO e 3;Garantia Fisica
 #' @param numeroCaso valor inteiro com o numero do caso
-#' @param codModelo valor inteiro com o codigo do modelo. 1:NEWAVE; 2:SUISHI
+#' @param codModelo valor inteiro com o codigo do modelo. 1:NEWAVE
 #'
 #' @return lt.distDef lista com os dados de distribuicao dos deficits, distribuicao de CVaR e comparacao de distribuicao de deficit com CVaR maximo
 #'

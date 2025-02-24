@@ -20,7 +20,7 @@ graficoRequisitosPot(
 
 \item{numeroCaso}{valor inteiro com o numero do caso}
 
-\item{codModelo}{valor inteiro com o codigo do modelo. 1:NEWAVE; 2:SUISHI}
+\item{codModelo}{valor inteiro com o codigo do modelo. 1:NEWAVE}
 
 \item{inicioHorizonteGrafico}{valor numerico do ano de inicio do horizonte para o grafico. Formato: AAAA. Ex: 2020}
 

@@ -9,10 +9,11 @@
 #' @param pastaSaidas localizacao dos arquivos de saida do modulo NWLISTOP
 #' @param tipoCaso valor inteiro. 1:PDE; 2:PMO e 3;Garantia Fisica
 #' @param numeroCaso valor inteiro com o numero do caso
-#' @param codModelo valor inteiro com o codigo do modelo. 1:NEWAVE; 2:SUISHI
+#' @param codModelo valor inteiro com o codigo do modelo. 1:NEWAVE
 #' @param descricaoCaso vetor de caracteres indicando a descricao do caso
 #' @param horasPonta valor inteiro com o numero de horas de ponta
 #' @param idDemandaLiquida identificador de calculo com demanda liquida. [1]=Deterministica [2]=Liquida
+#' @param idModulacao identificador do tipo de modulacao. [1]=por REE [2]=por UHE
 #' @param sistemasNaoModulamPonta vetor numerico com codigos dos sitemas que nao modulam na ponta
 #' @param sistemasNaoModulamMedia vetor numerico com codigos dos sitemas que nao modulam na media
 #' @param sistemasModulamTabela vetor numerico com codigos dos sitemas que modulam conforme tabela
@@ -33,7 +34,8 @@ carregaDadosSQLite <- function(baseSQLite,
                                codModelo, 
                                descricaoCaso, 
                                horasPonta, 
-                               idDemandaLiquida, 
+                               idDemandaLiquida,
+                               idModulacao,
                                sistemasNaoModulamPonta, 
                                sistemasNaoModulamMedia,
                                sistemasModulamTabela,
@@ -129,7 +131,8 @@ carregaDadosSQLite <- function(baseSQLite,
                                 A01_NR_HORAS_PONTA =  horasPonta,
                                 A01_NR_COTA_LIMITE_TUCURUI = cotaLimiteTucurui,
                                 A01_NR_GERACAO_LIMITE_TUCURUI = geracaoLimiteTucurui,
-                                A01_IN_DEMANDA_LIQUIDA = idDemandaLiquida,
+                                A01_TP_DEMANDA = idDemandaLiquida,
+                                A01_TP_MODULACAO = idModulacao,
                                 A01_NR_SERIES_HIDRO = seriesHidro,
                                 A01_NR_MES_INICIO_MDI = anoMesInicioMDI,
                                 A01_NR_MES_FIM_MDI = anoMesFimMDI)
@@ -176,9 +179,14 @@ carregaDadosSQLite <- function(baseSQLite,
   df.ree$A02_TP_CALC_POTENCIA <- 1
   
   # define os valores do calculo de potencia passados pelo usuario
-  df.ree <- df.ree %>% dplyr::mutate(A02_TP_CALC_POTENCIA = ifelse(A02_NR_REE %in% sistemasNaoModulamPonta, 2, A02_TP_CALC_POTENCIA))
-  df.ree <- df.ree %>% dplyr::mutate(A02_TP_CALC_POTENCIA = ifelse(A02_NR_REE %in% sistemasNaoModulamMedia, 3, A02_TP_CALC_POTENCIA))
-  df.ree <- df.ree %>% dplyr::mutate(A02_TP_CALC_POTENCIA = ifelse(A02_NR_REE %in% sistemasModulamTabela, 4, A02_TP_CALC_POTENCIA))
+  if(idModulacao == 1){
+    df.ree <- df.ree %>% dplyr::mutate(A02_TP_CALC_POTENCIA = ifelse(A02_NR_REE %in% sistemasNaoModulamPonta, 2, A02_TP_CALC_POTENCIA))
+    df.ree <- df.ree %>% dplyr::mutate(A02_TP_CALC_POTENCIA = ifelse(A02_NR_REE %in% sistemasNaoModulamMedia, 3, A02_TP_CALC_POTENCIA))
+    df.ree <- df.ree %>% dplyr::mutate(A02_TP_CALC_POTENCIA = ifelse(A02_NR_REE %in% sistemasModulamTabela, 4, A02_TP_CALC_POTENCIA))
+  }else{
+    df.ree$A02_TP_CALC_POTENCIA <- 5
+    df.ree <- df.ree %>% dplyr::mutate(A02_TP_CALC_POTENCIA = ifelse(A02_NR_REE %in% sistemasModulamTabela, 4, A02_TP_CALC_POTENCIA))
+  }
   
   # salva BPO_A02_REES
   DBI::dbWriteTable(conexao, "BPO_A02_REES", df.ree, append = T)

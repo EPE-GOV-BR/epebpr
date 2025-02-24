@@ -183,6 +183,7 @@ serverBalanco <- function(input, output, session) {
                                                  input$descricao,
                                                  as.integer(input$horasPonta),
                                                  as.integer(input$idDemanda),
+                                                 as.integer(input$idModulacao),
                                                  sistemasNaoModulamPonta,
                                                  sistemasNaoModulamMedia,
                                                  sistemasModulamTabela,
@@ -207,7 +208,8 @@ serverBalanco <- function(input, output, session) {
                                                                codTucurui,
                                                                input$flagVert,
                                                                input$flagUHE,
-                                                               TRUE)
+                                                               TRUE,
+                                                               as.integer(input$idModulacao))
       } else {
         mensagemDisponibilidade <- ""
       }
@@ -246,31 +248,34 @@ serverBalanco <- function(input, output, session) {
     arqOpt <- paste0(pastaCaso, "/optExec_", stringr::str_remove(basename(baseSQLite), "\\.sqlite3"), ".txt")
     # momento do inicio da execucao
     cat(paste0(# versao do pacote utilizada
-               "Vers\u00E3o do pacote epebpr: ", packageVersion("epebpr"), "\n",
-               # usuario
-               "Usu\u00E1rio: ", Sys.getenv("USERNAME"), "\n",
-               # pastas e arquivos selecionados
-               "Diret\u00F3rio NEWAVE: ", pastaCaso, "\n",
-               "Diret\u00F3rio NWLISTOP: ", pastaSaidas, "\n",
-               "Base de Dados: ", baseSQLite, "\n",
-               # opcoes de execucao
-               "Tipo de Caso: ", ifelse(input$tipoCaso == 1, "PDE", ifelse(input$tipoCaso == 2, "PMO", ifelse(input$tipoCaso == 3, "GF", NA))), "\n",
-               "Modelo: ", ifelse(input$codModelo == 1, "NEWAVE", ifelse(input$codModelo == 2, "SUISHI", NA)), "\n",
-               "Demanda: ", ifelse(input$idDemanda == 1, "Determin\u00EDstica", ifelse(input$idDemanda == 2, "L\u00EDquida", NA)), "\n",
-               "N\u00B0 do caso: ", input$numeroCaso, "\n",
-               "Horas de Ponta: ", input$horasPonta, "\n",
-               "Distribui\u00E7\u00E3o D\u00E9ficit [%]: ", input$distribuicaoDeficit, "\n",
-               "Descri\u00E7\u00E3o: ", input$descricao, "\n",
-               "REEs n\u00E3o modulam GHPonta: ", input$sistemasNaoModulamPonta, "\n",
-               "REEs n\u00E3o modulam GHM\u00E9dia: ", input$sistemasNaoModulamMedia, "\n",
-               "REEs modulam por tabela: ", input$sistemasModulamTabela, "\n",
-               "Balan\u00E7o Resumido: ", ifelse(input$balancoResumido, "Sim", "N\u00E3o"), "\n",
-               "Dados: ", ifelse(input$leituraDados, "Sim", "N\u00E3o"), "\n",
-               "Disp. Hidro: ", ifelse(input$disponibilidadeHidro, "Sim", "N\u00E3o"), "\n",
-               "Balan\u00E7o de Ponta: ", ifelse(input$execucaoBP, "Sim", "N\u00E3o"), "\n",
-               "Vertimento para todas UHE: ", ifelse(input$flagVert, "Sim", "N\u00E3o"), "\n",
-               "T\u00E9rmino da execu\u00E7\u00E3o: ", lubridate::now(), "\n",
-               tempoExecucao
+      "Vers\u00E3o do pacote epebpr: ", packageVersion("epebpr"), "\n",
+      # usuario
+      "Usu\u00E1rio: ", Sys.getenv("USERNAME"), "\n",
+      # pastas e arquivos selecionados
+      "Diret\u00F3rio NEWAVE: ", pastaCaso, "\n",
+      "Diret\u00F3rio NWLISTOP: ", pastaSaidas, "\n",
+      "Base de Dados: ", baseSQLite, "\n",
+      # opcoes de execucao
+      "Tipo de Caso: ", ifelse(input$tipoCaso == 1, "PDE", ifelse(input$tipoCaso == 2, "PMO", ifelse(input$tipoCaso == 3, "GF", NA))), "\n",
+      "Modelo: ", ifelse(input$codModelo == 1, "NEWAVE", NA), "\n",
+      "Demanda: ", ifelse(input$idDemanda == 1, "Determin\u00EDstica", ifelse(input$idDemanda == 2, "L\u00EDquida", NA)), "\n",
+      "N\u00B0 do caso: ", input$numeroCaso, "\n",
+      "Horas de Ponta: ", input$horasPonta, "\n",
+      "Distribui\u00E7\u00E3o D\u00E9ficit [%]: ", input$distribuicaoDeficit, "\n",
+      "Descri\u00E7\u00E3o: ", input$descricao, "\n",
+      "Tipo de Modula\u00E7\u00E3o: ", ifelse(input$idModulacao == 1, "por REE", ifelse(input$idModulacao == 2, "por UHE", NA)), "\n",
+      ifelse(input$idModulacao == 1,
+             paste0("REEs n\u00E3o modulam GHPonta: ", input$sistemasNaoModulamPonta, "\n",
+                    "REEs n\u00E3o modulam GHM\u00E9dia: ", input$sistemasNaoModulamMedia, "\n"),
+             ""),
+      "REEs modulam por tabela: ", input$sistemasModulamTabela, "\n",
+      "Balan\u00E7o Resumido: ", ifelse(input$balancoResumido, "Sim", "N\u00E3o"), "\n",
+      "Dados: ", ifelse(input$leituraDados, "Sim", "N\u00E3o"), "\n",
+      "Disp. Hidro: ", ifelse(input$disponibilidadeHidro, "Sim", "N\u00E3o"), "\n",
+      "Balan\u00E7o de Ponta: ", ifelse(input$execucaoBP, "Sim", "N\u00E3o"), "\n",
+      "Vertimento para todas UHE: ", ifelse(input$flagVert, "Sim", "N\u00E3o"), "\n",
+      "T\u00E9rmino da execu\u00E7\u00E3o: ", lubridate::now(), "\n",
+      tempoExecucao
     ), file = arqOpt)
     
     return({paste(mensagemBancoDados, mensagemDisponibilidade, mensagem, tempoExecucao, sep = "<br>")})

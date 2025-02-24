@@ -28,7 +28,7 @@ calculaDisponibilidadeHidro(
 
 \item{numeroCaso}{valor inteiro com o numero do caso}
 
-\item{codModelo}{valor inteiro com o codigo do modelo. 1:NEWAVE; 2:SUISHI}
+\item{codModelo}{valor inteiro com o codigo do modelo. 1:NEWAVE}
 
 \item{codTucurui}{codigo atribuido para a usina de Tucurui}
 

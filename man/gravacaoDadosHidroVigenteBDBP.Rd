@@ -21,7 +21,7 @@ gravacaoDadosHidroVigenteBDBP(
 
 \item{numeroCaso}{caracter com o numero do caso, definido pelo usuario.}
 
-\item{codModelo}{caracter com a definicao do modelo utilizado. [1]=Newave [2]=Suishi.}
+\item{codModelo}{valor inteiro com o codigo do modelo. 1:NEWAVE}
 }
 \value{
 \code{mensagem} vetor de caracteres com a mensagem de sucesso de gravacao na tabela BPO_A05_DADOS_VIGENTES_UHE

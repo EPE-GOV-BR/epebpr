@@ -6,7 +6,7 @@
 #' @param baseSQLite caracter com a localizacao da base de dados do BP.
 #' @param tipoCaso valor inteiro. 1:PDE; 2:PMO e 3;Garantia Fisica
 #' @param numeroCaso valor inteiro com o numero do caso
-#' @param codModelo valor inteiro com o codigo do modelo. 1:NEWAVE; 2:SUISHI
+#' @param codModelo valor inteiro com o codigo do modelo. 1:NEWAVE
 #' @param df.dadosGerais data frame com os dados gerais do caso utilizado
 #'
 #' @return \code{mensagem} vetor de caracteres com a mensagem de sucesso de gravacao dos dados de saida de analise

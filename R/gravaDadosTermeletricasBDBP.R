@@ -8,7 +8,7 @@
 #' @param conexao caracter com a conexao com o Banco de Dados do Balanco de Potencia.
 #' @param tipoCaso caracter com o tipo de caso simulado. [1]=PDE [2]=PMO [3]=GF.
 #' @param numeroCaso caracter com o numero do caso, definido pelo usuario.
-#' @param codModelo caracter com a definicao do modelo utilizado. [1]=Newave [2]=Suishi.
+#' @param codModelo valor inteiro com o codigo do modelo. 1:NEWAVE
 #'
 #' @return \code{mensagem} vetor de caracteres com a mensagem de sucesso de gravacao na tabela BPO_A14_DISPONIBILIDADE_UTE
 #'

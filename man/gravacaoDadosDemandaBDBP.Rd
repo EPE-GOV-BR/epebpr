@@ -22,7 +22,7 @@ gravacaoDadosDemandaBDBP(
 
 \item{numeroCaso}{caracter com o numero do caso, definido pelo usuario.}
 
-\item{codModelo}{caracter com a definicao do modelo utilizado. [1]=Newave [2]=Suishi.}
+\item{codModelo}{valor inteiro com o codigo do modelo. 1:NEWAVE}
 
 \item{tipoDemanda}{caracter com a definicao do tipo de demanda do caso. [1]=Deterministica [2]=Liquida}
 }

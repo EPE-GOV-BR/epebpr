@@ -54,9 +54,7 @@ uiBalanco <- fluidPage(
                  tags$div(style="display:inline-block; width:100px",
                           selectInput(inputId = "codModelo",
                                       label = "Modelo:",
-                                      choices = c("NEWAVE" = 1,
-                                                  "SUISHI" = 2
-                                      ),
+                                      choices = c("NEWAVE" = 1),
                                       selected = 1)),
                  
                  # Espaco entre inputs
@@ -107,6 +105,14 @@ uiBalanco <- fluidPage(
                            label = HTML("Descri\u00E7\u00E3o do Caso:"),
                            value = NULL),
                  
+                 # Select input para o tipo de modulacao que sera adotada
+                 selectInput(inputId = "idModulacao",
+                             label = "Tipo de Modula\u00E7\u00E3o:",
+                             choices = c("Modula\u00E7\u00E3o por UHE" = 2,
+                                         "Modula\u00E7\u00E3o por REE" = 1),
+                             selected = 2),
+               
+                 conditionalPanel(condition = "input.idModulacao == 1",
                  wellPanel(style = "padding: 5px;",
                            tags$b(HTML("REEs N\u00E3o Modulam")),
                            tags$br(),
@@ -125,7 +131,8 @@ uiBalanco <- fluidPage(
                                     textInput(inputId = "sistemasNaoModulamMedia",
                                               label = HTML("GHM\u00E9dia:"),
                                               value = "6, 13",
-                                              placeholder = "sist1, sist2, etc."))),
+                                              placeholder = "sist1, sist2, etc.")))
+                 ),
                  
                  wellPanel(style = "padding: 5px;",
                            tags$b(HTML("REEs Modulam Conforme Tabela")),
