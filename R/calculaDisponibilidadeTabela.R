@@ -108,30 +108,5 @@ calculaDisponibilidadeTabela <- function(tipoCaso, numeroCaso, codModelo, pastaC
                   A33_VL_POTENCIA_MAXIMA,
                   A33_VL_DISPONIBILIDADE_MAXIMA_PONTA)
   
-  df.dadosUHEModulamTabela <- df.dadosUHEModulamTabelaUsina %>% 
-    dplyr::group_by(A02_NR_REE, A33_NR_SERIE, A33_NR_MES) %>% #dados por REE
-    dplyr::reframe(A33_VL_DISPONIBILIDADE_MAXIMA_PONTA = sum(A33_VL_DISPONIBILIDADE_MAXIMA_PONTA),
-                   A33_VL_POTENCIA_MAXIMA = sum(A33_VL_POTENCIA_MAXIMA)) %>% 
-    dplyr::ungroup() %>% 
-    dplyr::mutate(A09_VL_DISPONIBILIDADE_MAXIMA_PONTA = A33_VL_DISPONIBILIDADE_MAXIMA_PONTA,
-                  A01_CD_MODELO = codModelo,
-                  A01_TP_CASO = tipoCaso,
-                  A01_NR_CASO = numeroCaso,
-                  A09_NR_MES = A33_NR_MES,
-                  A09_NR_SERIE = A33_NR_SERIE,
-                  A09_VL_GERACAO_HIDRO_MINIMA = 0,
-                  A09_VL_GERACAO_HIDRO_MINIMA_ORIGINAL = 0,
-                  A09_VL_POTENCIA_MAXIMA = A33_VL_POTENCIA_MAXIMA) %>% 
-    dplyr::select(A01_CD_MODELO, 
-                  A01_TP_CASO, 
-                  A01_NR_CASO, 
-                  A02_NR_REE, 
-                  A09_NR_MES,
-                  A09_NR_SERIE, 
-                  A09_VL_GERACAO_HIDRO_MINIMA, 
-                  A09_VL_GERACAO_HIDRO_MINIMA_ORIGINAL,
-                  A09_VL_DISPONIBILIDADE_MAXIMA_PONTA, 
-                  A09_VL_POTENCIA_MAXIMA)
-  
-  return(df.dadosUHEModulamTabela)
+  return(df.dadosUHEModulamTabelaUsina)
 }

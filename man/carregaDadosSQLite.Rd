@@ -18,9 +18,6 @@ carregaDadosSQLite(
   sistemasNaoModulamPonta,
   sistemasNaoModulamMedia,
   sistemasModulamTabela,
-  codTucurui,
-  cotaLimiteTucurui,
-  geracaoLimiteTucurui,
   execShiny = FALSE
 )
 }
@@ -50,12 +47,6 @@ carregaDadosSQLite(
 \item{sistemasNaoModulamMedia}{vetor numerico com codigos dos sitemas que nao modulam na media}
 
 \item{sistemasModulamTabela}{vetor numerico com codigos dos sitemas que modulam conforme tabela}
-
-\item{codTucurui}{codigo atribuido para a usina de Tucurui}
-
-\item{cotaLimiteTucurui}{valor da cota da usina de Tucurui [m]}
-
-\item{geracaoLimiteTucurui}{valor da geracao limite da usina de Tucurui}
 
 \item{execShiny}{booleano que indica se a funcao esta sendo executada em um contexto reativo, para atualizacao da barra de progresso}
 }

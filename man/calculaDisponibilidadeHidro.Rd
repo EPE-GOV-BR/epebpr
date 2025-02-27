@@ -11,7 +11,7 @@ calculaDisponibilidadeHidro(
   tipoCaso,
   numeroCaso,
   codModelo,
-  codTucurui,
+  lt.dadosTucurui,
   flagVert = FALSE,
   flagUHE = FALSE,
   execShiny = FALSE,
@@ -31,7 +31,7 @@ calculaDisponibilidadeHidro(
 
 \item{codModelo}{valor inteiro com o codigo do modelo. 1:NEWAVE}
 
-\item{codTucurui}{codigo atribuido para a usina de Tucurui}
+\item{lt.dadosTucurui}{lista com dados referentes a UHE Tucurui para calculo do PDisp}
 
 \item{flagVert}{booleano que indica se considera ou nao o vertimento para todas as UHE}
 

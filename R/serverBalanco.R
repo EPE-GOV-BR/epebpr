@@ -19,10 +19,9 @@ serverBalanco <- function(input, output, session) {
   baseSQLite <- ""
   pastaBD <- ""
   
-  # dados do balanco
-  codTucurui <- 275 # codigo da usina Tucurui
-  cotaLimiteTucurui <- 62 # cota limite de Tucurui em metros
-  potenciaLimiteTucurui <- 4000 # potencia limite de Tucurui em MW
+  # dados de tucurui
+  lt.dadosTucurui <- list(cod = 275, cotasLimite = c(62, 60.5))
+
   # os valores de CVU da transmissao, hidro e outras renovaveis foram calibrados para forcarem o modelo a os considerar no balanco de forma ordenada,
   # evitando solucoes degeneradas ou irreais, mas matematicamente aceitas. Contudo, se os custos das geracoes aumentarem, 
   # esses valores devem ser recalibrados para evitar problemas de escalonamento.
@@ -44,8 +43,7 @@ serverBalanco <- function(input, output, session) {
                      icon = icon("search")),
         textInput(inputId = "nomeBD",
                   label = HTML("Nome da base de dados"),
-                  value = NULL #,
-                  # placeholder = "bd_balanco_pde"
+                  value = NULL
         ),
         footer = tagList(
           modalButton(label = "     ",
@@ -187,9 +185,6 @@ serverBalanco <- function(input, output, session) {
                                                  sistemasNaoModulamPonta,
                                                  sistemasNaoModulamMedia,
                                                  sistemasModulamTabela,
-                                                 codTucurui,
-                                                 cotaLimiteTucurui,
-                                                 potenciaLimiteTucurui,
                                                  TRUE)
       } else {
         mensagemBancoDados <- ""
@@ -205,7 +200,7 @@ serverBalanco <- function(input, output, session) {
                                                                as.integer(input$tipoCaso),
                                                                as.integer(input$numeroCaso),
                                                                as.integer(input$codModelo),
-                                                               codTucurui,
+                                                               lt.dadosTucurui,
                                                                input$flagVert,
                                                                input$flagUHE,
                                                                TRUE,
@@ -232,7 +227,14 @@ serverBalanco <- function(input, output, session) {
         
         # se o balanco foi calculado, gera saidas na BD e em excel
         df.dadosGerais <- leitorrmpe::leituraDadosGerais(pastaCaso)
-        mensagemSaidas <- gravacaoSaidasAnalises(baseSQLite, as.integer(input$tipoCaso), as.integer(input$numeroCaso), as.integer(input$codModelo), df.dadosGerais)
+        mensagemSaidas <- gravacaoSaidasAnalises(baseSQLite, 
+                                                 as.integer(input$tipoCaso), 
+                                                 as.integer(input$numeroCaso), 
+                                                 as.integer(input$codModelo), 
+                                                 df.dadosGerais,
+                                                 as.integer(input$cvar),
+                                                 as.integer(input$limCriterio),
+                                                 as.integer(input$lolp))
         
       } else {
         mensagem <- ""

@@ -14,7 +14,7 @@ calculaDisponibilidadeTipo1(
   df.dadosMaquinasUHE,
   df.potMaquinas,
   df.dadosCaso,
-  codTucurui,
+  lt.dadosTucurui,
   flagVert
 )
 }
@@ -37,7 +37,7 @@ calculaDisponibilidadeTipo1(
 
 \item{df.dadosCaso}{data frame com dados do caso em execucao}
 
-\item{codTucurui}{codigo atribuido para a usina de Tucurui}
+\item{lt.dadosTucurui}{lista com dados referentes a UHE Tucurui para calculo do PDisp}
 
 \item{flagVert}{booleano que indica se considera ou nao o vertimento para todas as UHE}
 }

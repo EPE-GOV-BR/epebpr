@@ -8,7 +8,7 @@
 #' @param tipoCaso valor inteiro. 1:PDE; 2:PMO e 3;Garantia Fisica
 #' @param numeroCaso valor inteiro com o numero do caso
 #' @param codModelo valor inteiro com o codigo do modelo. 1:NEWAVE
-#' @param codTucurui codigo atribuido para a usina de Tucurui
+#' @param lt.dadosTucurui lista com dados referentes a UHE Tucurui para calculo do PDisp
 #' @param flagVert booleano que indica se considera ou nao o vertimento para todas as UHE
 #' @param flagUHE booleano que indica se as saidas individuais por UHE deverao ou nao ser gravadas na base de dados
 #' @param execShiny booleano que indica se a funcao esta sendo executada em um contexto reativo, para atualizacao da barra de progresso
@@ -17,7 +17,7 @@
 #' @return \code{mensagem} vetor de caracteres com a mensagem de sucesso de gravacao na base
 #'
 #' @export
-calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipoCaso, numeroCaso, codModelo, codTucurui, flagVert = FALSE, flagUHE = FALSE, execShiny = FALSE, tipoModulacao) {
+calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipoCaso, numeroCaso, codModelo, lt.dadosTucurui, flagVert = FALSE, flagUHE = FALSE, execShiny = FALSE, tipoModulacao) {
   # SQLite
   conexaoSQLite <- DBI::dbConnect(RSQLite::SQLite(), baseSQLite)
   # fecha conexao com a base SQLite na saida da funcao, seja por erro ou normalmente
@@ -27,8 +27,6 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipo
   sql <- paste0("SELECT A01_NR_MES_INICIO as dataInicioCaso,
                   A01_NR_MES_FIM as dataFimCaso,
                   A01_NR_HORAS_PONTA as horasPonta,
-                  A01_NR_GERACAO_LIMITE_TUCURUI as gerLimiteTucurui,
-                  A01_NR_COTA_LIMITE_TUCURUI as cotaLimiteTucurui,
                   A01_NR_SERIES_HIDRO as numeroSeries
                   FROM BPO_A01_CASOS_ANALISE
                   WHERE
@@ -246,7 +244,7 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipo
                                                          df.dadosMaquinasUHE, 
                                                          df.potMaquinas, 
                                                          df.dadosCaso, 
-                                                         codTucurui, 
+                                                         lt.dadosTucurui, 
                                                          flagVert)
     
     # grava dados calculados na BPO_A08_DADOS_CALCULADOS_UHE
@@ -300,16 +298,41 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipo
       df.saidasHidroTipo4 <- df.saidasHidro %>% 
         dplyr::filter(A02_NR_REE %in% reeTipo4)
       
-      df.dadosUHEModulamTabela <- calculaDisponibilidadeTabela(tipoCaso,
-                                                               numeroCaso,
-                                                               codModelo,
-                                                               pastaCaso,
-                                                               UHEtipo4,
-                                                               df.saidasHidroTipo4, 
-                                                               lt.hidrogramaBM, 
-                                                               df.hidrograma, 
-                                                               df.tabelaModulacao,
-                                                               flagVert)
+      df.dadosUHEModulamTabelaUsina <- calculaDisponibilidadeTabela(tipoCaso,
+                                                                    numeroCaso,
+                                                                    codModelo,
+                                                                    pastaCaso,
+                                                                    UHEtipo4,
+                                                                    df.saidasHidroTipo4, 
+                                                                    lt.hidrogramaBM, 
+                                                                    df.hidrograma, 
+                                                                    df.tabelaModulacao,
+                                                                    flagVert)
+      
+      df.dadosUHEModulamTabela <- df.dadosUHEModulamTabelaUsina %>% 
+        dplyr::group_by(A02_NR_REE, A33_NR_SERIE, A33_NR_MES) %>% #dados por REE
+        dplyr::reframe(A33_VL_DISPONIBILIDADE_MAXIMA_PONTA = sum(A33_VL_DISPONIBILIDADE_MAXIMA_PONTA),
+                       A33_VL_POTENCIA_MAXIMA = sum(A33_VL_POTENCIA_MAXIMA)) %>% 
+        dplyr::ungroup() %>% 
+        dplyr::mutate(A09_VL_DISPONIBILIDADE_MAXIMA_PONTA = A33_VL_DISPONIBILIDADE_MAXIMA_PONTA,
+                      A01_CD_MODELO = codModelo,
+                      A01_TP_CASO = tipoCaso,
+                      A01_NR_CASO = numeroCaso,
+                      A09_NR_MES = A33_NR_MES,
+                      A09_NR_SERIE = A33_NR_SERIE,
+                      A09_VL_GERACAO_HIDRO_MINIMA = 0,
+                      A09_VL_GERACAO_HIDRO_MINIMA_ORIGINAL = 0,
+                      A09_VL_POTENCIA_MAXIMA = A33_VL_POTENCIA_MAXIMA) %>% 
+        dplyr::select(A01_CD_MODELO, 
+                      A01_TP_CASO, 
+                      A01_NR_CASO, 
+                      A02_NR_REE, 
+                      A09_NR_MES,
+                      A09_NR_SERIE, 
+                      A09_VL_GERACAO_HIDRO_MINIMA, 
+                      A09_VL_GERACAO_HIDRO_MINIMA_ORIGINAL,
+                      A09_VL_DISPONIBILIDADE_MAXIMA_PONTA, 
+                      A09_VL_POTENCIA_MAXIMA)
       
       # grava dados calculados na BPO_A33_DADOS_CALCULADOS_UHE_REE_TABELA
       if(flagUHE){
@@ -360,12 +383,17 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipo
     planilhaModulacao <- list.files(path = pastaCaso, pattern = "^dadosModulacaoUHE")
     if (length(planilhaModulacao) != 1) {
       DBI::dbDisconnect(conexaoSQLite)
-      stop("Planilha de pequenas n\u00E3o encontrada ou multiplos arquivos com nome GeraPeq em ", pastaCaso)
+      stop("Planilha de com dados de modula\u00E7\u00E3o por UHE n\u00E3o encontrada ou multiplos arquivos com nome dadosModulacaoUHE em ", pastaCaso)
     }else{
       df.dadosModulacaoUHE <- readxl::read_xlsx(paste(pastaCaso, planilhaModulacao, sep = "/")) %>% 
         dplyr::select(-UHE) %>% 
         tidyr::pivot_longer(!cod, names_to = "mes", values_to = "tipo") %>%
         dplyr::mutate(mes = as.numeric(mes))
+      # verifica se os dados de tipo contem apenas os valores 1 e 2
+      if(dplyr::setequal(unique(df.dadosModulacaoUHE$tipo), c(1,2)) == FALSE){
+        DBI::dbDisconnect(conexaoSQLite)
+        stop("Planilha de com dados de modula\u00E7\u00E3o por UHE ", planilhaModulacao, " cont\u00E9m dados para o tipo de modula\u00E7\u00E3o diferentes de 1 e 2.")
+      }
     }
     
     # filtra REEs com calculo tipo 5
@@ -398,12 +426,13 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipo
                                                          df.dadosMaquinasUHE, 
                                                          df.potMaquinas, 
                                                          df.dadosCaso, 
-                                                         codTucurui, 
+                                                         lt.dadosTucurui, 
                                                          flagVert) %>% 
       dplyr::mutate(mes = A08_NR_MES%%100) %>% 
       dplyr::left_join(df.dadosModulacaoUHE, by = c("A03_CD_USINA" = "cod", "mes")) %>%
-      dplyr::mutate(A08_VL_POTENCIA_MAXIMA_MODULADA = ifelse(tipo==1, A08_VL_GERACAO_HIDRO_MEDIA, A08_VL_POTENCIA_MAXIMA_MODULADA)) %>% 
-      dply::select(-mes, -tipo)
+      dplyr::mutate(tipo = ifelse(is.na(tipo), 1, tipo),
+                    A08_VL_POTENCIA_MAXIMA_MODULADA = ifelse(tipo==1, A08_VL_GERACAO_HIDRO_MEDIA, A08_VL_POTENCIA_MAXIMA_MODULADA)) %>% 
+      dplyr::select(-mes, -tipo)
     
     # grava dados calculados na BPO_A08_DADOS_CALCULADOS_UHE
     if(flagUHE){
@@ -434,16 +463,41 @@ calculaDisponibilidadeHidro <- function(baseSQLite, pastaCaso, pastaSaidas, tipo
       df.saidasHidroTipo4 <- df.saidasHidro %>% 
         dplyr::filter(A02_NR_REE %in% reeTipo4)
       
-      df.dadosUHEModulamTabela <- calculaDisponibilidadeTabela(tipoCaso,
-                                                               numeroCaso,
-                                                               codModelo,
-                                                               pastaCaso,
-                                                               UHEtipo4,
-                                                               df.saidasHidroTipo4, 
-                                                               lt.hidrogramaBM, 
-                                                               df.hidrograma, 
-                                                               df.tabelaModulacao,
-                                                               flagVert)
+      df.dadosUHEModulamTabelaUsina <- calculaDisponibilidadeTabela(tipoCaso,
+                                                                    numeroCaso,
+                                                                    codModelo,
+                                                                    pastaCaso,
+                                                                    UHEtipo4,
+                                                                    df.saidasHidroTipo4, 
+                                                                    lt.hidrogramaBM, 
+                                                                    df.hidrograma, 
+                                                                    df.tabelaModulacao,
+                                                                    flagVert)
+      
+      df.dadosUHEModulamTabela <- df.dadosUHEModulamTabelaUsina %>% 
+        dplyr::group_by(A02_NR_REE, A33_NR_SERIE, A33_NR_MES) %>% #dados por REE
+        dplyr::reframe(A33_VL_DISPONIBILIDADE_MAXIMA_PONTA = sum(A33_VL_DISPONIBILIDADE_MAXIMA_PONTA),
+                       A33_VL_POTENCIA_MAXIMA = sum(A33_VL_POTENCIA_MAXIMA)) %>% 
+        dplyr::ungroup() %>% 
+        dplyr::mutate(A09_VL_DISPONIBILIDADE_MAXIMA_PONTA = A33_VL_DISPONIBILIDADE_MAXIMA_PONTA,
+                      A01_CD_MODELO = codModelo,
+                      A01_TP_CASO = tipoCaso,
+                      A01_NR_CASO = numeroCaso,
+                      A09_NR_MES = A33_NR_MES,
+                      A09_NR_SERIE = A33_NR_SERIE,
+                      A09_VL_GERACAO_HIDRO_MINIMA = 0,
+                      A09_VL_GERACAO_HIDRO_MINIMA_ORIGINAL = 0,
+                      A09_VL_POTENCIA_MAXIMA = A33_VL_POTENCIA_MAXIMA) %>% 
+        dplyr::select(A01_CD_MODELO, 
+                      A01_TP_CASO, 
+                      A01_NR_CASO, 
+                      A02_NR_REE, 
+                      A09_NR_MES,
+                      A09_NR_SERIE, 
+                      A09_VL_GERACAO_HIDRO_MINIMA, 
+                      A09_VL_GERACAO_HIDRO_MINIMA_ORIGINAL,
+                      A09_VL_DISPONIBILIDADE_MAXIMA_PONTA, 
+                      A09_VL_POTENCIA_MAXIMA)
       
       # grava dados calculados na BPO_A33_DADOS_CALCULADOS_UHE_REE_TABELA
       if(flagUHE){

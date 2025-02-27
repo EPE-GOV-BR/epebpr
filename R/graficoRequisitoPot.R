@@ -56,7 +56,7 @@ graficoRequisitosPot <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, in
         tickformat = "d" 
       ), 
       xaxis = list( 
-        title = "<b>M\u00EDs</b>", 
+        title = "<b>M\u00EAs</b>", 
         ticktext = as.list(as.character(zoo::as.yearmon(marcasEixoMes))), 
         tickvals = as.list(marcasEixoMes)#,
       )

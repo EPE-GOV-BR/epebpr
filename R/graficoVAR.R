@@ -68,7 +68,7 @@ graficoVAR <- function(baseSQLite, tipoCaso, numeroCaso, codModelo,
       dplyr::pull(anoMes) %>% c(., max(tib.resultadosVarMes$anoMes))
     
     graficoVaR <- plotly::plot_ly(data = tib.resultadosVarMes, x = ~anoMes, y = ~A25_VL_VAR, color = ~A25_TX_PERCENT_VAR, type = "bar",
-                                  hovertemplate = "<b>D\u00E9ficit em MW</b>: %{y:.0f}<br><b>M\u00EDs</b>: %{x|%Y-%m}<extra></extra>") %>% 
+                                  hovertemplate = "<b>D\u00E9ficit em MW</b>: %{y:.0f}<br><b>M\u00EAs</b>: %{x|%Y-%m}<extra></extra>") %>% 
       plotly::layout( 
         title = paste0("<b>", tituloGraficoVARMes, "</b>"),
         legend = list(orientation = 'h', x = "0.3", y = "-0.15"),

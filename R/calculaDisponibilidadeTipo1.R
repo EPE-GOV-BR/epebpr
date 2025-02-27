@@ -9,15 +9,15 @@
 #' @param df.dadosMaquinasUHE data frame com dados da tabela BPO_A04_MAQUINAS_UHE
 #' @param df.potMaquinas data frame com dados de potencia das UHE
 #' @param df.dadosCaso data frame com dados do caso em execucao
-#' @param codTucurui codigo atribuido para a usina de Tucurui
+#' @param lt.dadosTucurui lista com dados referentes a UHE Tucurui para calculo do PDisp
 #' @param flagVert booleano que indica se considera ou nao o vertimento para todas as UHE
 #'
 #' @return \code{df.dadosCalculadosUHE} data frame com dados de disponibilidade individuais das UHE
 #'
 #' @export
 
-calculaDisponibilidadeTipo1 <- function(tipoCaso, numeroCaso, codModelo, df.saidasHidro, df.dadosUHE, df.dadosVigentes, df.dadosMaquinasUHE, df.potMaquinas, df.dadosCaso, codTucurui, flagVert){
-
+calculaDisponibilidadeTipo1 <- function(tipoCaso, numeroCaso, codModelo, df.saidasHidro, df.dadosUHE, df.dadosVigentes, df.dadosMaquinasUHE, df.potMaquinas, df.dadosCaso, lt.dadosTucurui, flagVert){
+  
   df.dadosCalculadosUHE <- dplyr::inner_join(df.dadosVigentes, 
                                              df.saidasHidro, 
                                              by = c("A02_NR_REE", "A05_NR_MES" = "A06_NR_MES"),
@@ -166,14 +166,26 @@ calculaDisponibilidadeTipo1 <- function(tipoCaso, numeroCaso, codModelo, df.said
                   A08_VL_ALTURA_MODULADA = 0)
   
   # Ajusta potencia maxima de tucurui
-  df.dadosCalculadosUHE <- df.dadosCalculadosUHE %>%
-    dplyr::mutate(A08_VL_POTENCIA_MAXIMA_MODULADA = ifelse((A03_CD_USINA == codTucurui &
-                                                              A08_VL_POTENCIA_MAXIMA_MODULADA > df.dadosCaso$gerLimiteTucurui &
-                                                              A08_VL_COTA_OPERATIVA < df.dadosCaso$cotaLimiteTucurui),
-                                                           df.dadosCaso$gerLimiteTucurui,
-                                                           A08_VL_POTENCIA_MAXIMA_MODULADA))
+  df.dadosTucurui <- df.dadosCalculadosUHE %>% 
+    dplyr::filter(A03_CD_USINA == lt.dadosTucurui[['cod']]) %>% 
+    dplyr::left_join(df.dadosUHE, by = "A03_CD_USINA") %>% 
+    dplyr::left_join(df.dadosVigentes, by = c("A03_CD_USINA", "A08_NR_MES" = "A05_NR_MES")) %>% 
+    dplyr::mutate(H = A08_VL_COTA_OPERATIVA - A05_NR_CANAL_FUGA_MEDIO - A03_VL_PERDA,
+                  A08_VL_POTENCIA_MAXIMA_MODULADA = dplyr::if_else(A08_VL_COTA_OPERATIVA < lt.dadosTucurui[["cotasLimite"]][2],
+                                                                   pmin(A08_VL_POTENCIA_MAXIMA_MODULADA,
+                                                                       4245*(1-A05_VL_TEIF.x/100)*(1-A05_VL_IP.x/100)*(H/65.5)**1.5),
+                                                                   A08_VL_POTENCIA_MAXIMA_MODULADA),
+                                                                   dplyr::if_else(A08_VL_COTA_OPERATIVA >= lt.dadosTucurui[["cotasLimite"]][2] & A08_VL_COTA_OPERATIVA < lt.dadosTucurui[["cotasLimite"]][1],
+                                                                                  pmin(A08_VL_POTENCIA_MAXIMA_MODULADA,
+                                                                                      4245*(1-A05_VL_TEIF.x/100)*(1-A05_VL_IP.x/100)*(H/65.5)**1.5 + 1560*(H/61.7)**1.5),
+                                                                                  pmin(A08_VL_POTENCIA_MAXIMA_MODULADA,
+                                                                                      4245*(1-A05_VL_TEIF.x/100)*(1-A05_VL_IP.x/100)*(H/65.5)**1.5 + 4680*(1-A05_VL_TEIF.x/100)*(1-A05_VL_IP.x/100)*(H/61.7)**1.5)
+                                                                   )
+                  )
   
-  
+  # substitui os dados de Tucurui no df
+  df.dadosCalculadosUHE[df.dadosCalculadosUHE[, "A03_CD_USINA"] == lt.dadosTucurui[['cod']],]$A08_VL_POTENCIA_MAXIMA_MODULADA <- df.dadosTucurui$A08_VL_POTENCIA_MAXIMA_MODULADA
+
   df.dadosCalculadosUHE <- df.dadosCalculadosUHE %>%
     dplyr::select(A01_TP_CASO, A01_NR_CASO, A01_CD_MODELO, A03_CD_USINA, A08_NR_MES,
                   A08_NR_SERIE, A02_NR_REE, A08_VL_VOLUME_OPERATIVO,

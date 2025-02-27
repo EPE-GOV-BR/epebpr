@@ -17,11 +17,7 @@
 #' @param sistemasNaoModulamPonta vetor numerico com codigos dos sitemas que nao modulam na ponta
 #' @param sistemasNaoModulamMedia vetor numerico com codigos dos sitemas que nao modulam na media
 #' @param sistemasModulamTabela vetor numerico com codigos dos sitemas que modulam conforme tabela
-#' @param codTucurui codigo atribuido para a usina de Tucurui
-#' @param cotaLimiteTucurui valor da cota da usina de Tucurui [m]
-#' @param geracaoLimiteTucurui valor da geracao limite da usina de Tucurui
 #' @param execShiny booleano que indica se a funcao esta sendo executada em um contexto reativo, para atualizacao da barra de progresso
-#'
 #'
 #' @return \code{mensagem} vetor de caracteres com a mensagem de sucesso de gravacao na base
 #'
@@ -39,9 +35,6 @@ carregaDadosSQLite <- function(baseSQLite,
                                sistemasNaoModulamPonta, 
                                sistemasNaoModulamMedia,
                                sistemasModulamTabela,
-                               codTucurui, 
-                               cotaLimiteTucurui, 
-                               geracaoLimiteTucurui,
                                execShiny = FALSE) {
   # barra de progresso
   if(execShiny){incProgress(3/100, detail = "Leitura de Dados Gerais")}
@@ -129,8 +122,6 @@ carregaDadosSQLite <- function(baseSQLite,
                                 A01_NR_MES_INICIO = inicioCaso,
                                 A01_NR_MES_FIM = fimCaso,
                                 A01_NR_HORAS_PONTA =  horasPonta,
-                                A01_NR_COTA_LIMITE_TUCURUI = cotaLimiteTucurui,
-                                A01_NR_GERACAO_LIMITE_TUCURUI = geracaoLimiteTucurui,
                                 A01_TP_DEMANDA = idDemandaLiquida,
                                 A01_TP_MODULACAO = idModulacao,
                                 A01_NR_SERIES_HIDRO = seriesHidro,

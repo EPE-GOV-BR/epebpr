@@ -9,6 +9,9 @@ dadosRequisitoPot(
   tipoCaso,
   numeroCaso,
   codModelo,
+  cvar,
+  limCvar,
+  lolp,
   inicioHorizonteGrafico,
   fimHorizonteGrafico
 )
@@ -21,6 +24,12 @@ dadosRequisitoPot(
 \item{numeroCaso}{valor inteiro com o numero do caso}
 
 \item{codModelo}{valor inteiro com o codigo do modelo. 1:NEWAVE}
+
+\item{cvar}{valor do CVaR da potencia nao suprida em %}
+
+\item{limCvar}{valor do limite do CVaR em % da demanda}
+
+\item{lolp}{valor do limite da LOLP}
 
 \item{inicioHorizonteGrafico}{valor numerico do ano de inicio do horizonte para o grafico. Formato: AAAA. Ex: 2020}
 

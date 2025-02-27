@@ -3,6 +3,7 @@ test_that("epebpr works", {
   caminho <- withr::local_tempdir()
   criaBDBalanco(caminho, "testeCL")
   caminhoBD <- paste(caminho, "testeCL.sqlite3", sep = "/")
+  lt.dadosTucurui <- list(cod = 275, cotasLimite = c(62, 60.5))
   
   expect_equal(carregaDadosSQLite(baseSQLite = caminhoBD,
                                   pastaCaso = "testDataCL",
@@ -13,37 +14,65 @@ test_that("epebpr works", {
                                   descricaoCaso = "teste",
                                   horasPonta = 10,
                                   idDemandaLiquida = 2,
+                                  idModulacao = 1,
                                   sistemasNaoModulamPonta = c(6, 13),
                                   sistemasNaoModulamMedia = NA,
                                   sistemasModulamTabela = c(5, 8),
-                                  codTucurui = 275,
-                                  cotaLimiteTucurui = 62,
-                                  geracaoLimiteTucurui = 4000,
                                   execShiny = FALSE),
                "Leitura e grava\u00E7\u00E3o dos dados de entrada efetuadas com sucesso!")
   
-  # calcula disp hidro com flag vertimento TRUE e flag UHE FALSE
+  # calcula disp hidro com flag vertimento TRUE, flag UHE FALSE e modulacao por REE
   expect_equal(calculaDisponibilidadeHidro(baseSQLite = caminhoBD,
                                            pastaCaso = "testDataCL",
                                            pastaSaidas = "testDataCL/nwlistop",
                                            tipoCaso = 1,
                                            numeroCaso = 1,
                                            codModelo = 1,
-                                           codTucurui = 275,
+                                           lt.dadosTucurui = lt.dadosTucurui,
                                            flagVert = TRUE,
-                                           flagUHE = FALSE),
+                                           tipoModulacao = 1),
                "Disponibilidade hidro processada com sucesso!")
   
-  # calcula disp hidro com flag vertimento FALSE e flag UHE TRUE
+  # calcula disp hidro com flag vertimento FALSE, flag UHE TRUE e modulacao por REE
   expect_equal(calculaDisponibilidadeHidro(baseSQLite = caminhoBD,
                                            pastaCaso = "testDataCL",
                                            pastaSaidas = "testDataCL/nwlistop",
                                            tipoCaso = 1,
                                            numeroCaso = 1,
                                            codModelo = 1,
-                                           codTucurui = 275,
+                                           lt.dadosTucurui = lt.dadosTucurui,
                                            flagVert = FALSE,
-                                           flagUHE = TRUE),
+                                           flagUHE = TRUE,
+                                           tipoModulacao = 1),
+               "Disponibilidade hidro processada com sucesso!")
+  
+  expect_equal(carregaDadosSQLite(baseSQLite = caminhoBD,
+                                  pastaCaso = "testDataCL",
+                                  pastaSaidas = "testDataCL/nwlistop",
+                                  tipoCaso = 1,
+                                  numeroCaso = 1,
+                                  codModelo = 1,
+                                  descricaoCaso = "teste",
+                                  horasPonta = 10,
+                                  idDemandaLiquida = 2,
+                                  idModulacao = 2,
+                                  sistemasNaoModulamPonta = NA,
+                                  sistemasNaoModulamMedia = NA,
+                                  sistemasModulamTabela = c(5, 8),
+                                  execShiny = FALSE),
+               "Leitura e grava\u00E7\u00E3o dos dados de entrada efetuadas com sucesso!")
+  
+  # calcula disp hidro com flag vertimento TRUE, flag UHE FALSE e modulacao por UHE
+  expect_equal(calculaDisponibilidadeHidro(baseSQLite = caminhoBD,
+                                           pastaCaso = "testDataCL",
+                                           pastaSaidas = "testDataCL/nwlistop",
+                                           tipoCaso = 1,
+                                           numeroCaso = 1,
+                                           codModelo = 1,
+                                           lt.dadosTucurui = lt.dadosTucurui,
+                                           flagVert = TRUE,
+                                           flagUHE = FALSE,
+                                           tipoModulacao = 2),
                "Disponibilidade hidro processada com sucesso!")
   
   # calcula balanco resumido
@@ -79,7 +108,10 @@ test_that("epebpr works", {
                                       tipoCaso = 1,
                                       numeroCaso = 1,
                                       codModelo = 1,
-                                      df.dadosGerais = leitorrmpe::leituraDadosGerais("testDataCL")),
+                                      df.dadosGerais = leitorrmpe::leituraDadosGerais("testDataCL"),
+                                      5,
+                                      5,
+                                      5),
                "saidas de analise gravadas com sucesso!")
   
   #### PDE, NEWAVE, Carga Bruta
@@ -96,12 +128,10 @@ test_that("epebpr works", {
                                   descricaoCaso = "teste",
                                   horasPonta = 10,
                                   idDemandaLiquida = 1,
-                                  sistemasNaoModulamPonta = c(6, 13),
+                                  idModulacao = 1,
+                                  sistemasNaoModulamPonta = 6,
                                   sistemasNaoModulamMedia = NA,
-                                  sistemasModulamTabela = c(5, 8),
-                                  codTucurui = 275,
-                                  cotaLimiteTucurui = 62,
-                                  geracaoLimiteTucurui = 4000,
+                                  sistemasModulamTabela = NA,
                                   execShiny = FALSE),
                "Leitura e grava\u00E7\u00E3o dos dados de entrada efetuadas com sucesso!")
   
@@ -112,10 +142,27 @@ test_that("epebpr works", {
                                            tipoCaso = 1,
                                            numeroCaso = 1,
                                            codModelo = 1,
-                                           codTucurui = 275,
+                                           lt.dadosTucurui = lt.dadosTucurui,
                                            flagVert = TRUE,
-                                           flagUHE = FALSE),
+                                           flagUHE = FALSE,
+                                           tipoModulacao = 1),
                "Disponibilidade hidro processada com sucesso!")
+  
+  expect_equal(carregaDadosSQLite(baseSQLite = caminhoBD,
+                                  pastaCaso = "testDataCB",
+                                  pastaSaidas = "testDataCB/nwlistop",
+                                  tipoCaso = 1,
+                                  numeroCaso = 1,
+                                  codModelo = 1,
+                                  descricaoCaso = "teste",
+                                  horasPonta = 10,
+                                  idDemandaLiquida = 1,
+                                  idModulacao = 2,
+                                  sistemasNaoModulamPonta = 6,
+                                  sistemasNaoModulamMedia = NA,
+                                  sistemasModulamTabela = NA,
+                                  execShiny = FALSE),
+               "Leitura e grava\u00E7\u00E3o dos dados de entrada efetuadas com sucesso!")
   
   # calcula disp hidro com flag vertimento FALSE e flag UHE TRUE
   expect_equal(calculaDisponibilidadeHidro(baseSQLite = caminhoBD,
@@ -124,9 +171,10 @@ test_that("epebpr works", {
                                            tipoCaso = 1,
                                            numeroCaso = 1,
                                            codModelo = 1,
-                                           codTucurui = 275,
+                                           lt.dadosTucurui = lt.dadosTucurui,
                                            flagVert = FALSE,
-                                           flagUHE = TRUE),
+                                           flagUHE = TRUE,
+                                           tipoModulacao = 2),
                "Disponibilidade hidro processada com sucesso!")
   
   # calcula balanco resumido
@@ -162,7 +210,10 @@ test_that("epebpr works", {
                                       tipoCaso = 1,
                                       numeroCaso = 1,
                                       codModelo = 1,
-                                      df.dadosGerais = leitorrmpe::leituraDadosGerais("testDataCB")),
+                                      df.dadosGerais = leitorrmpe::leituraDadosGerais("testDataCB"),
+                                      5,
+                                      5,
+                                      5),
                "saidas de analise gravadas com sucesso!")
   
   #### PMO, NEWAVE, Carga Bruta
@@ -179,12 +230,10 @@ test_that("epebpr works", {
                                   descricaoCaso = "teste",
                                   horasPonta = 10,
                                   idDemandaLiquida = 1,
-                                  sistemasNaoModulamPonta = c(6, 13),
+                                  idModulacao = 2,
+                                  sistemasNaoModulamPonta = NA,
                                   sistemasNaoModulamMedia = NA,
                                   sistemasModulamTabela = c(5, 8),
-                                  codTucurui = 275,
-                                  cotaLimiteTucurui = 62,
-                                  geracaoLimiteTucurui = 4000,
                                   execShiny = FALSE),
                "Leitura e grava\u00E7\u00E3o dos dados de entrada efetuadas com sucesso!")
   
@@ -195,10 +244,27 @@ test_that("epebpr works", {
                                            tipoCaso = 2,
                                            numeroCaso = 1,
                                            codModelo = 1,
-                                           codTucurui = 275,
+                                           lt.dadosTucurui = lt.dadosTucurui,
                                            flagVert = TRUE,
-                                           flagUHE = FALSE),
+                                           flagUHE = FALSE,
+                                           tipoModulacao = 2),
                "Disponibilidade hidro processada com sucesso!")
+  
+  expect_equal(carregaDadosSQLite(baseSQLite = caminhoBD,
+                                  pastaCaso = "testDataPMO",
+                                  pastaSaidas = "testDataPMO/nwlistop",
+                                  tipoCaso = 2,
+                                  numeroCaso = 1,
+                                  codModelo = 1,
+                                  descricaoCaso = "teste",
+                                  horasPonta = 10,
+                                  idDemandaLiquida = 1,
+                                  idModulacao = 1,
+                                  sistemasNaoModulamPonta = NA,
+                                  sistemasNaoModulamMedia = NA,
+                                  sistemasModulamTabela = c(5, 8),
+                                  execShiny = FALSE),
+               "Leitura e grava\u00E7\u00E3o dos dados de entrada efetuadas com sucesso!")
   
   # calcula disp hidro com flag vertimento FALSE e flag UHE TRUE
   expect_equal(calculaDisponibilidadeHidro(baseSQLite = caminhoBD,
@@ -207,9 +273,10 @@ test_that("epebpr works", {
                                            tipoCaso = 2,
                                            numeroCaso = 1,
                                            codModelo = 1,
-                                           codTucurui = 275,
+                                           lt.dadosTucurui = lt.dadosTucurui,
                                            flagVert = FALSE,
-                                           flagUHE = TRUE),
+                                           flagUHE = TRUE,
+                                           tipoModulacao = 1),
                "Disponibilidade hidro processada com sucesso!")
   
   # calcula balanco resumido
@@ -245,6 +312,9 @@ test_that("epebpr works", {
                                       tipoCaso = 2,
                                       numeroCaso = 1,
                                       codModelo = 1,
-                                      df.dadosGerais = leitorrmpe::leituraDadosGerais("testDataPMO")),
+                                      df.dadosGerais = leitorrmpe::leituraDadosGerais("testDataPMO"),
+                                      5,
+                                      5,
+                                      5),
                "saidas de analise gravadas com sucesso!")
 })
