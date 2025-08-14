@@ -6,18 +6,16 @@
 #' @param baseSQLite caracter com a localizacao da base de dados do BP.
 #' @param tipoCaso valor inteiro. 1:PDE; 2:PMO e 3;Garantia Fisica
 #' @param numeroCaso valor inteiro com o numero do caso
-#' @param codModelo valor inteiro com o codigo do modelo. 1:NEWAVE; 2:SUISHI
+#' @param codModelo valor inteiro com o codigo do modelo. 1:NEWAVE
 #' @param df.dadosGerais data frame com os dados gerais do caso utilizado
+#' @param cvar valor do CVaR da potencia nao suprida em %
+#' @param limCvar valor do limite do CVaR em % da demanda
+#' @param lolp valor do limite da LOLP
 #'
 #' @return \code{mensagem} vetor de caracteres com a mensagem de sucesso de gravacao dos dados de saida de analise
-#' 
-#' @examples
-#' \dontrun{
-#' gravacaoSaidasAnalises("C:/PDE2027_Caso080.sqlite3", 1, 80, 1)
-#' }
 #'
 #' @export
-gravacaoSaidasAnalises <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, df.dadosGerais) {
+gravacaoSaidasAnalises <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, df.dadosGerais, cvar, limCvar, lolp) {
   if (missing(baseSQLite)) {
     stop("favor indicar o caminho da BDBP")
   }
@@ -124,7 +122,10 @@ gravacaoSaidasAnalises <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
   dadosRequisitoPot <- dadosRequisitoPot(baseSQLite, 
                                          tipoCaso,
                                          numeroCaso,
-                                         codModelo, 
+                                         codModelo,
+                                         cvar,
+                                         limCvar,
+                                         lolp,
                                          df.dadosGerais$anoInicio, 
                                          (df.dadosGerais$anoInicio + df.dadosGerais$duracaoEstudo - 1) )%>% 
     dplyr::mutate(mes = A09_NR_MES%%100) %>% 
@@ -134,7 +135,10 @@ gravacaoSaidasAnalises <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
   dadosRequisitoPotQuad <- dadosRequisitoPotQuad(baseSQLite, 
                                                  tipoCaso,
                                                  numeroCaso,
-                                                 codModelo, 
+                                                 codModelo,
+                                                 cvar,
+                                                 limCvar,
+                                                 lolp,
                                                  df.dadosGerais$anoInicio, 
                                                  (df.dadosGerais$anoInicio + df.dadosGerais$duracaoEstudo - 1))
   

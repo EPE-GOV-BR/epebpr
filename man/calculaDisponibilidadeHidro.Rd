@@ -11,10 +11,11 @@ calculaDisponibilidadeHidro(
   tipoCaso,
   numeroCaso,
   codModelo,
-  codTucurui,
+  lt.dadosTucurui,
   flagVert = FALSE,
   flagUHE = FALSE,
-  execShiny = FALSE
+  execShiny = FALSE,
+  tipoModulacao
 )
 }
 \arguments{
@@ -22,26 +23,27 @@ calculaDisponibilidadeHidro(
 
 \item{pastaCaso}{localizacao da pasta com os arquivos do NEWAVE do caso a ser analisado no balanco de ponta}
 
-\item{pastaSaidas}{localizacao dos arquivos de saida do modulo NWLISTOP e arquivos do SUISHI}
+\item{pastaSaidas}{localizacao dos arquivos de saida do modulo NWLISTOP}
 
 \item{tipoCaso}{valor inteiro. 1:PDE; 2:PMO e 3;Garantia Fisica}
 
 \item{numeroCaso}{valor inteiro com o numero do caso}
 
-\item{codModelo}{valor inteiro com o codigo do modelo. 1:NEWAVE; 2:SUISHI}
+\item{codModelo}{valor inteiro com o codigo do modelo. 1:NEWAVE}
 
-\item{codTucurui}{codigo atribuido para a usina de Tucurui}
+\item{lt.dadosTucurui}{lista com dados referentes a UHE Tucurui para calculo do PDisp}
 
 \item{flagVert}{booleano que indica se considera ou nao o vertimento para todas as UHE}
 
 \item{flagUHE}{booleano que indica se as saidas individuais por UHE deverao ou nao ser gravadas na base de dados}
 
 \item{execShiny}{booleano que indica se a funcao esta sendo executada em um contexto reativo, para atualizacao da barra de progresso}
+
+\item{tipoModulacao}{valor inteiro. 1:Modulacao por REE; 2:Modulacao por UHE}
 }
 \value{
 \code{mensagem} vetor de caracteres com a mensagem de sucesso de gravacao na base
 }
 \description{
-Faz os calculos da disponibilidade hidraulica atualizando as tabelas BPO_A06_SAIDA_HIDRO_NEWAVE, BPO_A08_DADOS_CALCULADOS_UHE e 
-BPO_A09_DISPONIBILIDADE_HIDRO_PONTA_SUBSISTEMA
+Faz os calculos da disponibilidade hidraulica
 }

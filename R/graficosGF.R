@@ -5,7 +5,7 @@
 #' @param baseSQLite nome e localizacao da base SQLite do balanco de potencia
 #' @param tipoCaso valor inteiro. 1:PDE; 2:PMO e 3;Garantia Fisica
 #' @param numeroCaso valor inteiro com o numero do caso
-#' @param codModelo valor inteiro com o codigo do modelo. 1:NEWAVE; 2:SUISHI
+#' @param codModelo valor inteiro com o codigo do modelo. 1:NEWAVE
 #' @param tipoGrafico valor numerico identificando o tipo de grafico. 10: CVAR mensal; 11: VAR mensal; 12: VAR anual
 #' @param tituloGraficoCVARMes vetor de caracteres com o titulo do grafico de CVAR mensal - Nao obrigatorio - valor padrao com numero do caso
 #' @param tituloGraficoVARMes vetor de caracteres com o titulo do grafico de VAR mensal - Nao obrigatorio - valor padrao com numero do caso

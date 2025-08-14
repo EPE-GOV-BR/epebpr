@@ -9,7 +9,10 @@ gravacaoSaidasAnalises(
   tipoCaso,
   numeroCaso,
   codModelo,
-  df.dadosGerais
+  df.dadosGerais,
+  cvar,
+  limCvar,
+  lolp
 )
 }
 \arguments{
@@ -19,9 +22,15 @@ gravacaoSaidasAnalises(
 
 \item{numeroCaso}{valor inteiro com o numero do caso}
 
-\item{codModelo}{valor inteiro com o codigo do modelo. 1:NEWAVE; 2:SUISHI}
+\item{codModelo}{valor inteiro com o codigo do modelo. 1:NEWAVE}
 
 \item{df.dadosGerais}{data frame com os dados gerais do caso utilizado}
+
+\item{cvar}{valor do CVaR da potencia nao suprida em %}
+
+\item{limCvar}{valor do limite do CVaR em % da demanda}
+
+\item{lolp}{valor do limite da LOLP}
 }
 \value{
 \code{mensagem} vetor de caracteres com a mensagem de sucesso de gravacao dos dados de saida de analise
@@ -29,10 +38,4 @@ gravacaoSaidasAnalises(
 \description{
 Faz a gravacao dos dados das principais saidas de analise do balanCo de ponta em arquivo excel e no banco de dados do Balanco de Potencia (BDBP).
 Os dados sao gravados nas tabelas a partir da BPO_A22 do BDBP
-}
-\examples{
-\dontrun{
-gravacaoSaidasAnalises("C:/PDE2027_Caso080.sqlite3", 1, 80, 1)
-}
-
 }

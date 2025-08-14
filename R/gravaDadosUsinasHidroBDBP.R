@@ -7,7 +7,7 @@
 #' @param conexao conexao com o banco de dados (classe SQLiteConnection)
 #' @param tipoCaso valor inteiro. 1:PDE; 2:PMO e 3;Garantia Fisica
 #' @param numeroCaso valor inteiro com o numero do caso
-#' @param codModelo valor inteiro com o codigo do modelo. 1:NEWAVE; 2:SUISHI
+#' @param codModelo valor inteiro com o codigo do modelo. 1:NEWAVE
 #'
 #' @return \code{mensagem} vetor de caracteres com a mensagem de sucesso de gravacao na tabela BPO_A03_DADOS_UHE
 #'
@@ -54,18 +54,8 @@ gravaDadosUsinasHidroBDBP <- function(pasta, conexao, tipoCaso, numeroCaso, codM
     dplyr::select(codUsina, codREE, idUsinaExistente)
   
   # une dados em um unico data frame
-  # se o modelo for o SUISHI (codModelo = 2) deixa todas as usinas mesmo que nao tenham dados de configuracao  
-  if (codModelo == 2) {
-    df.dadosUsinasHidro <- dplyr::inner_join(df.dadosUsinasHidroeletricas, df.polinomiosVazaoNivelJusante, by = c("codUsina"))
-    df.dadosUsinasHidro <- dplyr::left_join(df.dadosUsinasHidro, df.configuracaoHidro, by = c("codUsina")) %>% 
-      dplyr::mutate(idUsinaExistente = ifelse(is.na(idUsinaExistente),
-                                              "-",
-                                              idUsinaExistente))
-    
-  } else {
-    df.dadosUsinasHidro <- dplyr::inner_join(df.dadosUsinasHidroeletricas, df.polinomiosVazaoNivelJusante, by = c("codUsina"))
-    df.dadosUsinasHidro <- dplyr::inner_join(df.dadosUsinasHidro, df.configuracaoHidro, by = c("codUsina"))
-  }
+  df.dadosUsinasHidro <- dplyr::inner_join(df.dadosUsinasHidroeletricas, df.polinomiosVazaoNivelJusante, by = c("codUsina"))
+  df.dadosUsinasHidro <- dplyr::inner_join(df.dadosUsinasHidro, df.configuracaoHidro, by = c("codUsina"))
   
   # ajusta dados de acordo com a tabela BPO_A03_DADOS_UHE
   df.dadosUsinasHidro <- df.dadosUsinasHidro %>% dplyr::mutate(tipoCaso = tipoCaso, 

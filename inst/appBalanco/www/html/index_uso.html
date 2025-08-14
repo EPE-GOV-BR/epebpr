@@ -129,6 +129,20 @@
 		</table>
 	</div>
 	<br>
+	<h2>Definir o tipo de modulação que será utilizada</h2>
+	<div class="boxed">
+		<table>
+			<tr>
+				<td width = 370px>
+					<img src = "../imagens/cb_tipo_modulacao.png" />
+				</td>
+				<td>
+					Nesta caixa de seleção, o usuário deve escolher o tipo de modulação que será usada no cálculo disponibilidade hidráulica. As opções são: (i) Modulação por REE, onde todas as UHE de um mesmo REE seguem o mesmo tipo de modulação, e (ii) Modulação por UHE, onde o tipo de modulação para cada UHE e para cada mês do ano pode ser definido através de uma tabela específica.	
+				</td>
+			</tr>
+		</table>
+	</div>
+	<br>
 	<h2>Definir os reservatórios equivalentes que não modulam e usam dados de geração média mensal</h2>
 	<div class="boxed">
 		<table>
@@ -252,7 +266,9 @@
 					<br>
           A caixa de seleção "Considerar Vertimento para todas UHE" altera o cálculo da disponibilidade hidráulica (etapa 15.4 da página de informações), somando à geração hidráulica do REE a parcela de vertimento turbinável (vertturb).<br>
           <br>
-          A caixa de seleção "Gravar dados individuais das UHE" habilita ou não a gravação da tabela BPO_A08_DADOS_CALCULADOS_UHE na base SQLite. Esta tabela contem dados intermediários necessários ao calculo da disponibilidade hidráulica e é a maior tabela da base. Sua escrita aumenta consideravelmente o tamanho do arquivo da base SQLite. 
+          A caixa de seleção "Gravar dados individuais das UHE" habilita ou não a gravação da tabela BPO_A08_DADOS_CALCULADOS_UHE na base SQLite. Esta tabela contem dados intermediários necessários ao calculo da disponibilidade hidráulica e é a maior tabela da base. Sua escrita aumenta consideravelmente o tamanho do arquivo da base SQLite.<br>
+          <br>
+          Os 3 inputs numéricos contidos dentro da caixa "Critérios de suprimento" podem ser utilizadas para alterar os parâmetros do cálculo dos requisitos de potência.
 				</td>
 			</tr>
 		</table>

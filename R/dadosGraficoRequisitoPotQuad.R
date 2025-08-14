@@ -3,14 +3,18 @@
 #' @param baseSQLite nome e localizacao da base SQLite do balanco de potencia
 #' @param tipoCaso valor inteiro. 1:PDE; 2:PMO e 3;Garantia Fisica
 #' @param numeroCaso valor inteiro com o numero do caso
-#' @param codModelo valor inteiro com o codigo do modelo. 1:NEWAVE; 2:SUISHI
+#' @param codModelo valor inteiro com o codigo do modelo. 1:NEWAVE
+#' @param cvar valor do CVaR da potencia nao suprida em %
+#' @param limCvar valor do limite do CVaR em % da demanda
+#' @param lolp valor do limite da LOLP
 #' @param inicioHorizonteGrafico valor numerico do ano de inicio do horizonte para o grafico. Formato: AAAA. Ex: 2020
 #' @param fimHorizonteGrafico valor numerico do ano de fim do horizonte para o grafico. Formato: AAAA. Ex:2029
 #'
 #' @return tib.requisitosPotQuad tibble com os dados do grafico de Requisitos de Potencia Quadrimestral
 #'
 #' @export
-dadosRequisitoPotQuad <- function(baseSQLite, tipoCaso, numeroCaso, codModelo, 
+dadosRequisitoPotQuad <- function(baseSQLite, tipoCaso, numeroCaso, codModelo,
+                                  cvar, limCvar, lolp,
                                   inicioHorizonteGrafico, fimHorizonteGrafico) {
   
   conexao <- DBI::dbConnect(RSQLite::SQLite(), baseSQLite)
@@ -78,9 +82,9 @@ dadosRequisitoPotQuad <- function(baseSQLite, tipoCaso, numeroCaso, codModelo,
   # calcula o requisito por mes
   tib.resultadosCvarMes <- tib.resultados %>%
     dplyr::group_by(A09_NR_MES, DEMANDA, RESERVA_F, RESERVA_C) %>%
-    dplyr::summarise(cvar5 = cvar(DEFICIT, 0.05)) %>% 
+    dplyr::summarise(cvar5 = cvar(DEFICIT, cvar/100)) %>% 
     dplyr::ungroup() %>% 
-    dplyr::mutate(limiteCriterio = (DEMANDA +  RESERVA_F + RESERVA_C)* 0.05, 
+    dplyr::mutate(limiteCriterio = (DEMANDA +  RESERVA_F + RESERVA_C)* limCvar/100, 
                   violacaoCriterio = ifelse(cvar5 > limiteCriterio, 
                                             cvar5 - limiteCriterio, 
                                             0), 
@@ -90,7 +94,7 @@ dadosRequisitoPotQuad <- function(baseSQLite, tipoCaso, numeroCaso, codModelo,
   # calcula o VAR 5 por mes
   tib.resultadosVarMes <- tib.resultados %>%
     dplyr::group_by(A09_NR_MES) %>%
-    dplyr::summarise(var5 = var(DEFICIT, 0.05), .groups = "drop")
+    dplyr::summarise(var5 = var(DEFICIT, lolp/100), .groups = "drop")
   
   # cria coluna do tipo data a partir do campo anoMes e filtra o horizonte para exibicao no grafico
   tib.resultadosCvarMes <- tib.resultadosCvarMes %>% 

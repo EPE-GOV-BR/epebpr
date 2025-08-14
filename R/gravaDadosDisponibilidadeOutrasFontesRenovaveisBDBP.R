@@ -8,7 +8,7 @@
 #' @param tipoCaso caracter com o tipo de caso simulado. [1]=PDE [2]=PMO [3]=GF.
 #' @param numeroCaso caracter com o numero do caso, definido pelo usuario.
 #' @param tipoDemanda caracter com a definicao do tipo de demanda do caso. [1]=Deterministica [2]=Liquida
-#' @param codModelo caracter com a definicao do modelo utilizado. [1]=Newave [2]=Suishi.
+#' @param codModelo valor inteiro com o codigo do modelo. 1:NEWAVE
 #' @param anoMesInicioMDI caracter com o ano e mes do inicio da simulacao do MDI.
 #' @param anoMesFimMDI caracter com o ano e mes do final da simulacao do MDI.
 #'

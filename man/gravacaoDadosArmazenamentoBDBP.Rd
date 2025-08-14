@@ -23,7 +23,7 @@ gravacaoDadosArmazenamentoBDBP(
 
 \item{numeroCaso}{caracter com o numero do caso, definido pelo usuario.}
 
-\item{codModelo}{caracter com a definicao do modelo utilizado. [1]=Newave [2]=Suishi.}
+\item{codModelo}{valor inteiro com o codigo do modelo. 1:NEWAVE}
 
 \item{anoMesInicioMDI}{caracter com o ano e mes do inicio da simulacao do MDI.}
 

@@ -27,7 +27,7 @@ gravacaoDadosDisponibilidadeOutrasFontesBDBP(
 
 \item{tipoDemanda}{caracter com a definicao do tipo de demanda do caso. [1]=Deterministica [2]=Liquida}
 
-\item{codModelo}{caracter com a definicao do modelo utilizado. [1]=Newave [2]=Suishi.}
+\item{codModelo}{valor inteiro com o codigo do modelo. 1:NEWAVE}
 
 \item{anoMesInicioMDI}{caracter com o ano e mes do inicio da simulacao do MDI.}
 

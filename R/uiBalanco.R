@@ -38,186 +38,218 @@ uiBalanco <- fluidPage(
     tabPanel(HTML("Balan\u00E7o de Pot\u00EAncia"),
              sidebarLayout(
                sidebarPanel(width = 3,
-                 # Selecao do tipo de caso
-                 # div para colocar inputs na mesma linha
-                 tags$div(style="display:inline-block; width:140px",
-                          selectInput(inputId = "tipoCaso",
-                                      label = "Tipo de Caso:",
-                                      choices = c("PDE" = 1,
-                                                  "PMO" = 2,
-                                                  "Garantia Fisica" = 3),
-                                      selected = 1)),
-                 # Espaco entre inputs
-                 tags$div(style="display:inline-block; width:7px"),
-                 
-                 # Selecao do modelo
-                 tags$div(style="display:inline-block; width:100px",
-                          selectInput(inputId = "codModelo",
-                                      label = "Modelo:",
-                                      choices = c("NEWAVE" = 1,
-                                                  "SUISHI" = 2
-                                      ),
-                                      selected = 1)),
-                 
-                 # Espaco entre inputs
-                 tags$div(style="display:inline-block; width:7px"),
-                 
-                 # Selecao do modelo
-                 tags$div(style="display:inline-block; width:140px",
-                          selectInput(inputId = "idDemanda",
-                                      label = "Demanda:",
-                                      choices = c("L\u00EDquida" = 2,
-                                                  "Determin\u00EDstica" = 1),
-                                      selected = 2)),
-                 tags$br(),
-                 
-                 
-                 # Entrada numerica para o numero do caso
-                 tags$div(style="display:inline-block; width:80px",
-                          numericInput(inputId = "numeroCaso",
-                                       label = HTML("Caso:"),
-                                       min = 1,
-                                       value = NULL)),
-                 
-                 # Espaco entre inputs
-                 tags$div(style="display:inline-block; width:7px"),
-                 
-                 # Entrada para horas de ponta
-                 tags$div(style="display:inline-block; width:120px",
-                          numericInput(inputId = "horasPonta",
-                                       label = HTML("Horas de Ponta:"),
-                                       min = 1,
-                                       value = 10)),
-                 
-                 # Espaco entre inputs
-                 tags$div(style="display:inline-block; width:7px"),
-                 
-                 # Entrada para percentual de rateio do deficit
-                 tags$div(style="display:inline-block; width:170px",
-                          numericInput(inputId = "distribuicaoDeficit",
-                                       label = HTML("Distribui\u00E7\u00E3o D\u00E9ficit [%]:"),
-                                       min = 0,
-                                       max = 100,
-                                       value = 100)),
-                 
-                 tags$br(),
-                 
-                 # Entrada de texto para a descricao do caso
-                 textInput(inputId = "descricao",
-                           label = HTML("Descri\u00E7\u00E3o do Caso:"),
-                           value = NULL),
-                 
-                 wellPanel(style = "padding: 5px;",
-                           tags$b(HTML("REEs N\u00E3o Modulam")),
-                           tags$br(),
-                           # Entrada para sistemas que nao modulam na ponta
-                           tags$div(style="display:inline-block; width:150px",
-                                    textInput(inputId = "sistemasNaoModulamPonta",
-                                              label = HTML("GHPonta:"),
-                                              value = NULL,
-                                              placeholder = "sist1, sist2, etc.")),
-                           
-                           # Espaco entre inputs
-                           tags$div(style="display:inline-block; width:7px"),
-                           
-                           # Entrada para sistemas que nao modulam na media
-                           tags$div(style="display:inline-block; width:150px",
-                                    textInput(inputId = "sistemasNaoModulamMedia",
-                                              label = HTML("GHM\u00E9dia:"),
-                                              value = "6, 13",
-                                              placeholder = "sist1, sist2, etc."))),
-                 
-                 wellPanel(style = "padding: 5px;",
-                           tags$b(HTML("REEs Modulam Conforme Tabela")),
-                           tags$br(),
-                           # Entrada para sistemas que nao modulam na ponta
-                           tags$div(style="display:inline-block; width:150px",
-                                    textInput(inputId = "sistemasModulamTabela",
-                                              label = HTML("GHPonta:"),
-                                              value = "5, 8",
-                                              placeholder = "sist1, sist2, etc."))),
-                 
-                 # Localiza base SQLite
-                 tags$span(strong(textOutput(outputId = "textoBaseSQLite"))),
-                 tags$span(strong(textOutput(outputId = "baseSQLite"), style = c("color:red; font-size:10px"))),
-                 tags$div(style = "height:3px"),
-                 tags$div(actionButton(inputId = "btnBaseSQLite",
-                                       label = NULL,
-                                       icon = icon("search"),
-                                       width = 77),
-                          actionButton(inputId = "btnCriaBaseSQLite",
-                                       label = NULL,
-                                       icon = icon("database"),
-                                       width = 77)),
-                 
-                 # Localiza a pasta do caso
-                 tags$div(style = "height:8px"),
-                 tags$span(strong(textOutput(outputId = "textoPasta"))),
-                 tags$span(strong(textOutput(outputId = "pasta"), style = c("color:red; font-size:10px"))),
-                 tags$div(style = "height:3px"),
-                 actionButton(inputId = "btnPasta",
-                              label = NULL,
-                              icon = icon("search"),
-                              width = 77),
-                 
-                 # Localiza a pasta de dados de saida do caso (nwlistop)
-                 tags$div(style = "height:8px"),
-                 tags$span(strong(textOutput(outputId = "textoPastaSaidas"))),
-                 tags$span(strong(textOutput(outputId = "pastaSaidas"), style = c("color:red; font-size:10px"))),
-                 tags$div(style = "height:3px"),
-                 actionButton(inputId = "btnPastaSaidas",
-                              label = NULL,
-                              icon = icon("search"),
-                              width = 77),
-                 tags$br(),
-                 tags$br(),
-                 tags$b(HTML("Etapas de execu\u00E7\u00E3o:")),
-                 tags$br(),
-                 tags$div(style = "display:inline-block; width:5px"),
-                 tags$div(style="display:inline-block;",
-                          checkboxInput(inputId = "leituraDados",
-                                        value = T,
-                                        label = HTML("1. Dados"))),
-                 tags$div(style = "display:inline-block; width:5px"),
-                 tags$div(style="display:inline-block;",
-                          checkboxInput(inputId = "disponibilidadeHidro",
-                                        value = T,
-                                        label = HTML("2. Disp. Hidro"))),
-                 tags$div(style = "display:inline-block; width:5px"),
-                 tags$div(style="display:inline-block;",
-                          checkboxInput(inputId = "execucaoBP",
-                                        value = T,
-                                        label = HTML("3. BP"))),
-                 tags$br(),
-                 conditionalPanel(condition = "input.execucaoBP == 1 || input.disponibilidadeHidro == 1",
-                                  tags$b(HTML("Op\u00E7\u00F5es adicionais:"))
-                 ),
-                 conditionalPanel(condition = "input.execucaoBP == 1",
-                                  tags$div(style = "display:inline-block; width:5px"),
-                                  tags$div(style="display:inline-block;",
-                                           checkboxInput(inputId = "balancoResumido",
-                                                         value = T,
-                                                         label = HTML("BP Resumido")))
-                 ),
-                 conditionalPanel(condition = "input.disponibilidadeHidro == 1",
-                                  tags$div(style = "display:inline-block; width:5px"),
-                                  tags$div(style="display:inline-block;",
-                                           checkboxInput(inputId = "flagVert",
-                                                         value = F,
-                                                         label = HTML("Considerar Vertimento para todas UHE")),
-                                           checkboxInput(inputId = "flagUHE",
-                                                         value = F,
-                                                         label = HTML("Gravar dados individuais das UHE")))
-                 ),
-
-                 # Action button
-                 tags$div(style = "height:8px"),
-                 tags$div(style = "height:3px"),
-                 actionButton(inputId = "btnBalanco",
-                              label = "Executar",
-                              icon = icon("play"),
-                              width = 200)
-                 
+                            # Selecao do tipo de caso
+                            # div para colocar inputs na mesma linha
+                            tags$div(style="display:inline-block; width:140px",
+                                     selectInput(inputId = "tipoCaso",
+                                                 label = "Tipo de Caso:",
+                                                 choices = c("PDE" = 1,
+                                                             "PMO" = 2,
+                                                             "Garantia Fisica" = 3),
+                                                 selected = 1)),
+                            # Espaco entre inputs
+                            tags$div(style="display:inline-block; width:7px"),
+                            
+                            # Selecao do modelo
+                            tags$div(style="display:inline-block; width:100px",
+                                     selectInput(inputId = "codModelo",
+                                                 label = "Modelo:",
+                                                 choices = c("NEWAVE" = 1),
+                                                 selected = 1)),
+                            
+                            # Espaco entre inputs
+                            tags$div(style="display:inline-block; width:7px"),
+                            
+                            # Selecao do modelo
+                            tags$div(style="display:inline-block; width:140px",
+                                     selectInput(inputId = "idDemanda",
+                                                 label = "Demanda:",
+                                                 choices = c("L\u00EDquida" = 2,
+                                                             "Determin\u00EDstica" = 1),
+                                                 selected = 2)),
+                            tags$br(),
+                            
+                            
+                            # Entrada numerica para o numero do caso
+                            tags$div(style="display:inline-block; width:80px",
+                                     numericInput(inputId = "numeroCaso",
+                                                  label = HTML("Caso:"),
+                                                  min = 1,
+                                                  value = NULL)),
+                            
+                            # Espaco entre inputs
+                            tags$div(style="display:inline-block; width:7px"),
+                            
+                            # Entrada para horas de ponta
+                            tags$div(style="display:inline-block; width:120px",
+                                     numericInput(inputId = "horasPonta",
+                                                  label = HTML("Horas de Ponta:"),
+                                                  min = 1,
+                                                  value = 10)),
+                            
+                            # Espaco entre inputs
+                            tags$div(style="display:inline-block; width:7px"),
+                            
+                            # Entrada para percentual de rateio do deficit
+                            tags$div(style="display:inline-block; width:170px",
+                                     numericInput(inputId = "distribuicaoDeficit",
+                                                  label = HTML("Distribui\u00E7\u00E3o D\u00E9ficit [%]:"),
+                                                  min = 0,
+                                                  max = 100,
+                                                  value = 100)),
+                            
+                            tags$br(),
+                            
+                            # Entrada de texto para a descricao do caso
+                            textInput(inputId = "descricao",
+                                      label = HTML("Descri\u00E7\u00E3o do Caso:"),
+                                      value = NULL),
+                            
+                            # Select input para o tipo de modulacao que sera adotada
+                            selectInput(inputId = "idModulacao",
+                                        label = "Tipo de Modula\u00E7\u00E3o:",
+                                        choices = c("Modula\u00E7\u00E3o por UHE" = 2,
+                                                    "Modula\u00E7\u00E3o por REE" = 1),
+                                        selected = 2),
+                            
+                            conditionalPanel(condition = "input.idModulacao == 1",
+                                             wellPanel(style = "padding: 5px;",
+                                                       tags$b(HTML("REEs N\u00E3o Modulam")),
+                                                       tags$br(),
+                                                       # Entrada para sistemas que nao modulam na ponta
+                                                       tags$div(style="display:inline-block; width:150px",
+                                                                textInput(inputId = "sistemasNaoModulamPonta",
+                                                                          label = HTML("GHPonta:"),
+                                                                          value = NULL,
+                                                                          placeholder = "sist1, sist2, etc.")),
+                                                       
+                                                       # Espaco entre inputs
+                                                       tags$div(style="display:inline-block; width:7px"),
+                                                       
+                                                       # Entrada para sistemas que nao modulam na media
+                                                       tags$div(style="display:inline-block; width:150px",
+                                                                textInput(inputId = "sistemasNaoModulamMedia",
+                                                                          label = HTML("GHM\u00E9dia:"),
+                                                                          value = "6, 13",
+                                                                          placeholder = "sist1, sist2, etc.")))
+                            ),
+                            
+                            wellPanel(style = "padding: 5px;",
+                                      tags$b(HTML("REEs Modulam Conforme Tabela")),
+                                      tags$br(),
+                                      # Entrada para sistemas que nao modulam na ponta
+                                      tags$div(style="display:inline-block; width:150px",
+                                               textInput(inputId = "sistemasModulamTabela",
+                                                         label = HTML("GHPonta:"),
+                                                         value = "5, 8",
+                                                         placeholder = "sist1, sist2, etc."))),
+                            
+                            # Localiza base SQLite
+                            tags$span(strong(textOutput(outputId = "textoBaseSQLite"))),
+                            tags$span(strong(textOutput(outputId = "baseSQLite"), style = c("color:red; font-size:10px"))),
+                            tags$div(style = "height:3px"),
+                            tags$div(actionButton(inputId = "btnBaseSQLite",
+                                                  label = NULL,
+                                                  icon = icon("search"),
+                                                  width = 77),
+                                     actionButton(inputId = "btnCriaBaseSQLite",
+                                                  label = NULL,
+                                                  icon = icon("database"),
+                                                  width = 77)),
+                            
+                            # Localiza a pasta do caso
+                            tags$div(style = "height:8px"),
+                            tags$span(strong(textOutput(outputId = "textoPasta"))),
+                            tags$span(strong(textOutput(outputId = "pasta"), style = c("color:red; font-size:10px"))),
+                            tags$div(style = "height:3px"),
+                            actionButton(inputId = "btnPasta",
+                                         label = NULL,
+                                         icon = icon("search"),
+                                         width = 77),
+                            
+                            # Localiza a pasta de dados de saida do caso (nwlistop)
+                            tags$div(style = "height:8px"),
+                            tags$span(strong(textOutput(outputId = "textoPastaSaidas"))),
+                            tags$span(strong(textOutput(outputId = "pastaSaidas"), style = c("color:red; font-size:10px"))),
+                            tags$div(style = "height:3px"),
+                            actionButton(inputId = "btnPastaSaidas",
+                                         label = NULL,
+                                         icon = icon("search"),
+                                         width = 77),
+                            tags$br(),
+                            tags$br(),
+                            tags$b(HTML("Etapas de execu\u00E7\u00E3o:")),
+                            tags$br(),
+                            tags$div(style = "display:inline-block; width:5px"),
+                            tags$div(style="display:inline-block;",
+                                     checkboxInput(inputId = "leituraDados",
+                                                   value = T,
+                                                   label = HTML("1. Dados"))),
+                            tags$div(style = "display:inline-block; width:5px"),
+                            tags$div(style="display:inline-block;",
+                                     checkboxInput(inputId = "disponibilidadeHidro",
+                                                   value = T,
+                                                   label = HTML("2. Disp. Hidro"))),
+                            tags$div(style = "display:inline-block; width:5px"),
+                            tags$div(style="display:inline-block;",
+                                     checkboxInput(inputId = "execucaoBP",
+                                                   value = T,
+                                                   label = HTML("3. BP"))),
+                            tags$br(),
+                            conditionalPanel(condition = "input.execucaoBP == 1 || input.disponibilidadeHidro == 1",
+                                             tags$b(HTML("Op\u00E7\u00F5es adicionais:"))
+                            ),
+                            conditionalPanel(condition = "input.disponibilidadeHidro == 1",
+                                             tags$div(style = "display:inline-block; width:5px"),
+                                             tags$div(style="display:inline-block;",
+                                                      checkboxInput(inputId = "flagVert",
+                                                                    value = T,
+                                                                    label = HTML("Considerar Vertimento para todas UHE")),
+                                                      checkboxInput(inputId = "flagUHE",
+                                                                    value = F,
+                                                                    label = HTML("Gravar dados individuais das UHE")))
+                            ),
+                            conditionalPanel(condition = "input.execucaoBP == 1",
+                                             tags$div(style = "display:inline-block; width:5px"),
+                                             tags$div(style="display:inline-block;",
+                                                      checkboxInput(inputId = "balancoResumido",
+                                                                    value = T,
+                                                                    label = HTML("BP Resumido"))),
+                                             wellPanel(style = "padding: 5px;",
+                                                       tags$b(HTML("Crit\u00E9rios de Suprimento")),
+                                                       tags$br(),
+                                                       tags$br(),
+                                                       # Entrada para valores dos criterios de suprimento
+                                                       tags$div(style="display:inline-block; width:120px; font-size:11px",
+                                                                numericInput(inputId = "cvar",
+                                                                             label = "CVaR (PNS)[%]:",
+                                                                             min = 1,
+                                                                             value = 5)),
+                                                       # Espaco entre inputs
+                                                       tags$div(style="display:inline-block; width:7px"),
+                                                       tags$div(style="display:inline-block; width:120px; font-size:10px",
+                                                                numericInput(inputId = "limCriterio",
+                                                                             label = "Limite [% da Demanda]:",
+                                                                             min = 1,
+                                                                             value = 5)),
+                                                       # Espaco entre inputs
+                                                       tags$div(style="display:inline-block; width:7px"),
+                                                       tags$div(style="display:inline-block; width:120px; font-size:11px",
+                                                                numericInput(inputId = "lolp",
+                                                                             label = "LOLP [%]:",
+                                                                             min = 1,
+                                                                             value = 5))
+                                             )
+                            ),
+                            
+                            # Action button
+                            tags$div(style = "height:8px"),
+                            tags$div(style = "height:3px"),
+                            actionButton(inputId = "btnBalanco",
+                                         label = "Executar",
+                                         icon = icon("play"),
+                                         width = 200)
+                            
                ),
                
                # Output:

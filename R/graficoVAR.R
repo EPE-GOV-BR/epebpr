@@ -5,7 +5,7 @@
 #' @param baseSQLite nome e localizacao da base SQLite do balanco de potencia
 #' @param tipoCaso valor inteiro. 1:PDE; 2:PMO e 3;Garantia Fisica
 #' @param numeroCaso valor inteiro com o numero do caso
-#' @param codModelo valor inteiro com o codigo do modelo. 1:NEWAVE; 2:SUISHI
+#' @param codModelo valor inteiro com o codigo do modelo. 1:NEWAVE
 #' @param inicioHorizonteGrafico valor numerico do ano de inicio do horizonte para o grafico. Formato: AAAA. Ex: 2020
 #' @param fimHorizonteGrafico valor numerico do ano de fim do horizonte para o grafico. Formato: AAAA. Ex:2029
 #' @param tipoGrafico valor numerico identificando o tipo de grafico. 5: Mensal por patamar; 6: Mensal em linha; 7:Anual
@@ -68,7 +68,7 @@ graficoVAR <- function(baseSQLite, tipoCaso, numeroCaso, codModelo,
       dplyr::pull(anoMes) %>% c(., max(tib.resultadosVarMes$anoMes))
     
     graficoVaR <- plotly::plot_ly(data = tib.resultadosVarMes, x = ~anoMes, y = ~A25_VL_VAR, color = ~A25_TX_PERCENT_VAR, type = "bar",
-                                  hovertemplate = "<b>D\u00E9ficit em MW</b>: %{y:.0f}<br><b>M\u00EDs</b>: %{x|%Y-%m}<extra></extra>") %>% 
+                                  hovertemplate = "<b>D\u00E9ficit em MW</b>: %{y:.0f}<br><b>M\u00EAs</b>: %{x|%Y-%m}<extra></extra>") %>% 
       plotly::layout( 
         title = paste0("<b>", tituloGraficoVARMes, "</b>"),
         legend = list(orientation = 'h', x = "0.3", y = "-0.15"),

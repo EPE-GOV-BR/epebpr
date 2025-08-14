@@ -15,7 +15,7 @@ gravaDadosUsinasHidroBDBP(pasta, conexao, tipoCaso, numeroCaso, codModelo)
 
 \item{numeroCaso}{valor inteiro com o numero do caso}
 
-\item{codModelo}{valor inteiro com o codigo do modelo. 1:NEWAVE; 2:SUISHI}
+\item{codModelo}{valor inteiro com o codigo do modelo. 1:NEWAVE}
 }
 \value{
 \code{mensagem} vetor de caracteres com a mensagem de sucesso de gravacao na tabela BPO_A03_DADOS_UHE

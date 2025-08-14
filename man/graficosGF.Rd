@@ -25,7 +25,7 @@ graficosGF(
 
 \item{numeroCaso}{valor inteiro com o numero do caso}
 
-\item{codModelo}{valor inteiro com o codigo do modelo. 1:NEWAVE; 2:SUISHI}
+\item{codModelo}{valor inteiro com o codigo do modelo. 1:NEWAVE}
 
 \item{tipoGrafico}{valor numerico identificando o tipo de grafico. 10: CVAR mensal; 11: VAR mensal; 12: VAR anual}
 

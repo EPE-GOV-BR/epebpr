@@ -14,12 +14,10 @@ carregaDadosSQLite(
   descricaoCaso,
   horasPonta,
   idDemandaLiquida,
+  idModulacao,
   sistemasNaoModulamPonta,
   sistemasNaoModulamMedia,
   sistemasModulamTabela,
-  codTucurui,
-  cotaLimiteTucurui,
-  geracaoLimiteTucurui,
   execShiny = FALSE
 )
 }
@@ -34,7 +32,7 @@ carregaDadosSQLite(
 
 \item{numeroCaso}{valor inteiro com o numero do caso}
 
-\item{codModelo}{valor inteiro com o codigo do modelo. 1:NEWAVE; 2:SUISHI}
+\item{codModelo}{valor inteiro com o codigo do modelo. 1:NEWAVE}
 
 \item{descricaoCaso}{vetor de caracteres indicando a descricao do caso}
 
@@ -42,17 +40,13 @@ carregaDadosSQLite(
 
 \item{idDemandaLiquida}{identificador de calculo com demanda liquida. [1]=Deterministica [2]=Liquida}
 
+\item{idModulacao}{identificador do tipo de modulacao. [1]=por REE [2]=por UHE}
+
 \item{sistemasNaoModulamPonta}{vetor numerico com codigos dos sitemas que nao modulam na ponta}
 
 \item{sistemasNaoModulamMedia}{vetor numerico com codigos dos sitemas que nao modulam na media}
 
 \item{sistemasModulamTabela}{vetor numerico com codigos dos sitemas que modulam conforme tabela}
-
-\item{codTucurui}{codigo atribuido para a usina de Tucurui}
-
-\item{cotaLimiteTucurui}{valor da cota da usina de Tucurui [m]}
-
-\item{geracaoLimiteTucurui}{valor da geracao limite da usina de Tucurui}
 
 \item{execShiny}{booleano que indica se a funcao esta sendo executada em um contexto reativo, para atualizacao da barra de progresso}
 }
