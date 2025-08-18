@@ -9,6 +9,11 @@
 #' 
 #' @importFrom dplyr %>%
 serverBalanco <- function(input, output, session) {
+  options(shiny.fullstacktrace = TRUE, shiny.error = function() {
+    arqLog <- paste0(pastaCaso, "/errLog_", stringr::str_remove(basename(baseSQLite), "\\.sqlite3"), ".txt")
+    frame <- sys.frame(sys.nframe() - 1)
+    cat(conditionMessage(frame$e), file = arqLog)
+  })
   
   ####### ABA BALANCO #######
   output$textoPasta <- renderText("Escolha a pasta do caso:")
